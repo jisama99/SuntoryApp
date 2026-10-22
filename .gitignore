@@ -1,0 +1,29 @@
+# Dépendances et builds
+node_modules/
+.next/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Secrets et environnement
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Jamais de classeur ni de donnée réelle dans le dépôt
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+*.pdf
+generated/
+data-real/
+sources-reelles/
+
+# Système
+.DS_Store
+Thumbs.db
