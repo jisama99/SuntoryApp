@@ -66,7 +66,8 @@ for (const locale of LOCALES) {
 
       // Semaine incohérente avec la date (W5), correction en un clic, enregistrement.
       await fill(page, start, end);
-      await page.locator('#f-sw-0').click();
+      await shot(page, 'form_weeks_derived_rs');
+      await page.getByRole('button', { name: /Corriger la semaine|Correct the week/ }).first().click();
       await pickDay(page, page.getByRole('dialog'), plusDays(start, 8));
       await save(page).click();
       await expect(page.getByTestId('findings').locator('[data-rule=W5]')).toBeVisible();
@@ -119,12 +120,9 @@ for (const locale of LOCALES) {
     await context.addCookies([{ name: 'demo_theme', value: 'dark', url: 'http://localhost:3100' }]);
     const watcher = watch(page);
     await page.goto(`/${locale}/needs/new`);
-    await page.locator('#f-sw-0').click();
-    await pickDay(page, page.getByRole('dialog'), '2026-12-28');
-    await page.locator('#f-ew-0').click();
-    await page.getByRole('dialog').waitFor();
-    await pickDay(page, page.getByRole('dialog'), '2027-01-05');
-    await page.locator('#f-sw-0').click();
+    await pickRange(page, 'f-range-0', '2026-12-28', '2027-01-10');
+    await page.getByRole('button', { name: /Corriger la semaine|Correct the week/ }).first().click();
+    await expect(page.getByRole('dialog')).toBeVisible();
     await page.screenshot({ path: path.join(OUT, `calendar_week_dark_${locale}_1440.png`), fullPage: true });
     await page.keyboard.press('Escape');
     await page.screenshot({ path: path.join(OUT, `form_dark_${locale}_1440.png`), fullPage: true });

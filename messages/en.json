@@ -266,6 +266,7 @@
       "noPeriod": "Period to complete",
       "toComplete": "To complete",
       "period": "P{n}: from {start} to {end} ({from} to {to})",
+      "periodOneWeek": "P{n}: from {start} to {end} ({week})",
       "onBehalf": "Entered by the agency for the sector manager"
     },
     "state": {
@@ -327,6 +328,8 @@
     "confirmNote": "These alerts do not block saving. You can adjust the dates or confirm.",
     "merge": "Merge with the existing need",
     "adjust": "Adjust the entry",
+    "correctWeek": "Correct the week",
+    "derivedHint": "Weeks are derived from the dates.",
     "applyWeek": "Apply {week}",
     "openExisting": "Open the existing need",
     "otherScope": "The need concerned is outside your scope.",
@@ -392,7 +395,7 @@
     "W14": "The date \"{raw}\" may have day and month swapped.",
     "W15": "The date \"{raw}\" is not recognised.",
     "W16": "The start ({date}) falls on a non-working day.",
-    "W17": "The start falls mid-week: {days} days out of {of} in week {week}.",
+    "W17": "The start falls mid-week: {days, plural, one {# day} other {# days}} out of {of} in week {week}.",
     "W18": "Period 2 starts on {start}, before the end of period 1 ({end}).",
     "W19": "Period 2 ({start}) comes before period 1 ({other}).",
     "W20": "The mission starts before the entry date or outside the campaign window.",

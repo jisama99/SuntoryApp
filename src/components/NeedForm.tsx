@@ -14,7 +14,7 @@ import { Button } from './Button';
 import { Field } from './Field';
 import { FindingsPanel } from './FindingsPanel';
 import { DateRangePicker } from './pickers/DateRangePicker';
-import { WeekPicker } from './pickers/WeekPicker';
+import { DerivedWeek } from './pickers/DerivedWeek';
 import { WeekdayPicker } from './pickers/WeekdayPicker';
 import { SelectField } from './SelectField';
 import { StatusTag } from './StatusTag';
@@ -188,8 +188,8 @@ export function NeedForm(props: NeedFormProps) {
               {...bounds}
             />
           </div>
-          <WeekPicker id={`f-sw-${i}`} label={t('fields.startWeek')} value={p.start_week} onChange={(w) => setPeriod(i, { start_week: w })} {...bounds} />
-          <WeekPicker id={`f-ew-${i}`} label={t('fields.endWeek')} value={p.end_week} onChange={(w) => setPeriod(i, { end_week: w })} {...bounds} />
+          <DerivedWeek id={`f-sw-${i}`} label={t('fields.startWeek')} week={p.start_week} onChange={(w) => setPeriod(i, { start_week: w })} {...bounds} />
+          <DerivedWeek id={`f-ew-${i}`} label={t('fields.endWeek')} week={p.end_week} onChange={(w) => setPeriod(i, { end_week: w })} {...bounds} />
           {i === 1 ? (
             <Button type="button" variant="ghost" className="w-fit" onClick={() => setValue((cur) => ({ ...cur, periods: cur.periods.slice(0, 1) }))}>
               {t('removePeriod')}

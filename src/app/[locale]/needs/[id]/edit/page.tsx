@@ -4,6 +4,7 @@ import { NeedForm } from '@/components/NeedForm';
 import { PageHeader } from '@/components/PageHeader';
 import { repository } from '@/data';
 import type { Locale } from '@/domain/types';
+import { keepTogether } from '@/lib/format';
 import { loadFormData } from '@/lib/need-form-data';
 import type { NeedFormValue } from '@/lib/need-form-value';
 import { getAccessContext } from '@/lib/session';
@@ -34,7 +35,7 @@ export default async function EditNeedPage({ params }: { params: Promise<{ local
   };
   return (
     <>
-      <PageHeader title={t('needs.complete', { code: need.need_code })} subtitle={t(`role.${ctx.profileId}`)} />
+      <PageHeader title={t('needs.complete', { code: keepTogether(need.need_code) })} subtitle={t(`role.${ctx.profileId}`)} />
       <NeedForm mode="edit" needId={need.id} initial={initial} {...data} />
     </>
   );

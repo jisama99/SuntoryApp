@@ -266,6 +266,7 @@
       "noPeriod": "Période à compléter",
       "toComplete": "À compléter",
       "period": "P{n} : du {start} au {end} ({from} à {to})",
+      "periodOneWeek": "P{n} : du {start} au {end} ({week})",
       "onBehalf": "Saisi par l'agence pour le RS"
     },
     "state": {
@@ -327,6 +328,8 @@
     "confirmNote": "Ces alertes ne bloquent pas l'enregistrement. Vous pouvez ajuster les dates ou confirmer.",
     "merge": "Fusionner avec le besoin existant",
     "adjust": "Ajuster la saisie",
+    "correctWeek": "Corriger la semaine",
+    "derivedHint": "Les semaines se déduisent des dates.",
     "applyWeek": "Appliquer {week}",
     "openExisting": "Ouvrir le besoin existant",
     "otherScope": "Le besoin concerné se trouve hors de votre périmètre.",
@@ -392,7 +395,7 @@
     "W14": "La date « {raw} » peut avoir le jour et le mois permutés.",
     "W15": "La date « {raw} » n'est pas reconnue.",
     "W16": "Le début ({date}) tombe un jour non ouvré.",
-    "W17": "Le début tombe en milieu de semaine : {days} jours sur {of} en semaine {week}.",
+    "W17": "Le début tombe en milieu de semaine : {days, plural, one {# jour} other {# jours}} sur {of} en semaine {week}.",
     "W18": "La période 2 commence le {start}, avant la fin de la période 1 ({end}).",
     "W19": "La période 2 ({start}) précède la période 1 ({other}).",
     "W20": "La mission commence avant la date de saisie ou hors de la fenêtre de la campagne.",

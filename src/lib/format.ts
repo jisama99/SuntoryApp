@@ -17,6 +17,9 @@ export function formatIsoWeek(stored: string, locale: Locale): string {
   return locale === 'en' ? stored.replace('-S', '-W') : stored;
 }
 
+/** Tiret insécable (U+2011) : un code comme BES-DEMO-032 ne se coupe plus en fin de ligne. */
+export const keepTogether = (code: string): string => code.replaceAll('-', '\u2011');
+
 const ISO_DATE_PARAM = /^\d{4}-\d{2}-\d{2}$/;
 const STORED_WEEK_PARAM = /^\d{4}-S\d{2}$/;
 

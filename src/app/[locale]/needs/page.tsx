@@ -44,13 +44,20 @@ export default async function NeedsPage({ params }: { params: Promise<{ locale: 
           return (
             <li key={p.period_no}>
               {r.start && r.end
-                ? t('needs.list.period', {
-                    n: p.period_no,
-                    start: formatDate(r.start, loc),
-                    end: formatDate(r.end, loc),
-                    from: formatIsoWeek(p.start_week ?? '', loc),
-                    to: formatIsoWeek(p.end_week ?? '', loc),
-                  })
+                ? p.start_week === p.end_week
+                  ? t('needs.list.periodOneWeek', {
+                      n: p.period_no,
+                      start: formatDate(r.start, loc),
+                      end: formatDate(r.end, loc),
+                      week: formatIsoWeek(p.start_week ?? '', loc),
+                    })
+                  : t('needs.list.period', {
+                      n: p.period_no,
+                      start: formatDate(r.start, loc),
+                      end: formatDate(r.end, loc),
+                      from: formatIsoWeek(p.start_week ?? '', loc),
+                      to: formatIsoWeek(p.end_week ?? '', loc),
+                    })
                 : t('needs.list.noPeriod')}
             </li>
           );

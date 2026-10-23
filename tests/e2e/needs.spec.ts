@@ -65,8 +65,11 @@ test.describe('saisie des besoins (A2a)', () => {
 
     await page.goto('/fr/needs');
     await page.getByRole('row', { name: new RegExp(code) }).getByRole('link', { name: 'Dupliquer' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(code.replaceAll('-', '\u2011'));
+    await expect(page.getByRole('heading', { level: 1 })).not.toContainText(code);
     await page.locator('#dup-start').click();
     await pickDay(page, page.getByRole('dialog'), '2027-04-05');
+    await expect(page.locator('#dup-week')).toHaveText('2027-S14, du 05/04/2027 au 11/04/2027');
     await page.getByRole('button', { name: 'Dupliquer', exact: true }).click();
     const d1 = page.getByTestId('findings').locator('[data-rule=D1]');
     await expect(d1).toBeVisible();
@@ -83,7 +86,7 @@ test.describe('saisie des besoins (A2a)', () => {
     await setProfile(context, 'rs');
     await page.goto('/fr/needs/new');
     await fillRequired(page, { start: '2027-05-24', end: '2027-05-30', hours: '10' });
-    await page.locator('#f-sw-0').click();
+    await page.getByRole('button', { name: 'Corriger la semaine' }).first().click();
     await pickDay(page, page.getByRole('dialog'), '2027-06-09');
     await page.getByRole('button', { name: 'Enregistrer le besoin' }).click();
     const w5 = page.getByTestId('findings').locator('[data-rule=W5]');
@@ -141,6 +144,36 @@ test.describe('saisie des besoins (A2a)', () => {
   });
 });
 
+test.describe('semaines déduites des dates (D146) et liste', () => {
+  test('les semaines ne sont plus des champs : elles se déduisent des dates, avec un lien pour les corriger', async ({ page, context }) => {
+    await setProfile(context, 'rs');
+    await page.goto('/fr/needs/new');
+    await expect(page.locator('button#f-sw-0')).toHaveCount(0);
+    await expect(page.locator('#f-sw-0')).toHaveText('Les semaines se déduisent des dates.');
+    await expect(page.getByRole('button', { name: 'Corriger la semaine' })).toHaveCount(0);
+    await pickRange(page, 'f-range-0', '2027-08-30', '2027-09-05');
+    await expect(page.locator('#f-sw-0')).toHaveText('2027-S35, du 30/08/2027 au 05/09/2027');
+    await expect(page.locator('#f-ew-0')).toHaveText('2027-S35, du 30/08/2027 au 05/09/2027');
+    await page.getByRole('button', { name: 'Corriger la semaine' }).first().click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await pickDay(page, page.getByRole('dialog'), '2027-09-08');
+    await expect(page.locator('#f-sw-0')).toHaveText('2027-S36, du 06/09/2027 au 12/09/2027');
+    await expect(page.locator('#f-ew-0')).toHaveText('2027-S35, du 30/08/2027 au 05/09/2027');
+  });
+
+  test('liste : une seule semaine quand le début et la fin sont dans la même semaine', async ({ page, context }) => {
+    await setProfile(context, 'agency_operator');
+    await page.goto('/fr/needs');
+    const first = page.getByRole('row', { name: /BES-DEMO-001/ });
+    await expect(first).toContainText('(2026-S44)');
+    await expect(first).not.toContainText('2026-S44 à 2026-S44');
+    const texts = await page.locator('tbody td:nth-child(4)').allTextContents();
+    for (const t of texts) expect(t).not.toMatch(/(\d{4}-S\d{2}) à \1/);
+    const multi = page.getByRole('row', { name: /BES-DEMO-002/ });
+    await expect(multi).toContainText('2026-S50 à 2026-S51');
+  });
+});
+
 test.describe('calendrier (D133)', () => {
   test('clavier : flèches, échappement, semaine ISO affichée, semaine clôturée désactivée avec sa raison', async ({ page, context }) => {
     await setProfile(context, 'rs');
@@ -188,10 +221,9 @@ test.describe('calendrier (D133)', () => {
   test('anglais : dates au format jj/mm/aaaa et semaines W', async ({ page, context }) => {
     await setProfile(context, 'rs');
     await page.goto('/en/needs/new');
-    await page.locator('#f-sw-0').click();
-    await pickDay(page, page.getByRole('dialog'), '2026-12-28');
-    await expect(page.locator('#f-sw-0')).toContainText('2026-W53');
-    await expect(page.locator('#f-sw-0')).toContainText('28/12/2026');
+    await pickRange(page, 'f-range-0', '2026-12-28', '2027-01-10');
+    await expect(page.locator('#f-sw-0')).toHaveText('2026-W53, from 28/12/2026 to 03/01/2027');
+    await expect(page.locator('#f-ew-0')).toHaveText('2027-W01, from 04/01/2027 to 10/01/2027');
   });
 
   test('dimanche désactivé dans les jours proposés', async ({ page, context }) => {

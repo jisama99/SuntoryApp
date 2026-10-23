@@ -49,7 +49,10 @@ describe('dates (D133, règle commune 12) : aucune date tapée à la main', () =
 
   it('les écrans de saisie utilisent les sélecteurs communs', () => {
     const form = read(path.join(ROOT, 'src/components/NeedForm.tsx'));
-    for (const c of ['DateRangePicker', 'WeekPicker', 'WeekdayPicker']) expect(form).toContain(`<${c}`);
+    for (const c of ['DateRangePicker', 'DerivedWeek', 'WeekdayPicker']) expect(form).toContain(`<${c}`);
+    // D146 : les semaines ne sont plus des champs demandés, le sélecteur de semaine n'ouvre que par « corriger la semaine ».
+    expect(form).not.toContain('<WeekPicker');
+    expect(read(path.join(ROOT, 'src/components/pickers/DerivedWeek.tsx'))).toContain('<WeekPicker');
     expect(read(path.join(ROOT, 'src/components/DuplicateForm.tsx'))).toContain('<DatePicker');
   });
 

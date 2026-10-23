@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { repository } from '@/data';
 import type { Locale } from '@/domain/types';
 import { resolvePeriod } from '@/domain/week-rules';
+import { keepTogether } from '@/lib/format';
 import { loadFormData } from '@/lib/need-form-data';
 import { getAccessContext } from '@/lib/session';
 
@@ -21,7 +22,7 @@ export default async function DuplicateNeedPage({ params }: { params: Promise<{ 
   const first = need.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null;
   return (
     <>
-      <PageHeader title={t('duplicate.title', { code: need.need_code })} subtitle={t(`role.${ctx.profileId}`)} />
+      <PageHeader title={t('duplicate.title', { code: keepTogether(need.need_code) })} subtitle={t(`role.${ctx.profileId}`)} />
       <DuplicateForm needId={need.id} sourceStart={first} today={data.today} min={data.min} max={data.max} closedWeeks={data.closedWeeks} />
     </>
   );

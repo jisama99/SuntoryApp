@@ -9,7 +9,9 @@ import { Link } from '@/i18n/navigation';
 import { Button } from './Button';
 import { FindingsPanel } from './FindingsPanel';
 import { DatePicker } from './pickers/DatePicker';
+import { DerivedWeek } from './pickers/DerivedWeek';
 import { StatusTag } from './StatusTag';
+import { formatWeek, isoWeekOf } from '@/domain/week';
 
 /** Duplication d'un besoin avec décalage de dates (F-20.3) : on choisit le nouveau premier jour, la durée est conservée. */
 export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeeks }: {
@@ -52,6 +54,7 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
             max={max}
             closedWeeks={closedWeeks}
           />
+          <DerivedWeek id="dup-week" label={tf('fields.startWeek')} week={start ? formatWeek(isoWeekOf(start)) : null} today={today} min={min} max={max} closedWeeks={closedWeeks} />
           <div className="flex flex-wrap items-center gap-3">
             <Button type="button" disabled={!start || pending} onClick={() => run(false)}>{t('submit')}</Button>
             <Link href="/needs" className="inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold text-link hover:bg-sel">
