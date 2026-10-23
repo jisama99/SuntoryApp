@@ -62,7 +62,7 @@ Le tiroir mobile du premier jet (bouton « Menu » en haut) a été remplacé pa
 | 7. Cibles, base, feuilles | 44 px (`min-h-11`) partout, police de base 16 px, sélecteurs de date en **feuille plein écran** sous 640 px avec bouton Fermer | e2e : aucune cible interactive sous 44 px sur la page Besoins à 390 px, feuille de 390 × 844 |
 | 9. Navigation | Raccourcis clavier documentés (`?` ouvre la liste, bouton « Raccourcis clavier » en barre d'outils) ; fil d'Ariane et lien d'évitement déjà en place | e2e rule16 ; vue présentation agence (D154) hors périmètre |
 **Police Inter (règle 10) :** déjà chargée **en local** par `@fontsource-variable/inter` (importée dans le layout, servie depuis `/_next/static/media`). Le défaut constaté : `font-family` plaçait les polices système avant Inter, donc Inter n'était pas utilisée sur Mac ni iOS ; `--font-sans` commence maintenant par `'Inter Variable'`. Contrôles : test de source (aucun service de polices) et e2e (police chargée, aucune requête externe, corps à 16 px).
-**Libellés hors glossaire (à valider, section 9 D177) :** le glossaire ne contient aucun terme pour ces gestes, ils sont donc proposés et non validés : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Annulation impossible : une autre modification a eu lieu depuis / Cannot undo: another change was made since, Trier le tableau / Sort the table (tri croissant / décroissant), Raccourcis clavier / Keyboard shortcuts et ses lignes.
+**Libellés hors glossaire (à valider, section 9 D180) :** le glossaire ne contient aucun terme pour ces gestes, ils sont donc proposés et non validés : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Annulation impossible : une autre modification a eu lieu depuis / Cannot undo: another change was made since, Trier le tableau / Sort the table (tri croissant / décroissant), Raccourcis clavier / Keyboard shortcuts et ses lignes.
 **Écarts honnêtes :** (a) les tableaux d'inputs de la saisie en lot restent des grilles de formulaire, non des tableaux de lecture ; (b) le tri n'est proposé que sur la liste des besoins et le calendrier (les matrices de paramètres n'ont pas d'ordre utile) ; (c) l'annulation est de niveau démonstrateur (instantané de l'état en mémoire), l'étape B devra la refaire par compensation en base ; (d) `Date`/horloge : le délai de la séquence `g` utilise l'horodatage de l'événement clavier ; (e) la colonne Secteur de la liste n'est pas triable (ZoneLabel seul lecteur des libellés de zone).
 
 ## 2. Non réalisé (hors périmètre, conforme au prompt)
@@ -142,23 +142,23 @@ C3 et C8 ; essais sur Mac ; navigateurs autres que Chromium ; lecteur d'écran r
 10. Forfait kilométrique fictif de 10,00 € HT pour le démonstrateur : valeur à garder ou à laisser « Non chiffré » ?
 
 ## 9. Mise à jour du registre proposée (non inscrite dans `docs/DECISIONS.md`)
-D153 à D163 sont déjà pris sur `main` (budget, règles 14 à 16, glossaire, directives). Numéros proposés **à partir de D164**, à attribuer par T. SOEFOU ; les renvois internes de ce compte rendu à « D153 à D163 » désignent ces propositions, pas les décisions de `main`.
+D153 à D163 sont déjà pris sur `main` (budget, règles 14 à 16, glossaire, directives). Numéros proposés **à partir de D167** (D164 à D166 ont été pris sur `main` après la rédaction : signalement, hébergement, parcours de correction ; décalage de +3 appliqué à la revue), à attribuer par T. SOEFOU ; les renvois internes de ce compte rendu à « D153 à D163 » désignent ces propositions, pas les décisions de `main`.
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
-| D164 | Jours ouvrés des échéances | Lundi à vendredi hors fériés, distincts des jours non ouvrés de mission (D145) | Proposée (H-A2b-1) |
-| D165 | Mois cible et blocage | Mois du premier jour de la première période ; blocage applicable à tout mois dont l'échéance est passée, réouverture seule issue | Proposée (H-A2b-2, 3), arbitrage question 2 |
-| D166 | Fenêtre de saisie du dispositif | Borne la clôture, saisie anticipée permise, lecture A par défaut (Q-N9-1) | Proposée (H-A2b-4) |
-| D167 | Priorité des échéances | Paramètre du dispositif avant date fixe avant preset par défaut | Proposée (H-A2b-7), précise D82 et D128 |
-| D168 | Report sur M+1 | Dates conservées, marque « reportée », jugé sur M+1, sans chaîne | Proposée (H-A2b-9) |
-| D169 | Réouverture | Zone obligatoire, durée par date de fin (90 jours au plus), décision réservée à l'agence administration | Proposée (H-A2b-10), précise D147 |
-| D170 | Alertes d'échéance dérivées | Cascade 5, 2, 0 jours ouvrés, J-2 et jour J réservés aux périmètres en retard, bilan chiffré d'audience agence ; EV-30 et EV-31 reportés aux automatisations (A4a) | Proposée (H-A2b-11, 12) |
-| D171 | Saisie en lot | Ligne incomplète rejetée, alerte confirmée par ligne, brouillon automatique côté données, collage avec explications | Proposée (H-A2b-13, 14) |
-| D172 | Courriels préparés | File à valider sans envoi, un message par responsable concerné, résumé du lundi sans chiffre | Proposée (précise D86 et D94) |
-| D173 | Journal | EV-04 (agence), EV-32 et EV-33 (les deux), **EV-38 hors catalogue** (agence) à inscrire au doc 26 | Proposée (H-A2b-15) |
-| D174 | Navigation web | Règle 14 appliquée en A2b ; contrôles d'accès dans des `layout.tsx` au-dessus des états de chargement pour garder le 404 | Constat technique, à confirmer |
-| D175 | Annulation après écriture | Jeton opaque par écriture, une seule annulation à la fois tant qu'aucune autre écriture n'a eu lieu, même profil ; le journal n'est jamais réécrit ; **EV-39 hors catalogue** (annulation) à inscrire au doc 26 | Proposée (règle 16, directive 4) |
-| D176 | Raccourcis clavier | `?` liste, `g` puis `h d n a s` pour naviguer, `c` nouveau besoin ; inactifs dans les champs, aucun n'écrit | Proposée (directive 9) |
-| D177 | Ajouts de libellés hors glossaire | Voir section 1 quater : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Trier le tableau / Sort the table, Raccourcis clavier / Keyboard shortcuts | À valider (le glossaire est le seul référentiel) |
+| D167 | Jours ouvrés des échéances | Lundi à vendredi hors fériés, distincts des jours non ouvrés de mission (D145) | Proposée (H-A2b-1) |
+| D168 | Mois cible et blocage | Mois du premier jour de la première période ; blocage applicable à tout mois dont l'échéance est passée, réouverture seule issue | Proposée (H-A2b-2, 3), arbitrage question 2 |
+| D169 | Fenêtre de saisie du dispositif | Borne la clôture, saisie anticipée permise, lecture A par défaut (Q-N9-1) | Proposée (H-A2b-4) |
+| D170 | Priorité des échéances | Paramètre du dispositif avant date fixe avant preset par défaut | Proposée (H-A2b-7), précise D82 et D128 |
+| D171 | Report sur M+1 | Dates conservées, marque « reportée », jugé sur M+1, sans chaîne | Proposée (H-A2b-9) |
+| D172 | Réouverture | Zone obligatoire, durée par date de fin (90 jours au plus), décision réservée à l'agence administration | Proposée (H-A2b-10), précise D147 |
+| D173 | Alertes d'échéance dérivées | Cascade 5, 2, 0 jours ouvrés, J-2 et jour J réservés aux périmètres en retard, bilan chiffré d'audience agence ; EV-30 et EV-31 reportés aux automatisations (A4a) | Proposée (H-A2b-11, 12) |
+| D174 | Saisie en lot | Ligne incomplète rejetée, alerte confirmée par ligne, brouillon automatique côté données, collage avec explications | Proposée (H-A2b-13, 14) |
+| D175 | Courriels préparés | File à valider sans envoi, un message par responsable concerné, résumé du lundi sans chiffre | Proposée (précise D86 et D94) |
+| D176 | Journal | EV-04 (agence), EV-32 et EV-33 (les deux), **EV-38 hors catalogue** (agence) à inscrire au doc 26 | Proposée (H-A2b-15) |
+| D177 | Navigation web | Règle 14 appliquée en A2b ; contrôles d'accès dans des `layout.tsx` au-dessus des états de chargement pour garder le 404 | Constat technique, à confirmer |
+| D178 | Annulation après écriture | Jeton opaque par écriture, une seule annulation à la fois tant qu'aucune autre écriture n'a eu lieu, même profil ; le journal n'est jamais réécrit ; **EV-39 hors catalogue** (annulation) à inscrire au doc 26 | Proposée (règle 16, directive 4) |
+| D179 | Raccourcis clavier | `?` liste, `g` puis `h d n a s` pour naviguer, `c` nouveau besoin ; inactifs dans les champs, aucun n'écrit | Proposée (directive 9) |
+| D180 | Ajouts de libellés hors glossaire | Voir section 1 quater : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Trier le tableau / Sort the table, Raccourcis clavier / Keyboard shortcuts | À valider (le glossaire est le seul référentiel) |
 
 ## 10. Suite
 Pas de chaînage vers A3. Gabarit : la préférence du menu replié n'est pas une décision du registre (proposition à valider avec le reste). Avant A3 : réponses aux questions 1 à 4 (elles pilotent les dates et les règles par défaut), validation écrite de ce compte rendu, relecture des captures non parcourues.
