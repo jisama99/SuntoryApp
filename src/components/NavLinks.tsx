@@ -38,8 +38,8 @@ export function NavLinks({ items, label, collapsed = false, onNavigate }: {
               >
                 <span
                   data-nav-tile
-                  className={`grid size-9 shrink-0 place-items-center rounded-[10px] transition-colors ${
-                    active ? 'bg-primary text-white' : 'bg-alt text-muted group-hover:bg-surface group-hover:text-ink'
+                  className={`grid size-9 shrink-0 place-items-center rounded-ctl transition-colors ${
+                    active ? 'bg-primary text-on-fill' : 'bg-alt text-muted group-hover:bg-surface group-hover:text-ink'
                   }`}
                 >
                   <Icon icon={MENU_ICONS[item.key]} size="md" />

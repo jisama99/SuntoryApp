@@ -249,7 +249,8 @@
       "all_saints": "All Saints' Day",
       "armistice": "Armistice Day",
       "christmas": "Christmas Day"
-    }
+    },
+    "close": "Close"
   },
   "weekdays": {
     "monToFri": "Mon to Fri",
@@ -807,5 +808,28 @@
     },
     "mondaySummary": "Monday summary of {date} for the client",
     "reminder": "Reminder of {date} for the entry of {month} ({n, plural, one {# sector concerned} other {# sectors concerned}})"
+  },
+  "confirmation": {
+    "region": "Confirmation",
+    "undo": "Undo",
+    "undone": "Change undone",
+    "expired": "Cannot undo: another change was made since.",
+    "close": "Close",
+    "saved": "Saved"
+  },
+  "table": {
+    "sortLabel": "Sort the table",
+    "asc": "sorted ascending",
+    "desc": "sorted descending"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "intro": "Active outside input fields. None of them saves or approves anything.",
+    "help": "Show this list",
+    "create": "New need",
+    "goTo": "Go to: {page}",
+    "close": "Close this list",
+    "closeButton": "Close",
+    "hint": "Keyboard shortcuts"
   }
 }

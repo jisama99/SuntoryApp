@@ -10,6 +10,7 @@ import type { Locale } from '@/domain/types';
 import { addDays } from '@/domain/week';
 import { formatDate, formatIsoWeek, formatMonth } from '@/lib/format';
 import { Button } from './Button';
+import { useConfirmation } from './Confirmation';
 import { DatePicker } from './pickers/DatePicker';
 import { SelectField } from './SelectField';
 import { StatusTag } from './StatusTag';
@@ -27,6 +28,8 @@ export function RequestDecision({ request, zoneText, context }: { request: Reope
   const [reason, setReason] = useState('');
   const [until, setUntil] = useState<string | null>(request.desired_until);
   const [res, setRes] = useState<string | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const decide = (decision: 'grant' | 'decline') =>
     startTransition(async () => {
@@ -34,6 +37,7 @@ export function RequestDecision({ request, zoneText, context }: { request: Reope
         locale, requestId: request.id, decision, scope: request.scope, target: request.target, zoneId: request.zone_id, reason, expiresOn: until ?? '',
       });
       setRes(r.status === 'ok' ? 'ok' : r.status === 'refused' ? r.reason : 'invalid');
+      if (r.status === 'ok') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setRes(null) });
     });
   return (
     <li data-testid="reopen-request-card" className="flex flex-col gap-3 rounded-card bg-surface p-5 shadow-card">
@@ -67,6 +71,8 @@ export function DirectReopen({ context, zones, closedMonths, closedWeeks }: { co
   const [reason, setReason] = useState('');
   const [until, setUntil] = useState<string | null>(null);
   const [res, setRes] = useState<string | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const options = [
     ...closedMonths.map((m) => ({ value: `month:${m}`, text: t('targetMonth', { month: formatMonth(m, locale) }) })),
@@ -77,6 +83,7 @@ export function DirectReopen({ context, zones, closedMonths, closedWeeks }: { co
       const [scope, id] = target.split(':') as ['month' | 'week', string];
       const r = await decideReopeningAction({ locale, requestId: null, decision: 'grant', scope, target: id ?? '', zoneId: zone, reason, expiresOn: until ?? '' });
       setRes(r.status === 'ok' ? 'ok' : r.status === 'refused' ? r.reason : 'invalid');
+      if (r.status === 'ok') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setRes(null) });
     });
   return (
     <form noValidate onSubmit={(e) => { e.preventDefault(); submit(); }} className="grid max-w-xl gap-4 rounded-card bg-surface p-5 shadow-card" aria-labelledby="direct-title" data-testid="direct-reopen">

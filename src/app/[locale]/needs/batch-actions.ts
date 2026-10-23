@@ -19,6 +19,7 @@ export interface BatchDto {
   rejected: number;
   needsConfirmation: number;
   ignored: number;
+  undoToken?: string;
 }
 export type BatchState = ({ status: 'done' } & BatchDto) | { status: 'invalid' };
 
@@ -30,11 +31,16 @@ export async function saveBatchAction(payload: { locale: string; rows: unknown; 
   const parsed = BatchRowsSchema.safeParse(payload.rows);
   if (!locale || !parsed.success) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
-  const result = await repository.saveNeedsBatch(ctx, parsed.data, { confirm: payload.confirm ?? [], defer: payload.defer ?? [] });
+  const { result, undoToken } = await repository.withUndo(
+    ctx,
+    () => repository.saveNeedsBatch(ctx, parsed.data, { confirm: payload.confirm ?? [], defer: payload.defer ?? [] }),
+    (r) => r.saved > 0,
+  );
   if (result.saved > 0) revalidatePath('/', 'layout');
   return {
-    status: 'done',
     ...result,
+    status: 'done',
+    undoToken: undoToken ?? undefined,
     lines: result.lines.map((l) => ({ ...l, findings: l.findings.map((f) => ({ ...f, params: presentParams(f.params, locale) })) })),
   };
 }

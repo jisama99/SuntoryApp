@@ -6,7 +6,7 @@ const TONES: Record<TileTone, { box: string; sub: string }> = {
   aqua: { box: 'bg-tint-aqua text-ink', sub: 'text-muted-strong' },
   lav: { box: 'bg-tint-lav text-ink', sub: 'text-muted-strong' },
   sand: { box: 'bg-tint-sand text-ink', sub: 'text-muted-strong' },
-  anchor: { box: 'bg-anchor text-white', sub: 'text-white/85' },
+  anchor: { box: 'bg-anchor text-on-fill', sub: 'text-on-fill/85' },
 };
 const ATTENTION = { box: 'bg-tint-rose text-ink', sub: 'text-muted-strong' };
 
@@ -27,7 +27,7 @@ export function Tile({ label, value, tone, attention = false, size = 'md', class
   return (
     <div className={`flex flex-col gap-2 rounded-card p-5 shadow-card ${c.box} ${className}`.trim()}>
       <span className={`text-sm ${c.sub}`}>{label}</span>
-      <span className={`tabular font-semibold tracking-tight ${size === 'xl' ? 'text-6xl' : 'text-4xl'}`}>{value}</span>
+      <span className={`tabular font-semibold tracking-tight ${size === 'xl' ? 'text-2xl' : 'text-2xl'}`}>{value}</span>
       {children ? <div className={`text-sm font-semibold ${c.sub}`}>{children}</div> : null}
     </div>
   );

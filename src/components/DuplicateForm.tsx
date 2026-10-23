@@ -11,6 +11,7 @@ import { formatMonth } from '@/lib/format';
 import { DeadlineBanner } from './DeadlineBanner';
 import { Link } from '@/i18n/navigation';
 import { Button } from './Button';
+import { useConfirmation } from './Confirmation';
 import { FindingsPanel } from './FindingsPanel';
 import { DatePicker } from './pickers/DatePicker';
 import { DerivedWeek } from './pickers/DerivedWeek';
@@ -34,12 +35,16 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
   const locale = useLocale() as Locale;
   const [start, setStart] = useState<string | null>(null);
   const [result, setResult] = useState<SaveState | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
 
   const run = (confirm: boolean, deferToNextMonth = false) => {
     if (!start) return;
     startTransition(async () => {
-      setResult(await duplicateNeedAction({ locale, needId, newStart: start, confirm, deferToNextMonth }));
+      const r = await duplicateNeedAction({ locale, needId, newStart: start, confirm, deferToNextMonth });
+      setResult(r);
+      if (r.status === 'saved') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setResult(null) });
     });
   };
   const lockedMonths = lockedMonthsFor(deadline, dispositif, sectorId, min, max);
@@ -80,7 +85,7 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
           <div className="flex flex-col gap-3 rounded-card bg-ok-soft p-5" data-testid="saved">
             <StatusTag tone="ok">{tf('saved.submit.title')}</StatusTag>
             <p>{t('done', { code: result.needCode })}</p>
-            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover">
+            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-fill hover:bg-primary-hover">
               {tf('goList')}
             </Link>
           </div>

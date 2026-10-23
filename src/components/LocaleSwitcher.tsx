@@ -9,7 +9,7 @@ export function LocaleSwitcher() {
   const current = useLocale();
   const pathname = usePathname();
   return (
-    <div role="group" aria-label={t('label')} className="inline-flex rounded-full bg-alt p-0.5">
+    <div role="group" aria-label={t('label')} className="inline-flex rounded-full bg-alt p-1">
       {routing.locales.map((loc) => (
         <Link
           key={loc}
@@ -18,8 +18,8 @@ export function LocaleSwitcher() {
           lang={loc}
           hrefLang={loc}
           aria-current={loc === current ? 'true' : undefined}
-          className={`inline-flex min-h-10 min-w-12 items-center justify-center rounded-full px-3 text-sm font-semibold ${
-            loc === current ? 'bg-marine text-white' : 'text-ink hover:bg-alt'
+          className={`inline-flex min-h-11 min-w-12 items-center justify-center rounded-full px-3 text-sm font-semibold ${
+            loc === current ? 'bg-marine text-on-fill' : 'text-ink hover:bg-alt'
           }`}
         >
           {loc.toUpperCase()}

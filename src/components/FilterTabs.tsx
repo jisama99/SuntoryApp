@@ -27,7 +27,7 @@ export function FilterTabs({ label, basePath, param, items, current, keep = {} }
           href={href(it.value, i === 0)}
           aria-current={current === it.value ? 'true' : undefined}
           scroll={false}
-          className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold ${current === it.value ? 'bg-primary text-white' : 'bg-alt text-ink hover:bg-sel'}`}
+          className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold transition-colors ${current === it.value ? 'bg-primary text-on-fill' : 'bg-alt text-ink hover:bg-sel'}`}
         >
           {it.text}
         </Link>

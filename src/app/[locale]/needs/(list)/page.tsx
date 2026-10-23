@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/Breadcrumb';
-import { DataTable } from '@/components/DataTable';
+import { DataTable, parseSort, sortRows } from '@/components/DataTable';
 import { DeadlineBanner } from '@/components/DeadlineBanner';
 import { DelaySummary } from '@/components/DelaySummary';
 import { FilterTabs } from '@/components/FilterTabs';
@@ -56,8 +56,7 @@ export default async function NeedsPage({ params, searchParams }: {
   const needs = allNeeds.filter((n) =>
     filter === 'draft' ? n.need_state === 'draft' : filter === 'submitted' ? n.need_state === 'submitted' : filter === 'deferred' ? Boolean(n.deferred_from_month) : true,
   );
-  const keepMonth: Record<string, string> = month && month !== delays[0]?.month ? { month } : {};
-  const keepFilter: Record<string, string> = filter !== 'all' ? { filter } : {};
+
   const reopened = new Set(deadline.reopenings.filter((r) => r.scope === 'week').map((r) => r.target));
   const closedMonths = [...new Set(bannerRows(deadline, null, null).closed.map((r) => r.month))];
   const closedWeeks = closures.map((w) => w.week).filter((w) => !reopened.has(w));
@@ -96,14 +95,15 @@ export default async function NeedsPage({ params, searchParams }: {
       </ul>
     );
 
+
   const columns: Column<Need>[] = [
-    { key: 'need', header: t('needs.cols.need'), render: (n) => <span className="whitespace-nowrap font-mono text-sm">{n.need_code}</span> },
+    { key: 'need', header: t('needs.cols.need'), render: (n) => <span className="whitespace-nowrap font-mono text-sm">{n.need_code}</span>, sortValue: (n) => n.need_code },
     { key: 'sector', header: t('needs.cols.sector'), render: (n) => (sectors.get(n.sector_id) ? <ZoneLabel zone={sectors.get(n.sector_id)!} /> : null) },
-    { key: 'dispositif', header: t('needs.cols.dispositif'), render: (n) => (n.dispositif ? t(`dispositif.${n.dispositif}`) : <span className="text-muted">{t('needs.list.toComplete')}</span>) },
-    { key: 'period', header: t('needs.cols.period'), render: periodsOf },
-    { key: 'hours', header: t('needs.cols.hours'), numeric: true, render: (n) => (n.weekly_hours === null ? <span className="text-muted">{t('needs.list.toComplete')}</span> : n.weekly_hours) },
+    { key: 'dispositif', header: t('needs.cols.dispositif'), render: (n) => (n.dispositif ? t(`dispositif.${n.dispositif}`) : <span className="text-muted">{t('needs.list.toComplete')}</span>), sortValue: (n) => (n.dispositif ? t(`dispositif.${n.dispositif}`) : null) },
+    { key: 'period', header: t('needs.cols.period'), render: periodsOf, sortValue: (n) => n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null },
+    { key: 'hours', header: t('needs.cols.hours'), numeric: true, sortValue: (n) => n.weekly_hours, render: (n) => (n.weekly_hours === null ? <span className="text-muted">{t('needs.list.toComplete')}</span> : n.weekly_hours) },
     {
-      key: 'state', header: t('needs.cols.state'),
+      key: 'state', header: t('needs.cols.state'), sortValue: (n) => t(`needs.state.${n.need_state}`),
       render: (n) => (
         <div className="flex flex-col items-start gap-1">
           <StatusTag tone={n.need_state === 'draft' ? 'attention' : 'info'}>{t(`needs.state.${n.need_state}`)}</StatusTag>
@@ -129,6 +129,15 @@ export default async function NeedsPage({ params, searchParams }: {
       : []),
   ];
 
+  const sort = parseSort({ sort: one('sort'), dir: one('dir') }, columns);
+  const keepSort: Record<string, string> = sort ? { sort: sort.key, dir: sort.dir } : {};
+  const keepMonth: Record<string, string> = { ...(month && month !== delays[0]?.month ? { month } : {}), ...keepSort };
+  const keepFilter: Record<string, string> = { ...(filter !== 'all' ? { filter } : {}), ...keepSort };
+  const sortHref = (key: string, dir: 'asc' | 'desc') => {
+    const q = new URLSearchParams({ ...(month && month !== delays[0]?.month ? { month } : {}), ...(filter !== 'all' ? { filter } : {}), sort: key, dir });
+    return `/needs?${q.toString()}`;
+  };
+
   return (
     <>
       <Breadcrumb items={[{ label: t('menu.needs') }]} />
@@ -145,7 +154,7 @@ export default async function NeedsPage({ params, searchParams }: {
       </div>
       {canWrite ? (
         <div className="mb-6 flex flex-wrap gap-3">
-          <Link href="/needs/new" className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover">
+          <Link href="/needs/new" className="inline-flex min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-fill hover:bg-primary-hover">
             {t('needs.new')}
           </Link>
           <Link href="/needs/batch" className="inline-flex min-h-11 items-center rounded-full border-2 border-primary bg-surface px-5 text-sm font-semibold text-link hover:bg-sel">
@@ -168,7 +177,16 @@ export default async function NeedsPage({ params, searchParams }: {
       {needs.length === 0 ? (
         <EmptyState title={t('states.empty.title')} body={allNeeds.length === 0 ? t('needs.empty') : t('needs.emptyFilter')} />
       ) : (
-        <DataTable caption={t('needs.caption')} columns={columns} rows={needs} rowKey={(n) => n.id} rowId={(n) => `need-${n.id}`} />
+        <DataTable
+          caption={t('needs.caption')}
+          columns={columns}
+          rows={sortRows(needs, columns, sort)}
+          rowKey={(n) => n.id}
+          rowId={(n) => `need-${n.id}`}
+          sort={sort}
+          sortHref={sortHref}
+          sortLabels={{ label: t('table.sortLabel'), asc: t('table.asc'), desc: t('table.desc') }}
+        />
       )}
     </>
   );

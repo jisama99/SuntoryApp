@@ -5,11 +5,13 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { ConfirmationProvider } from '@/components/Confirmation';
 import { DemoBanner } from '@/components/DemoBanner';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { AppShell } from '@/components/AppShell';
 import type { NavItem } from '@/components/NavLinks';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { Shortcuts } from '@/components/Shortcuts';
 import { ProfileSwitcher } from '@/components/ProfileSwitcher';
 import { profileDirectory, repository } from '@/data';
 import { routing } from '@/i18n/routing';
@@ -43,11 +45,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <NextIntlClientProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-full focus:bg-marine focus:px-4 focus:py-2 focus:text-white"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-full focus:bg-marine focus:px-4 focus:py-2 focus:text-on-fill"
           >
             {tApp('skip')}
           </a>
           <DemoBanner />
+          <ConfirmationProvider>
           <AppShell
             items={items}
             collapsedInitial={await getSidebarCollapsed()}
@@ -58,6 +61,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             }}
             toolbar={
               <>
+                <Shortcuts items={items} canCreate={repository.canWriteNeeds(ctx)} createHref="/needs/new" />
                 <ThemeSwitcher />
                 <LocaleSwitcher />
                 <ProfileSwitcher profiles={profiles} current={ctx.profileId} />
@@ -66,6 +70,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           >
             {children}
           </AppShell>
+          </ConfirmationProvider>
         </NextIntlClientProvider>
       </body>
     </html>

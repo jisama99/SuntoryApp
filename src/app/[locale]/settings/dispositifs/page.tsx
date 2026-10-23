@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { DataTable } from '@/components/DataTable';
+import type { Column } from '@/components/DataTable';
 import { FilterTabs } from '@/components/FilterTabs';
 import { PageHeader } from '@/components/PageHeader';
 import { ParamEditor } from '@/components/ParamEditor';
@@ -76,51 +78,36 @@ export default async function DispositifsPage({ params, searchParams }: {
         />
       </div>
 
-      {scope === 'all' ? (
-        <div className="mb-8 overflow-x-auto rounded-card bg-surface shadow-card">
-          <table className="w-full border-collapse text-left text-sm" data-testid="params-compare">
-            <caption className="px-4 py-3 text-left text-sm font-semibold text-muted">{t('params.compareCaption')}</caption>
-            <thead>
-              <tr className="bg-alt">
-                <th scope="col" className="px-4 py-2 font-semibold">{t('params.cols.param')}</th>
-                {DISPOSITIFS.map((d) => <th key={d} scope="col" className="px-4 py-2 font-semibold">{t(`dispositif.${d}`)}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {PARAM_KEYS.map((k) => (
-                <tr key={k} className="even:bg-alt/60">
-                  <th scope="row" className="px-4 py-3 font-semibold">{t(`params.keys.${k}`)}</th>
-                  {DISPOSITIFS.map((d) => <td key={d} className="px-4 py-3">{formatParamValue(k, valueOf(d, k), tp, loc)}</td>)}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="mb-8 overflow-x-auto rounded-card bg-surface shadow-card">
-          <table className="w-full border-collapse text-left text-sm" data-testid="params-detail">
-            <caption className="px-4 py-3 text-left text-sm font-semibold text-muted">{t('params.detailCaption', { name: t(`dispositif.${scope as Dispositif}`) })}</caption>
-            <thead>
-              <tr className="bg-alt">
-                <th scope="col" className="px-4 py-2 font-semibold">{t('params.cols.param')}</th>
-                <th scope="col" className="px-4 py-2 font-semibold">{t('params.cols.value')}</th>
-                <th scope="col" className="px-4 py-2 font-semibold">{t('params.cols.status')}</th>
-                {canEdit ? <th scope="col" className="px-4 py-2 font-semibold">{t('params.cols.actions')}</th> : null}
-              </tr>
-            </thead>
-            <tbody>
-              {PARAM_KEYS.map((k) => (
-                <tr key={k} className="even:bg-alt/60" data-param={k}>
-                  <th scope="row" className="px-4 py-3 align-top font-semibold">{t(`params.keys.${k}`)}</th>
-                  <td className="px-4 py-3 align-top">{formatParamValue(k, valueOf(scope as Dispositif, k), tp, loc)}</td>
-                  <td className="px-4 py-3 align-top"><StatusTag tone={statusTone(PARAM_STATUS[k])}>{t(`params.status.${PARAM_STATUS[k]}`)}</StatusTag></td>
-                  {canEdit ? <td className="px-4 py-3 align-top"><ParamEditor dispositif={scope as Dispositif} paramKey={k} value={valueOf(scope as Dispositif, k)} /></td> : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <div className="mb-8">
+        {scope === 'all' ? (
+          <DataTable<ParamKey>
+            testId="params-compare"
+            caption={t('params.compareCaption')}
+            rows={[...PARAM_KEYS]}
+            rowKey={(k) => k}
+            columns={[
+              { key: 'param', header: t('params.cols.param'), rowHeader: true, render: (k) => t(`params.keys.${k}`) },
+              ...DISPOSITIFS.map((d): Column<ParamKey> => ({ key: d, header: t(`dispositif.${d}`), render: (k) => formatParamValue(k, valueOf(d, k), tp, loc) })),
+            ]}
+          />
+        ) : (
+          <DataTable<ParamKey>
+            testId="params-detail"
+            caption={t('params.detailCaption', { name: t(`dispositif.${scope as Dispositif}`) })}
+            rows={[...PARAM_KEYS]}
+            rowKey={(k) => k}
+            rowData={(k) => ({ 'data-param': k })}
+            columns={[
+              { key: 'param', header: t('params.cols.param'), rowHeader: true, render: (k) => t(`params.keys.${k}`) },
+              { key: 'value', header: t('params.cols.value'), render: (k) => formatParamValue(k, valueOf(scope as Dispositif, k), tp, loc) },
+              { key: 'status', header: t('params.cols.status'), render: (k) => <StatusTag tone={statusTone(PARAM_STATUS[k])}>{t(`params.status.${PARAM_STATUS[k]}`)}</StatusTag> },
+              ...(canEdit
+                ? [{ key: 'actions', header: t('params.cols.actions'), render: (k: ParamKey) => <ParamEditor dispositif={scope as Dispositif} paramKey={k} value={valueOf(scope as Dispositif, k)} /> }]
+                : []),
+            ]}
+          />
+        )}
+      </div>
 
       <section aria-labelledby="h2-title" className="mb-8 flex flex-col gap-3 rounded-card bg-tint-lav p-5 shadow-card" data-testid="h2-example">
         <h2 id="h2-title" className="text-lg font-semibold">{t('params.h2.title')}</h2>
@@ -143,28 +130,20 @@ export default async function DispositifsPage({ params, searchParams }: {
         {shown.length === 0 ? (
           <EmptyState title={t('states.empty.title')} body={t('params.history.empty')} />
         ) : (
-          <div className="overflow-x-auto rounded-card bg-surface shadow-card">
-            <table className="w-full border-collapse text-left text-sm" data-testid="params-history">
-              <caption className="px-4 py-3 text-left text-sm font-semibold text-muted">{t('params.history.caption')}</caption>
-              <thead>
-                <tr className="bg-alt">
-                  {(['date', 'actor', 'dispositif', 'param', 'old', 'new'] as const).map((c) => <th key={c} scope="col" className="px-4 py-2 font-semibold">{t(`params.history.cols.${c}`)}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {shown.map((h) => (
-                  <tr key={h.id} className="even:bg-alt/60">
-                    <td className="px-4 py-3">{formatDate(h.changed_on, loc)}</td>
-                    <td className="px-4 py-3">{t(`profile.${h.actor_profile}`)}</td>
-                    <td className="px-4 py-3">{t(`dispositif.${h.dispositif}`)}</td>
-                    <td className="px-4 py-3">{t(`params.keys.${h.key}`)}</td>
-                    <td className="px-4 py-3">{formatParamValue(h.key, h.old_value, tp, loc)}</td>
-                    <td className="px-4 py-3 font-semibold">{formatParamValue(h.key, h.new_value, tp, loc)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable<ParamChange>
+            testId="params-history"
+            caption={t('params.history.caption')}
+            rows={shown}
+            rowKey={(h) => h.id}
+            columns={[
+              { key: 'date', header: t('params.history.cols.date'), render: (h) => formatDate(h.changed_on, loc) },
+              { key: 'actor', header: t('params.history.cols.actor'), render: (h) => t(`profile.${h.actor_profile}`) },
+              { key: 'dispositif', header: t('params.history.cols.dispositif'), render: (h) => t(`dispositif.${h.dispositif}`) },
+              { key: 'param', header: t('params.history.cols.param'), render: (h) => t(`params.keys.${h.key}`) },
+              { key: 'old', header: t('params.history.cols.old'), render: (h) => formatParamValue(h.key, h.old_value, tp, loc) },
+              { key: 'new', header: t('params.history.cols.new'), render: (h) => <span className="font-semibold">{formatParamValue(h.key, h.new_value, tp, loc)}</span> },
+            ]}
+          />
         )}
       </section>
 

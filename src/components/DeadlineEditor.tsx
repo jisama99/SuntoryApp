@@ -11,6 +11,7 @@ import { addDays } from '@/domain/week';
 import { addMonths, monthOf, monthStart } from '@/domain/working-days';
 import { formatMonth } from '@/lib/format';
 import { Button } from './Button';
+import { useConfirmation } from './Confirmation';
 import { DatePicker } from './pickers/DatePicker';
 import { SelectField } from './SelectField';
 import { StatusTag } from './StatusTag';
@@ -30,6 +31,8 @@ export function DeadlineEditor({ context }: { context: DeadlineContext }) {
   const [entryPreset, setEntryPreset] = useState('');
   const [fixed, setFixed] = useState<string | null>(null);
   const [res, setRes] = useState<{ where: 'preset' | 'entry'; value: string } | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
 
   const months = Array.from({ length: 6 }, (_, i) => addMonths(monthOf(context.today), i + 1));
@@ -40,6 +43,7 @@ export function DeadlineEditor({ context }: { context: DeadlineContext }) {
     startTransition(async () => {
       const r = await setDefaultPresetAction({ locale, preset });
       setRes({ where: 'preset', value: r.status === 'ok' ? 'ok' : sync(r.status === 'refused' ? r.reason : 'invalid') });
+      if (r.status === 'ok') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setRes(null) });
     });
   const saveEntry = () =>
     startTransition(async () => {
@@ -51,6 +55,7 @@ export function DeadlineEditor({ context }: { context: DeadlineContext }) {
         },
       });
       setRes({ where: 'entry', value: r.status === 'ok' ? 'ok' : sync(r.status === 'refused' ? r.reason : 'invalid') });
+      if (r.status === 'ok') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setRes(null) });
     });
 
   const monthLimit = month ? addDays(monthStart(month), -1) : addDays(context.today, 90);

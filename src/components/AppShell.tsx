@@ -72,7 +72,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
         key={item.key}
         href={item.href}
         aria-current={active ? 'page' : undefined}
-        className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-ctl px-1 text-xs ${active ? 'font-semibold text-link' : 'font-medium text-muted'}`}
+        className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-ctl px-1 text-xs ${active ? 'font-semibold text-link' : 'font-medium text-muted'}`}
       >
         <span className={`grid h-7 w-12 place-items-center rounded-full ${active ? 'bg-sel' : ''}`}>
           <Icon icon={MENU_ICONS[item.key]} size="md" />
@@ -88,7 +88,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
   return (
     <div
       data-collapsed={collapsed}
-      className={`min-h-[calc(100vh-40px)] lg:grid ${collapsed ? 'lg:grid-cols-[88px_1fr]' : 'lg:grid-cols-[252px_1fr]'} motion-safe:transition-[grid-template-columns]`}
+      className={`min-h-screen lg:grid ${collapsed ? 'lg:grid-cols-[var(--sidebar-width-collapsed)_1fr]' : 'lg:grid-cols-[var(--sidebar-width)_1fr]'} motion-safe:transition-[grid-template-columns]`}
     >
       <aside id="app-sidebar" className="hidden bg-surface p-4 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
         <div className={`mb-4 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
@@ -119,11 +119,11 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
         </main>
       </div>
 
-      <nav aria-label={labels.mobile} className="fixed inset-x-0 bottom-0 z-40 bg-surface pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_20px_rgb(11_43_58/0.10)] print:hidden lg:hidden">
+      <nav aria-label={labels.mobile} className="fixed inset-x-0 bottom-0 z-40 bg-surface pb-[env(safe-area-inset-bottom)] shadow-bar print:hidden lg:hidden">
         {sheet ? (
           <>
             <button type="button" tabIndex={-1} aria-hidden="true" onClick={() => setSheetAt(null)} className="fixed inset-0 -z-10 cursor-default bg-ink/30" />
-            <div id="mobile-more" role="dialog" aria-label={labels.moreTitle} className="absolute inset-x-2 bottom-full mb-2 max-h-[70vh] overflow-y-auto rounded-card bg-surface p-3 shadow-card">
+            <div id="mobile-more" role="dialog" aria-label={labels.moreTitle} className="absolute inset-x-2 bottom-full mb-2 max-h-(--sheet-max-h) overflow-y-auto rounded-card bg-surface p-3 shadow-card">
               <p className="px-2 pb-1 text-sm font-semibold text-muted">{labels.moreTitle}</p>
               <NavLinks items={rest} label={labels.moreTitle} onNavigate={() => setSheetAt(null)} />
             </div>
@@ -136,7 +136,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
               href="/needs/new"
               aria-label={labels.create}
               title={labels.create}
-              className="mx-1 -mt-5 grid size-14 shrink-0 place-items-center self-start rounded-full bg-primary text-white shadow-card hover:bg-primary-hover"
+              className="mx-1 -mt-5 grid size-14 shrink-0 place-items-center self-start rounded-full bg-primary text-on-fill shadow-card hover:bg-primary-hover"
             >
               <Icon icon={UI_ICONS.plus} size="lg" />
             </Link>
@@ -149,7 +149,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
               aria-expanded={sheet}
               aria-controls="mobile-more"
               onClick={() => setSheetAt(sheet ? null : pathname)}
-              className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-ctl px-1 text-xs ${sheet ? 'font-semibold text-link' : 'font-medium text-muted'}`}
+              className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-ctl px-1 text-xs ${sheet ? 'font-semibold text-link' : 'font-medium text-muted'}`}
             >
               <span className={`grid h-7 w-12 place-items-center rounded-full ${sheet ? 'bg-sel' : ''}`}>
                 <Icon icon={UI_ICONS.more} size="md" />

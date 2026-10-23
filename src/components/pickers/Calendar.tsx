@@ -143,7 +143,7 @@ export function Calendar(props: CalendarProps) {
     new Intl.DateTimeFormat(intl, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
 
   return (
-    <div className="w-[21rem] max-w-full">
+    <div className="w-84 max-w-full">
       <div className="mb-2 flex items-center justify-between gap-2">
         <button
           type="button"
@@ -167,7 +167,7 @@ export function Calendar(props: CalendarProps) {
       </div>
 
       <div ref={grid} role="grid" aria-label={monthLabel.format(new Date(`${month}T00:00:00Z`))} onKeyDown={onKeyDown}>
-        <div role="row" className="grid grid-cols-[2rem_repeat(7,1fr)] items-center text-center text-xs text-muted">
+        <div role="row" className="grid grid-cols-[var(--calendar-week-col)_repeat(7,1fr)] items-center text-center text-xs text-muted">
           <span role="columnheader" title={t('isoWeek')}>
             {t('weekShort')}
           </span>
@@ -182,7 +182,7 @@ export function Calendar(props: CalendarProps) {
           const stored = `${mondayWeek.year}-S${String(mondayWeek.week).padStart(2, '0')}`;
           const weekClosed = props.closedWeeks.includes(stored);
           return (
-            <div key={row[0]} role="row" className="grid grid-cols-[2rem_repeat(7,1fr)] items-center">
+            <div key={row[0]} role="row" className="grid grid-cols-[var(--calendar-week-col)_repeat(7,1fr)] items-center">
               {mode === 'week' ? (
                 <button
                   type="button"
@@ -210,7 +210,7 @@ export function Calendar(props: CalendarProps) {
                 const cls = reason
                   ? 'bg-alt text-muted'
                   : selected
-                    ? 'bg-primary text-white font-semibold'
+                    ? 'bg-primary text-on-fill font-semibold'
                     : inRange
                       ? 'bg-sel text-ink'
                       : d === today
@@ -248,7 +248,7 @@ export function Calendar(props: CalendarProps) {
                     >
                       {Number(d.slice(8))}
                       {holiday ? (
-                        <span aria-hidden="true" className="absolute bottom-0.5 text-[10px] leading-none">
+                        <span aria-hidden="true" className="absolute bottom-0.5 text-xs leading-none">
                           {t('holidayShort')}
                         </span>
                       ) : null}
@@ -261,7 +261,7 @@ export function Calendar(props: CalendarProps) {
         })}
       </div>
 
-      <p className="mt-2 min-h-10 text-sm text-muted" aria-live="polite" data-testid="calendar-reason">
+      <p className="mt-2 min-h-11 text-sm text-muted" aria-live="polite" data-testid="calendar-reason">
         {focusReason ? reasonText(focusReason) : focusHoliday ? t('reason.holiday', { name: t(`holiday.${focusHoliday}`) }) : t('legend')}
       </p>
       <button

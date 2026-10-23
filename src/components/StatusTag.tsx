@@ -19,7 +19,7 @@ export function StatusTag({ tone, children }: { tone: Tone; children: ReactNode 
   const { icon, cls } = TONES[tone];
   const Glyph = UI_ICONS[icon];
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-sm font-semibold ${cls}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${cls}`}>
       <Icon icon={Glyph} size="sm" />
       {children}
     </span>

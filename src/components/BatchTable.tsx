@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { useConfirmation } from './Confirmation';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import type { FindingDto } from '@/app/[locale]/needs/actions';
@@ -75,6 +76,8 @@ export function BatchTable(props: BatchTableProps) {
   const [pasteText, setPasteText] = useState('');
   const [pasteInfo, setPasteInfo] = useState<{ added: number; blank: number; header: boolean } | null>(null);
   const [invalid, setInvalid] = useState(false);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const [draftState, setDraftState] = useState<'idle' | 'saving' | 'saved'>(props.hadDraft ? 'saved' : 'idle');
   const first = useRef(true);
@@ -161,6 +164,16 @@ export function BatchTable(props: BatchTableProps) {
       }
       setLines(nextLines);
       setSaved(nextSaved);
+      if (result.saved > 0) {
+        const added = result.lines.filter((l) => l.status === 'saved').map((l) => l.index);
+        announce(tc('saved'), {
+          undoToken: result.undoToken,
+          onUndo: () => {
+            setSaved((cur) => cur.filter((i) => !added.includes(i)));
+            setLines((cur) => Object.fromEntries(Object.entries(cur).filter(([k]) => !added.includes(Number(k)))));
+          },
+        });
+      }
       setSummaryOpen(false);
       if (result.saved > 0 && result.rejected === 0 && result.needsConfirmation === 0) {
         await clearBatchDraftAction({ locale });
@@ -232,7 +245,7 @@ export function BatchTable(props: BatchTableProps) {
                 type="button"
                 aria-pressed={filter === f}
                 onClick={() => setFilter(f)}
-                className={`min-h-11 rounded-full px-4 text-sm font-semibold ${filter === f ? 'bg-primary text-white' : 'bg-alt text-ink hover:bg-sel'}`}
+                className={`min-h-11 rounded-full px-4 text-sm font-semibold ${filter === f ? 'bg-primary text-on-fill' : 'bg-alt text-ink hover:bg-sel'}`}
               >
                 {t(`result.filter.${f}`)}
               </button>
@@ -435,10 +448,10 @@ export function BatchTable(props: BatchTableProps) {
         ) : (
           <>
             <dl className="grid gap-3 sm:grid-cols-4">
-              <div><dt className="text-sm text-muted-strong">{t('summary.filled')}</dt><dd className="text-2xl font-semibold tabular">{summary.filled}</dd></div>
-              <div><dt className="text-sm text-muted-strong">{t('summary.complete')}</dt><dd className="text-2xl font-semibold tabular">{summary.complete}</dd></div>
-              <div><dt className="text-sm text-muted-strong">{t('summary.hours')}</dt><dd className="text-2xl font-semibold tabular">{summary.weeklyHours}</dd></div>
-              <div><dt className="text-sm text-muted-strong">{t('summary.ignored')}</dt><dd className="text-2xl font-semibold tabular">{summary.ignored}</dd></div>
+              <div><dt className="text-sm text-muted-strong">{t('summary.filled')}</dt><dd className="text-xl font-semibold tabular">{summary.filled}</dd></div>
+              <div><dt className="text-sm text-muted-strong">{t('summary.complete')}</dt><dd className="text-xl font-semibold tabular">{summary.complete}</dd></div>
+              <div><dt className="text-sm text-muted-strong">{t('summary.hours')}</dt><dd className="text-xl font-semibold tabular">{summary.weeklyHours}</dd></div>
+              <div><dt className="text-sm text-muted-strong">{t('summary.ignored')}</dt><dd className="text-xl font-semibold tabular">{summary.ignored}</dd></div>
             </dl>
             {Object.keys(summary.byDispositif).length > 0 ? (
               <p>{(Object.entries(summary.byDispositif) as Array<[Dispositif, number]>).map(([d, n]) => t('summary.byDispositif', { name: td(d), n })).join(' · ')}</p>

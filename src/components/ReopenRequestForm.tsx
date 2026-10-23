@@ -10,6 +10,7 @@ import type { Locale } from '@/domain/types';
 import { addDays } from '@/domain/week';
 import { formatDate, formatIsoWeek, formatMonth } from '@/lib/format';
 import { Button } from './Button';
+import { useConfirmation } from './Confirmation';
 import { DatePicker } from './pickers/DatePicker';
 import { SelectField } from './SelectField';
 import { StatusTag } from './StatusTag';
@@ -31,6 +32,8 @@ export function ReopenRequestForm({ context, closedMonths, closedWeeks, requests
   const [motive, setMotive] = useState('');
   const [until, setUntil] = useState<string | null>(null);
   const [result, setResult] = useState<'ok' | 'invalid' | string | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const options = [
     ...closedMonths.map((m) => ({ value: `month:${m}`, text: t('targetMonth', { month: formatMonth(m, locale) }) })),
@@ -48,6 +51,7 @@ export function ReopenRequestForm({ context, closedMonths, closedWeeks, requests
       const r = await requestReopeningAction({ locale, scope, target: id, motive, desiredUntil: until });
       setResult(r.status === 'ok' ? 'ok' : r.status === 'refused' ? r.reason : 'invalid');
       if (r.status === 'ok') {
+        announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setResult(null) });
         setMotive('');
         setUntil(null);
         setTarget('');

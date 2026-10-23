@@ -7,6 +7,7 @@ import type { ParamKey } from '@/data/schemas';
 import { ENTRY_PROFILES } from '@/domain/types';
 import type { Dispositif, Locale } from '@/domain/types';
 import { Button } from './Button';
+import { useConfirmation } from './Confirmation';
 import { Field } from './Field';
 import { WeekdayPicker } from './pickers/WeekdayPicker';
 import { SelectField } from './SelectField';
@@ -23,6 +24,8 @@ export function ParamEditor({ dispositif, paramKey, value }: { dispositif: Dispo
   const locale = useLocale() as Locale;
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const [d, setD] = useState<Draft>(() => initialDraft(paramKey, value));
   const set = (patch: Draft) => { setD((cur) => ({ ...cur, ...patch })); setResult(null); };
@@ -32,7 +35,10 @@ export function ParamEditor({ dispositif, paramKey, value }: { dispositif: Dispo
     startTransition(async () => {
       const r = await updateParamAction({ locale, dispositif, key: paramKey, value: toValue(paramKey, d) });
       setResult(r.status === 'ok' ? 'ok' : r.status === 'refused' ? r.reason : 'invalid');
-      if (r.status === 'ok') setOpen(false);
+      if (r.status === 'ok') {
+        setOpen(false);
+        announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setResult(null) });
+      }
     });
 
   if (!open) {

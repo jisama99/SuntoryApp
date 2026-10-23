@@ -96,6 +96,13 @@ export function resetDemoState(): void {
   delete globalState.__suntoryDemoState;
 }
 
+/** Photographie des données modifiables, journal exclu : le journal n'est jamais réécrit (D91). */
+const snapshotOf = (st: DemoState): string => JSON.stringify({ ...st, events: undefined, seq: undefined, batchDrafts: undefined });
+type UndoEntry = { actor: ProfileId; before: string; after: string };
+const undoGlobal = globalThis as typeof globalThis & { __suntoryUndo?: Map<string, UndoEntry> };
+const undoStore = (undoGlobal.__suntoryUndo ??= new Map<string, UndoEntry>());
+const UNDO_KEEP = 20;
+
 const WRITE_PROFILES: readonly ProfileId[] = ['rs', 'agency_operator', 'agency_admin'];
 
 function emit(code: EventCode, actor: ProfileId, zoneId: string, needId: string | null, audience: Audience, data: BusinessEvent['data']) {
@@ -534,6 +541,31 @@ export function createMemoryRepository(): Repository {
       }
       const count = (s: BatchLineResult['status']) => lines.filter((l) => l.status === s).length;
       return { lines, saved: count('saved'), rejected: count('rejected'), needsConfirmation: count('needs_confirmation'), ignored: count('ignored') };
+    },
+
+    async withUndo(ctx, write, changed) {
+      const before = snapshotOf(state());
+      const result = await write();
+      const after = snapshotOf(state());
+      if (!changed(result) || before === after) return { result, undoToken: null };
+      const token = crypto.randomUUID();
+      undoStore.set(token, { actor: ctx.profileId, before, after });
+      while (undoStore.size > UNDO_KEEP) undoStore.delete(undoStore.keys().next().value as string);
+      return { result, undoToken: token };
+    },
+
+    async undoWrite(ctx, token) {
+      const entry = undoStore.get(token);
+      if (!entry || entry.actor !== ctx.profileId) return { status: 'refused', reason: entry ? 'forbidden' : 'expired' };
+      const st = state();
+      if (snapshotOf(st) !== entry.after) return { status: 'refused', reason: 'expired' };
+      const { events, seq } = st;
+      const restored = JSON.parse(entry.before) as Partial<DemoState>;
+      Object.assign(st, restored, { events, seq });
+      undoStore.delete(token);
+      const anyZone = (zones.find((z) => z.kind === 'dr') as Zone).id;
+      emit('EV-39', ctx.profileId, anyZone, null, 'agency', { kind: 'undo' });
+      return { status: 'ok' };
     },
 
     async getBatchDraft(ctx) {

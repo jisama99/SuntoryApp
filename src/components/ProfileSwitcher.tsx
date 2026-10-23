@@ -9,7 +9,7 @@ export async function ProfileSwitcher({ profiles, current }: { profiles: DemoPro
   const t = await getTranslations('profile');
   return (
     <details className="relative">
-      <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full bg-alt px-3 text-sm font-semibold marker:hidden">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full bg-alt px-3 text-sm font-semibold marker:hidden">
         <Icon icon={UI_ICONS.profile} size="sm" />
         <span className="text-muted">{t('switcher')} :</span>
         <span>{t(current)}</span>

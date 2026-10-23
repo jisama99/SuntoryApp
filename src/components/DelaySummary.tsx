@@ -3,6 +3,7 @@ import type { Zone } from '@/data/schemas';
 import type { DelayMonth, SectorStatus } from '@/domain/deadline-views';
 import type { Locale } from '@/domain/types';
 import { formatDate, formatMonth } from '@/lib/format';
+import { DataTable } from './DataTable';
 import { FilterTabs } from './FilterTabs';
 import { StatusTag } from './StatusTag';
 import { zoneLabelOnly } from './ZoneLabel';
@@ -47,29 +48,17 @@ export async function DelaySummary({ months, current, keep }: { months: DelayMon
         </Tile>
       </div>
       {month.regions.length > 0 ? (
-        <div className="overflow-x-auto rounded-card bg-surface shadow-card">
-          <table className="w-full border-collapse text-left text-sm">
-            <caption className="px-4 py-3 text-left text-sm font-semibold text-muted">{t('byRegion')}</caption>
-            <thead>
-              <tr className="bg-alt">
-                <th scope="col" className="px-4 py-2 font-semibold">{t('cols.region')}</th>
-                <th scope="col" className="px-4 py-2 text-right font-semibold">{t('status.up_to_date')}</th>
-                <th scope="col" className="px-4 py-2 text-right font-semibold">{t('status.to_follow')}</th>
-                <th scope="col" className="px-4 py-2 text-right font-semibold">{t('status.late')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {month.regions.map((r) => (
-                <tr key={r.zone.id} className="even:bg-alt/60">
-                  <th scope="row" className="px-4 py-3 font-semibold">{label(r.zone)}</th>
-                  <td className="px-4 py-3 text-right tabular-nums">{r.counts.up_to_date}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{r.counts.to_follow}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{r.counts.late}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable<DelayMonth['regions'][number]>
+          caption={t('byRegion')}
+          rows={month.regions}
+          rowKey={(r) => r.zone.id}
+          columns={[
+            { key: 'region', header: t('cols.region'), rowHeader: true, render: (r) => label(r.zone) },
+            { key: 'up_to_date', header: t('status.up_to_date'), numeric: true, render: (r) => r.counts.up_to_date },
+            { key: 'to_follow', header: t('status.to_follow'), numeric: true, render: (r) => r.counts.to_follow },
+            { key: 'late', header: t('status.late'), numeric: true, render: (r) => r.counts.late },
+          ]}
+        />
       ) : null}
       {toFollow.length > 0 ? (
         <div className="flex flex-col gap-2">

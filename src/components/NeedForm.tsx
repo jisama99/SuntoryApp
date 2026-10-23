@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { useConfirmation } from './Confirmation';
 import { useState, useTransition } from 'react';
 import { saveNeedAction } from '@/app/[locale]/needs/actions';
 import type { FindingDto, SaveState } from '@/app/[locale]/needs/actions';
@@ -50,6 +51,8 @@ export function NeedForm(props: NeedFormProps) {
   const locale = useLocale() as Locale;
   const [value, setValue] = useState<NeedFormValue>(props.initial);
   const [result, setResult] = useState<SaveState | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const set = <K extends keyof NeedFormValue>(key: K, v: NeedFormValue[K]) => {
     setValue((cur) => ({ ...cur, [key]: v }));
@@ -82,12 +85,12 @@ export function NeedForm(props: NeedFormProps) {
 
   const submit = (options: { confirm?: boolean; mergeInto?: string; deferToNextMonth?: boolean } = {}) =>
     startTransition(async () => {
-      setResult(
-        await saveNeedAction({
-          locale, input: toInput(value), needId: props.needId, confirm: options.confirm, mergeInto: options.mergeInto,
-          deferToNextMonth: options.deferToNextMonth,
-        }),
-      );
+      const r = await saveNeedAction({
+        locale, input: toInput(value), needId: props.needId, confirm: options.confirm, mergeInto: options.mergeInto,
+        deferToNextMonth: options.deferToNextMonth,
+      });
+      setResult(r);
+      if (r.status === 'saved') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setResult(null) });
     });
 
   const applyFix = (fix: NonNullable<FindingDto['fix']>) => {
@@ -282,7 +285,7 @@ export function NeedForm(props: NeedFormProps) {
             {result.missing.length > 0 ? (
               <p className="text-muted">{t('stillMissing', { fields: result.missing.map((m) => t(`missing.${m}`)).join(', ') })}</p>
             ) : null}
-            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover">
+            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-fill hover:bg-primary-hover">
               {t('goList')}
             </Link>
           </div>

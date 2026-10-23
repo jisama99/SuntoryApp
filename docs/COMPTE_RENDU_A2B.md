@@ -50,6 +50,21 @@ Retour de T. SOEFOU : le menu latéral n'a pas de volet dépliable, il reste en 
 | Captures | 20 vues **à la taille de l'écran** (`shell_*`) : bureau déployé, défilé, replié, sombre ; mobile barre du bas (haut de page, défilé), volet « Plus » ouvert, profil en lecture sans « + », saisie ouverte depuis le « + », en français et en anglais ; les 88 captures pleine page ont été régénérées avec le nouveau gabarit | relues : `shell_desktop_expanded_scrolled_fr`, `shell_desktop_collapsed_params_fr`, `shell_desktop_expanded_top_en`, `shell_desktop_dark_batch_fr`, `shell_mobile_closed_scrolled_fr`, `shell_mobile_more_open_fr`, `shell_mobile_readonly_profile_en`, `shell_mobile_new_need_agency_fr` ; les autres vues `shell_*` ne sont pas relues |
 Le tiroir mobile du premier jet (bouton « Menu » en haut) a été remplacé par la barre du bas à la demande suivante de T. SOEFOU. Les captures de l'A1 et de l'A2a n'ont pas été régénérées : elles montrent l'ancien gabarit.
 
+## 1 quater. Règle 16 (D159) et directives 1 à 7 et 9
+| Directive | Réalisation | Vérification |
+|---|---|---|
+| 1. Jetons | `globals.css` : espacement (pas de 4 px, `--spacing`), six tailles de texte, durées `--duration-fast/base/slow` (150, 200, 250 ms) et boucle de squelette, courbe `--ease-standard`, gabarits (`--sidebar-width`, `--table-max-h`…), couleur `on-fill`, ombre `shadow-bar` ; tout le code TSX réécrit sur ces jetons | `tests/unit/design-tokens.test.ts` (13 tests) échoue sur toute couleur, valeur arbitraire de taille ou de durée, durée Tailwind chiffrée, demi-pas d'espacement, taille de texte hors des six, cible sous 44 px |
+| 2. Transitions | Durée et courbe par défaut posées sur les jetons, `transition-colors` sur boutons, onglets, menu ; coupées sous `prefers-reduced-motion` | Test de durée (150 à 250 ms) et e2e « mouvement réduit » (durée de transition nulle) |
+| 3. Squelettes | `LoadingState` = squelette de page (barres teintées, titre lu par les lecteurs d'écran), plus de roue qui tourne ; `loading.tsx` et `error.tsx` sur chaque route (déjà posés) | Capture `r16_skeleton_*` ; `data-testid="skeleton"` |
+| 4. Confirmation annulable | `ConfirmationProvider` : message vocal (`role=status`), bouton Annuler, focus placé sur le message puis replacé sur l'élément précédent ; branché sur les 10 écritures (besoin, doublon, lot, demande et décision de réouverture, paramètre, échéance, preset, courriel préparé) ; `Repository.withUndo` / `undoWrite` (jeton opaque, valable tant qu'aucune autre écriture n'a eu lieu, même profil, journal conservé, EV-39) | `tests/unit/undo.test.ts` (5), e2e rule16 : message, focus, annulation, retour de l'état |
+| 5. État dans l'URL | Tri (`sort`, `dir`) en plus des filtres, période et onglets, sur la liste des besoins et le calendrier d'échéances ; colonne inconnue ignorée | e2e : lien profond, retour arrière, rechargement |
+| 6. Tableaux mobiles | `DataTable` : cartes empilées sous 640 px avec libellé par valeur, liste de tris, en-tête fixe au-dessus de 640 px (zone défilante limitée à `--table-max-h`, sans défilement imbriqué sur mobile), tri par liens avec `aria-sort` ; 6 tableaux convertis (besoins, calendrier, comparatif, détail, historique, retards par région) | e2e 390 px sans défilement horizontal ; captures `r16_cards_390_*`, `params_compare_*_390` |
+| 7. Cibles, base, feuilles | 44 px (`min-h-11`) partout, police de base 16 px, sélecteurs de date en **feuille plein écran** sous 640 px avec bouton Fermer | e2e : aucune cible interactive sous 44 px sur la page Besoins à 390 px, feuille de 390 × 844 |
+| 9. Navigation | Raccourcis clavier documentés (`?` ouvre la liste, bouton « Raccourcis clavier » en barre d'outils) ; fil d'Ariane et lien d'évitement déjà en place | e2e rule16 ; vue présentation agence (D154) hors périmètre |
+**Police Inter (règle 10) :** déjà chargée **en local** par `@fontsource-variable/inter` (importée dans le layout, servie depuis `/_next/static/media`). Le défaut constaté : `font-family` plaçait les polices système avant Inter, donc Inter n'était pas utilisée sur Mac ni iOS ; `--font-sans` commence maintenant par `'Inter Variable'`. Contrôles : test de source (aucun service de polices) et e2e (police chargée, aucune requête externe, corps à 16 px).
+**Libellés hors glossaire (à valider, section 9 D177) :** le glossaire ne contient aucun terme pour ces gestes, ils sont donc proposés et non validés : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Annulation impossible : une autre modification a eu lieu depuis / Cannot undo: another change was made since, Trier le tableau / Sort the table (tri croissant / décroissant), Raccourcis clavier / Keyboard shortcuts et ses lignes.
+**Écarts honnêtes :** (a) les tableaux d'inputs de la saisie en lot restent des grilles de formulaire, non des tableaux de lecture ; (b) le tri n'est proposé que sur la liste des besoins et le calendrier (les matrices de paramètres n'ont pas d'ordre utile) ; (c) l'annulation est de niveau démonstrateur (instantané de l'état en mémoire), l'étape B devra la refaire par compensation en base ; (d) `Date`/horloge : le délai de la séquence `g` utilise l'horodatage de l'événement clavier ; (e) la colonne Secteur de la liste n'est pas triable (ZoneLabel seul lecteur des libellés de zone).
+
 ## 2. Non réalisé (hors périmètre, conforme au prompt)
 Propositions et décisions, indicateurs, courriels réels (aucun envoi), import Excel, base de données. Pas d'écran d'affectation d'une campagne à un dispositif (P2 est testée au niveau du Repository et affichée en lecture). Pas de chaîne de reports (un report ne se reporte pas). Pas de modification d'un besoin soumis (A3). Événements EV-30 et EV-31 **non émis** : sans planificateur, les alertes sont dérivées à la lecture (voir §4, H-A2b-11).
 
@@ -58,9 +73,9 @@ Propositions et décisions, indicateurs, courriels réels (aucun envoi), import 
 |---|---|
 | `npm run typecheck` | OK, 0 erreur |
 | `npm run lint` | OK, 0 erreur, 0 avertissement |
-| `npm test` | **24 fichiers, 494 tests passés, 1 ignoré** (C3) |
-| `npm run test:e2e` | **56 passés sur 56** (23 de l'A1, 14 de l'A2a, 14 de l'A2b, 5 du gabarit), après `npm run build` automatique |
-| Captures | `npx playwright test --config=playwright.shots.config.ts a2b` : 7 parcours passés, 108 images (88 pleine page + 20 vues à la taille de l'écran), console vide et aucune requête externe vérifiées sur chaque parcours |
+| `npm test` | **26 fichiers, 512 tests passés, 1 ignoré** (C3) |
+| `npm run test:e2e` | **64 passés sur 64** (dont 8 de la règle 16), après `npm run build` |
+| Captures | `npx playwright test --config=playwright.shots.config.ts a2b` : 9 parcours passés, 124 images (88 pleine page + 20 vues à la taille de l'écran), console vide et aucune requête externe vérifiées sur chaque parcours |
 | C1, C2 | Passés (`tests/unit/fixtures-a2b.test.ts` et existants) |
 | C3 | **Non exécuté** : `.denylist.local` absent |
 | C4, C5, C7 | Passés (`tests/unit/guards.test.ts`) |
@@ -69,11 +84,12 @@ Propositions et décisions, indicateurs, courriels réels (aucun envoi), import 
 
 Couverture des critères d'acceptation : P1 à P6 une fois chacune (`dispositif-rules.test.ts`, `a2b-repository.test.ts`), priorité dispositif sur preset avec recul à la veille ouvrée et fériés (`deadlines.test.ts`), refus d'écriture par le Repository après échéance puis rétablissement par la réouverture de l'agence, un CVR ne peut pas rouvrir lui-même, ni aucun autre profil que l'agence administration, audience (aucune alerte agence côté cliente, CVR, DR, RS), lot partiellement invalide qui ne crée que les lignes valides et liste les rejets, aucun événement sans audience.
 
-### Captures `docs/captures/A2b/` (108 images)
+### Captures `docs/captures/A2b/` (124 images, toutes régénérées après la règle 16 ; 16 nouvelles `r16_*`)
 30 vues, en français et en anglais (les vues de la phase 2 en français à 1440 px, hors alertes J-2 et bandeau de réouverture, faits dans les deux langues et largeurs), 1440 et 390 px, clair ; mode sombre sur la liste, le lot, le calendrier et les paramètres. Liste : `list_*`, `form_banner_*`, `calendar_locked_november_rs`, `batch_*` (vide, collé, résumé, résultat avec blocage après échéance), `deadlines_admin`, `params_*`, `alerts_j5_*`, `alerts_j2_rs`, `reopen_*`, `calendar_nonworking_admin`, `params_editor_open_admin`, `params_history_admin`, `deadlines_after_edit_admin`, `*_dark_*`.
 
 **Relues image par image :** `batch_result_blocked_rs_fr_1440`, `calendar_locked_november_rs_fr_1440`, `list_direction_client_fr_1440`, `alerts_j2_rs_fr_1440`, `reopen_request_cvr_fr_1440`, `calendar_nonworking_admin_fr_1440`, `params_dark_admin_fr_1440`, `batch_summary_rs_en_1440` (relue avant la correction du séparateur « Permanent : 3 », régénérée depuis sans nouvelle relecture), ainsi que les premiers aperçus du lot, de la liste, du calendrier et des paramètres (régénérés depuis). `batch_result_blocked_rs_fr_390` : **relue en partie seulement** (haut de page et début de la ligne rejetée, découpe de 1 600 px sur 6 335).
-**Non relues (environ 78 images) :** générées sans erreur, console vide, aucune requête externe, mais pas parcourues une à une. Les captures à 390 px d'écrans longs et les versions anglaises hors `batch_summary` sont à parcourir par T. SOEFOU.
+**Relues après la règle 16 (cette passe) :** `r16_sort_desktop_1440_fr/en`, `r16_sort_dark_1440_en`, `r16_cards_390_fr/en`, `r16_confirmation_1440_fr/en`, `r16_confirmation_390_fr/en`, `r16_picker_sheet_390_fr/en`, `r16_shortcuts_1440_fr/en`, `r16_skeleton_1440_fr/en`, `params_compare_admin_fr_390` (avant et après correction du défilement imbriqué), `params_second_placement_admin_en_390`, `deadlines_admin_fr_390`, `deadlines_dark_admin_en_1440`, `params_history_admin_fr_1440`, `list_dark_rs_fr_1440`, `batch_summary_rs_fr_390`, `alerts_j5_agency_admin_en_390`. Constats : barre du bas visible au milieu des captures pleine page (artefact de la barre fixe, pas un défaut) ; en-tête « Heures par semaine » sur trois lignes en anglais à 1440 px.
+**Non relues (environ 95 images, y compris celles ci-dessus des relectures antérieures, régénérées depuis) :** générées sans erreur, console vide, aucune requête externe, mais pas parcourues une à une. Les captures à 390 px d'écrans longs et les versions anglaises hors `batch_summary` sont à parcourir par T. SOEFOU.
 
 ## 4. Hypothèses d'interprétation à valider (non des décisions)
 | N° | Hypothèse appliquée |
@@ -126,20 +142,23 @@ C3 et C8 ; essais sur Mac ; navigateurs autres que Chromium ; lecteur d'écran r
 10. Forfait kilométrique fictif de 10,00 € HT pour le démonstrateur : valeur à garder ou à laisser « Non chiffré » ?
 
 ## 9. Mise à jour du registre proposée (non inscrite dans `docs/DECISIONS.md`)
-Numéros proposés à partir de D153, à attribuer par T. SOEFOU.
+D153 à D163 sont déjà pris sur `main` (budget, règles 14 à 16, glossaire, directives). Numéros proposés **à partir de D164**, à attribuer par T. SOEFOU ; les renvois internes de ce compte rendu à « D153 à D163 » désignent ces propositions, pas les décisions de `main`.
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
-| D153 | Jours ouvrés des échéances | Lundi à vendredi hors fériés, distincts des jours non ouvrés de mission (D145) | Proposée (H-A2b-1) |
-| D154 | Mois cible et blocage | Mois du premier jour de la première période ; blocage applicable à tout mois dont l'échéance est passée, réouverture seule issue | Proposée (H-A2b-2, 3), arbitrage question 2 |
-| D155 | Fenêtre de saisie du dispositif | Borne la clôture, saisie anticipée permise, lecture A par défaut (Q-N9-1) | Proposée (H-A2b-4) |
-| D156 | Priorité des échéances | Paramètre du dispositif avant date fixe avant preset par défaut | Proposée (H-A2b-7), précise D82 et D128 |
-| D157 | Report sur M+1 | Dates conservées, marque « reportée », jugé sur M+1, sans chaîne | Proposée (H-A2b-9) |
-| D158 | Réouverture | Zone obligatoire, durée par date de fin (90 jours au plus), décision réservée à l'agence administration | Proposée (H-A2b-10), précise D147 |
-| D159 | Alertes d'échéance dérivées | Cascade 5, 2, 0 jours ouvrés, J-2 et jour J réservés aux périmètres en retard, bilan chiffré d'audience agence ; EV-30 et EV-31 reportés aux automatisations (A4a) | Proposée (H-A2b-11, 12) |
-| D160 | Saisie en lot | Ligne incomplète rejetée, alerte confirmée par ligne, brouillon automatique côté données, collage avec explications | Proposée (H-A2b-13, 14) |
-| D161 | Courriels préparés | File à valider sans envoi, un message par responsable concerné, résumé du lundi sans chiffre | Proposée (précise D86 et D94) |
-| D162 | Journal | EV-04 (agence), EV-32 et EV-33 (les deux), **EV-38 hors catalogue** (agence) à inscrire au doc 26 | Proposée (H-A2b-15) |
-| D163 | Navigation web | Règle 14 appliquée en A2b ; contrôles d'accès dans des `layout.tsx` au-dessus des états de chargement pour garder le 404 | Constat technique, à confirmer |
+| D164 | Jours ouvrés des échéances | Lundi à vendredi hors fériés, distincts des jours non ouvrés de mission (D145) | Proposée (H-A2b-1) |
+| D165 | Mois cible et blocage | Mois du premier jour de la première période ; blocage applicable à tout mois dont l'échéance est passée, réouverture seule issue | Proposée (H-A2b-2, 3), arbitrage question 2 |
+| D166 | Fenêtre de saisie du dispositif | Borne la clôture, saisie anticipée permise, lecture A par défaut (Q-N9-1) | Proposée (H-A2b-4) |
+| D167 | Priorité des échéances | Paramètre du dispositif avant date fixe avant preset par défaut | Proposée (H-A2b-7), précise D82 et D128 |
+| D168 | Report sur M+1 | Dates conservées, marque « reportée », jugé sur M+1, sans chaîne | Proposée (H-A2b-9) |
+| D169 | Réouverture | Zone obligatoire, durée par date de fin (90 jours au plus), décision réservée à l'agence administration | Proposée (H-A2b-10), précise D147 |
+| D170 | Alertes d'échéance dérivées | Cascade 5, 2, 0 jours ouvrés, J-2 et jour J réservés aux périmètres en retard, bilan chiffré d'audience agence ; EV-30 et EV-31 reportés aux automatisations (A4a) | Proposée (H-A2b-11, 12) |
+| D171 | Saisie en lot | Ligne incomplète rejetée, alerte confirmée par ligne, brouillon automatique côté données, collage avec explications | Proposée (H-A2b-13, 14) |
+| D172 | Courriels préparés | File à valider sans envoi, un message par responsable concerné, résumé du lundi sans chiffre | Proposée (précise D86 et D94) |
+| D173 | Journal | EV-04 (agence), EV-32 et EV-33 (les deux), **EV-38 hors catalogue** (agence) à inscrire au doc 26 | Proposée (H-A2b-15) |
+| D174 | Navigation web | Règle 14 appliquée en A2b ; contrôles d'accès dans des `layout.tsx` au-dessus des états de chargement pour garder le 404 | Constat technique, à confirmer |
+| D175 | Annulation après écriture | Jeton opaque par écriture, une seule annulation à la fois tant qu'aucune autre écriture n'a eu lieu, même profil ; le journal n'est jamais réécrit ; **EV-39 hors catalogue** (annulation) à inscrire au doc 26 | Proposée (règle 16, directive 4) |
+| D176 | Raccourcis clavier | `?` liste, `g` puis `h d n a s` pour naviguer, `c` nouveau besoin ; inactifs dans les champs, aucun n'écrit | Proposée (directive 9) |
+| D177 | Ajouts de libellés hors glossaire | Voir section 1 quater : Annuler / Undo, Enregistré / Saved, Fermer / Close, Modification annulée / Change undone, Trier le tableau / Sort the table, Raccourcis clavier / Keyboard shortcuts | À valider (le glossaire est le seul référentiel) |
 
 ## 10. Suite
 Pas de chaînage vers A3. Gabarit : la préférence du menu replié n'est pas une décision du registre (proposition à valider avec le reste). Avant A3 : réponses aux questions 1 à 4 (elles pilotent les dates et les règles par défaut), validation écrite de ce compte rendu, relecture des captures non parcourues.

@@ -73,6 +73,12 @@ export interface Repository {
   /** Secteurs du périmètre désignés par leur code collé d'un tableur : le code ne quitte jamais la couche données autrement. */
   resolveSectorCodes(ctx: AccessContext, codes: string[]): Promise<Array<{ id: string; code: string }>>;
   saveNeedsBatch(ctx: AccessContext, rows: BatchRow[], options?: BatchOptions): Promise<BatchResult>;
+  /**
+   * Exécute une écriture et garde de quoi l'annuler (D159). Le jeton n'est rendu que si `changed` juge l'écriture
+   * effective. L'annulation n'est possible que tant qu'aucune autre écriture n'a eu lieu depuis.
+   */
+  withUndo<T>(ctx: AccessContext, write: () => Promise<T>, changed: (result: T) => boolean): Promise<{ result: T; undoToken: string | null }>;
+  undoWrite(ctx: AccessContext, token: string): Promise<MutationResult<'expired' | 'forbidden'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;

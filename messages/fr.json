@@ -249,7 +249,8 @@
       "all_saints": "Toussaint",
       "armistice": "Armistice 1918",
       "christmas": "Noël"
-    }
+    },
+    "close": "Fermer"
   },
   "weekdays": {
     "monToFri": "Lun à ven",
@@ -807,5 +808,28 @@
     },
     "mondaySummary": "Résumé du lundi {date} pour la cliente",
     "reminder": "Rappel du {date} pour la saisie de {month} ({n, plural, one {# secteur concerné} other {# secteurs concernés}})"
+  },
+  "confirmation": {
+    "region": "Confirmation",
+    "undo": "Annuler",
+    "undone": "Modification annulée",
+    "expired": "Annulation impossible : une autre modification a eu lieu depuis.",
+    "close": "Fermer",
+    "saved": "Enregistré"
+  },
+  "table": {
+    "sortLabel": "Trier le tableau",
+    "asc": "tri croissant",
+    "desc": "tri décroissant"
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "intro": "Actifs hors des champs de saisie. Aucun n'enregistre ni ne valide quoi que ce soit.",
+    "help": "Afficher cette liste",
+    "create": "Nouveau besoin",
+    "goTo": "Aller à : {page}",
+    "close": "Fermer cette liste",
+    "closeButton": "Fermer",
+    "hint": "Raccourcis clavier"
   }
 }

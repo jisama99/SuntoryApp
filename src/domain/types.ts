@@ -65,8 +65,9 @@ export type PositionStatus = (typeof POSITION_STATUSES)[number];
  * Événements métier émis par les lots A2a et A2b (catalogue du doc 26 §3, D91).
  * EV-04 : saisie bloquée ou reportée. EV-32 et EV-33 : réouverture demandée puis décidée.
  * EV-38 : paramètre d'échéance ou de dispositif modifié, code proposé hors catalogue (à inscrire au doc 26).
+ * EV-39 : écriture annulée par son auteur juste après coup, code proposé hors catalogue ; l'événement annulé reste au journal.
  */
-export const EVENT_CODES = ['EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-32', 'EV-33', 'EV-38'] as const;
+export const EVENT_CODES = ['EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-32', 'EV-33', 'EV-38', 'EV-39'] as const;
 export type EventCode = (typeof EVENT_CODES)[number];
 
 /** Jours de la semaine : 1 = lundi … 7 = dimanche. */

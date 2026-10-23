@@ -29,7 +29,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
           <li key={c.href} className="flex flex-col gap-3 rounded-card bg-surface p-5 shadow-card">
             <h2 className="text-lg font-semibold">{c.title}</h2>
             <p className="text-muted">{c.body}</p>
-            <Link href={c.href} className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover">
+            <Link href={c.href} className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-fill hover:bg-primary-hover">
               {t('settings.open')}
             </Link>
           </li>

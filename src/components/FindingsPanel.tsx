@@ -28,7 +28,7 @@ export function FindingsPanel({ findings, onFix }: {
         <li key={`${f.rule}-${f.periodNo ?? 0}-${i}`} data-rule={f.rule} data-gravity={f.gravity} className="flex flex-col gap-2 rounded-card bg-surface p-4 shadow-card">
           <div className="flex flex-wrap items-center gap-2">
             <StatusTag tone={TONE[f.gravity]}>{tg(f.gravity)}</StatusTag>
-            <span className="rounded-md bg-alt px-1.5 font-mono text-xs text-muted">{f.rule}</span>
+            <span className="rounded-md bg-alt px-2 font-mono text-xs text-muted">{f.rule}</span>
             {f.periodNo ? <span className="text-sm text-muted">{tf('periodN', { n: f.periodNo })}</span> : null}
           </div>
           <p>{t(f.rule, f.params)}</p>

@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { DataTable, parseSort, sortRows } from '@/components/DataTable';
+import type { Column } from '@/components/DataTable';
 import { DeadlineEditor } from '@/components/DeadlineEditor';
 import { FilterTabs } from '@/components/FilterTabs';
 import { OutboxButtons } from '@/components/OutboxButtons';
@@ -69,6 +71,21 @@ export default async function DeadlinesPage({ params, searchParams }: {
     r.status.state === 'closed' ? t('deadline.state.closed') : r.status.threshold === null ? t('deadline.state.open') : r.status.threshold === 0 ? t('deadline.stage.zero') : t('deadline.stage.n', { n: r.status.threshold });
   const sourceText = (r: DeadlineRow) => (r.deadline.source === 'preset' ? `${t('deadline.source.preset')} · ${t(`deadline.preset.${r.deadline.preset ?? deadline.settings.default_preset}`)}` : t(`deadline.source.${r.deadline.source}`));
 
+  const calendarColumns: Column<DeadlineRow>[] = [
+    { key: 'month', header: t('deadline.calendar.cols.month'), rowHeader: true, render: (r) => formatMonth(r.month, loc), sortValue: (r) => r.month },
+    { key: 'type', header: t('deadline.calendar.cols.type'), render: (r) => `${t(`deadline.type.${r.type}`)}${r.dispositif ? ` · ${t(`dispositif.${r.dispositif}`)}` : ''}`, sortValue: (r) => r.type },
+    { key: 'rule', header: t('deadline.calendar.cols.rule'), render: sourceText },
+    { key: 'date', header: t('deadline.calendar.cols.date'), render: (r) => <span className="tabular-nums">{formatDate(r.deadline.date, loc)}</span>, sortValue: (r) => r.deadline.date },
+    {
+      key: 'window', header: t('deadline.calendar.cols.window'),
+      render: (r) => (r.deadline.opensOn ? t('deadline.banner.window', { from: formatDate(r.deadline.opensOn, loc), to: formatDate(r.deadline.date, loc) }) : t('deadline.calendar.noWindow')),
+    },
+    { key: 'state', header: t('deadline.calendar.cols.state'), render: (r) => <StatusTag tone={stageTone(r)}>{stageText(r)}</StatusTag> },
+  ];
+  const sort = parseSort({ sort: one('sort'), dir: one('dir') }, calendarColumns);
+  const keepSort: Record<string, string> = sort ? { sort: sort.key, dir: sort.dir } : {};
+  const sortHref = (key: string, dir: 'asc' | 'desc') => `/settings/deadlines?${new URLSearchParams({ ...keepSpan, ...keepScope, sort: key, dir }).toString()}`;
+
   const closedMonths = [...new Set(bannerRows(deadline, null, null).closed.map((r) => r.month))];
   const closedWeeks = (await repository.getWeekClosures(ctx)).map((w) => w.week).filter((w) => !deadline.reopenings.some((r) => r.scope === 'week' && r.target === w && r.expires_on >= deadline.today));
   const pending = requests.filter((r) => r.status === 'pending');
@@ -86,32 +103,21 @@ export default async function DeadlinesPage({ params, searchParams }: {
 
       <section aria-labelledby="cal-title" className="mb-8 flex flex-col gap-4">
         <h2 id="cal-title" className="text-lg font-semibold">{t('deadline.calendar.title')}</h2>
-        <FilterTabs label={t('deadline.calendar.scope')} basePath="/settings/deadlines" param="dispositif" current={scope} keep={keepSpan}
+        <FilterTabs label={t('deadline.calendar.scope')} basePath="/settings/deadlines" param="dispositif" current={scope} keep={{ ...keepSpan, ...keepSort }}
           items={SCOPES.map((s) => ({ value: s, text: s === 'all' ? t('params.allDispositifs') : s === 'global' ? t('deadline.calendar.global') : t(`dispositif.${s}`) }))} />
-        <FilterTabs label={t('deadline.calendar.span')} basePath="/settings/deadlines" param="months" current={span} keep={keepScope}
+        <FilterTabs label={t('deadline.calendar.span')} basePath="/settings/deadlines" param="months" current={span} keep={{ ...keepScope, ...keepSort }}
           items={SPANS.map((s) => ({ value: s, text: t('deadline.calendar.months', { n: Number(s) }) }))} />
-        <div className="overflow-x-auto rounded-card bg-surface shadow-card">
-          <table className="w-full border-collapse text-left text-sm" data-testid="deadline-table">
-            <caption className="px-4 py-3 text-left text-sm font-semibold text-muted">{t('deadline.calendar.caption')}</caption>
-            <thead>
-              <tr className="bg-alt">
-                {(['month', 'type', 'rule', 'date', 'window', 'state'] as const).map((c) => <th key={c} scope="col" className="px-4 py-2 font-semibold">{t(`deadline.calendar.cols.${c}`)}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={`${r.month}-${r.type}-${r.dispositif}`} className="even:bg-alt/60" data-rule-source={r.deadline.source}>
-                  <th scope="row" className="px-4 py-3 font-semibold">{formatMonth(r.month, loc)}</th>
-                  <td className="px-4 py-3">{t(`deadline.type.${r.type}`)}{r.dispositif ? ` · ${t(`dispositif.${r.dispositif}`)}` : ''}</td>
-                  <td className="px-4 py-3">{sourceText(r)}</td>
-                  <td className="px-4 py-3 tabular-nums">{formatDate(r.deadline.date, loc)}</td>
-                  <td className="px-4 py-3">{r.deadline.opensOn ? t('deadline.banner.window', { from: formatDate(r.deadline.opensOn, loc), to: formatDate(r.deadline.date, loc) }) : t('deadline.calendar.noWindow')}</td>
-                  <td className="px-4 py-3"><StatusTag tone={stageTone(r)}>{stageText(r)}</StatusTag></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable<DeadlineRow>
+          testId="deadline-table"
+          caption={t('deadline.calendar.caption')}
+          columns={calendarColumns}
+          rows={sortRows(rows, calendarColumns, sort)}
+          rowKey={(r) => `${r.month}-${r.type}-${r.dispositif}`}
+          rowData={(r) => ({ 'data-rule-source': r.deadline.source })}
+          sort={sort}
+          sortHref={sortHref}
+          sortLabels={{ label: t('table.sortLabel'), asc: t('table.asc'), desc: t('table.desc') }}
+        />
       </section>
 
       {canEdit ? (

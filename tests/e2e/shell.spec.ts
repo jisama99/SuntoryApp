@@ -36,7 +36,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
       const r = el.getBoundingClientRect();
       return { top: Math.round(r.top), bottom: Math.round(r.bottom) };
     });
-    expect(box.top).toBe(0);
+    expect(Math.abs(box.top)).toBe(0);
     expect(box.bottom).toBeGreaterThanOrEqual(899);
   });
 
@@ -45,6 +45,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
     await setProfile(context, 'rs');
     await page.goto('/fr/needs');
     await expect(page.locator('#app-sidebar')).toBeHidden();
+    await expect(page.getByRole('table', { name: 'Besoins de votre périmètre' })).toBeVisible();
     const bar = page.getByRole('navigation', { name: 'Navigation mobile' });
     await expect(bar).toBeVisible();
     // La barre reste collée au bas de l'écran pendant le défilement.
