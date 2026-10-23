@@ -42,3 +42,4 @@ data-local/
 
 # Fichiers incrémentaux TypeScript
 *.tsbuildinfo
+docs/demo-credentials.md
