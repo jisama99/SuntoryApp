@@ -263,3 +263,10 @@ Voir la section 6 du document 14.
 | D116 | Référentiels de livraison | Accessibilité (WCAG/RGAA) et niveau de sécurité (ASVS) à fixer avec Impact avant la fin de l'étape A | Validée (point ouvert enregistré) le 23/10/2026 | Impact |
 | D117 | Signature des livrables externes | Profil **FREELANCE** pour le dossier de stack et de livraison | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
 D107 et D108 restent **proposées**.
+
+### Direction visuelle du 23/10/2026 (A1 bis)
+
+| N° | Sujet | Décision | Statut | À confirmer par |
+|---|---|---|---|---|
+| D123 | Direction visuelle | Rapport éditorial clair, finition proche d'Apple : fond clair, cartes à ombre diffuse et bordure discrète, pile typographique système (SF Pro sur Apple, Inter en repli local), chiffres tabulaires, une couleur dominante dans les graphiques, aucun style « IA » (dégradés, étincelles, cadres anguleux). Modèle de page rapport ajouté à la bibliothèque de composants | Validée par T. SOEFOU le 23/10/2026 (recommandations acceptées) | T. SOEFOU, Impact |
+| D124 | Mode sombre | **Conservé** (écart avec la recommandation de l'exclure en v1) : choix Système, Clair ou Sombre, mémorisé dans le cookie `demo_theme`, appliqué côté serveur sans flash ; contrastes WCAG testés dans les deux modes | Décidée par T. SOEFOU le 23/10/2026 | T. SOEFOU |

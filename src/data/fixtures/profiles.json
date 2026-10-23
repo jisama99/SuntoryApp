@@ -1,0 +1,74 @@
+[
+  {
+    "id": "direction_client",
+    "side": "client",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Ulysse",
+    "is_demo": true
+  },
+  {
+    "id": "dr_client",
+    "side": "client",
+    "scope": {
+      "kind": "dr",
+      "ids": [
+        "1cf08936-8d48-4257-9eba-3ab84fe0ed99"
+      ]
+    },
+    "first_name": "Amel",
+    "is_demo": true
+  },
+  {
+    "id": "cvr_client",
+    "side": "client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "63a9516d-798d-410f-a0fe-03496a86b1f7"
+      ]
+    },
+    "first_name": "Bastien",
+    "is_demo": true
+  },
+  {
+    "id": "rs",
+    "side": "client",
+    "scope": {
+      "kind": "rs",
+      "ids": [
+        "f225f950-c5f7-4156-89ae-a92334ac9263"
+      ]
+    },
+    "first_name": "Clémence",
+    "is_demo": true
+  },
+  {
+    "id": "agency_operator",
+    "side": "agency",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Valentin",
+    "is_demo": true
+  },
+  {
+    "id": "agency_admin",
+    "side": "agency",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Zoé",
+    "is_demo": true
+  },
+  {
+    "id": "provider_admin",
+    "side": "provider",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": null,
+    "is_demo": true
+  }
+]

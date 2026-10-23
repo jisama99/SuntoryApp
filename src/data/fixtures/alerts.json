@@ -1,0 +1,101 @@
+[
+  {
+    "id": "a04833d4-97cd-441e-8f2d-f2b4b516bd46",
+    "audience": "agency",
+    "severity": "attention",
+    "message_key": "late_proposal_internal",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "created_at": "2026-10-21",
+    "is_demo": true
+  },
+  {
+    "id": "76dcbf5f-ce89-4a9a-b825-9be462439a19",
+    "audience": "agency",
+    "severity": "risk",
+    "message_key": "incomplete_costing",
+    "zone_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "created_at": "2026-10-20",
+    "is_demo": true
+  },
+  {
+    "id": "02c094d7-8fc9-4ab5-b382-41ffe07aa4fc",
+    "audience": "agency",
+    "severity": "attention",
+    "message_key": "import_quality",
+    "zone_id": null,
+    "created_at": "2026-10-22",
+    "is_demo": true
+  },
+  {
+    "id": "ae0a188d-ea5f-4820-832a-4dbf6993a0de",
+    "audience": "agency",
+    "severity": "info",
+    "message_key": "technical_sync",
+    "zone_id": null,
+    "created_at": "2026-10-22",
+    "is_demo": true
+  },
+  {
+    "id": "97e4b088-a002-4a96-9e7c-84e37237bb94",
+    "audience": "agency",
+    "severity": "risk",
+    "message_key": "cost_threshold",
+    "zone_id": "d87ca0e1-f161-4c58-8794-fbafdd7aacb3",
+    "created_at": "2026-10-19",
+    "is_demo": true
+  },
+  {
+    "id": "f81406e6-17e3-4c8a-8090-c4dbbe0be235",
+    "audience": "both",
+    "severity": "attention",
+    "message_key": "deadline_d5",
+    "zone_id": null,
+    "created_at": "2026-10-23",
+    "is_demo": true
+  },
+  {
+    "id": "e54cdc30-6082-453b-ba2a-5ed51717bdab",
+    "audience": "both",
+    "severity": "risk",
+    "message_key": "deadline_d2",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "created_at": "2026-10-23",
+    "is_demo": true
+  },
+  {
+    "id": "557e8c10-9f9f-4a82-93d0-1fe975c51d89",
+    "audience": "both",
+    "severity": "info",
+    "message_key": "week_53_check",
+    "zone_id": null,
+    "created_at": "2026-10-18",
+    "is_demo": true
+  },
+  {
+    "id": "39e133ca-5d43-4e76-820e-e5a5965ccaef",
+    "audience": "both",
+    "severity": "attention",
+    "message_key": "need_to_confirm",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "created_at": "2026-10-22",
+    "is_demo": true
+  },
+  {
+    "id": "5706ec3e-8019-4433-a564-32fd8183a9fb",
+    "audience": "client",
+    "severity": "attention",
+    "message_key": "proposal_awaiting_decision",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "created_at": "2026-10-21",
+    "is_demo": true
+  },
+  {
+    "id": "ca238718-f545-427b-812b-12da6b5fd7cb",
+    "audience": "client",
+    "severity": "info",
+    "message_key": "client_decision_pending",
+    "zone_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "created_at": "2026-10-20",
+    "is_demo": true
+  }
+]

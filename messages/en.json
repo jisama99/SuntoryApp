@@ -1,0 +1,182 @@
+{
+  "app": {
+    "name": "Suntory steering platform",
+    "skip": "Skip to main content"
+  },
+  "banner": {
+    "demo": "DEMO DATA",
+    "note": "Demonstrator: no real data is used."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "open": "Menu"
+  },
+  "locale": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
+  },
+  "profile": {
+    "switcher": "Simulated profile",
+    "note": "Simulation for the demonstration, this is not a sign-in.",
+    "current": "Current profile",
+    "direction_client": "Client leadership",
+    "dr_client": "Client DR",
+    "cvr_client": "Client CVR",
+    "rs": "RS",
+    "agency_operator": "Agency (operator)",
+    "agency_admin": "Agency (administrator)",
+    "provider_admin": "Provider (technical administrator)"
+  },
+  "menu": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "needs": "Needs",
+    "proposals": "Proposals",
+    "field": "Field",
+    "budget": "Budget",
+    "alerts": "Alerts",
+    "settings": "Settings",
+    "admin": "Administration"
+  },
+  "greeting": {
+    "named": "Hello {name}",
+    "anonymous": "Hello"
+  },
+  "home": {
+    "date": "{date}, week {week}",
+    "scope": {
+      "title": "Your scope",
+      "all": "All zones of the mission",
+      "empty": "No zone in this scope."
+    },
+    "alerts": {
+      "title": "Recent alerts",
+      "empty": "No alert for your scope.",
+      "all": "See all alerts"
+    }
+  },
+  "role": {
+    "direction_client": "Summary of your scope",
+    "dr_client": "Your DR",
+    "cvr_client": "Your CVR",
+    "rs": "Your sector",
+    "agency_operator": "Mission needs and resources",
+    "agency_admin": "Mission and settings",
+    "provider_admin": "Technical administration of the demonstration"
+  },
+  "placeholder": {
+    "title": "Screen coming soon",
+    "body": "This screen will be built in a later work package. No function is available here for now."
+  },
+  "zone": {
+    "responsible": "in charge",
+    "code": "code",
+    "kind": {
+      "dr": "DR",
+      "cvr": "CVR",
+      "rs": "RS"
+    }
+  },
+  "alerts": {
+    "severity": {
+      "info": "Information",
+      "attention": "Attention",
+      "risk": "Risk"
+    },
+    "audience": {
+      "agency": "Agency only",
+      "client": "Visible to the client",
+      "both": "Agency and client"
+    },
+    "text": {
+      "late_proposal_internal": "An internal proposal is late in preparation.",
+      "incomplete_costing": "The costing of a need is incomplete.",
+      "import_quality": "A data import contains rows to check.",
+      "technical_sync": "The technical demonstration sync is complete.",
+      "cost_threshold": "An internal cost threshold is getting close.",
+      "deadline_d5": "The monthly entry deadline is in 5 days.",
+      "deadline_d2": "The monthly entry deadline is in 2 days for this sector.",
+      "week_53_check": "The year 2026 has 53 weeks: check the needs that span the year end.",
+      "need_to_confirm": "A need is waiting for your confirmation.",
+      "proposal_awaiting_decision": "A proposal is waiting for a client decision.",
+      "client_decision_pending": "A client decision is pending for your scope."
+    }
+  },
+  "states": {
+    "empty": {
+      "title": "Nothing to show",
+      "body": "No item matches for now."
+    },
+    "loading": {
+      "title": "Loading",
+      "body": "The data is on its way."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "body": "The operation did not complete. No data was changed."
+    },
+    "conflict": {
+      "title": "Version conflict",
+      "body": "Someone changed this item while you were editing. Choose the version to keep."
+    },
+    "retry": "Try again",
+    "keepMine": "Keep my version",
+    "keepTheirs": "Use the saved version"
+  },
+  "gallery": {
+    "title": "Component library",
+    "intro": "Visual check page for work package A1, reserved to the technical administrator.",
+    "buttons": "Buttons",
+    "primary": "Primary action",
+    "secondary": "Secondary action",
+    "ghost": "Quiet action",
+    "disabled": "Unavailable action",
+    "fields": "Fields",
+    "fieldLabel": "Field label",
+    "fieldHint": "Entry help, always visible.",
+    "fieldErrorLabel": "Field with an error",
+    "fieldError": "The value entered is not valid.",
+    "tags": "Status tags",
+    "tagNeutral": "Draft",
+    "tagInfo": "Information",
+    "tagOk": "Approved",
+    "tagAttention": "To handle",
+    "tagRisk": "Late",
+    "tagImportant": "Priority",
+    "table": "Table",
+    "tableCaption": "Table example (demonstration values)",
+    "colName": "Item",
+    "colStatus": "Status",
+    "colValue": "Value",
+    "rowA": "Demonstration item A",
+    "rowB": "Demonstration item B",
+    "states": "Screen states",
+    "icons": "Menu icons",
+    "report": {
+      "kicker": "Demo report",
+      "headline": "The conclusion title states the result in one sentence",
+      "kpi1": "Indicator 1",
+      "kpi1Tag": "Stable",
+      "kpi2": "Indicator 2",
+      "kpi2Tag": "Target met",
+      "kpi3": "Indicator 3",
+      "kpi3Tag": "To handle",
+      "chart": "Breakdown by series (demo values)",
+      "series": {
+        "a": "Series A",
+        "b": "Series B",
+        "c": "Series C",
+        "d": "Series D"
+      },
+      "note": "Reading note: the highlighted series uses the main color, the others stay grey."
+    },
+    "reportTitle": "Report page template"
+  },
+  "theme": {
+    "label": "Appearance",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

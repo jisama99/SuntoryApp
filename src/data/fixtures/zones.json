@@ -1,0 +1,212 @@
+[
+  {
+    "id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "kind": "dr",
+    "code": "DR-ALPHA",
+    "parent_id": null,
+    "label_fr": "Zone Nord-Test",
+    "label_en": "North Test Zone",
+    "responsible_name": "Amel Démo",
+    "is_demo": true
+  },
+  {
+    "id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "kind": "cvr",
+    "code": "CVR-ZV01",
+    "parent_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "label_fr": "Nord-Test 1",
+    "label_en": "North Test 1",
+    "responsible_name": "Bastien Démo",
+    "is_demo": true
+  },
+  {
+    "id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "kind": "rs",
+    "code": "RS-HRF1",
+    "parent_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "label_fr": "Secteur Nord-Test 1.1",
+    "label_en": "Sector North Test 1.1",
+    "responsible_name": "Clémence Démo",
+    "is_demo": true
+  },
+  {
+    "id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "kind": "rs",
+    "code": "RS-5LL0",
+    "parent_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "label_fr": "Secteur Nord-Test 1.2",
+    "label_en": "Sector North Test 1.2",
+    "responsible_name": "Darius Démo",
+    "is_demo": true
+  },
+  {
+    "id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "kind": "cvr",
+    "code": "CVR-WY02",
+    "parent_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "label_fr": "Nord-Test 2",
+    "label_en": "North Test 2",
+    "responsible_name": "Élise Démo",
+    "is_demo": true
+  },
+  {
+    "id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "kind": "rs",
+    "code": "RS-5WN4",
+    "parent_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "label_fr": "Secteur Nord-Test 2.1",
+    "label_en": "Sector North Test 2.1",
+    "responsible_name": "Farid Démo",
+    "is_demo": true
+  },
+  {
+    "id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "kind": "rs",
+    "code": "RS-BK7G",
+    "parent_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "label_fr": "Secteur Nord-Test 2.2",
+    "label_en": "Sector North Test 2.2",
+    "responsible_name": "Gaëlle Démo",
+    "is_demo": true
+  },
+  {
+    "id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "kind": "cvr",
+    "code": "CVR-GP03",
+    "parent_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "label_fr": "Nord-Test 3",
+    "label_en": "North Test 3",
+    "responsible_name": "Hugo Démo",
+    "is_demo": true
+  },
+  {
+    "id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "kind": "rs",
+    "code": "RS-RT9F",
+    "parent_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "label_fr": "Secteur Nord-Test 3.1",
+    "label_en": "Sector North Test 3.1",
+    "responsible_name": "Inès Démo",
+    "is_demo": true
+  },
+  {
+    "id": "f97cc5b8-dce0-43b1-a21f-e53441a8d52c",
+    "kind": "dr",
+    "code": "DR-BETA",
+    "parent_id": null,
+    "label_fr": "Zone Centre-Test",
+    "label_en": "Central Test Zone",
+    "responsible_name": "Jonas Démo",
+    "is_demo": true
+  },
+  {
+    "id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "kind": "cvr",
+    "code": "CVR-NM04",
+    "parent_id": "f97cc5b8-dce0-43b1-a21f-e53441a8d52c",
+    "label_fr": "Centre-Test 1",
+    "label_en": "Central Test 1",
+    "responsible_name": "Kenza Démo",
+    "is_demo": true
+  },
+  {
+    "id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "kind": "rs",
+    "code": "RS-684K",
+    "parent_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "label_fr": "Secteur Centre-Test 1.1",
+    "label_en": "Sector Central Test 1.1",
+    "responsible_name": "Léo Démo",
+    "is_demo": true
+  },
+  {
+    "id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "kind": "rs",
+    "code": "RS-WWR5",
+    "parent_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "label_fr": "Secteur Centre-Test 1.2",
+    "label_en": "Sector Central Test 1.2",
+    "responsible_name": "Maëlle Démo",
+    "is_demo": true
+  },
+  {
+    "id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "kind": "rs",
+    "code": "RS-LN05",
+    "parent_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "label_fr": "Secteur Centre-Test 1.3",
+    "label_en": "Sector Central Test 1.3",
+    "responsible_name": "Noé Démo",
+    "is_demo": true
+  },
+  {
+    "id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "kind": "cvr",
+    "code": "CVR-MS05",
+    "parent_id": "f97cc5b8-dce0-43b1-a21f-e53441a8d52c",
+    "label_fr": "Centre-Test 2",
+    "label_en": "Central Test 2",
+    "responsible_name": "Olivia Démo",
+    "is_demo": true
+  },
+  {
+    "id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "kind": "rs",
+    "code": "RS-F1DB",
+    "parent_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "label_fr": "Secteur Centre-Test 2.1",
+    "label_en": "Sector Central Test 2.1",
+    "responsible_name": "Paul Démo",
+    "is_demo": true
+  },
+  {
+    "id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "kind": "rs",
+    "code": "RS-MQ5T",
+    "parent_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "label_fr": "Secteur Centre-Test 2.2",
+    "label_en": "Sector Central Test 2.2",
+    "responsible_name": "Quitterie Démo",
+    "is_demo": true
+  },
+  {
+    "id": "5cff9a1e-38ab-4da2-b164-73630191fb39",
+    "kind": "dr",
+    "code": "DR-GAMMA",
+    "parent_id": null,
+    "label_fr": "Zone Sud-Test",
+    "label_en": "South Test Zone",
+    "responsible_name": "Rania Démo",
+    "is_demo": true
+  },
+  {
+    "id": "d87ca0e1-f161-4c58-8794-fbafdd7aacb3",
+    "kind": "cvr",
+    "code": "CVR-UH06",
+    "parent_id": "5cff9a1e-38ab-4da2-b164-73630191fb39",
+    "label_fr": "Sud-Test 1",
+    "label_en": "South Test 1",
+    "responsible_name": "Sacha Démo",
+    "is_demo": true
+  },
+  {
+    "id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "kind": "rs",
+    "code": "RS-V3S1",
+    "parent_id": "d87ca0e1-f161-4c58-8794-fbafdd7aacb3",
+    "label_fr": "Secteur Sud-Test 1.1",
+    "label_en": "Sector South Test 1.1",
+    "responsible_name": "Théo Démo",
+    "is_demo": true
+  },
+  {
+    "id": "95d59f2d-1c28-4d7c-b8fc-bdbc019f7f08",
+    "kind": "rs",
+    "code": "RS-KQD3",
+    "parent_id": "d87ca0e1-f161-4c58-8794-fbafdd7aacb3",
+    "label_fr": "Secteur Sud-Test 1.2",
+    "label_en": "Sector South Test 1.2",
+    "responsible_name": "Yasmine Démo",
+    "is_demo": true
+  }
+]

@@ -1,0 +1,132 @@
+@import 'tailwindcss';
+
+/*
+ * Jetons de la charte mixte (D30) : Suntory Beverage dominant, rose Marvesting sur les éléments importants.
+ * Direction visuelle D123 : rapport éditorial clair, finition proche d'Apple, ombres diffuses, bordures discrètes.
+ * Mode sombre conservé (D124) : choix Système, Clair ou Sombre, mêmes jetons redéfinis plus bas.
+ * Les rapports de contraste des deux modes sont vérifiés par tests/unit/contrast.test.ts.
+ */
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  --color-page: #f4f8fa;
+  --color-surface: #ffffff;
+  --color-alt: #f0f6f9;
+  --color-sel: #e7f5f9;
+  --color-line: #e8eff3;
+  --color-field: #7a8d98;
+  --color-ink: #16222a;
+  --color-muted: #5e717c;
+  --color-link: #006b80;
+  --color-title: #08071e;
+  --color-focus: #1a1950;
+
+  --color-primary: #00829b;
+  --color-primary-hover: #006b80;
+  --color-aqua: #5bc2dc;
+  --color-primary-soft: #e7f5f9;
+
+  --color-pink: #e52365;
+  --color-pink-pale: #ffc2d5;
+  --color-pink-soft: #fde6ee;
+  --color-navy: #08071e;
+  --color-marine: #1a1950;
+  --color-warm: #f1efea;
+
+  --color-ok: #1b7b45;
+  --color-ok-soft: #e3f5ea;
+  --color-warn: #8a5a00;
+  --color-warn-soft: #fff1d6;
+  --color-danger: #b3202a;
+  --color-danger-soft: #fde4e6;
+
+  --radius-card: 16px;
+  --radius-ctl: 12px;
+  --shadow-card: 0 1px 2px rgb(11 43 58 / 0.04), 0 8px 24px rgb(11 43 58 / 0.06);
+}
+
+html {
+  color-scheme: light;
+}
+
+/* MODE SOMBRE : choix explicite */
+:root[data-theme='dark'] {
+  --color-page: #0e1316;
+  --color-surface: #161e23;
+  --color-alt: #1c272d;
+  --color-sel: #123540;
+  --color-line: #2b3a42;
+  --color-field: #6f8794;
+  --color-ink: #e9f1f4;
+  --color-muted: #9db1bb;
+  --color-link: #5bc2dc;
+  --color-title: #f4f8fa;
+  --color-focus: #9fdceb;
+  --color-primary-soft: #123540;
+  --color-pink: #ff5c93;
+  --color-marine: #3a39a0;
+  --color-warm: #232019;
+  --color-ok: #6fd39a;
+  --color-ok-soft: #12301f;
+  --color-warn: #f2c265;
+  --color-warn-soft: #3a2c0c;
+  --color-danger: #ff8b93;
+  --color-danger-soft: #3d1519;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+/* MODE SOMBRE : choix Système (aucun attribut data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+  --color-page: #0e1316;
+    --color-surface: #161e23;
+    --color-alt: #1c272d;
+    --color-sel: #123540;
+    --color-line: #2b3a42;
+    --color-field: #6f8794;
+    --color-ink: #e9f1f4;
+    --color-muted: #9db1bb;
+    --color-link: #5bc2dc;
+    --color-title: #f4f8fa;
+    --color-focus: #9fdceb;
+    --color-primary-soft: #123540;
+    --color-pink: #ff5c93;
+    --color-marine: #3a39a0;
+    --color-warm: #232019;
+    --color-ok: #6fd39a;
+    --color-ok-soft: #12301f;
+    --color-warn: #f2c265;
+    --color-warn-soft: #3a2c0c;
+    --color-danger: #ff8b93;
+    --color-danger-soft: #3d1519;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+    color-scheme: dark;
+  }
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "app": {
+    "name": "Plateforme de pilotage Suntory",
+    "skip": "Aller au contenu principal"
+  },
+  "banner": {
+    "demo": "DONNÉES FICTIVES",
+    "note": "Démonstrateur : aucune donnée réelle n'est utilisée."
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "open": "Menu"
+  },
+  "locale": {
+    "label": "Langue",
+    "fr": "Français",
+    "en": "English"
+  },
+  "profile": {
+    "switcher": "Profil simulé",
+    "note": "Simulation pour la démonstration, ce n'est pas une connexion.",
+    "current": "Profil actuel",
+    "direction_client": "Direction cliente",
+    "dr_client": "DR cliente",
+    "cvr_client": "CVR cliente",
+    "rs": "RS",
+    "agency_operator": "Agence (opérateur)",
+    "agency_admin": "Agence (administrateur)",
+    "provider_admin": "Prestataire (administrateur technique)"
+  },
+  "menu": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "needs": "Besoins",
+    "proposals": "Propositions",
+    "field": "Terrain",
+    "budget": "Budget",
+    "alerts": "Alertes",
+    "settings": "Paramètres",
+    "admin": "Administration"
+  },
+  "greeting": {
+    "named": "Bonjour {name}",
+    "anonymous": "Bonjour"
+  },
+  "home": {
+    "date": "{date}, semaine {week}",
+    "scope": {
+      "title": "Votre périmètre",
+      "all": "Toutes les zones de la mission",
+      "empty": "Aucune zone dans ce périmètre."
+    },
+    "alerts": {
+      "title": "Alertes récentes",
+      "empty": "Aucune alerte pour votre périmètre.",
+      "all": "Voir toutes les alertes"
+    }
+  },
+  "role": {
+    "direction_client": "Synthèse de votre périmètre",
+    "dr_client": "Votre DR",
+    "cvr_client": "Votre CVR",
+    "rs": "Votre secteur",
+    "agency_operator": "Besoins et ressources de la mission",
+    "agency_admin": "Mission et paramètres",
+    "provider_admin": "Administration technique de la démonstration"
+  },
+  "placeholder": {
+    "title": "Écran à venir",
+    "body": "Cet écran sera construit dans un lot suivant. Aucune fonction n'est disponible ici pour le moment."
+  },
+  "zone": {
+    "responsible": "responsable",
+    "code": "code",
+    "kind": {
+      "dr": "DR",
+      "cvr": "CVR",
+      "rs": "RS"
+    }
+  },
+  "alerts": {
+    "severity": {
+      "info": "Information",
+      "attention": "Attention",
+      "risk": "Risque"
+    },
+    "audience": {
+      "agency": "Agence uniquement",
+      "client": "Visible côté cliente",
+      "both": "Agence et cliente"
+    },
+    "text": {
+      "late_proposal_internal": "Une proposition interne est en retard de préparation.",
+      "incomplete_costing": "Le chiffrage d'un besoin est incomplet.",
+      "import_quality": "Un import de données contient des lignes à vérifier.",
+      "technical_sync": "La synchronisation technique de démonstration est terminée.",
+      "cost_threshold": "Un seuil de coût interne est approché.",
+      "deadline_d5": "L'échéance de saisie mensuelle est dans 5 jours.",
+      "deadline_d2": "L'échéance de saisie mensuelle est dans 2 jours pour ce secteur.",
+      "week_53_check": "L'année 2026 compte 53 semaines : vérifiez les besoins qui chevauchent la fin d'année.",
+      "need_to_confirm": "Un besoin attend votre confirmation.",
+      "proposal_awaiting_decision": "Une proposition attend une décision de la cliente.",
+      "client_decision_pending": "Une décision cliente est en attente pour votre périmètre."
+    }
+  },
+  "states": {
+    "empty": {
+      "title": "Rien à afficher",
+      "body": "Aucun élément ne correspond pour le moment."
+    },
+    "loading": {
+      "title": "Chargement en cours",
+      "body": "Les données arrivent."
+    },
+    "error": {
+      "title": "Une erreur est survenue",
+      "body": "L'opération n'a pas abouti. Aucune donnée n'a été modifiée."
+    },
+    "conflict": {
+      "title": "Conflit de version",
+      "body": "Quelqu'un a modifié cet élément pendant votre saisie. Choisissez la version à conserver."
+    },
+    "retry": "Réessayer",
+    "keepMine": "Garder ma version",
+    "keepTheirs": "Reprendre la version enregistrée"
+  },
+  "gallery": {
+    "title": "Bibliothèque de composants",
+    "intro": "Page de contrôle visuel du lot A1, réservée à l'administrateur technique.",
+    "buttons": "Boutons",
+    "primary": "Action principale",
+    "secondary": "Action secondaire",
+    "ghost": "Action discrète",
+    "disabled": "Action indisponible",
+    "fields": "Champs",
+    "fieldLabel": "Libellé du champ",
+    "fieldHint": "Aide à la saisie, visible en permanence.",
+    "fieldErrorLabel": "Champ en erreur",
+    "fieldError": "La valeur saisie n'est pas valide.",
+    "tags": "Étiquettes de statut",
+    "tagNeutral": "Brouillon",
+    "tagInfo": "Information",
+    "tagOk": "Validé",
+    "tagAttention": "À traiter",
+    "tagRisk": "En retard",
+    "tagImportant": "Prioritaire",
+    "table": "Tableau",
+    "tableCaption": "Exemple de tableau (valeurs de démonstration)",
+    "colName": "Élément",
+    "colStatus": "Statut",
+    "colValue": "Valeur",
+    "rowA": "Élément de démonstration A",
+    "rowB": "Élément de démonstration B",
+    "states": "États d'écran",
+    "icons": "Icônes de menu",
+    "report": {
+      "kicker": "Rapport de démonstration",
+      "headline": "Le titre-conclusion énonce le résultat en une phrase",
+      "kpi1": "Indicateur 1",
+      "kpi1Tag": "Stable",
+      "kpi2": "Indicateur 2",
+      "kpi2Tag": "Objectif atteint",
+      "kpi3": "Indicateur 3",
+      "kpi3Tag": "À traiter",
+      "chart": "Répartition par série (valeurs de démonstration)",
+      "series": {
+        "a": "Série A",
+        "b": "Série B",
+        "c": "Série C",
+        "d": "Série D"
+      },
+      "note": "Note de lecture : la série mise en avant porte la couleur principale, les autres restent en gris."
+    },
+    "reportTitle": "Modèle de page rapport"
+  },
+  "theme": {
+    "label": "Affichage",
+    "system": "Système",
+    "light": "Clair",
+    "dark": "Sombre"
+  }
+}
