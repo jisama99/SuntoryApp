@@ -20,6 +20,7 @@ Moteur de reporting paramétrable : catalogue de diapositives, graphiques sélec
    minimale à environ 70 % de la trame Marvesting (D70).
 2. Catalogue de pages et de graphiques ; choix du type (secteurs, anneaux, barres...) ou proposition automatique selon
    les données ; formes arrondies par défaut ; graphique natif modifiable en option par page ; valeurs toujours en annexe Excel.
+2 bis. Couleurs des graphiques d'export : lire le jeu défini en A4a (D213 proposée), jeu A Marvesting signature par défaut, jeu choisi par l'agence par modèle de rapport ; mêmes règles (statuts fixes, valeur écrite, aucun quadrillage ni axe tracé) ; style de tracé par modèle de rapport (D214 proposée, validée le 24/10/2026) : Exécutif conseillé pour les COPIL, Doux ailleurs, Directionnel pour l'entonnoir et la cascade budgétaire ; les formes sont dessinées (doc 25 §7 option C) et le style est verrouillable pour la cliente et contrôle de fidélité D72 tenant compte des couleurs de la palette.
 3. Mêmes libellés de zone (ZoneLabel) et mêmes règles d'audience que l'interface ; coûts exclus sauf décision de l'agence.
 4. Réglages de mise en page, titres, photo de couverture, pages : réservés aux profils agence ; CVR et DR voient les
    rapports de leur zone ; l'agence peut publier des rapports dans l'application.
