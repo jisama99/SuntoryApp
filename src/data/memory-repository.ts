@@ -330,6 +330,10 @@ function noteReadable(ctx: AccessContext, n: Note): boolean {
   return noteVisibleTo(n, { side: ctx.side, scope: ctx.scope }, zoneInScope(zones, n.sector_id, ctx.scope), recipient);
 }
 
+/** Vrai pour une note de proposition en préparation lue par la cliente : le brouillon n'existe pas de son côté. */
+const onHiddenDraft = (ctx: AccessContext, n: Note): boolean =>
+  ctx.side === 'client' && n.object_kind === 'proposal' && state().proposals.find((p) => p.id === n.object_id)?.status === 'in_progress';
+
 /**
  * Audience de l'événement d'une note : l'interne et le partage avec un destinataire restent à l'agence (l'existence d'une
  * note adressée à un seul destinataire ne se lit pas dans le journal des autres) ; le partage avec la cliente est commun.
@@ -425,7 +429,8 @@ function decideOne(ctx: AccessContext, proposalId: string, input: DecisionInput)
   const motive = (input.motive ?? '').trim();
   if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
   if (input.outcome !== 'approved' && !motive) return { status: 'refused', reason: 'motive_required' };
-  if (p.status !== 'proposed') return { status: 'refused', reason: 'not_decidable' };
+  // Un besoin stoppé ou rejeté est sorti du circuit : ses propositions ne se décident plus.
+  if (p.status !== 'proposed' || isClosedRecruitment(recruitmentOf(need.id))) return { status: 'refused', reason: 'not_decidable' };
   if (validDecisionOn(p.id, st.decisions)) return { status: 'refused', reason: 'already_decided' };
   st.decisions.push({
     id: crypto.randomUUID(), proposal_id: p.id, need_id: need.id, version: p.version, outcome: input.outcome, motive: motive || null, status: 'valid',
@@ -1070,7 +1075,8 @@ export function createMemoryRepository(): Repository {
         decisions: state().decisions.filter((d) => ids.has(d.proposal_id)).sort((a, b) => b.decided_on.localeCompare(a.decided_on)),
         events: (await this.getEvents(ctx)).filter((e) => e.need_id === n.id),
         stores: ctx.side === 'client' ? [] : stores.filter((s) => s.sector_id === n.sector_id || s.sector_id === null),
-        notes: state().notes.filter((x) => x.need_id === n.id && noteReadable(ctx, x)).sort((a, b) => a.seq - b.seq),
+        // Une note rattachée à un brouillon de proposition reste à l'agence, quelle que soit sa visibilité.
+        notes: state().notes.filter((x) => x.need_id === n.id && noteReadable(ctx, x) && !onHiddenDraft(ctx, x)).sort((a, b) => a.seq - b.seq),
       } satisfies NeedThread;
     },
 
@@ -1171,8 +1177,7 @@ export function createMemoryRepository(): Repository {
     async getNotes(ctx, objectKind, objectId) {
       const need = needOfObject(objectKind, objectId);
       if (!need || !zoneInScope(zones, need.sector_id, ctx.scope)) return [];
-      if (objectKind === 'proposal' && ctx.side === 'client' && state().proposals.find((p) => p.id === objectId)?.status === 'in_progress') return [];
-      return state().notes.filter((n) => n.object_kind === objectKind && n.object_id === objectId && noteReadable(ctx, n)).sort((a, b) => a.seq - b.seq);
+      return state().notes.filter((n) => n.object_kind === objectKind && n.object_id === objectId && noteReadable(ctx, n) && !onHiddenDraft(ctx, n)).sort((a, b) => a.seq - b.seq);
     },
 
     async addNote(ctx, input) {

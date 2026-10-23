@@ -194,7 +194,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
                     </div>
                   ))}
                   <NotesThread objectKind="proposal" objectId={p.id} notes={notesOf('proposal', p.id)} canWrite={canNotes} recipients={recipients} />
-                  {repository.canDecide(ctx) && p.status === 'proposed' && !validDecision ? <DecisionForm proposalId={p.id} version={p.version} /> : null}
+                  {repository.canDecide(ctx) && p.status === 'proposed' && !validDecision && !closed ? <DecisionForm proposalId={p.id} version={p.version} /> : null}
                   {repository.canPropose(ctx) && p.status === 'proposed' ? <WithdrawProposalForm proposalId={p.id} hasDecision={Boolean(validDecision)} /> : null}
                   {repository.canPropose(ctx) && p.status === 'in_progress' ? <WithdrawProposalForm proposalId={p.id} hasDecision={false} /> : null}
                 </li>

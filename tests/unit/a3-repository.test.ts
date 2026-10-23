@@ -555,3 +555,26 @@ describe('annulation après écriture (D159)', () => {
     expect((await rowOf(n)).funnel).toBe('proposed');
   });
 });
+
+describe('revue A3 : constats corrigés', () => {
+  it('une note partagée sur un brouillon de proposition ne sort pas dans le fil de la cliente', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const draft = await repo.saveProposal(AG(), n.id, input(n));
+    if (draft.status !== 'saved') throw new Error('brouillon');
+    await repo.addNote(AG(), { objectKind: 'proposal', objectId: draft.proposal.id, text: 'FUITE-BROUILLON', visibility: 'shared_client', confirmShare: true });
+    const thread = (await repo.getNeedThread(CVR(), n.id))!;
+    expect(JSON.stringify(thread)).not.toContain('FUITE-BROUILLON');
+    expect(thread.notes).toEqual([]);
+    expect((await repo.getNeedThread(AG(), n.id))!.notes).toHaveLength(1);
+  });
+  it('la cliente ne décide pas sur un besoin stoppé ou rejeté', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const p = await send(n);
+    await repo.recordStep(AG(), n.id, 'stop', { motive: 'Magasin fermé.' });
+    expect(await decide(p.id, 'approved')).toMatchObject({ status: 'refused', reason: 'not_decidable' });
+    expect((await repo.decideBatch(CVR(), [p.id], { outcome: 'approved' })).items[0]).toMatchObject({ status: 'refused', reason: 'not_decidable' });
+    expect((await rowOf(n)).funnel).toBeNull();
+  });
+});
