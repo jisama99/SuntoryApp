@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { test } from '@playwright/test';
 import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 export const PROFILES = [
@@ -13,7 +14,8 @@ export const PROFILES = [
 ] as const;
 export const LOCALES = ['fr', 'en'] as const;
 
-const BASE = 'http://localhost:3100';
+/** Serveur du projet en cours : le projet isolé (annulation, D159) a le sien, les autres partagent le port 3100. */
+const baseUrl = (): string => (test.info().project.use.baseURL as string | undefined) ?? 'http://localhost:3100';
 
 /** Mots de passe fictifs : fichier local non versionné, produit par `npm run demo:accounts`. Jamais écrits dans le code. */
 export function demoPassword(username: string): string {
@@ -27,7 +29,7 @@ export function demoPassword(username: string): string {
 
 /** Connexion réelle par l'interface de programmation de connexion (même chemin que le formulaire). */
 export async function loginAs(context: BrowserContext, username: string) {
-  const response = await context.request.post(`${BASE}/api/login`, { data: { username, password: demoPassword(username) } });
+  const response = await context.request.post(`${baseUrl()}/api/login`, { data: { username, password: demoPassword(username) } });
   if (!response.ok()) throw new Error(`Connexion refusée pour ${username}`);
 }
 
@@ -41,17 +43,18 @@ export async function setProfile(context: BrowserContext, id: string) {
     await context.clearCookies({ name: 'demo_view_as' });
     return;
   }
-  await context.addCookies([{ name: 'demo_view_as', value: `sim.${id}`, url: BASE }]);
+  await context.addCookies([{ name: 'demo_view_as', value: `sim.${id}`, url: baseUrl() }]);
 }
 
 /** Enregistre les requêtes hors serveur local et les erreurs de console. */
 export function watch(page: Page) {
+  const origin = baseUrl();
   const external: string[] = [];
   const consoleErrors: string[] = [];
   page.on('request', (req) => {
     const u = req.url();
     if (u.startsWith('data:') || u.startsWith('blob:')) return;
-    if (new URL(u).origin !== 'http://localhost:3100') external.push(u);
+    if (new URL(u).origin !== new URL(origin).origin) external.push(u);
   });
   page.on('console', (m) => {
     if (m.type() === 'error' || m.type() === 'warning') consoleErrors.push(`${m.type()}: ${m.text()}`);

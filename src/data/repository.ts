@@ -1,11 +1,15 @@
 import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
-import type { DeadlineType, Dispositif, HomeSkin, MenuKey, PresetId, ProfileId, ReopenScope, Scope } from '@/domain/types';
+import type { DelayStat, FunnelSummary, Milestone, NextStep, PipelineParams, ProposalIssue } from '@/domain/pipeline';
+import type {
+  DecisionOutcome, DeadlineType, Dispositif, FunnelState, HomeSkin, MenuKey, NoteObjectKind, NoteVisibility, PositionStatus, PresetId,
+  ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation,
+} from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
-  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, DemoClock, DemoProfile, DispositifParams, Need, ParamChange,
-  ParamKey, PublicAccount, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
+  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, Decision, DemoClock, DemoProfile, DispositifParams, Need, Note,
+  ParamChange, ParamKey, Proposal, ProposalInput, PublicAccount, Recruitment, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from './schemas';
 
 export interface MenuEntry {
@@ -99,6 +103,32 @@ export interface Repository {
   setAccountActive(ctx: AccessContext, accountId: string, active: boolean): Promise<MutationResult<'forbidden' | 'not_found' | 'protected' | 'self'>>;
   assignAccount(ctx: AccessContext, accountId: string, input: Omit<AccountInput, 'username'>): Promise<MutationResult<'forbidden' | 'not_found' | 'protected' | 'invalid'>>;
   resetAccountPassword(ctx: AccessContext, accountId: string): Promise<AccountSecretResult<'forbidden' | 'not_found' | 'protected'>>;
+  // ---- Lot A3 : propositions, décisions, qui doit agir, entonnoir de recrutement, notes ----
+  /** Un enregistrement par besoin du périmètre : statuts séparés, proposition courante, décision valide, qui doit agir. */
+  getPipeline(ctx: AccessContext): Promise<PipelineRow[]>;
+  /** Fil d'un besoin : versions de proposition, décisions, événements, notes visibles. Nul hors périmètre. */
+  getNeedThread(ctx: AccessContext, needId: string): Promise<NeedThread | null>;
+  getFunnelReport(ctx: AccessContext): Promise<FunnelReport>;
+  /** Alertes dérivées de propositions et de décisions, filtrées par audience (D108, défaut refus). */
+  getPipelineAlerts(ctx: AccessContext): Promise<PipelineAlert[]>;
+  canQualify(ctx: AccessContext): boolean;
+  canPropose(ctx: AccessContext): boolean;
+  canDecide(ctx: AccessContext): boolean;
+  canRecord(ctx: AccessContext, step: RecruitmentStep): boolean;
+  qualifyNeed(ctx: AccessContext, needId: string, input: QualifyInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'not_submitted' | 'already' | 'motive_required'>>;
+  saveProposal(ctx: AccessContext, needId: string, input: ProposalInput, options?: { send?: boolean }): Promise<ProposalResult>;
+  /** Retire une proposition envoyée (motif obligatoire) ou jette un brouillon. Une décision qui s'y rattache est invalidée. */
+  withdrawProposal(ctx: AccessContext, proposalId: string, motive: string): Promise<MutationResult<'forbidden' | 'not_found' | 'motive_required' | 'not_withdrawable'>>;
+  decideProposal(ctx: AccessContext, proposalId: string, input: DecisionInput): Promise<MutationResult<DecisionRefusal>>;
+  /** Validation en lot avec motif commun : chaque proposition est contrôlée seule, un refus n'arrête pas les autres. */
+  decideBatch(ctx: AccessContext, proposalIds: string[], input: DecisionInput): Promise<BatchDecisionResult>;
+  recordStep(ctx: AccessContext, needId: string, step: RecruitmentStep, input?: StepInput): Promise<MutationResult<StepRefusal>>;
+  /** Notes d'un objet (proposition ou décision) lisibles par le profil. */
+  getNotes(ctx: AccessContext, objectKind: NoteObjectKind, objectId: string): Promise<Note[]>;
+  canWriteNotes(ctx: AccessContext): boolean;
+  addNote(ctx: AccessContext, input: NoteInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'confirm_required' | 'invalid_recipient'>>;
+  /** Le retrait garde la trace, la note ne redevient jamais interne. */
+  withdrawNote(ctx: AccessContext, noteId: string): Promise<MutationResult<'forbidden' | 'not_found' | 'already'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;
@@ -228,4 +258,96 @@ export type SaveResult =
 export interface DemoProfileDirectory {
   list(): Promise<DemoProfile[]>;
   get(id: ProfileId): Promise<DemoProfile | null>;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3
+// ---------------------------------------------------------------------------------------------
+export interface PipelineRow {
+  /** Besoin, avec le statut de poste calculé (jamais saisi). */
+  need: Need;
+  recruitment: Recruitment;
+  funnel: FunnelState | null;
+  positionStatus: PositionStatus | null;
+  /** Proposition courante : la cliente ne voit que les propositions envoyées, jamais un brouillon. */
+  proposal: Proposal | null;
+  /** Décision valide sur la proposition courante. */
+  decision: Decision | null;
+  proposalCount: number;
+  next: NextStep;
+  submittedOn: string;
+  /** Facturable à partir de cette date (prise de poste). Réservé à l'agence. */
+  billableFrom: string | null;
+  /** Le besoin a changé depuis la proposition envoyée : la décision éventuelle est invalidée. */
+  needChanged: boolean;
+}
+
+export interface NeedThread {
+  row: PipelineRow;
+  proposals: Proposal[];
+  decisions: Decision[];
+  events: BusinessEvent[];
+  /** Magasins que l'agence peut proposer pour ce secteur. */
+  stores: Store[];
+  notes: Note[];
+}
+
+export interface FunnelReport {
+  summary: FunnelSummary;
+  delays: Record<Situation, Record<Milestone, DelayStat>>;
+  params: PipelineParams;
+  /** Zones blanches : âge de vacance en jours depuis la déclaration, sans délai de recrutement. */
+  vacancies: Array<{ needId: string; days: number }>;
+}
+
+export interface PipelineAlert {
+  id: string;
+  audience: Alert['audience'];
+  severity: Severity;
+  /** Clé sous `alerts.pipeline`. */
+  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate';
+  params: Record<string, string | number>;
+  created_at: string;
+}
+
+export interface QualifyInput {
+  outcome: 'take' | 'clarify' | 'reject';
+  motive?: string;
+}
+
+export type ProposalResult =
+  | { status: 'saved'; proposal: Proposal; sent: boolean; invalidated: number }
+  | { status: 'refused'; reason: 'forbidden' | 'not_found' | 'invalid' | 'invalid_store' | 'not_ready' | 'issues' | 'no_draft'; issues?: ProposalIssue[] };
+
+export interface DecisionInput {
+  outcome: DecisionOutcome;
+  motive?: string;
+}
+export type DecisionRefusal = 'forbidden' | 'not_found' | 'invalid' | 'motive_required' | 'not_decidable' | 'already_decided';
+
+export interface BatchDecisionResult {
+  items: Array<{ proposalId: string; status: 'ok' | 'refused'; reason?: DecisionRefusal }>;
+  decided: number;
+  refused: number;
+}
+
+export interface StepInput {
+  /** Date de l'étape (aaaa-mm-jj). Par défaut : la date du jour de démonstration. */
+  date?: string;
+  motive?: string;
+  /** Secteur d'origine d'une réattribution. */
+  fromSectorId?: string;
+}
+export type StepRefusal =
+  | 'forbidden' | 'not_found' | 'invalid' | 'not_taken' | 'closed' | 'no_accord' | 'not_hired' | 'motive_required' | 'already'
+  | 'invalid_sector' | 'nothing_to_withdraw';
+
+export interface NoteInput {
+  objectKind: NoteObjectKind;
+  objectId: string;
+  text: string;
+  visibility: NoteVisibility;
+  recipientZoneId?: string;
+  /** Confirmation explicite exigée avant tout partage (D162). */
+  confirmShare?: boolean;
 }

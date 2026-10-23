@@ -126,6 +126,17 @@
       "lateSummary": "Saisie de {month} close : {late, plural, =0 {aucun secteur en retard} one {# secteur en retard} other {# secteurs en retard}} sur {total}.",
       "closingReport": "Bilan de la clôture de {month} : {done} secteurs à jour, {late} en retard, {deferred} demandes reportées sur le mois suivant.",
       "reopenQueue": "{n, plural, one {# demande de réouverture attend une décision.} other {# demandes de réouverture attendent une décision.}}"
+    },
+    "pipelineTitle": "Propositions et décisions",
+    "pipeline": {
+      "open": "Ouvrir les propositions",
+      "proposalLate": "{n, plural, one {# proposition est en retard de préparation.} other {# propositions sont en retard de préparation.}}",
+      "qualifyLate": "{n, plural, one {# besoin attend sa qualification au delà du délai.} other {# besoins attendent leur qualification au delà du délai.}}",
+      "costingIncomplete": "{n, plural, one {# proposition a un chiffrage incomplet.} other {# propositions ont un chiffrage incomplet.}}",
+      "decisionsPending": "{n, plural, one {# proposition attend une décision de la cliente.} other {# propositions attendent une décision de la cliente.}}",
+      "decisionsLate": "{n, plural, one {# décision de la cliente dépasse son échéance.} other {# décisions de la cliente dépassent leur échéance.}}",
+      "clarificationPending": "{n, plural, one {# besoin attend une précision du RS.} other {# besoins attendent une précision du RS.}}",
+      "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}"
     }
   },
   "states": {
@@ -913,5 +924,463 @@
     "attention": "Ce qui demande votre attention",
     "signIn": "Connexion",
     "manageAccess": "Gérer les accès"
+  },
+  "pipeline": {
+    "title": "Propositions et décisions",
+    "funnelLink": "Entonnoir de recrutement",
+    "filters": {
+      "label": "Filtrer les besoins",
+      "mine": "À traiter par moi",
+      "all": "Tous",
+      "overdue": "En retard",
+      "decision": "En attente de décision"
+    },
+    "tiles": {
+      "toAct": "À traiter par vous",
+      "toActNote": "Besoins où vous devez agir",
+      "overdue": "En retard",
+      "awaiting": "En attente de décision",
+      "awaitingNote": "Propositions envoyées sans décision"
+    },
+    "caption": "Besoins, propositions et décisions de votre périmètre",
+    "cols": {
+      "need": "Besoin",
+      "sector": "Secteur",
+      "funnel": "Recrutement",
+      "position": "Poste",
+      "proposal": "Proposition",
+      "next": "Qui doit agir",
+      "due": "Échéance"
+    },
+    "emptyTitle": "Rien à afficher",
+    "empty": "Aucun besoin dans votre périmètre.",
+    "emptyFilter": "Aucun besoin ne correspond à ce filtre.",
+    "linkHelp": "Ouvrez un besoin pour suivre ses propositions, ses décisions et son recrutement.",
+    "none": "Aucune",
+    "outside": "Hors entonnoir",
+    "due": "Avant le {date}",
+    "noDue": "Sans échéance",
+    "lateDays": "{n, plural, one {# jour ouvré de retard} other {# jours ouvrés de retard}}",
+    "urgency": {
+      "overdue": "En retard",
+      "urgent": "Urgent",
+      "soon": "Bientôt",
+      "normal": "Dans les temps"
+    },
+    "version": "Version {n}",
+    "notRecorded": "Non enregistrée",
+    "stopped": "Stoppé",
+    "funnel": {
+      "to_recruit": "À recruter",
+      "recruiting": "En recrutement",
+      "proposed": "Proposé",
+      "approved": "Validé",
+      "hired": "Recrutement finalisé",
+      "started": "En poste",
+      "unavailable": "Donnée indisponible"
+    },
+    "position": {
+      "to_recruit": "À recruter",
+      "recruiting": "En recrutement",
+      "proposed": "Proposé",
+      "approved": "Validé",
+      "filled": "En poste",
+      "withdrawal": "Désistement",
+      "termination": "Rupture",
+      "cancelled": "Annulé",
+      "refused": "Refusé"
+    },
+    "intake": {
+      "to_qualify": "À qualifier",
+      "taken": "Pris en charge",
+      "clarification": "Précision demandée",
+      "rejected": "Rejeté"
+    },
+    "situation": {
+      "new": "Recrutement nouveau",
+      "reassigned": "Réattribué",
+      "white_zone": "Zone blanche"
+    },
+    "proposalStatus": {
+      "in_progress": "En préparation",
+      "proposed": "Envoyée",
+      "withdrawn": "Retirée",
+      "superseded": "Remplacée"
+    },
+    "outcome": {
+      "approved": "Validée",
+      "refused": "Refusée",
+      "revision": "Révision demandée"
+    },
+    "decisionStatus": {
+      "valid": "En vigueur",
+      "invalidated": "Invalidée"
+    },
+    "invalidation": {
+      "new_version": "Invalidée le {date} par l'envoi d'une nouvelle version.",
+      "withdrawn": "Invalidée le {date} : la proposition a été retirée.",
+      "need_changed": "Invalidée le {date} : le besoin a changé depuis la proposition."
+    },
+    "actor": {
+      "rs": "Le RS",
+      "agency": "L'agence",
+      "decider": "La cliente",
+      "none": "Personne"
+    },
+    "action": {
+      "complete_need": "Compléter le besoin",
+      "qualify": "Qualifier le besoin",
+      "clarify": "Répondre à la demande de précision",
+      "prepare_proposal": "Préparer une proposition",
+      "send_proposal": "Envoyer la proposition",
+      "decide": "Décider de la proposition",
+      "revise_proposal": "Réviser la proposition",
+      "new_proposal": "Proposer un autre profil",
+      "finalise_hiring": "Finaliser le recrutement",
+      "start_work": "Enregistrer la prise de poste",
+      "none": "Aucune action"
+    },
+    "dimension": {
+      "need": "Besoin",
+      "proposal": "Proposition",
+      "recruitment": "Recrutement",
+      "execution": "Exécution"
+    },
+    "audience": {
+      "agency": "Agence uniquement",
+      "client": "Visible côté cliente",
+      "both": "Agence et cliente"
+    },
+    "actorProfile": {
+      "direction_client": "Direction cliente",
+      "dr_client": "DR cliente",
+      "cvr_client": "CVR cliente",
+      "rs": "RS",
+      "agency_operator": "Agence, opération",
+      "agency_admin": "Agence, administration",
+      "provider_admin": "Prestataire"
+    },
+    "event": {
+      "EV-01": "Besoin saisi",
+      "EV-02": "Besoin soumis",
+      "EV-03": "Besoin modifié",
+      "EV-04": "Saisie bloquée ou reportée",
+      "EV-05": "Anomalie détectée",
+      "EV-09": "Besoin qualifié par l'agence",
+      "EV-10": "Proposition envoyée",
+      "EV-11": "Décision de la cliente",
+      "EV-12": "Décision invalidée",
+      "EV-13": "Recrutement en cours",
+      "EV-14": "Recrutement finalisé",
+      "EV-15": "Formation réalisée",
+      "EV-16": "Poste démarré",
+      "EV-17": "Véhicule remis",
+      "EV-18": "Réattribution",
+      "EV-19": "Besoin stoppé",
+      "EV-20": "Zone blanche",
+      "EV-21": "Désistement ou départ du poste",
+      "EV-44": "Note ajoutée ou retirée",
+      "EV-45": "Proposition retirée"
+    },
+    "detail": {
+      "title": "Besoin {code}",
+      "statuses": "Quatre statuts séparés",
+      "hours": "{n} heures par semaine",
+      "reassignedFrom": "Secteur d'origine :",
+      "counters": "Refus : {refusals}. Désistements : {withdrawals}.",
+      "startWork": "Prise de poste",
+      "vehicle": "Remise du véhicule",
+      "billableFrom": "Facturable à partir du {date}",
+      "next": "Qui doit agir",
+      "needChanged": "Le besoin a changé depuis la proposition",
+      "motive": {
+        "clarification": "Précision demandée : {motive}",
+        "rejected": "Motif du rejet : {motive}",
+        "taken": "{motive}",
+        "to_qualify": "{motive}"
+      },
+      "stoppedMotive": "Motif de l'arrêt : {motive}",
+      "versions": "Propositions et décisions",
+      "noProposal": "Aucune proposition pour ce besoin.",
+      "sentOn": "Envoyée le {date}",
+      "range": "du {start} au {end}",
+      "withdrawnOn": "Retirée le {date}",
+      "decidedOn": "Décidée le {date}",
+      "journal": "Journal du besoin"
+    },
+    "batch": {
+      "title": "Valider plusieurs propositions",
+      "help": "Cochez les propositions, choisissez la décision et rédigez un motif commun. Chaque proposition est contrôlée seule.",
+      "legend": "Propositions en attente de décision",
+      "all": "Tout cocher",
+      "none": "Tout décocher",
+      "version": "Version {n}",
+      "due": "Avant le {date}",
+      "overdue": "En retard",
+      "motive": "Motif commun",
+      "motiveHint": "Obligatoire pour une révision ou un refus.",
+      "approve": "Valider la sélection",
+      "revision": "Demander une révision",
+      "refuse": "Refuser la sélection",
+      "nothingPicked": "Cochez au moins une proposition.",
+      "motiveRequired": "Un motif commun est obligatoire pour une révision ou un refus.",
+      "summary": "{decided} décidée(s), {refused} refusée(s) par le contrôle.",
+      "reason": {
+        "forbidden": "Votre profil ne décide pas.",
+        "not_found": "Proposition introuvable dans votre périmètre.",
+        "invalid": "Décision invalide.",
+        "motive_required": "Motif obligatoire.",
+        "not_decidable": "Proposition remplacée ou retirée.",
+        "already_decided": "Décision déjà prise."
+      }
+    },
+    "qualify": {
+      "title": "Qualifier le besoin",
+      "help": "Prendre en charge, demander une précision au RS ou rejeter avec un motif.",
+      "outcome": "Décision de l'agence",
+      "choose": "Choisir",
+      "outcomes": {
+        "take": "Prendre en charge",
+        "clarify": "Demander une précision",
+        "reject": "Rejeter"
+      },
+      "motive": "Motif ou question",
+      "motiveHint": "Obligatoire pour une précision ou un rejet.",
+      "submit": "Enregistrer",
+      "refused": {
+        "motive_required": "Un motif est obligatoire.",
+        "forbidden": "Votre profil ne qualifie pas les besoins.",
+        "not_found": "Besoin introuvable.",
+        "invalid": "Saisie invalide.",
+        "not_submitted": "Le besoin n'est pas soumis.",
+        "already": "Le besoin est déjà qualifié."
+      }
+    },
+    "decide": {
+      "title": "Votre décision sur la version {n}",
+      "outcome": "Décision",
+      "choose": "Choisir",
+      "outcomes": {
+        "approved": "Valider",
+        "revision": "Demander une révision",
+        "refused": "Refuser"
+      },
+      "motive": "Motif",
+      "motiveHint": "Obligatoire pour une révision ou un refus.",
+      "submit": "Enregistrer la décision",
+      "refused": {
+        "outcome_required": "Choisissez une décision.",
+        "motive_required": "Un motif est obligatoire.",
+        "forbidden": "Votre profil ne décide pas.",
+        "not_found": "Proposition introuvable.",
+        "invalid": "Saisie invalide.",
+        "not_decidable": "Cette version est remplacée ou retirée.",
+        "already_decided": "Une décision est déjà en vigueur sur cette version."
+      }
+    },
+    "withdraw": {
+      "open": "Retirer la proposition",
+      "invalidates": "La décision en vigueur sur cette version sera invalidée et restera au dossier.",
+      "motive": "Motif du retrait",
+      "submit": "Retirer",
+      "cancel": "Annuler",
+      "refused": {
+        "motive_required": "Un motif est obligatoire.",
+        "forbidden": "Votre profil ne retire pas de proposition.",
+        "not_found": "Proposition introuvable.",
+        "not_withdrawable": "Cette version ne peut plus être retirée.",
+        "invalid": "Saisie invalide."
+      }
+    },
+    "proposal": {
+      "title": "Proposition, version {n}",
+      "help": "Enregistrez un brouillon, puis envoyez-le à la cliente. L'envoi crée la version et remplace la précédente.",
+      "hours": "Heures par semaine",
+      "days": "Jours",
+      "slot": "Créneau horaire",
+      "slotHint": "Exemple : 09:00-17:00.",
+      "period": "Période",
+      "stores": "Magasins",
+      "noStores": "Aucun magasin disponible pour ce secteur.",
+      "deviations": "Écarts au besoin",
+      "noDeviation": "Aucun écart",
+      "deviation": {
+        "hours": "Heures",
+        "days": "Jours",
+        "slot": "Créneau",
+        "period": "Période",
+        "stores": "Magasins"
+      },
+      "note": "Explication de l'écart",
+      "noteRequired": "Obligatoire pour envoyer : décrivez chaque écart.",
+      "noteHint": "Facultatif tant qu'il n'y a pas d'écart.",
+      "cost": "Chiffrage",
+      "costHint": "Visible de l'agence seulement. Un coût inconnu reste « Non chiffré ».",
+      "choose": "Choisir",
+      "costStatus": {
+        "complete": "Chiffrage complet",
+        "partial": "Chiffrage partiel",
+        "not_priced": "Non chiffré"
+      },
+      "invalidatesWarning": "L'envoi invalidera l'accord en vigueur si un élément déterminant change.",
+      "saveDraft": "Enregistrer le brouillon",
+      "send": "Envoyer à la cliente",
+      "sent": "Proposition envoyée",
+      "sentInvalidated": "Proposition envoyée. {n} décision(s) invalidée(s).",
+      "draftSaved": "Brouillon enregistré",
+      "incomplete": "Complétez la référence, les heures, les jours et la période.",
+      "refused": {
+        "forbidden": "Votre profil ne propose pas.",
+        "not_found": "Besoin introuvable.",
+        "invalid": "Saisie invalide.",
+        "invalid_store": "Un magasin n'appartient pas à ce secteur.",
+        "not_ready": "Le besoin n'est pas pris en charge.",
+        "issues": "L'envoi est refusé.",
+        "no_draft": "Aucun brouillon."
+      },
+      "issue": {
+        "period_order": "La fin précède le début.",
+        "deviation_unexplained": "Un écart au besoin n'est pas expliqué.",
+        "no_change": "Aucun élément déterminant n'a changé depuis la version envoyée."
+      },
+      "worker": "Référence de l'intervenant",
+      "workerHint": "Référence fictive de la forme INT-001."
+    },
+    "steps": {
+      "title": "Recrutement et exécution",
+      "help": "Chaque étape est enregistrée avec sa date. La prise de poste et la remise du véhicule sont deux événements distincts.",
+      "recordedOn": "Enregistrée le {date}",
+      "date": "Date",
+      "fromSector": "Secteur d'origine",
+      "choose": "Choisir",
+      "motive": "Motif",
+      "names": {
+        "start_search": "Recherche commencée",
+        "hired": "Recrutement finalisé",
+        "training": "Formation réalisée",
+        "start_work": "Prise de poste",
+        "vehicle_handover": "Remise du véhicule",
+        "reassign": "Réattribution",
+        "stop": "Besoin stoppé",
+        "white_zone": "Zone blanche",
+        "lift_white_zone": "Fin de la zone blanche",
+        "withdrawal": "Désistement ou départ"
+      },
+      "hints": {
+        "start_search": "Fait passer le besoin à « En recrutement ».",
+        "hired": "Exige un accord en vigueur de la cliente.",
+        "training": "Exige un recrutement finalisé.",
+        "start_work": "Peut être planifiée ; « En poste » apparaît à la date atteinte.",
+        "vehicle_handover": "Sans effet sur l'état du recrutement.",
+        "reassign": "Un intervenant déjà présent sur un autre secteur prend ce besoin.",
+        "stop": "Motif obligatoire. Le besoin sort de l'entonnoir et des taux.",
+        "white_zone": "Non pourvable : la ligne est comptée à part et sort du taux d'heures.",
+        "lift_white_zone": "Le besoin revient dans les taux.",
+        "withdrawal": "Ramène à « En recrutement » et garde l'historique."
+      },
+      "actions": {
+        "start_search": "Enregistrer le début de recherche",
+        "hired": "Enregistrer le recrutement",
+        "training": "Enregistrer la formation",
+        "start_work": "Enregistrer la prise de poste",
+        "vehicle_handover": "Enregistrer la remise",
+        "reassign": "Enregistrer la réattribution",
+        "stop": "Stopper le besoin",
+        "white_zone": "Déclarer la zone blanche",
+        "lift_white_zone": "Lever la zone blanche",
+        "withdrawal": "Enregistrer le désistement"
+      },
+      "blocked": {
+        "not_taken": "Le besoin doit d'abord être pris en charge.",
+        "no_accord": "Aucun accord en vigueur de la cliente.",
+        "not_hired": "Le recrutement doit d'abord être finalisé.",
+        "closed": "Le besoin est sorti du circuit.",
+        "forbidden": "Étape réservée à un autre profil.",
+        "already": "Étape déjà enregistrée."
+      },
+      "refused": {
+        "forbidden": "Étape réservée à un autre profil.",
+        "not_found": "Besoin introuvable.",
+        "invalid": "Date ou saisie invalide.",
+        "not_taken": "Le besoin doit d'abord être pris en charge.",
+        "closed": "Le besoin est sorti du circuit.",
+        "no_accord": "Aucun accord en vigueur de la cliente.",
+        "not_hired": "Le recrutement doit d'abord être finalisé.",
+        "motive_required": "Un motif est obligatoire.",
+        "already": "Étape déjà enregistrée.",
+        "invalid_sector": "Choisissez un autre secteur.",
+        "nothing_to_withdraw": "Rien à retirer pour ce besoin."
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "empty": "Aucune note.",
+      "visibility": {
+        "agency_internal": "Interne agence",
+        "shared_client": "Partagée avec la cliente",
+        "shared_recipient": "Partagée avec un destinataire"
+      },
+      "withdrawnOn": "Retirée le {date}",
+      "by": "Le {date}",
+      "withdraw": "Retirer la note",
+      "text": "Nouvelle note",
+      "visibilityLabel": "Visibilité",
+      "choose": "Choisir",
+      "recipient": "Destinataire",
+      "confirmShare": "Je confirme le partage de cette note.",
+      "add": "Ajouter la note",
+      "refused": {
+        "forbidden": "Votre profil n'écrit pas de note.",
+        "not_found": "Objet introuvable.",
+        "invalid": "Note invalide.",
+        "confirm_required": "Confirmez le partage avant d'ajouter la note.",
+        "invalid_recipient": "Choisissez un destinataire concerné par ce besoin.",
+        "already": "Note déjà retirée."
+      }
+    },
+    "funnelPage": {
+      "title": "Entonnoir de recrutement",
+      "demanded": "Heures demandées par semaine",
+      "demandedNote": "Hors zone blanche et besoins stoppés",
+      "hiredRate": "Taux d'heures recrutées",
+      "hiredRateNote": "Recrutement finalisé ou en poste",
+      "startedRate": "Taux d'heures en poste",
+      "startedRateNote": "Prise de poste atteinte",
+      "returns": "Refus et désistements",
+      "returnsNote": "{refusals, plural, one {# refus} other {# refus}}, {withdrawals, plural, one {# désistement} other {# désistements}}, {needs, plural, one {# besoin revenu} other {# besoins revenus}} à « En recrutement »",
+      "stock": "Besoins par état",
+      "stockCaption": "{n} besoins dans l'entonnoir",
+      "state": "État",
+      "needs": "Besoins",
+      "hours": "Heures par semaine",
+      "share": "Part des besoins",
+      "outside": "Hors entonnoir",
+      "outsideHelp": "Ces positions sont comptées à part. La zone blanche et les besoins stoppés sortent du taux d'heures.",
+      "outsideKinds": {
+        "toQualify": "À qualifier",
+        "whiteZone": "Zone blanche",
+        "stopped": "Stoppés",
+        "rejected": "Rejetés",
+        "reassigned": "Réattribués (comptés dans leur état)"
+      },
+      "needsAndHours": "{needs, plural, one {# besoin} other {# besoins}}, {hours} heures",
+      "delays": "Délais par situation",
+      "delaysHelp": "Médiane, étendue et effectif pour chaque situation. Sous {min} cas, la page n'en tire aucune conclusion.",
+      "delaysCaption": "Délais en jours calendaires",
+      "situation": "Situation",
+      "milestone": {
+        "j1": "Soumission à proposition",
+        "j2": "Proposition à décision",
+        "j3": "Décision à recrutement finalisé",
+        "j4": "Décision à prise de poste"
+      },
+      "noDelay": "Pas de délai : âge de vacance ci-dessous",
+      "tooFew": "Effectif trop faible pour conclure ({n})",
+      "delayValue": "{median} jours, de {min} à {max}, sur {n} cas",
+      "delaysNote": "Valeurs de départ à valider : jours calendaires et effectif minimal paramétrable.",
+      "vacancy": "Âge de vacance des zones blanches",
+      "noVacancy": "Aucune zone blanche.",
+      "vacancyAge": "{n, plural, one {Vacant depuis # jour} other {Vacant depuis # jours}}"
+    }
   }
 }

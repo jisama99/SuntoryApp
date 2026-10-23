@@ -1,4 +1,4 @@
-# Lot A4g : notifications et préférences d'alerte (D197 à D200 proposées)
+# Lot A4g : notifications et préférences d'alerte (D205 à D208 proposées)
 
 Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`. Dépend de A2b (échéances et alertes), A3 (événements avec audience), A4a (alertes, cockpit) et A4f. Placé après A4f dans le noyau, premier candidat au report en seconde démonstration si le calendrier du 10/11 est menacé (signaler plutôt que bâcler).
 
