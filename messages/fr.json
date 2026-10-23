@@ -10,7 +10,10 @@
   "nav": {
     "label": "Navigation principale",
     "open": "Menu",
-    "breadcrumb": "Fil d'Ariane"
+    "breadcrumb": "Fil d'Ariane",
+    "collapse": "Réduire le menu",
+    "expand": "Déployer le menu",
+    "close": "Fermer le menu"
   },
   "locale": {
     "label": "Langue",

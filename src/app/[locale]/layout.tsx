@@ -1,5 +1,4 @@
 import '@fontsource-variable/inter';
-import { Icon } from '@/components/Icon';
 import '../globals.css';
 import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
@@ -8,14 +7,14 @@ import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { DemoBanner } from '@/components/DemoBanner';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
-import { NavLinks } from '@/components/NavLinks';
+import { AppShell } from '@/components/AppShell';
 import type { NavItem } from '@/components/NavLinks';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { ProfileSwitcher } from '@/components/ProfileSwitcher';
-import { UI_ICONS } from '@/components/icons';
 import { profileDirectory, repository } from '@/data';
 import { routing } from '@/i18n/routing';
 import { getAccessContext } from '@/lib/session';
+import { getSidebarCollapsed } from '@/lib/sidebar';
 import { getTheme } from '@/lib/theme';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -49,31 +48,20 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             {tApp('skip')}
           </a>
           <DemoBanner />
-          <div className="min-h-[calc(100vh-40px)] lg:grid lg:grid-cols-[252px_1fr]">
-            <aside className="hidden bg-surface p-4 print:hidden lg:block">
-              <p className="mb-4 px-3 text-lg font-extrabold tracking-tight text-title">{tApp('name')}</p>
-              <NavLinks items={items} label={tNav('label')} />
-            </aside>
-            <div className="min-w-0">
-              <details className="bg-surface print:hidden lg:hidden">
-                <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2 px-4 font-semibold marker:hidden">
-                  <Icon icon={UI_ICONS.menu} size="md" />
-                  {tNav('open')}
-                </summary>
-                <div className="p-3">
-                  <NavLinks items={items} label={tNav('label')} />
-                </div>
-              </details>
-              <div className="flex flex-wrap items-center justify-end gap-3 px-4 pt-4 print:hidden lg:px-8">
+          <AppShell
+            items={items}
+            collapsedInitial={await getSidebarCollapsed()}
+            labels={{ brand: tApp('name'), nav: tNav('label'), open: tNav('open'), close: tNav('close'), collapse: tNav('collapse'), expand: tNav('expand') }}
+            toolbar={
+              <>
                 <ThemeSwitcher />
                 <LocaleSwitcher />
                 <ProfileSwitcher profiles={profiles} current={ctx.profileId} />
-              </div>
-              <main id="main" tabIndex={-1} className="px-4 py-6 print:px-0 print:pt-8 lg:px-8">
-                {children}
-              </main>
-            </div>
-          </div>
+              </>
+            }
+          >
+            {children}
+          </AppShell>
         </NextIntlClientProvider>
       </body>
     </html>

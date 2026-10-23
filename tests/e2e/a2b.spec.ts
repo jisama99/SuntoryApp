@@ -118,6 +118,25 @@ test.describe('échéances, blocage et saisie en lot (A2b)', () => {
     await expect(page.getByTestId('deadline-alerts')).toContainText('demande de réouverture');
   });
 
+  test('anglais : saisie en lot, blocage et textes traduits', async ({ page, context }) => {
+    await setProfile(context, 'rs');
+    const w = watch(page);
+    await page.goto('/en/needs/batch');
+    // Brouillon repris des parcours précédents : on repart d'un lot vide.
+    await page.getByRole('button', { name: 'Clear the batch' }).click();
+    await expect(page.getByTestId('batch-row')).toHaveCount(3);
+    await paste(page, ROW({ start: '2026-11-16', end: '2026-11-22', days: 'MON;TUE' }));
+    await page.getByRole('button', { name: 'See the summary' }).click();
+    await page.getByRole('button', { name: /Submit 1 complete line/ }).click();
+    const row = page.locator('[data-testid=batch-row][data-status=rejected]');
+    await expect(row.locator('[data-rule=E1]')).toContainText('November 2026');
+    await expect(row.getByRole('button', { name: /Defer to December 2026/ })).toBeVisible();
+    await page.goto('/en/needs');
+    await expect(page.getByTestId('delay-summary')).toContainText('Entry delays');
+    expect(w.external).toEqual([]);
+    expect(w.consoleErrors).toEqual([]);
+  });
+
   test('CVR : demande de réouverture, seule l\'agence administration décide, puis le RS peut de nouveau saisir', async ({ page, context }) => {
     await setProfile(context, 'cvr_client');
     await page.goto('/fr/needs');
@@ -198,23 +217,6 @@ test.describe('échéances, blocage et saisie en lot (A2b)', () => {
     await setProfile(context, 'rs');
     await page.goto('/fr/alerts');
     await expect(page.getByTestId('deadline-alerts')).toContainText('J-2');
-  });
-
-  test('anglais : saisie en lot, blocage et textes traduits', async ({ page, context }) => {
-    await setProfile(context, 'rs');
-    const w = watch(page);
-    await page.goto('/en/needs/batch');
-    // Octobre reste clos (novembre a été rouvert par le parcours précédent).
-    await paste(page, ROW({ start: '2026-10-26', end: '2026-11-01', days: 'MON;TUE' }));
-    await page.getByRole('button', { name: 'See the summary' }).click();
-    await page.getByRole('button', { name: /Submit 1 complete line/ }).click();
-    const row = page.locator('[data-testid=batch-row][data-status=rejected]');
-    await expect(row.locator('[data-rule=E1]')).toContainText('October 2026');
-    await expect(row.getByRole('button', { name: /Defer to November 2026/ })).toBeVisible();
-    await page.goto('/en/needs');
-    await expect(page.getByTestId('delay-summary')).toContainText('Entry delays');
-    expect(w.external).toEqual([]);
-    expect(w.consoleErrors).toEqual([]);
   });
 });
 

@@ -1,6 +1,6 @@
 import {
   Bell, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Circle, ClipboardCheck, ClipboardList, Flag, GitMerge, House, Inbox,
-  Info, Languages, LayoutDashboard, LoaderCircle, Menu, OctagonAlert, Settings, ShieldCheck, Store,
+  Info, Languages, LayoutDashboard, LoaderCircle, Menu, OctagonAlert, PanelLeftClose, PanelLeftOpen, Settings, ShieldCheck, Store,
   TriangleAlert, UserRound, Wallet, X, Sun, Moon, Monitor,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -31,6 +31,8 @@ export const UI_ICONS = {
   calendar: CalendarDays,
   close: X,
   menu: Menu,
+  panelClose: PanelLeftClose,
+  panelOpen: PanelLeftOpen,
   language: Languages,
   profile: UserRound,
   info: Info,

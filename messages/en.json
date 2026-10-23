@@ -10,7 +10,10 @@
   "nav": {
     "label": "Main navigation",
     "open": "Menu",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "collapse": "Collapse the menu",
+    "expand": "Expand the menu",
+    "close": "Close the menu"
   },
   "locale": {
     "label": "Language",
