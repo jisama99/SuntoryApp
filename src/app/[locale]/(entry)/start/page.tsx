@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { enterAsProfile } from '@/app/actions';
-import { BrandLogo } from '@/components/BrandLogo';
+import { BrandLogo, BrandMark } from '@/components/BrandLogo';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { Visual } from '@/components/Visual';
@@ -45,9 +45,7 @@ export default async function StartPage({ params }: { params: Promise<{ locale: 
             </button>
           ))}
         </form>
-        <span className="inline-flex w-fit rounded-full bg-anchor px-5 py-2">
-          <BrandLogo brand="marvesting" className="h-5 opacity-90" />
-        </span>
+        <BrandMark className="mt-2 self-start" />
       </section>
     </main>
   );

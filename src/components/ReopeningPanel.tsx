@@ -86,7 +86,7 @@ export function DirectReopen({ context, zones, closedMonths, closedWeeks }: { co
       if (r.status === 'ok') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setRes(null) });
     });
   return (
-    <form noValidate onSubmit={(e) => { e.preventDefault(); submit(); }} className="grid max-w-xl gap-4 rounded-card bg-surface p-5 shadow-card" aria-labelledby="direct-title" data-testid="direct-reopen">
+    <form noValidate onSubmit={(e) => { e.preventDefault(); submit(); }} className="grid gap-4 rounded-card bg-surface p-5 shadow-card" aria-labelledby="direct-title" data-testid="direct-reopen">
       <h3 id="direct-title" className="text-lg font-semibold">{t('directTitle')}</h3>
       <SelectField id="direct-target" label={t('target')} placeholder={t('choose')} value={target} options={options} onChange={(e) => { setTarget(e.target.value); setRes(null); }} />
       <SelectField id="direct-zone" label={t('zone')} placeholder={t('choose')} value={zone} options={zones.map((z) => ({ value: z.id, text: z.text }))} onChange={(e) => { setZone(e.target.value); setRes(null); }} />

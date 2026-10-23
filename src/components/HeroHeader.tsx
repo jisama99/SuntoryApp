@@ -9,7 +9,7 @@ import type { VisualId } from './Visual';
 export function HeroHeader({ visual, title, subtitle, priority = false }: { visual: VisualId | null; title: string; subtitle?: string; priority?: boolean }) {
   if (!visual) return <PageHeader title={title} subtitle={subtitle} />;
   return (
-    <header data-testid="hero" data-visual={visual} className="relative isolate mb-8 flex min-h-(--hero-min-h-mobile) items-end overflow-hidden rounded-card bg-alt sm:min-h-(--hero-min-h)">
+    <header data-testid="hero" data-visual={visual} className="relative isolate mb-10 flex min-h-(--hero-min-h-mobile) items-end overflow-hidden rounded-card bg-alt sm:min-h-(--hero-min-h)">
       <Visual id={visual} priority={priority} className="fade-bottom absolute inset-0 -z-10 size-full object-cover" />
       <div className="veil m-4 max-w-xl rounded-card p-5">
         <h1 className="text-xl font-extrabold tracking-tight text-title">{title}</h1>

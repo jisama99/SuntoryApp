@@ -55,7 +55,8 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
     await expect(hero).toHaveAttribute('data-visual', 'nature');
     expect(await hero.locator('img').getAttribute('fetchpriority')).toBe('high');
     await expect(page.locator('#app-sidebar img[src*="logo-suntory"]')).toBeVisible();
-    await expect(page.locator('footer img[src*="logo-marvesting"]')).toBeVisible();
+    await expect(page.locator('footer .brand-mark')).toBeVisible();
+    expect(await page.locator('footer .brand-mark').evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Bonjour');
     expect(w.external).toEqual([]);
   });
@@ -183,4 +184,19 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
     expect(alpha).toMatch(/color\(srgb|rgba?\(/);
     await context.addCookies([{ name: 'demo_theme', value: 'light', url: 'http://localhost:3100' }]);
   });
+});
+
+test('D182 : la carte « Rouvrir sans demande » a la largeur de sa voisine dans le calendrier des échéances', async ({ page, context }) => {
+  await setProfile(context, 'agency_admin');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/fr/settings/deadlines');
+  await expect(page.getByTestId('direct-reopen')).toBeVisible();
+  await expect(page.getByTestId('deadline-editor')).toBeVisible();
+  await expect
+    .poll(async () => {
+      const direct = await page.getByTestId('direct-reopen').boundingBox();
+      const editor = await page.getByTestId('deadline-editor').locator('form').first().boundingBox();
+      return Math.abs((direct?.width ?? 0) - (editor?.width ?? 1));
+    })
+    .toBeLessThanOrEqual(1);
 });

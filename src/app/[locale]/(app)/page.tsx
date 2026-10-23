@@ -47,7 +47,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         title={greeting}
         subtitle={`${t(`role.${ctx.profileId}`)} · ${dateLine}`}
       />
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+      <div className="mb-10 grid gap-6 sm:grid-cols-3">
         <Tile tone="aqua" label={t('home.tiles.zones')} value={String(zones.length)} />
         <Tile tone="sand" attention={hasRisk} label={t('home.tiles.alerts')} value={String(alerts.length)}>
           {hasRisk ? <StatusTag tone="important">{t('home.tiles.toHandle')}</StatusTag> : null}
@@ -56,7 +56,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {clock.iso_week.split('-')[0]}
         </Tile>
       </div>
-      <div className="grid gap-8 xl:grid-cols-2">
+      <div className="grid gap-10 xl:grid-cols-2">
         <section aria-labelledby="scope-title" className="flex flex-col gap-3">
           <h2 id="scope-title" className="text-lg font-semibold">{t('home.scope.title')}</h2>
           {ctx.scope.kind === 'all' ? <p className="text-muted">{t('home.scope.all')}</p> : null}

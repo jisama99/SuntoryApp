@@ -53,6 +53,12 @@ for (const locale of LOCALES) {
       await page.goto(`/${locale}/settings`);
       await page.waitForLoadState('networkidle');
       await shot('settings_skin', 'light');
+      for (const [route, name] of [['deadlines', 'deadlines_texts'], ['dispositifs?dispositif=second_placement', 'params_texts']] as const) {
+        await page.goto(`/${locale}/settings/${route}`);
+        await page.waitForLoadState('networkidle');
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await shot(name, 'light');
+      }
       await setProfile(context, 'direction_client');
       expect(w.external).toEqual([]);
       expect(w.consoleErrors).toEqual([]);

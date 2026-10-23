@@ -20,3 +20,11 @@ export function BrandLogo({ brand, className = '' }: { brand: 'suntory' | 'marve
     />
   );
 }
+
+/**
+ * Marvesting en pied de page : même silhouette que le logo fourni, une seule teinte (celle du texte secondaire), donc
+ * fondu dans la page en clair comme en sombre, sans pastille ni fond rapporté.
+ */
+export function BrandMark({ className = '' }: { className?: string }) {
+  return <span aria-hidden="true" className={`brand-mark inline-block aspect-[22/5] h-5 ${className}`.trim()} />;
+}

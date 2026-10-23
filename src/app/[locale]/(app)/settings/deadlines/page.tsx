@@ -146,7 +146,11 @@ export default async function DeadlinesPage({ params, searchParams }: {
             )}
           </ul>
         )}
-        {canEdit ? <DirectReopen context={deadline} zones={zoneOptions} closedMonths={closedMonths} closedWeeks={closedWeeks} /> : null}
+        {canEdit ? (
+          <div className="grid gap-6 lg:grid-cols-2">
+            <DirectReopen context={deadline} zones={zoneOptions} closedMonths={closedMonths} closedWeeks={closedWeeks} />
+          </div>
+        ) : null}
       </section>
 
       <section aria-labelledby="trace-title" className="mb-8 flex flex-col gap-3">

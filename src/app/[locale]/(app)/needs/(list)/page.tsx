@@ -147,7 +147,7 @@ export default async function NeedsPage({ params, searchParams }: {
       {ctx.profileId === 'cvr_client' ? (
         <ReopenRequestForm context={deadline} closedMonths={closedMonths} closedWeeks={closedWeeks} requests={requests} />
       ) : null}
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-10 grid gap-6 sm:grid-cols-3">
         <Tile tone="aqua" label={t('needs.tiles.submitted')} value={String(totals.submitted)} />
         <Tile tone="lav" label={t('needs.tiles.hours')} value={String(totals.weekly_hours)} />
         <Tile tone="sand" label={t('needs.tiles.drafts')} value={String(totals.drafts)}>{t('needs.tiles.draftsNote')}</Tile>

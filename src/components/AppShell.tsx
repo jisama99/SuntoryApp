@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { MenuKey } from '@/domain/types';
 import { SIDEBAR_COOKIE } from '@/lib/sidebar-cookie';
-import { BrandLogo } from './BrandLogo';
+import { BrandLogo, BrandMark } from './BrandLogo';
 import { Icon } from './Icon';
 import { MENU_ICONS, UI_ICONS } from './icons';
 import { NavLinks } from './NavLinks';
@@ -91,10 +91,10 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       data-collapsed={collapsed}
       className={`min-h-screen lg:grid ${collapsed ? 'lg:grid-cols-[var(--sidebar-width-collapsed)_1fr]' : 'lg:grid-cols-[var(--sidebar-width)_1fr]'} motion-safe:transition-[grid-template-columns]`}
     >
-      <aside id="app-sidebar" className="hidden bg-surface p-4 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
-        <div className={`mb-4 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+      <aside id="app-sidebar" className="hidden bg-surface px-4 pb-6 pt-8 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
+        <div className={`mb-10 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
           {collapsed ? null : (
-            <div className="flex flex-col gap-2 px-3">
+            <div className="flex flex-col gap-3 px-3">
               <BrandLogo brand="suntory" className="h-8" />
               <p className="text-lg font-extrabold tracking-tight text-title">{labels.brand}</p>
             </div>
@@ -117,18 +117,16 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       </aside>
       <div className="min-w-0">
         <header className="bg-surface print:hidden lg:hidden">
-          <div className="flex min-h-14 items-center gap-3 px-4">
+          <div className="flex min-h-16 items-center gap-3 px-5">
             <BrandLogo brand="suntory" className="h-6" />
             <p className="text-base font-extrabold tracking-tight text-title">{labels.brand}</p>
           </div>
         </header>
-        <div className="flex flex-wrap items-center justify-end gap-3 px-4 pt-4 print:hidden lg:px-8">{toolbar}</div>
-        <main id="main" tabIndex={-1} className="px-4 pb-28 pt-6 print:px-0 print:pt-8 lg:px-8 lg:pb-6">
+        <div className="flex flex-wrap items-center justify-end gap-3 px-5 pt-6 print:hidden lg:px-10">{toolbar}</div>
+        <main id="main" tabIndex={-1} className="px-5 pb-28 pt-8 print:px-0 print:pt-8 lg:px-10 lg:pb-10">
           {children}
-          <footer className="mt-12 flex justify-center print:hidden">
-            <span className="inline-flex rounded-full bg-anchor px-5 py-2">
-              <BrandLogo brand="marvesting" className="h-5 opacity-90" />
-            </span>
+          <footer className="mt-16 flex justify-center print:hidden">
+            <BrandMark />
           </footer>
         </main>
       </div>

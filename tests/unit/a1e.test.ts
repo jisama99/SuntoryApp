@@ -53,7 +53,7 @@ describe('visuels optimisés (D160, D163)', () => {
 
   it('aucune image hors public/visuels (hors captures et documents), aucune origine externe', () => {
     const images = walk(ROOT, (f) => /\.(webp|jpe?g|png|gif|svg)$/i.test(f) && !f.includes('node_modules') && !f.includes('/.next/') && !f.includes('/docs/') && !f.includes('/test-results/'));
-    const outside = images.map(rel).filter((f) => !f.startsWith('public/visuels/'));
+    const outside = images.map(rel).filter((f) => !f.startsWith('public/visuels/') && f !== 'src/app/icon.png');
     expect(outside).toEqual([]);
     expect(readdirSync(VISUELS).filter((f) => !f.endsWith('.webp') && f !== 'manifest.json')).toEqual([]);
     const code = walk(path.join(ROOT, 'src'), (f) => /\.(tsx?|css)$/.test(f)).filter((f) => /https?:\/\/[^\s'"`)]+\.(webp|jpe?g|png|svg)/i.test(read(f)));
@@ -205,5 +205,22 @@ describe('titres et menus conformes au glossaire', () => {
     expect(fr.needs.title).toBe('Vos besoins en merchandising');
     expect(en.needs.title).toBe('Your merchandising needs');
     expect(glossary).toContain('Vos besoins en merchandising | Your merchandising needs');
+  });
+});
+
+/** Textes affichés sans références internes (D182). Ces mentions restent dans la documentation et les comptes rendus. */
+describe('aucune référence interne dans les textes affichés (D182)', () => {
+  const flat = (o: Record<string, unknown>, pre = ''): Array<[string, string]> =>
+    Object.entries(o).flatMap(([k, v]) => (v && typeof v === 'object' ? flat(v as Record<string, unknown>, `${pre}${k}.`) : [[`${pre}${k}`, String(v)] as [string, string]]));
+  const FORBIDDEN = /\bD\d{1,3}\b|\b(?:Lecture|Reading) [AB]\b|Hypoth[eè]se|Hypothesis|SOEFOU|\bH\d\b|\bQ-N\d/;
+  it('fr.json et en.json', () => {
+    for (const [name, dict] of [['fr', fr], ['en', en]] as const) {
+      const hits = flat(dict as Record<string, unknown>).filter(([, v]) => FORBIDDEN.test(v)).map(([k, v]) => `${name} ${k}: ${v}`);
+      expect(hits).toEqual([]);
+    }
+  });
+  it('l\'icône du site vient du logo (PNG), plus d\'icône provisoire', () => {
+    expect(statSync(path.join(ROOT, 'src/app/icon.png')).size).toBeGreaterThan(300);
+    expect(() => statSync(path.join(ROOT, 'src/app/icon.svg'))).toThrow();
   });
 });
