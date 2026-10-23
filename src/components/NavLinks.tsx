@@ -24,11 +24,10 @@ export function NavLinks({ items, label }: { items: NavItem[]; label: string }) 
               <Link
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
-                className={`group relative flex min-h-12 items-center gap-3 rounded-ctl px-2 text-ink transition-colors hover:bg-alt ${
+                className={`group flex min-h-12 items-center gap-3 rounded-ctl px-2 text-ink transition-colors hover:bg-alt ${
                   active ? 'bg-sel font-semibold' : 'font-medium'
                 }`}
               >
-                {active ? <span aria-hidden="true" className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-pink" /> : null}
                 <span
                   data-nav-tile
                   className={`grid size-9 shrink-0 place-items-center rounded-[10px] transition-colors ${

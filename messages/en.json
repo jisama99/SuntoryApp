@@ -54,6 +54,12 @@
       "title": "Recent alerts",
       "empty": "No alert for your scope.",
       "all": "See all alerts"
+    },
+    "tiles": {
+      "zones": "Zones in your scope",
+      "alerts": "Open alerts",
+      "week": "Current week",
+      "toHandle": "To handle"
     }
   },
   "role": {
@@ -156,12 +162,6 @@
     "report": {
       "kicker": "Demo report",
       "headline": "The conclusion title states the result in one sentence",
-      "kpi1": "Indicator 1",
-      "kpi1Tag": "Stable",
-      "kpi2": "Indicator 2",
-      "kpi2Tag": "Target met",
-      "kpi3": "Indicator 3",
-      "kpi3Tag": "To handle",
       "chart": "Breakdown by series (demo values)",
       "series": {
         "a": "Series A",
@@ -169,7 +169,17 @@
         "c": "Series C",
         "d": "Series D"
       },
-      "note": "Reading note: the highlighted series uses the main color, the others stay grey."
+      "note": "Reading note: the navy tile anchors the main result, each family keeps its tint, pink flags what needs action.",
+      "global": "Overall result",
+      "goalMet": "Target met",
+      "volume": "Volume",
+      "stable": "Stable",
+      "budget": "Budget used",
+      "onTarget": "On target",
+      "zones": "Zones tracked",
+      "upToDate": "All up to date",
+      "todo": "To handle",
+      "priority": "Priority"
     },
     "reportTitle": "Report page template"
   },

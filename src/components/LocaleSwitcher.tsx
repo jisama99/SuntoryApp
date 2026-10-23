@@ -9,7 +9,7 @@ export function LocaleSwitcher() {
   const current = useLocale();
   const pathname = usePathname();
   return (
-    <div role="group" aria-label={t('label')} className="inline-flex rounded-full border border-line bg-surface p-0.5">
+    <div role="group" aria-label={t('label')} className="inline-flex rounded-full bg-alt p-0.5">
       {routing.locales.map((loc) => (
         <Link
           key={loc}

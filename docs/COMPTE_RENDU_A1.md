@@ -70,6 +70,7 @@ Sorties détaillées : voir `npm test` et `npm run test:e2e` à relancer sur le 
 - Modèle de page rapport dans la bibliothèque : titre-conclusion, trois chiffres clés, barres avec valeur écrite, note de lecture.
 - Tests : contrastes vérifiés dans les deux modes (124 tests Vitest dont 1 ignoré), 22 tests e2e (dont thème Système et choix explicite), 36 captures (dont 4 en sombre).
 - D125 : icônes harmonisées (gabarit `Icon`, pastille de menu 36 px, trait 1,75 en taille 20 px) et page A4 du modèle de rapport (captures `rapport_A4_fr.png`, `rapport_A4_en.png`, PDF intermédiaire non versionné). Tests : 127 Vitest (1 ignoré), 23 e2e, 38 captures.
+- D126 : tuiles colorées (gabarit `Tile`, options A et C), tuiles de l'accueil (zones, alertes, semaine), suppression des traits décoratifs, test de règles de style. Tests : 162 Vitest (1 ignoré), 23 e2e, 38 captures.
 - Écart : D118 à D122 restent proposées (voir §5). La police Inter devient un repli (D121 à ajuster).
 
 ## 8. Suite

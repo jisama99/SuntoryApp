@@ -15,7 +15,7 @@ function Frame({ icon, title, body, role, children, spin }: {
     <div
       role={role}
       aria-busy={spin ? true : undefined}
-      className="flex flex-col items-center gap-3 rounded-card border border-dashed border-line bg-surface px-6 py-10 text-center"
+      className="flex flex-col items-center gap-3 rounded-card bg-tint-aqua px-6 py-10 text-center"
     >
       <Icon icon={Glyph} size="xl" className={`text-muted ${spin ? 'motion-safe:animate-spin' : ''}`} />
       <h2 className="text-lg font-semibold">{title}</h2>

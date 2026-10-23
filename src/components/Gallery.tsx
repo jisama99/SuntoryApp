@@ -88,7 +88,7 @@ export async function Gallery() {
         <h2 id="g-icons" className="text-lg font-semibold">{t('icons')}</h2>
         <ul className="flex flex-wrap gap-4">
           {Object.entries(MENU_ICONS).map(([key, Glyph]) => (
-            <li key={key} className="flex items-center gap-2 rounded-ctl border border-line bg-surface px-3 py-2">
+            <li key={key} className="flex items-center gap-2 rounded-ctl bg-alt px-3 py-2">
               <Icon icon={Glyph} size="md" />
               <span>{m(key)}</span>
             </li>

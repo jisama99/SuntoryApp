@@ -32,6 +32,12 @@
   --color-navy: #08071e;
   --color-marine: #1a1950;
   --color-warm: #f1efea;
+  --color-tint-aqua: #e7f5f9;
+  --color-tint-lav: #ecebf7;
+  --color-tint-sand: #f1efea;
+  --color-tint-rose: #fde6ee;
+  --color-anchor: #1a1950;
+  --color-muted-strong: #4d606b;
 
   --color-ok: #1b7b45;
   --color-ok-soft: #e3f5ea;
@@ -66,6 +72,12 @@ html {
   --color-pink: #ff5c93;
   --color-marine: #3a39a0;
   --color-warm: #232019;
+  --color-tint-aqua: #12353f;
+  --color-tint-lav: #23224d;
+  --color-tint-sand: #2a2620;
+  --color-tint-rose: #3b1a26;
+  --color-anchor: #34338f;
+  --color-muted-strong: #b4c5ce;
   --color-ok: #6fd39a;
   --color-ok-soft: #12301f;
   --color-warn: #f2c265;
@@ -94,6 +106,12 @@ html {
     --color-pink: #ff5c93;
     --color-marine: #3a39a0;
     --color-warm: #232019;
+    --color-tint-aqua: #12353f;
+    --color-tint-lav: #23224d;
+    --color-tint-sand: #2a2620;
+    --color-tint-rose: #3b1a26;
+    --color-anchor: #34338f;
+    --color-muted-strong: #b4c5ce;
     --color-ok: #6fd39a;
     --color-ok-soft: #12301f;
     --color-warn: #f2c265;

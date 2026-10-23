@@ -43,6 +43,18 @@ const MODE_PAIRS: Array<[string, string, number, string]> = [
   ['focus', 'page', 3, 'anneau de focus sur fond de page'],
   ['field', 'surface', 3, 'bordure de champ (WCAG 1.4.11)'],
   ['field', 'page', 3, 'barre de graphique de contexte'],
+  ['ink', 'tint-aqua', 4.5, 'texte sur tuile aqua'],
+  ['ink', 'tint-lav', 4.5, 'texte sur tuile lavande'],
+  ['ink', 'tint-sand', 4.5, 'texte sur tuile sable'],
+  ['ink', 'tint-rose', 4.5, 'texte sur tuile rose (action)'],
+  ['muted-strong', 'tint-aqua', 4.5, 'texte secondaire sur tuile aqua'],
+  ['muted-strong', 'tint-lav', 4.5, 'texte secondaire sur tuile lavande'],
+  ['muted-strong', 'tint-sand', 4.5, 'texte secondaire sur tuile sable'],
+  ['muted-strong', 'tint-rose', 4.5, 'texte secondaire sur tuile rose'],
+  ['muted-strong', 'surface', 4.5, 'note de lecture sur carte'],
+  ['muted-strong', 'alt', 4.5, 'texte secondaire sur fond alterné'],
+  ['link', 'tint-aqua', 4.5, 'lien en pastille sur teinte aqua'],
+  ['ink', 'primary-soft', 4.5, 'texte sur teinte principale'],
   ['primary', 'surface', 3, 'bordure du bouton secondaire et barre principale'],
 ];
 
@@ -53,6 +65,8 @@ const FIXED_PAIRS: Array<[string, string, number, string]> = [
   [WHITE, 'navy', 4.5, 'bandeau de données fictives'],
   ['navy', 'pink-pale', 4.5, 'étiquette importante et pastille du bandeau'],
   [WHITE, 'marine', 4.5, 'langue ou thème actif, lien d\'évitement'],
+  [WHITE, 'anchor', 4.5, 'texte sur tuile d\'ancrage'],
+  ['aqua', 'anchor', 3, 'barre de progression sur tuile d\'ancrage'],
 ];
 
 const pick = (tokens: Record<string, string>, name: string) => {

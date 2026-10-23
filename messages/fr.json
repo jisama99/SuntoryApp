@@ -54,6 +54,12 @@
       "title": "Alertes récentes",
       "empty": "Aucune alerte pour votre périmètre.",
       "all": "Voir toutes les alertes"
+    },
+    "tiles": {
+      "zones": "Zones dans votre périmètre",
+      "alerts": "Alertes en cours",
+      "week": "Semaine en cours",
+      "toHandle": "À traiter"
     }
   },
   "role": {
@@ -156,12 +162,6 @@
     "report": {
       "kicker": "Rapport de démonstration",
       "headline": "Le titre-conclusion énonce le résultat en une phrase",
-      "kpi1": "Indicateur 1",
-      "kpi1Tag": "Stable",
-      "kpi2": "Indicateur 2",
-      "kpi2Tag": "Objectif atteint",
-      "kpi3": "Indicateur 3",
-      "kpi3Tag": "À traiter",
       "chart": "Répartition par série (valeurs de démonstration)",
       "series": {
         "a": "Série A",
@@ -169,7 +169,17 @@
         "c": "Série C",
         "d": "Série D"
       },
-      "note": "Note de lecture : la série mise en avant porte la couleur principale, les autres restent en gris."
+      "note": "Note de lecture : la tuile marine ancre le résultat principal, chaque famille garde sa teinte, le rose signale ce qui demande une action.",
+      "global": "Résultat global",
+      "goalMet": "Objectif atteint",
+      "volume": "Volume",
+      "stable": "Stable",
+      "budget": "Budget consommé",
+      "onTarget": "Dans la cible",
+      "zones": "Zones suivies",
+      "upToDate": "Toutes à jour",
+      "todo": "À traiter",
+      "priority": "Prioritaire"
     },
     "reportTitle": "Modèle de page rapport"
   },

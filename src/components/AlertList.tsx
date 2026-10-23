@@ -18,7 +18,7 @@ export async function AlertList({ alerts, zones, showAudience }: { alerts: Alert
       {alerts.map((a) => {
         const zone = a.zone_id ? byId.get(a.zone_id) : undefined;
         return (
-          <li key={a.id} className="flex flex-col gap-2 rounded-card border border-line bg-surface p-4 shadow-card">
+          <li key={a.id} className="flex flex-col gap-2 rounded-card bg-surface p-4 shadow-card">
             <div className="flex flex-wrap items-center gap-2">
               <StatusTag tone={SEVERITY_TONE[a.severity]}>{t(`severity.${a.severity}`)}</StatusTag>
               {showAudience ? <StatusTag tone="neutral">{t(`audience.${a.audience}`)}</StatusTag> : null}

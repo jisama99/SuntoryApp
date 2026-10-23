@@ -50,12 +50,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           </a>
           <DemoBanner />
           <div className="min-h-[calc(100vh-40px)] lg:grid lg:grid-cols-[252px_1fr]">
-            <aside className="hidden print:hidden border-r border-line bg-surface p-4 lg:block">
+            <aside className="hidden bg-surface p-4 print:hidden lg:block">
               <p className="mb-4 px-3 text-lg font-extrabold tracking-tight text-title">{tApp('name')}</p>
               <NavLinks items={items} label={tNav('label')} />
             </aside>
             <div className="min-w-0">
-              <details className="border-b border-line bg-surface print:hidden lg:hidden">
+              <details className="bg-surface print:hidden lg:hidden">
                 <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2 px-4 font-semibold marker:hidden">
                   <Icon icon={UI_ICONS.menu} size="md" />
                   {tNav('open')}

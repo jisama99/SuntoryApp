@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AlertList } from '@/components/AlertList';
 import { PageHeader } from '@/components/PageHeader';
+import { StatusTag } from '@/components/StatusTag';
+import { Tile } from '@/components/Tile';
 import { EmptyState } from '@/components/States';
 import { ZoneLabel } from '@/components/ZoneLabel';
 import { repository } from '@/data';
@@ -31,10 +33,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const indent = { dr: 'pl-0', cvr: 'pl-6', rs: 'pl-12' } as const;
   const recent = alerts.slice(0, 3);
   const showAudience = ctx.side !== 'client';
+  const hasRisk = alerts.some((a) => a.severity === 'risk');
 
   return (
     <>
       <PageHeader title={greeting} subtitle={`${t(`role.${ctx.profileId}`)} · ${dateLine}`} />
+      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+        <Tile tone="aqua" label={t('home.tiles.zones')} value={String(zones.length)} />
+        <Tile tone="sand" attention={hasRisk} label={t('home.tiles.alerts')} value={String(alerts.length)}>
+          {hasRisk ? <StatusTag tone="important">{t('home.tiles.toHandle')}</StatusTag> : null}
+        </Tile>
+        <Tile tone="lav" label={t('home.tiles.week')} value={formatIsoWeek(clock.iso_week, ctx.locale).split('-')[1] ?? clock.iso_week}>
+          {clock.iso_week.split('-')[0]}
+        </Tile>
+      </div>
       <div className="grid gap-8 xl:grid-cols-2">
         <section aria-labelledby="scope-title" className="flex flex-col gap-3">
           <h2 id="scope-title" className="text-lg font-semibold">{t('home.scope.title')}</h2>
@@ -42,7 +54,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {shownZones.length === 0 ? (
             <EmptyState title={t('states.empty.title')} body={t('home.scope.empty')} />
           ) : (
-            <ul className="flex flex-col gap-2 rounded-card border border-line bg-surface p-4 shadow-card">
+            <ul className="flex flex-col gap-2 rounded-card bg-surface p-4 shadow-card">
               {shownZones.map((z) => (
                 <li key={z.id} className={indent[z.kind]}>
                   <ZoneLabel zone={z} />
@@ -59,7 +71,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <AlertList alerts={recent} zones={zones} showAudience={showAudience} />
           )}
           {menu.some((e) => e.key === 'alerts') ? (
-            <Link href="/alerts" className="font-semibold text-link underline underline-offset-4">
+            <Link href="/alerts" className="inline-flex min-h-11 w-fit items-center rounded-full bg-tint-aqua px-5 font-semibold text-link transition-colors hover:bg-sel">
               {t('home.alerts.all')}
             </Link>
           ) : null}
