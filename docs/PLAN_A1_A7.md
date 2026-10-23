@@ -12,6 +12,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A1e | Identité visuelle, titres, skin d'accueil (D160, D161) | A2b | D163 (droits des visuels) | Noyau ; prompt `24_PROMPT_LOT_A1E.md` |
 | A1f | Connexion par identifiant et comptes gérés par l'agence (D188, D189) | A1e | Aucune (D189 validée) | Noyau, avant A3 ; prompt `28_PROMPT_LOT_A1F.md` |
 | A3 | Propositions, décisions, qui doit agir, entonnoir | A2 | D11/D92, D97 | Charge élevée ; scission optionnelle A3a / A3b |
+| A3c | Validation CVR, escalade DR, délégations, qualification agence (F-30.1 à F-30.4) | A3 fusionné | D09 (RACI, délais), D43 (enveloppe, branchée en A4b1) | Correctif de périmètre issu du compte rendu A3 ; prompt `33_PROMPT_LOT_A3C.md` |
 | A4b1 | Enveloppe cliente, allocation agence, prévisionnel par besoin (D153, D157) | A3 | D07 | Noyau ; prompt `23_PROMPT_LOT_A4B1.md` |
 | A4a | Lecture, indicateurs, alertes, tableau de bord cliente | A3 | D05–D08 (moteur financier : montants fictifs seulement), P3 graphiques | Garde ; fixer le choix de bibliothèque de graphiques en début de lot |
 | A4d | Fiche secteur unique et plans d'action sur dépassement (D127) | A3, A4a, A5 | Q-N1-1 (D08), Q-N3-1 | Seconde démonstration ; prompt `21_PROMPT_LOT_A4D.md` |
@@ -21,11 +22,12 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A4c2 | R-01 État des besoins et recrutements, boucles AUT-06 à 11, horloge | A4c1 ; événements de A2/A3 | D93, D94, D96 | Garde ; dépend de l'émission d'événements dès A2 |
 | A5 | Terrain mobile, absences | A3 | D14/D15 révisées par D42, Q19 | À relire à la lumière de D42 (pas de compte intervenant) |
 | A4f | Vue Planning (D190) | A5 | Aucune | Noyau, après A5 ; prompt `30_PROMPT_LOT_A4F.md` |
+| A4g | Notifications et préférences d'alerte : réglages agence, « Mes notifications », centre, file push simulée (D197 à D200 proposées) | A3, A4a, A4f | Alertes obligatoires, heures calmes (hypothèses à valider) | Noyau si le calendrier du 10/11 le permet, sinon seconde démonstration ; prompt `32_PROMPT_LOT_A4G.md` ; aucun envoi réel |
 | A5b | Photos terrain sur images fictives | A5 | D101 (enseignes), D102 (durée par Impact) | Garde ; images générées |
 | A6 | Import Excel en quarantaine | A2 | D04/Q20, D51, P4 (bibliothèque) | Garde |
 | A7 | Recette, script de démonstration, captures | A1 à A6 | Q1–Q23 à provoquer | Garde |
 | A8 | Signalement d'un problème et écran Demandes (D164) | A7 | Adresse de notification en variable | Après le noyau ; `25_PROMPT_LOT_A8.md` |
-| A9 | Déploiement OVHcloud (D165, D166) | Démonstration validée, abonnement | Abonnement à prendre | Après validation ; `26_PROMPT_LOT_A9.md` |
+| A9 | Déploiement OVHcloud (D165, D166) | Démonstration validée, abonnement | Abonnement à prendre | Après validation ; `26_PROMPT_LOT_A9.md` ; porte aussi le Web Push réel et la PWA (service worker, clés VAPID, HTTPS) |
 
 ## 2. Scissions proposées
 

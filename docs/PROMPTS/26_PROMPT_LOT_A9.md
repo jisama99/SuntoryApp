@@ -2,7 +2,7 @@
 
 Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`. **Ne démarre qu'après validation de la démonstration et prise de l'abonnement OVHcloud** (D165). Préparatifs sans compte autorisés : conteneur, scripts, procédure.
 
-LECTURES : CLAUDE.md, docs/DECISIONS.md (D112 à D116, D148, D165, D166), docs/WORKFLOW_MAINTENANCE.md, HEBERGEMENT_CONFORME.md si présent.
+LECTURES : CLAUDE.md, docs/DECISIONS.md (D112 à D116, D148, D165, D166), docs/WORKFLOW_MAINTENANCE.md, HEBERGEMENT_CONFORME.md si présent, docs/PUSH_WEB_PREPARATION.md (produit par A4g).
 
 ÉTAPES
 1. Construction de production : build Next en mode autonome, conteneur, variables d'environnement documentées (aucun secret dans le dépôt), en-têtes de sécurité, aucune requête externe.
@@ -10,6 +10,8 @@ LECTURES : CLAUDE.md, docs/DECISIONS.md (D112 à D116, D148, D165, D166), docs/W
 3. Retour arrière documenté vers la version précédente ; sauvegardes ; santé de l'application.
 4. Procédure d'exploitation docs/RUNBOOK.md : déployer, revenir en arrière, rotation des secrets, journaux.
 5. Données : démonstration fictive ; données réelles seulement après D109 bis et DPO ; bandeau selon l'environnement.
+6. Web Push réel et PWA (prévus en A4g, canal `NotificationChannel`) : service worker, manifeste, clés VAPID en variables d'environnement, abonnement et désabonnement par appareil, consentement navigateur, contenu minimal sans chiffre (lien vers l'application), tests iOS (installation écran d'accueil) et Android, audience vérifiée avant tout envoi, HTTPS obligatoire. Aucun envoi sans validation de la file.
+7. Automatisation OVHcloud : documenter et scripter la création des environnements (API, CLI ou OpenTofu selon l'offre souscrite), DNS, certificat HTTPS, déploiement par GitHub Actions avec validation manuelle avant production ; aucun secret dans le dépôt.
 
 CRITÈRES
 1. Commandes de contrôle exécutées, sortie reportée ; build de production réussi.

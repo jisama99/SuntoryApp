@@ -6,10 +6,12 @@ Version du 23/10/2026. **Un lot = une session Claude Code**, jamais deux lots da
 |---|---|---|---|---|
 | 1 | A1f | `28_PROMPT_LOT_A1F.md` | Maintenant | Aucun, A1e est fusionné. |
 | 2 | A3 | `12_PROMPT_LOT_A3.md` | Après fusion de A1f | A1f fusionné. |
+| 2 bis | A3c | `33_PROMPT_LOT_A3C.md` | Après fusion de A3 | A3 fusionné. |
 | 3 | A4b1 | `23_PROMPT_LOT_A4B1.md` | Après fusion de A3 | A3 fusionné ; montants réels non fournis : jeux fictifs (D07). |
 | 4 | A4a | `13_PROMPT_LOT_A4A.md` | Après fusion de A4b1 | A4b1 fusionné. |
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | Après fusion de A4a | A4a fusionné. |
 | 6 | A4f | `30_PROMPT_LOT_A4F.md` | Après fusion de A5 | A5 fusionné. |
+| 6 bis | A4g | `32_PROMPT_LOT_A4G.md` | Après fusion de A4f (premier candidat au report en seconde démonstration) | A4f fusionné ; push et e-mail simulés. |
 | 7 | A6 | `15_PROMPT_LOT_A6.md` | Après fusion de A4f | A4f fusionné. |
 | 8 | A7 | `16_PROMPT_LOT_A7.md` | Après fusion de A6 (fin du noyau) | A6 fusionné. |
 | 9 | A4b2 | `17_PROMPT_LOT_A4B.md` | Seconde démonstration, après retour sur le noyau | Noyau fusionné. |
@@ -88,6 +90,25 @@ Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit e
 Récapitule en dix lignes maximum.
 ```
 
+## Lot A3c
+_Après fusion de A3. Prérequis : A3 fusionné._
+
+```text
+LANCEMENT · LOT A3c · SUNTORY REFONTE V3
+
+Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
+
+AVANT TOUT
+1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/DECISIONS.md contient D191 et les décisions d'A3 fusionnées, que docs/COMPTE_RENDU_A3.md existe et que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16. Sinon, arrête-toi et dis-le.
+2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/33_PROMPT_LOT_A3C.md, et ce qu'il demande de lire.
+3. Exécute uniquement ce lot. N'enchaîne pas.
+
+RÈGLES
+Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit et push de ta branche de session seulement, en fin de lot, après le compte rendu. Supabase et Vercel interdits. Aucune requête externe (règle 10). Aucun fichier de données réelles lu. Une hypothèse n'est pas une décision : propose les mises à jour du registre sans les inscrire, avec des numéros après le dernier du registre. Les contrôles (typecheck, lint, tests, build, e2e) sont exécutés et leur sortie reportée ; un test non lancé n'est pas déclaré passé. Dis honnêtement ce que tu n'as pas relu. Règle 17 (D192) : sous-agents au modèle le plus économique suffisant, jamais pour décider.
+
+Récapitule en dix lignes maximum.
+```
+
 ## Lot A4b1
 _Après fusion de A3. Prérequis : A3 fusionné ; montants réels non fournis : jeux fictifs (D07)._
 
@@ -156,6 +177,25 @@ Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
 AVANT TOUT
 1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/DECISIONS.md contient D190 et que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16. Sinon, arrête-toi et dis-le.
 2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/30_PROMPT_LOT_A4F.md, et ce qu'il demande de lire.
+3. Exécute uniquement ce lot. N'enchaîne pas.
+
+RÈGLES
+Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit et push de ta branche de session seulement, en fin de lot, après le compte rendu. Supabase et Vercel interdits. Aucune requête externe (règle 10). Aucun fichier de données réelles lu. Une hypothèse n'est pas une décision : propose les mises à jour du registre sans les inscrire, avec des numéros après le dernier du registre. Les contrôles (typecheck, lint, tests, build, e2e) sont exécutés et leur sortie reportée ; un test non lancé n'est pas déclaré passé. Dis honnêtement ce que tu n'as pas relu. Règle 17 (D192) : sous-agents au modèle le plus économique suffisant, jamais pour décider.
+
+Récapitule en dix lignes maximum.
+```
+
+## Lot A4g
+_Après fusion de A4f. Prérequis : A4f fusionné._
+
+```text
+LANCEMENT · LOT A4g · SUNTORY REFONTE V3
+
+Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
+
+AVANT TOUT
+1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/DECISIONS.md contient D196 et que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16. Sinon, arrête-toi et dis-le.
+2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/32_PROMPT_LOT_A4G.md, et ce qu'il demande de lire.
 3. Exécute uniquement ce lot. N'enchaîne pas.
 
 RÈGLES
