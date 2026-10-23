@@ -16,7 +16,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
     await expect.poll(() => page.locator('#app-sidebar').evaluate((el) => el.getBoundingClientRect().width)).toBeLessThan(120);
     // Les libellés restent accessibles (lecteur d'écran, info-bulle) alors que le texte est masqué.
     await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Besoins' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Paramètres' }).first()).toHaveAttribute('title', 'Paramètres');
+    await expect(page.getByRole('link', { name: 'Réglages' }).first()).toHaveAttribute('title', 'Réglages');
     await page.reload();
     await expect(page.getByRole('button', { name: 'Déployer le menu' })).toBeVisible();
     await expect(page.locator('[data-collapsed=true]')).toHaveCount(1);

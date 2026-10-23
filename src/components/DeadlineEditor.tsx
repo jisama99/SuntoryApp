@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
-import { setDefaultPresetAction, updateDeadlineAction } from '@/app/[locale]/settings/actions';
+import { setDefaultPresetAction, updateDeadlineAction } from '@/app/[locale]/(app)/settings/actions';
 import type { DeadlineContext } from '@/data/repository';
 import { calendarOf } from '@/domain/deadlines';
 import { DEADLINE_TYPES, PRESET_IDS } from '@/domain/types';

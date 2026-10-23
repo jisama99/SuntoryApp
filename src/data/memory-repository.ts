@@ -9,8 +9,8 @@ import { applyDispositifParams, paramsMapOf } from '@/domain/dispositif-params';
 import { checkNeed, decideSave } from '@/domain/need-check';
 import type { Finding } from '@/domain/rules';
 import { DEFAULT_RULE_CONFIG } from '@/domain/rules';
-import { DISPOSITIFS, PRESET_IDS } from '@/domain/types';
-import type { Audience, DeadlineType, Dispositif, EventCode, PresetId, ProfileId, Severity } from '@/domain/types';
+import { DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, PRESET_IDS } from '@/domain/types';
+import type { Audience, DeadlineType, Dispositif, EventCode, HomeSkin, PresetId, ProfileId, Severity } from '@/domain/types';
 import {
   addDays, daysBetween, isValidIsoDate, isValidWeek, parseStoredWeek, storedWeekOf, weekEnd, weekStart,
 } from '@/domain/week';
@@ -69,6 +69,8 @@ interface DemoState {
   requests: ReopeningRequest[];
   batchDrafts: Partial<Record<ProfileId, BatchDraft>>;
   outbox: Record<string, 'validated' | 'discarded'>;
+  homeSkinDefault: HomeSkin;
+  userSkins: Partial<Record<ProfileId, HomeSkin>>;
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -86,6 +88,8 @@ function state(): DemoState {
       requests: z.array(ReopeningRequestSchema).parse(reopeningRequestsJson),
       batchDrafts: {},
       outbox: {},
+      homeSkinDefault: DEFAULT_HOME_SKIN,
+      userSkins: {},
     };
   }
   return globalState.__suntoryDemoState;
@@ -97,7 +101,7 @@ export function resetDemoState(): void {
 }
 
 /** Photographie des données modifiables, journal exclu : le journal n'est jamais réécrit (D91). */
-const snapshotOf = (st: DemoState): string => JSON.stringify({ ...st, events: undefined, seq: undefined, batchDrafts: undefined });
+const snapshotOf = (st: DemoState): string => JSON.stringify({ ...st, events: undefined, seq: undefined, batchDrafts: undefined, userSkins: undefined });
 type UndoEntry = { actor: ProfileId; before: string; after: string };
 const undoGlobal = globalThis as typeof globalThis & { __suntoryUndo?: Map<string, UndoEntry> };
 const undoStore = (undoGlobal.__suntoryUndo ??= new Map<string, UndoEntry>());
@@ -565,6 +569,32 @@ export function createMemoryRepository(): Repository {
       undoStore.delete(token);
       const anyZone = (zones.find((z) => z.kind === 'dr') as Zone).id;
       emit('EV-39', ctx.profileId, anyZone, null, 'agency', { kind: 'undo' });
+      return { status: 'ok' };
+    },
+
+    async getHomeSkin(ctx) {
+      const st = state();
+      const own = st.userSkins[ctx.profileId];
+      return own ? { skin: own, source: 'user' } : { skin: st.homeSkinDefault, source: 'agency' };
+    },
+
+    async getHomeSkinDefault(ctx) {
+      return isAgencyAdmin(ctx) ? state().homeSkinDefault : null;
+    },
+
+    async setHomeSkinDefault(ctx, skin) {
+      if (!isAgencyAdmin(ctx)) return { status: 'refused', reason: 'forbidden' };
+      if (!(HOME_SKINS as readonly string[]).includes(skin)) return { status: 'refused', reason: 'invalid' };
+      const st = state();
+      if (st.homeSkinDefault === skin) return { status: 'ok' };
+      st.homeSkinDefault = skin;
+      emit('EV-38', ctx.profileId, (zones.find((z) => z.kind === 'dr') as Zone).id, null, 'agency', { kind: 'home_skin', skin });
+      return { status: 'ok' };
+    },
+
+    async setUserHomeSkin(ctx, skin) {
+      if (!(HOME_SKINS as readonly string[]).includes(skin)) return { status: 'refused', reason: 'invalid' };
+      state().userSkins[ctx.profileId] = skin;
       return { status: 'ok' };
     },
 

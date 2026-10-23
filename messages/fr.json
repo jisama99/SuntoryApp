@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Plateforme de pilotage Suntory",
+    "name": "Pilotage merchandising",
     "skip": "Aller au contenu principal"
   },
   "banner": {
@@ -37,15 +37,15 @@
     "provider_admin": "Prestataire (administrateur technique)"
   },
   "menu": {
-    "home": "Accueil",
-    "dashboard": "Tableau de bord",
-    "needs": "Besoins",
-    "proposals": "Propositions",
-    "field": "Terrain",
+    "home": "Mon cockpit",
+    "dashboard": "Pilotage",
+    "needs": "Besoins merch",
+    "proposals": "Réponses de l'agence",
+    "field": "Équipes terrain",
     "budget": "Budget",
-    "alerts": "Alertes",
-    "settings": "Paramètres",
-    "admin": "Administration"
+    "alerts": "À traiter",
+    "settings": "Réglages",
+    "admin": "Gestion de la mission"
   },
   "greeting": {
     "named": "Bonjour {name}",
@@ -315,7 +315,8 @@
       "submitted": "Soumis",
       "deferred": "Reportés"
     },
-    "emptyFilter": "Aucun besoin ne correspond à ce filtre."
+    "emptyFilter": "Aucun besoin ne correspond à ce filtre.",
+    "title": "Vos besoins en merchandising"
   },
   "form": {
     "note": "Un besoin incomplet est enregistré en brouillon et reste exclu des totaux. Les dates se choisissent dans le calendrier.",
@@ -831,5 +832,11 @@
     "close": "Fermer cette liste",
     "closeButton": "Fermer",
     "hint": "Raccourcis clavier"
+  },
+  "skin": {
+    "label": "Skin d'accueil",
+    "products": "Produits",
+    "nature": "Nature",
+    "plain": "Sobre"
   }
 }

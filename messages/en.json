@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Suntory steering platform",
+    "name": "Merchandising steering",
     "skip": "Skip to main content"
   },
   "banner": {
@@ -37,15 +37,15 @@
     "provider_admin": "Provider (technical administrator)"
   },
   "menu": {
-    "home": "Home",
-    "dashboard": "Dashboard",
-    "needs": "Needs",
-    "proposals": "Proposals",
-    "field": "Field",
+    "home": "My cockpit",
+    "dashboard": "Steering",
+    "needs": "Merch needs",
+    "proposals": "Agency responses",
+    "field": "Field teams",
     "budget": "Budget",
-    "alerts": "Alerts",
+    "alerts": "To handle",
     "settings": "Settings",
-    "admin": "Administration"
+    "admin": "Mission management"
   },
   "greeting": {
     "named": "Hello {name}",
@@ -315,7 +315,8 @@
       "submitted": "Submitted",
       "deferred": "Deferred"
     },
-    "emptyFilter": "No need matches this filter."
+    "emptyFilter": "No need matches this filter.",
+    "title": "Your merchandising needs"
   },
   "form": {
     "note": "An incomplete need is saved as a draft and stays out of the totals. Dates are chosen in the calendar.",
@@ -831,5 +832,11 @@
     "close": "Close this list",
     "closeButton": "Close",
     "hint": "Keyboard shortcuts"
+  },
+  "skin": {
+    "label": "Home theme",
+    "products": "Products",
+    "nature": "Nature",
+    "plain": "Plain"
   }
 }

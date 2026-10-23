@@ -4,6 +4,7 @@ import { AlertList } from '@/components/AlertList';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { DeadlineAlertList } from '@/components/DeadlineAlertList';
 import { Gallery } from '@/components/Gallery';
+import { HeroHeader } from '@/components/HeroHeader';
 import { PageHeader } from '@/components/PageHeader';
 import { EmptyState } from '@/components/States';
 import { repository } from '@/data';
@@ -60,7 +61,11 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <PageHeader title={title} subtitle={t(`role.${ctx.profileId}`)} />
+      {key === 'dashboard' ? (
+        <HeroHeader visual="products" priority title={title} subtitle={t(`role.${ctx.profileId}`)} />
+      ) : (
+        <PageHeader title={title} subtitle={t(`role.${ctx.profileId}`)} />
+      )}
       <EmptyState title={t('placeholder.title')} body={t('placeholder.body')} />
     </>
   );

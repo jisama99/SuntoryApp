@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
-import { decideReopeningAction } from '@/app/[locale]/settings/actions';
+import { decideReopeningAction } from '@/app/[locale]/(app)/settings/actions';
 import type { DeadlineContext } from '@/data/repository';
 import type { ReopeningRequest } from '@/data/schemas';
 import { calendarOf } from '@/domain/deadlines';

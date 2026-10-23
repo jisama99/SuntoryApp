@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { MenuKey } from '@/domain/types';
 import { SIDEBAR_COOKIE } from '@/lib/sidebar-cookie';
+import { BrandLogo } from './BrandLogo';
 import { Icon } from './Icon';
 import { MENU_ICONS, UI_ICONS } from './icons';
 import { NavLinks } from './NavLinks';
@@ -77,7 +78,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
         <span className={`grid h-7 w-12 place-items-center rounded-full ${active ? 'bg-sel' : ''}`}>
           <Icon icon={MENU_ICONS[item.key]} size="md" />
         </span>
-        <span className="max-w-full truncate">{item.label}</span>
+        <span className="line-clamp-2 max-w-full text-center leading-tight">{item.label}</span>
       </Link>
     );
   };
@@ -92,7 +93,12 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
     >
       <aside id="app-sidebar" className="hidden bg-surface p-4 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
         <div className={`mb-4 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          {collapsed ? null : <p className="px-3 text-lg font-extrabold tracking-tight text-title">{labels.brand}</p>}
+          {collapsed ? null : (
+            <div className="flex flex-col gap-2 px-3">
+              <BrandLogo brand="suntory" className="h-8" />
+              <p className="text-lg font-extrabold tracking-tight text-title">{labels.brand}</p>
+            </div>
+          )}
           <button
             type="button"
             aria-expanded={!collapsed}
@@ -111,11 +117,19 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       </aside>
       <div className="min-w-0">
         <header className="bg-surface print:hidden lg:hidden">
-          <p className="flex min-h-14 items-center px-4 text-base font-extrabold tracking-tight text-title">{labels.brand}</p>
+          <div className="flex min-h-14 items-center gap-3 px-4">
+            <BrandLogo brand="suntory" className="h-6" />
+            <p className="text-base font-extrabold tracking-tight text-title">{labels.brand}</p>
+          </div>
         </header>
         <div className="flex flex-wrap items-center justify-end gap-3 px-4 pt-4 print:hidden lg:px-8">{toolbar}</div>
         <main id="main" tabIndex={-1} className="px-4 pb-28 pt-6 print:px-0 print:pt-8 lg:px-8 lg:pb-6">
           {children}
+          <footer className="mt-12 flex justify-center print:hidden">
+            <span className="inline-flex rounded-full bg-anchor px-5 py-2">
+              <BrandLogo brand="marvesting" className="h-5 opacity-90" />
+            </span>
+          </footer>
         </main>
       </div>
 

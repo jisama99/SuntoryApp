@@ -141,7 +141,7 @@ export default async function NeedsPage({ params, searchParams }: {
   return (
     <>
       <Breadcrumb items={[{ label: t('menu.needs') }]} />
-      <PageHeader title={t('menu.needs')} subtitle={t(`role.${ctx.profileId}`)} />
+      <PageHeader title={t('needs.title')} subtitle={t(`role.${ctx.profileId}`)} />
       <DeadlineBanner context={deadline} dispositif="all" sectorId={null} />
       <DelaySummary months={delays} current={month} keep={keepFilter} />
       {ctx.profileId === 'cvr_client' ? (

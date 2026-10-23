@@ -5,8 +5,8 @@ import { repository } from '@/data';
 import type { DeadlineEntryInput } from '@/data/repository';
 import { PARAM_KEYS } from '@/data/schemas';
 import type { ParamKey } from '@/data/schemas';
-import { DISPOSITIFS, LOCALES, PRESET_IDS } from '@/domain/types';
-import type { Dispositif, Locale, PresetId } from '@/domain/types';
+import { DISPOSITIFS, HOME_SKINS, LOCALES, PRESET_IDS } from '@/domain/types';
+import type { Dispositif, HomeSkin, Locale, PresetId } from '@/domain/types';
 import { isValidIsoDate } from '@/domain/week';
 import { getAccessContext } from '@/lib/session';
 import { undoable } from '@/lib/undoable';
@@ -72,6 +72,16 @@ export async function decideOutboxAction(payload: { locale: string; id: string; 
   if (!locale) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
   const r = await undoable(ctx, () => repository.decideOutbox(ctx, payload.id, payload.decision));
+  if (r.status === 'ok') revalidatePath('/', 'layout');
+  return r;
+}
+
+/** Défaut du skin d'accueil (D161) : agence administration seule, vérifié par la couche données. */
+export async function setHomeSkinDefaultAction(payload: { locale: string; skin: string }): Promise<Outcome> {
+  const locale = asLocale(payload.locale);
+  if (!locale || !(HOME_SKINS as readonly string[]).includes(payload.skin)) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.setHomeSkinDefault(ctx, payload.skin as HomeSkin));
   if (r.status === 'ok') revalidatePath('/', 'layout');
   return r;
 }

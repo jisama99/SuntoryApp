@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { HomeSkinDefault } from '@/components/HomeSkinDefault';
 import { PageHeader } from '@/components/PageHeader';
 import { repository } from '@/data';
 import { Link } from '@/i18n/navigation';
@@ -15,6 +16,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   const menu = await repository.getMenu(ctx);
   if (!menu.some((e) => e.key === 'settings')) notFound();
   const t = await getTranslations();
+  const skinDefault = await repository.getHomeSkinDefault(ctx);
   const cards = [
     { href: '/settings/deadlines', title: t('settings.deadlines.title'), body: t('settings.deadlines.body') },
     { href: '/settings/dispositifs', title: t('settings.dispositifs.title'), body: t('settings.dispositifs.body') },
@@ -24,6 +26,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
       <Breadcrumb items={[{ label: t('menu.settings') }]} />
       <PageHeader title={t('menu.settings')} subtitle={t(`role.${ctx.profileId}`)} />
       {repository.canManageSettings(ctx) ? null : <p className="mb-6 text-muted">{t('settings.readOnly')}</p>}
+      {skinDefault ? <HomeSkinDefault current={skinDefault} /> : null}
       <ul className="grid gap-4 md:grid-cols-2">
         {cards.map((c) => (
           <li key={c.href} className="flex flex-col gap-3 rounded-card bg-surface p-5 shadow-card">

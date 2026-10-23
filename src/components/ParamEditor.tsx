@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
-import { updateParamAction } from '@/app/[locale]/settings/actions';
+import { updateParamAction } from '@/app/[locale]/(app)/settings/actions';
 import type { ParamKey } from '@/data/schemas';
 import { ENTRY_PROFILES } from '@/domain/types';
 import type { Dispositif, Locale } from '@/domain/types';
