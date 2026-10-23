@@ -100,6 +100,25 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | Trier le tableau | Sort table | |
 | Raccourcis clavier | Keyboard shortcuts | |
 
+## 4 quinquies. Titres d'écran en termes d'action (D186, validés d'avance le 23/10/2026)
+| Écran | Titre actuel | Titre FR | Titre EN |
+|---|---|---|---|
+| Nouveau besoin | Nouveau besoin | Saisir un besoin | Enter a need |
+| Saisie en lot | Saisie en lot | Saisir plusieurs besoins | Enter several needs |
+| Calendrier des échéances (Réglages) | Calendrier des échéances | Fixer les échéances de saisie | Set entry deadlines |
+| Échéances par mois | Échéances par mois cible | Dates limites mois par mois | Deadlines month by month |
+| Paramètres des dispositifs | Paramètres des dispositifs | Régler les dispositifs | Configure schemes |
+| Demandes de réouverture | Demandes de réouverture | Réouvertures à décider | Reopenings to decide |
+| Retards de saisie | Retards de saisie | Saisies à relancer | Entries to chase |
+| Courriels préparés | Courriels préparés | Courriels à valider | Emails to approve |
+| Alertes de l'accueil | Alertes récentes | Ce qui demande votre attention | What needs your attention |
+| Connexion (D188) | | Connexion | Sign in |
+| Gestion des comptes (D189) | | Gérer les accès | Manage access |
+| Identifiant / Mot de passe / Se déconnecter (D188) | | Identifiant / Mot de passe / Se déconnecter | Username / Password / Sign out |
+| Mot de passe temporaire (D189) | | Mot de passe temporaire | Temporary password |
+
+Conservés tels quels (déjà formulés en action ou en objet clair) : Vos besoins en merchandising, Demander une réouverture, Rouvrir sans demande, Coller depuis un tableur, Résumé avant soumission, Historique des modifications, Campagnes et dispositifs, Votre périmètre, Raccourcis clavier, états Rien à afficher, Chargement en cours, Une erreur est survenue.
+
 ## 4 ter. Signalement (D164)
 | FR | EN | Remarque |
 |---|---|---|
