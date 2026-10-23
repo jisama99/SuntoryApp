@@ -1,6 +1,6 @@
 # Directives UX et UI : 10 priorités (proposition)
 
-Version du 23/10/2026. **Proposition, aucune décision enregistrée.** Fait suite à D149, D150, D151. Constats tirés de l'état fusionné (A2a) : `src/app/globals.css`, `States.tsx`, `DataTable.tsx`, tests de style.
+Version du 23/10/2026. **Validée par T. SOEFOU le 23/10/2026 (D159).** Fait suite à D149, D150, D151. Constats tirés de l'état fusionné (A2a) : `src/app/globals.css`, `States.tsx`, `DataTable.tsx`, tests de style.
 
 ## Constats sur l'existant
 | Point | État observé |
@@ -27,10 +27,10 @@ Version du 23/10/2026. **Proposition, aucune décision enregistrée.** Fait suit
 | 9 | Navigation globale : fil d'Ariane, lien d'évitement, raccourcis clavier documentés, vue présentation agence (D154) | `layout.tsx`, `NavLinks` | Parcours clavier complet de chaque lot | A2b, A4a |
 | 10 | Carte fluide : zoom et déplacement inertiels, survol des régions et des magasins, regroupement des points, tableau équivalent | Composant carte | Interaction sous 100 ms, clavier, tactile | A4e |
 
-## Règle 16 proposée (design et micro-interactions)
+## Règle 16 (D159) (design et micro-interactions)
 Aucun style en dur (couleur, espacement, taille, durée) hors jetons ; transitions de 150 à 250 ms, désactivées en mouvement réduit ; trois états par route (chargement par squelette, vide, erreur) ; confirmation visible après toute action d'écriture ; tableaux en cartes sous 640 px ; cibles de 44 px. Tests de style étendus en conséquence.
 
-## À valider
+## Validé
 1. Les 10 directives et leur lot.
 2. La règle 16 comme règle commune, appliquée dès A2b.
 3. Chargement local de la police Inter (vérification demandée à Claude Code en A2b).
