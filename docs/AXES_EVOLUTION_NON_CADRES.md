@@ -56,3 +56,27 @@ Contrôles à la saisie, semaine ISO, alertes configurables, vues enregistrées,
 | D128 | Dispositifs | Dimension « dispositif » et paramètres par dispositif (N9) intégrés à A2b ; Q21 de la V0.4 reprise sous un identifiant distinct |
 | D129 | Frontière de périmètre | N11, N12, N13 : décision de frontière avant tout développement (lecture, écriture ou hors plateforme) |
 | D130 | Données de personnes | N6, N7 et N11 conditionnés à la qualification RGPD et à D18 |
+
+## 7. Axes complémentaires du 23/10/2026 : imports d'extractions et automatisations
+
+Constat. Les lots prévoient des automatisations de **sortie** (AUT-01 à AUT-05 en A2b, AUT-06 à AUT-11 en A4c2, AUT-12 à AUT-15 selon A4a et A4b) et un import Excel en quarantaine (A6) limité à **trois gabarits fictifs fixes**. Les adaptateurs de `MAPPING_SOURCES.md` §2 détectent les fichiers par des règles d'en-têtes écrites à la main. Aucun classeur ni extraction réelle n'a été ouvert (A0b) : les structures réelles ne sont pas vérifiées.
+
+| N° | Axe | Constat | Proposition | Décision attendue |
+|---|---|---|---|---|
+| N17 | **Assistant de mappage d'import configurable** | Les adaptateurs sont figés ; une extraction qui change de structure (le brut LOGA existe en deux variantes de 72 et 123 colonnes) casserait l'import | Profils d'import versionnés (onglet, ligne d'en-tête, colonne source vers champ cible, transformations, clé de rapprochement). Proposition automatique de correspondances par similarité des en-têtes normalisés et par type de contenu (date, code CVR, code Nielsen, entier), validée par un humain puis enregistrée | T. SOEFOU |
+| N18 | **Dictionnaire de valeurs à l'import** | Saisies libres avec variantes (casse, espaces, « OK » / « OK  ») | Table de correspondance valeur source vers liste fermée, alimentée à la validation de l'aperçu, réutilisée aux imports suivants | T. SOEFOU |
+| N19 | **Détection de dérive de structure** | Colonne ajoutée, renommée ou déplacée : aujourd'hui blocage sec | Empreinte de structure par profil ; écart classé (colonne inconnue ignorée et listée, colonne obligatoire absente bloquante, renommage proposé) ; alerte réservée à l'agence (AUT-14) | T. SOEFOU |
+| N20 | **Ingestion automatique des extractions** | D21 (dépôt manuel ou SharePoint) et D51 ouverts ; le Workshop évoque des alertes par Power Automate | Dépôt surveillé ou boîte de réception dédiée, passage au contrat de fichier, aperçu en file de validation. Rien n'est appliqué sans validation humaine tant que le rodage D94 n'est pas fait. Dépend du choix d'hébergement (D02, D19) et du mécanisme de dépôt (D21) | Impact, IT |
+| N21 | **Annulation d'un import** | A6 couvre l'idempotence et le refus d'écraser, pas le retour arrière | Annuler un lot importé : restitue l'état précédent, tracé (acteur, motif), refusé si une décision cliente en dépend | T. SOEFOU |
+| N22 | **Réconciliation automatique entre sources** | Écart TBB / 4C et LOGA traité seulement à l'étape B5 | Contrôles de cohérence à chaque import (somme des mois, nombre de CVR attendus, tolérance 0,01 €) avec écart en alerte, comme `MAPPING_SOURCES.md` §3 | T. SOEFOU |
+
+**Ce que l'on sait faire et ce que l'on ne peut pas affirmer**
+- Faisable : lecture d'un classeur ou d'un export, détection de l'onglet et de la ligne d'en-tête, correspondance colonne vers champ, normalisation, aperçu et rapport, idempotence. Tout se fait localement et de façon déterministe, sans envoyer les données à un service externe.
+- Non affirmable aujourd'hui : que la détection fonctionne sur les extractions **réelles** de l'agence, faute de les avoir lues. La fiabilité se mesure sur des fichiers réels, par un test de structure (en-têtes, types de colonnes, taux de reconnaissance) sans copier de valeur dans le dépôt.
+- Usage d'un modèle d'IA générative pour proposer les correspondances : possible sur les **seuls noms d'en-têtes**, jamais sur les valeurs ni sur des données de personnes (D17, D130). Non retenu par défaut.
+
+**Mise à jour proposée du registre (non enregistrée)**
+| Réf. | Objet | Proposition |
+|---|---|---|
+| D134 | Imports configurables | N17 à N19 ajoutés au périmètre de A6 comme profils d'import versionnés ; l'analyse de structure sur extractions réelles se fait en local, sans valeur versionnée, sous les conditions de D109 bis |
+| D135 | Ingestion et annulation | N20 et N21 réservés à l'étape B (dépendent de D21, D02, D19) ; N22 reprend `MAPPING_SOURCES.md` §3 en A6 |
