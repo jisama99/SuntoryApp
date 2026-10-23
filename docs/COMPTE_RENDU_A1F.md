@@ -28,8 +28,8 @@ Règle 17 (D192) : aucun sous-agent n'a été lancé dans ce lot, tout le travai
 |---|---|
 | `npx tsc --noEmit` | OK, 0 erreur |
 | `npm run lint` | OK, 0 avertissement |
-| `npm test` (Vitest) | **28 fichiers, 560 tests passés, 1 ignoré** (C3 : `.denylist.local` absent) |
-| `npm run build` puis `npm run test:e2e` | **98 passés sur 98** (21 nouveaux pour A1f). Un échec isolé (délai de 30 s dépassé dans le parcours de gestion des comptes) est apparu sur une exécution complète, **sans cause identifiée** ; trois exécutions complètes suivantes et une exécution du fichier seul sont passées. J'ai porté le délai de ce test à 90 s. |
+| `npm test` (Vitest) | **28 fichiers, 561 tests passés, 1 ignoré** (C3 : `.denylist.local` absent) ; 560 à la livraison, +1 pour les brouillons par compte |
+| `npm run build` puis `npm run test:e2e` | **98 passés sur 98** à la livraison initiale (21 nouveaux pour A1f), avec un échec isolé non expliqué ; **cause identifiée et corrigée le 23/10** (voir « Corrections après relecture »). **Réexécution complète le 23/10 après corrections : typecheck et lint propres, 561 tests unitaires, build puis 98 e2e sur 98**, sur Chromium 1243 (version installée dans l'environnement de correction). |
 | `npx playwright test --config=playwright.shots.config.ts a1e a1f` | 10 parcours passés, captures régénérées |
 | Mots de passe en clair | Aucun dans les fichiers versionnés et non ignorés ; aucun dans le journal du serveur ; captures : champ masqué, mot de passe temporaire remplacé par des points avant la prise de vue |
 | Premier affichage utile (LCP, serveur local) | Connexion 96 à 132 ms, gestion des comptes 124 ms, accueil et pilotage 96 à 156 ms (seuil 2 s) |
@@ -43,16 +43,34 @@ Les exécutions répétées du même fichier sur un serveur déjà lancé échou
 
 ## 4. Hypothèses d'interprétation (à valider, pas des décisions)
 1. **Répartition des six comptes agence** : une administration et cinq opérateurs (D189 ne la fixe pas).
-2. **Profils que l'agence peut créer** : direction, DR, CVR, RS, opérateur et administration, jamais le prestataire. Créer une administration est un pouvoir élevé : à confirmer.
+2. **Profils que l'agence peut créer** : direction, DR, CVR, RS, opérateur et administration, jamais le prestataire. **Décidé par T. SOEFOU le 23/10/2026 (message de session) : l'agence peut créer tous ces profils, administration comprise.** Reste à inscrire au registre (D194).
 3. **Mot de passe temporaire montré une seule fois** à l'agence (nécessaire pour le transmettre), jamais relu ni journalisé : lecture de « aucun mot de passe affiché après création ».
 4. **Politique de mot de passe** : 12 caractères, une lettre, un chiffre, différent du temporaire.
 5. **Prénom** : les comptes créés n'ont pas de prénom (salutation « Bonjour » seule) ; les comptes préconfigurés en ont un, repris des jeux d'essai.
 6. **Titre de l'écran de connexion** : « Connexion », le titre de l'application passe en ligne au-dessus.
 7. **Choix du skin** : suit désormais le compte (et non le profil) ; en visualisation, il suit le profil consulté.
-8. **Brouillons de saisie en lot** : toujours rattachés au profil, pas au compte (deux comptes d'un même profil partagent un brouillon).
+8. **Brouillons de saisie en lot** : ~~rattachés au profil~~ **corrigé le 23/10/2026** : rattachés au compte (et au profil consulté en visualisation) ; deux comptes d'un même profil ne partagent plus de brouillon (test `a2b-repository.test.ts`).
 
 ## 5. Captures : couverture de lecture
-44 images produites. **Relues image par image (12)** : `login_light_fr_1440`, `login_error_light_fr_390`, `accounts_dark_en_1440`, `account_created_light_fr_390`, `change_password_dark_en_390`, `accounts_light_fr_390`, plus, sur la génération précédente des captures A1e, `start_light_fr_1440` et `start_dark_fr_390` (devenues l'écran de connexion). **Non relues (environ 38)** : les autres déclinaisons de langue, de largeur et de mode. Constat : sur 1440 px en anglais, les trois boutons d'actions d'une ligne de compte passent sur deux lignes ; lisible, non corrigé. **Les captures de l'A1, A2a, A2b et A1e (hors écran de connexion) ne sont pas régénérées** : titres et menus y sont d'avant D186.
+44 images produites dans `docs/captures/A1f/`. **Décompte rectifié le 23/10/2026** : à la livraison, 6 images A1f avaient été relues (`login_light_fr_1440`, `login_error_light_fr_390`, `accounts_dark_en_1440`, `account_created_light_fr_390`, `change_password_dark_en_390`, `accounts_light_fr_390`) ; les deux images `start_*` citées avaient été relues sur la génération précédente (A1e) et ne comptent pas parmi ces 44. Le « 12 relues » de la première version était erroné ; les 38 autres sont relues le 23/10/2026, image par image, par la session qui a corrigé ce compte rendu. **Les 44 images A1f sont donc relues.** Relecture visuelle seulement : pas de mesure de contraste ni de lecteur d'écran.
+
+Constats de la relecture (aucun n'est corrigé dans ce lot) :
+- Les boutons d'actions d'une ligne de compte passent sur plusieurs lignes à 1440 px **en français comme en anglais** (le compte rendu initial ne le disait que pour l'anglais).
+- À 390 px, l'en-tête (thème, skin, langue, déconnexion) occupe environ la moitié de l'écran avant le contenu de la gestion des comptes ; le contenu s'ouvre sous la ligne de flottaison.
+- Sur la connexion et le changement de mot de passe en mode clair à 1440 px, le logo Suntory est pâle sur la carte translucide (lisible, contraste faible).
+- Réglages : le libellé « Skin d'accueil » reste en français avec un terme anglais (« Home theme » en anglais) ; hors périmètre A1f, à voir avec le glossaire.
+- Le champ de mot de passe reste masqué dans toutes les captures ; le mot de passe temporaire est remplacé par des points.
+
+**Les captures de l'A1, A2a, A2b et A1e (hors écran de connexion) ne sont pas régénérées** : titres et menus y sont d'avant D186.
+
+## Corrections après relecture (23/10/2026)
+| Point | Constat | Suite |
+|---|---|---|
+| Échec isolé du parcours de gestion des comptes | **Cause identifiée** : le test cliquait « Se déconnecter » puis reconnectait l'agence sans attendre la fin de la déconnexion ; la suppression du cookie par l'action serveur pouvait arriver après la nouvelle connexion, la session sautait et la page affichait la connexion (le bouton `Désactiver` attendu n'existait pas). Reproduit une fois sur une exécution complète le 23/10 ; ce n'était pas un problème de durée : le parcours dure environ 6 s. | Attente de l'adresse `/fr/start` ajoutée après le clic ; le délai de 90 s, qui masquait le symptôme, est retiré (délai par défaut de 30 s). Trois exécutions du fichier passées après correction. Un défaut du test, pas du produit. |
+| Hypothèse 2 | Décidée par T. SOEFOU (voir section 4). | Aucun changement de code : l'agence pouvait déjà créer l'administration. |
+| Hypothèse 8 | Brouillons partagés entre comptes d'un même profil. | Corrigé et testé (section 4). |
+| Visualisation « comme » | **Pas en lecture seule** : le prestataire qui consulte comme un profil peut écrire avec les droits de ce profil. C'est voulu à ce stade, car tous les tests de parcours (besoins, lots, échéances) s'en servent pour agir comme un RS, aucun compte RS n'étant préconfiguré. Le journal attribue l'écriture au **profil consulté**, sans mention du compte du prestataire. | **Non modifié** : le rendre en lecture seule casse l'ensemble des parcours. Écart à traiter à l'étape B (journal avec compte réel et profil consulté), ou décision de créer un compte RS de démonstration pour les tests. À arbitrer par T. SOEFOU. |
+| Verrouillage par identifiant | Un tiers peut bloquer le compte d'autrui (5 essais). | Déjà listé en section 6, à traiter à l'étape B. |
 
 ## 6. Écarts à reprendre à l'étape B (liste demandée)
 - **Hachage** : scrypt aux paramètres par défaut, sel par compte ; paramètres de coût à valider et empreintes en base.
@@ -63,6 +81,7 @@ Les exécutions répétées du même fichier sur un serveur déjà lancé échou
 - **Mot de passe temporaire** transmis hors de l'application (canal à définir) ; aucun envoi automatique (aucun e-mail, règle du démonstrateur).
 - **Cookies** : `Secure` et `__Host-` à activer avec le HTTPS de l'hébergement.
 - **Origine des requêtes** : contrôle d'en-tête `Origin` en plus de `SameSite` et du corps JSON ; protection contre les attaques par force brute au niveau de l'hébergement.
+- **Visualisation « comme »** : écritures permises et attribuées au profil consulté, sans le compte du prestataire dans le journal (voir « Corrections après relecture »).
 - **Sans JavaScript** : le formulaire de connexion ne fonctionne pas (envoi par `fetch`).
 - **Annulation** (D181) : restauration d'instantané en démonstrateur, compensation en base à l'étape B ; l'annulation d'une création de compte supprime le compte sans trace dans le journal des comptes autre que l'événement EV-39.
 
@@ -74,7 +93,7 @@ Dernière décision du registre à la dernière récupération : D192 (D191 revu
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
 | D193 | Comptes préconfigurés | Six comptes agence (une administration, cinq opérateurs), un direction, un par DR et CVR, un prestataire, aucun RS ; identifiants `Demo` + rôle + numéro ; empreintes scrypt versionnées, mots de passe dans `.demo-passwords.local.json` non versionné, régénérables par `npm run demo:accounts` | Précise D189 (hypothèse 1) |
-| D194 | Pouvoirs de l'agence sur les comptes | Créer, attribuer, désactiver, réinitialiser tous profils sauf prestataire ; jamais son propre compte ; création d'une administration à confirmer ; EV-40 à EV-43 hors catalogue, à inscrire au doc 26 | À valider (hypothèse 2) |
+| D194 | Pouvoirs de l'agence sur les comptes | Créer, attribuer, désactiver, réinitialiser tous profils sauf prestataire, administration comprise ; jamais son propre compte ; création d'une administration **décidée par T. SOEFOU le 23/10/2026** ; EV-40 à EV-43 hors catalogue, à inscrire au doc 26 | Décidée par T. SOEFOU le 23/10/2026 (message de session), à inscrire au registre |
 | D195 | Mot de passe temporaire et politique | Montré une seule fois, jamais journalisé, à changer à la première connexion ; 12 caractères avec lettre et chiffre | À valider (hypothèses 3 et 4) |
 | D196 | Session et sécurité de démonstrateur | Cookie signé httpOnly 8 h, relu à chaque requête ; limitation 5 échecs en 10 minutes pour 5 minutes par identifiant ; durée de réponse constante ; échec unique ; liste des écarts de la section 6 à traiter à l'étape B | Proposée |
 | D197 | Visualisation « comme » | Réservée au compte du prestataire, sans gestion des comptes en visualisation ; sert à la démonstration et aux tests | Précise D188 |

@@ -182,7 +182,6 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
   });
 
   test('gestion des comptes : création, mot de passe temporaire affiché une fois, premier accès, désactivation, réinitialisation, annulation', async ({ page, context }) => {
-    test.setTimeout(90_000);
     const w = watch(page);
     await loginAs(context, 'DemoAgence01');
     await page.goto('/fr/settings');
@@ -233,6 +232,8 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
     expect((await page.goto('/fr/settings/accounts'))?.status()).toBe(404);
     await page.goto('/fr');
     await page.getByRole('button', { name: 'Se déconnecter' }).click();
+    // Attendre la fin de la déconnexion : sinon la suppression du cookie peut arriver après la reconnexion suivante.
+    await expect(page).toHaveURL(/\/fr\/start$/);
 
     // L'agence désactive : la connexion est refusée ; elle réactive puis réinitialise.
     await loginAs(context, 'DemoAgence01');

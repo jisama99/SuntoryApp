@@ -71,7 +71,7 @@ interface DemoState {
   campaignDispositifs: Record<string, Dispositif[]>;
   reopenings: Reopening[];
   requests: ReopeningRequest[];
-  batchDrafts: Partial<Record<ProfileId, BatchDraft>>;
+  batchDrafts: Partial<Record<string, BatchDraft>>;
   outbox: Record<string, 'validated' | 'discarded'>;
   homeSkinDefault: HomeSkin;
   userSkins: Record<string, HomeSkin>;
@@ -197,6 +197,8 @@ function related(a: string, b: string): boolean {
 
 const isAgencyAdmin = (ctx: AccessContext) => ctx.profileId === 'agency_admin';
 /** Le choix de skin suit la personne (son compte) ; en visualisation d'un profil par le prestataire, il suit ce profil. */
+/** Brouillon de saisie en lot : rattaché au compte (et au profil consulté en visualisation), jamais partagé entre comptes (hypothèse 8 du lot A1f). */
+const draftKey = (ctx: AccessContext) => (ctx.accountId ? `${ctx.accountId}:${ctx.profileId}` : `profil:${ctx.profileId}`);
 const skinKey = (ctx: AccessContext) => (ctx.accountId && !ctx.impersonated ? ctx.accountId : `profil:${ctx.profileId}`);
 const publicOf = (a: Account): PublicAccount => ({
   id: a.id, username: a.username, profile: a.profile, scope: a.scope, first_name: a.first_name, active: a.active,
@@ -699,17 +701,17 @@ export function createMemoryRepository(): Repository {
     },
 
     async getBatchDraft(ctx) {
-      return state().batchDrafts[ctx.profileId] ?? null;
+      return state().batchDrafts[draftKey(ctx)] ?? null;
     },
 
     async saveBatchDraft(ctx, rows) {
       if (!WRITE_PROFILES.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
-      state().batchDrafts[ctx.profileId] = { updated_on: clock.date, rows: BatchRowsSchema.parse(rows) };
+      state().batchDrafts[draftKey(ctx)] = { updated_on: clock.date, rows: BatchRowsSchema.parse(rows) };
       return { status: 'ok' };
     },
 
     async clearBatchDraft(ctx) {
-      delete state().batchDrafts[ctx.profileId];
+      delete state().batchDrafts[draftKey(ctx)];
     },
   };
 
