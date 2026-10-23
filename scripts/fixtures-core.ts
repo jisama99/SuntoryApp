@@ -4,7 +4,8 @@
  * Codes selon docs/FIXTURES.md §3 ; chaque entité porte is_demo: true.
  */
 import type {
-  Alert, BusinessEvent, Campaign, DemoClock, DemoProfile, Need, Period, Store, WeekClosure, Zone,
+  Alert, BusinessEvent, Campaign, DeadlineSettings, DemoClock, DemoProfile, DispositifParams, Need, Period, Reopening,
+  ReopeningRequest, Store, WeekClosure, Zone,
 } from '../src/data/schemas';
 import { addDays, storedWeekOf } from '../src/domain/week';
 
@@ -225,5 +226,61 @@ export function buildFixtures() {
   events.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
   events.forEach((e, i) => { e.seq = i + 1; });
 
-  return { zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events };
+  // ---- Lot A2b : générés en dernier, donc sans modifier aucune valeur des lots précédents. ----
+  // Presets : valeurs de départ de docs/COMPLEMENTS_CADRAGE/24 §3, non figées (D82). Novembre : changements au plus tard
+  // le 30/10/2026, date fictive de l'illustration de D80 à confirmer par T. SOEFOU.
+  const deadlineSettings: DeadlineSettings = {
+    default_preset: 'standard',
+    presets: {
+      large: { needs_entry: { unit: 'calendar', days: 15 }, change_request: { unit: 'calendar', days: 15 } },
+      standard: { needs_entry: { unit: 'working', days: 10 }, change_request: { unit: 'working', days: 5 } },
+      short: { needs_entry: { unit: 'working', days: 3 }, change_request: { unit: 'working', days: 3 } },
+    },
+    cascade: [5, 2, 0],
+    non_working_weekdays: [6, 7],
+    exclude_holidays: true,
+    entries: [
+      { month: '2026-11', type: 'change_request', preset: null, fixed_date: '2026-10-30', author_profile: 'agency_admin', effective_from: '2026-10-23', is_demo: true },
+    ],
+    is_demo: true,
+  };
+
+  // Paramètres par dispositif : valeurs de départ du Workshop pour le second placement (doc 28 §2.2), à valider.
+  // Le forfait kilométrique est une valeur FICTIVE étiquetée ; les autres dispositifs n'ont pas de forfait applicable.
+  const baseParams = (dispositif: Campaign['dispositif']): DispositifParams => ({
+    dispositif, min_minutes: null, km_flat_rate: { applicable: false, amount_eur_ht: null }, entry_window: null,
+    change_effect: null, change_lead_days: null, change_lead_unit: 'calendar', entry_roles: null, horizon_weeks: null,
+    non_working_days: null, days_allowed: null, campaign_single_dispositif: true, is_demo: true,
+  });
+  const dispositifParams: DispositifParams[] = [
+    baseParams('permanent'),
+    baseParams('seasonal'),
+    baseParams('hourly_merch'),
+    {
+      ...baseParams('second_placement'),
+      min_minutes: 45,
+      km_flat_rate: { applicable: true, amount_eur_ht: 10 },
+      entry_window: { reading: 'last_full_week' },
+      change_effect: 'next_month',
+      change_lead_days: 10,
+      horizon_weeks: 52,
+      non_working_days: { weekdays: [7], holidays: true },
+      days_allowed: [1, 2, 3, 4, 5, 6],
+    },
+  ];
+
+  // Une demande de réouverture déposée par le CVR de démonstration, en attente de décision de l'agence (D87).
+  const reopeningRequests: ReopeningRequest[] = [
+    {
+      id: uuid(), scope: 'month', target: '2026-11', zone_id: cvr1.id,
+      motive: 'Besoin tardif de la cliente sur un secteur du CVR (donnée fictive).',
+      desired_until: '2026-11-06', requested_on: '2026-10-22', status: 'pending', is_demo: true,
+    },
+  ];
+  const reopenings: Reopening[] = [];
+
+  return {
+    zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events,
+    deadlineSettings, dispositifParams, reopeningRequests, reopenings,
+  };
 }

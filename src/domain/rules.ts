@@ -13,7 +13,12 @@ export const DUP_RULE_IDS = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'] as const;
 /** J1 à J3 : contrôles des jours cochés (docs/COMPLEMENTS_CADRAGE/28 §8). B1 : bornes de dates du dictionnaire. */
 export const DAY_RULE_IDS = ['J1', 'J2', 'J3'] as const;
 export const BOUND_RULE_IDS = ['B1'] as const;
-export const RULE_IDS = [...WEEK_RULE_IDS, ...DUP_RULE_IDS, ...DAY_RULE_IDS, ...BOUND_RULE_IDS] as const;
+/** P1 à P6 : règles par dispositif (F-30.11, doc 28 §2.3). E1 et E2 : échéance du calendrier global dépassée (D78). */
+export const DISPOSITIF_RULE_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'] as const;
+export const DEADLINE_RULE_IDS = ['E1', 'E2'] as const;
+export const RULE_IDS = [
+  ...WEEK_RULE_IDS, ...DUP_RULE_IDS, ...DAY_RULE_IDS, ...BOUND_RULE_IDS, ...DISPOSITIF_RULE_IDS, ...DEADLINE_RULE_IDS,
+] as const;
 export type RuleId = (typeof RULE_IDS)[number];
 
 export interface Finding {
@@ -25,6 +30,8 @@ export interface Finding {
   relatedNeedId?: string;
   /** Correction proposée en un clic (W1, W2, W3, W5). */
   fix?: { periodNo: 1 | 2; field: 'start_week' | 'end_week'; value: string };
+  /** Report possible sur le mois suivant (E1, E2, P3, P4) : le mois suivant est encore ouvert (D82). */
+  defer?: { toMonth: string };
 }
 export type RawFinding = Omit<Finding, 'gravity'>;
 
@@ -54,6 +61,9 @@ export const DEFAULT_RULE_CONFIG: RuleConfig = {
     D1: 'blocking', D2: 'alert', D3: 'alert', D4: 'info', D5: 'alert', D6: 'info', D7: 'blocking',
     J1: 'alert', J2: 'alert', J3: 'blocking',
     B1: 'blocking',
+    // P5 n'est pas bloquante : la ligne reste « Non chiffré », jamais 0 (doc 28 §2.3).
+    P1: 'blocking', P2: 'blocking', P3: 'blocking', P4: 'blocking', P5: 'info', P6: 'blocking',
+    E1: 'blocking', E2: 'blocking',
   },
   horizonWeeks: 52,
   excludedWeekdays: [7],

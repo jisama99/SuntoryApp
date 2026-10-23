@@ -4,7 +4,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { duplicateNeedAction } from '@/app/[locale]/needs/actions';
 import type { SaveState } from '@/app/[locale]/needs/actions';
-import type { Locale } from '@/domain/types';
+import type { DeadlineContext } from '@/data/repository';
+import type { Dispositif, Locale } from '@/domain/types';
+import { lockedMonthsFor } from '@/lib/deadline-view';
+import { formatMonth } from '@/lib/format';
+import { DeadlineBanner } from './DeadlineBanner';
 import { Link } from '@/i18n/navigation';
 import { Button } from './Button';
 import { FindingsPanel } from './FindingsPanel';
@@ -14,8 +18,11 @@ import { StatusTag } from './StatusTag';
 import { formatWeek, isoWeekOf } from '@/domain/week';
 
 /** Duplication d'un besoin avec décalage de dates (F-20.3) : on choisit le nouveau premier jour, la durée est conservée. */
-export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeeks }: {
+export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeeks, deadline, dispositif, sectorId }: {
   needId: string;
+  deadline: DeadlineContext;
+  dispositif: Dispositif | null;
+  sectorId: string;
   sourceStart: string | null;
   today: string;
   min: string;
@@ -29,16 +36,19 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
   const [result, setResult] = useState<SaveState | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const run = (confirm: boolean) => {
+  const run = (confirm: boolean, deferToNextMonth = false) => {
     if (!start) return;
     startTransition(async () => {
-      setResult(await duplicateNeedAction({ locale, needId, newStart: start, confirm }));
+      setResult(await duplicateNeedAction({ locale, needId, newStart: start, confirm, deferToNextMonth }));
     });
   };
+  const lockedMonths = lockedMonthsFor(deadline, dispositif, sectorId, min, max);
+  const deferTarget = result && result.status === 'refused' ? result.findings.find((f) => f.defer)?.defer?.toMonth : undefined;
 
   return (
     <div className="flex max-w-xl flex-col gap-5">
       <p className="text-muted">{sourceStart ? t('hint') : t('noPeriod')}</p>
+      <DeadlineBanner context={deadline} dispositif={dispositif} sectorId={sectorId} />
       {sourceStart ? (
         <>
           <DatePicker
@@ -53,6 +63,7 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
             min={min}
             max={max}
             closedWeeks={closedWeeks}
+            lockedMonths={lockedMonths}
           />
           <DerivedWeek id="dup-week" label={tf('fields.startWeek')} week={start ? formatWeek(isoWeekOf(start)) : null} today={today} min={min} max={max} closedWeeks={closedWeeks} />
           <div className="flex flex-wrap items-center gap-3">
@@ -75,6 +86,12 @@ export function DuplicateForm({ needId, sourceStart, today, min, max, closedWeek
           </div>
         ) : null}
         {result?.status === 'refused' ? <StatusTag tone="risk">{tf(`refusal.${result.reason}`)}</StatusTag> : null}
+        {deferTarget ? (
+          <div className="flex flex-wrap items-center gap-3" data-testid="defer-actions">
+            <p className="w-full text-muted">{tf('deferNote')}</p>
+            <Button type="button" disabled={pending} onClick={() => run(false, true)}>{tf('defer', { month: formatMonth(deferTarget, locale) })}</Button>
+          </div>
+        ) : null}
         {result && result.status !== 'invalid' && result.findings.length > 0 ? <FindingsPanel findings={result.findings} /> : null}
         {result?.status === 'needs_confirmation' ? (
           <div className="flex flex-wrap items-center gap-3" data-testid="confirm-actions">

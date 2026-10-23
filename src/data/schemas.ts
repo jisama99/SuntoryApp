@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
-  AUDIENCES, DISPOSITIFS, EVENT_CODES, NEED_STATES, POSITION_STATUSES, PROFILE_IDS, SEVERITIES, SIDES, ZONE_KINDS,
+  AUDIENCES, DEADLINE_TYPES, DISPOSITIFS, ENTRY_PROFILES, EVENT_CODES, NEED_STATES, POSITION_STATUSES, PRESET_IDS,
+  PROFILE_IDS, REOPEN_SCOPES, SEVERITIES, SIDES, ZONE_KINDS,
 } from '@/domain/types';
 
 export const ZoneSchema = z.object({
@@ -123,6 +124,8 @@ export const NeedSchema = NeedInputSchema.extend({
   modified_at: IsoDateStr,
   record_version: z.number().int().min(1),
   source_record_id: z.string().nullable(),
+  /** Mois d'origine (AAAA-MM) d'une demande reportée sur le mois suivant après une échéance (D82). Absent sinon. */
+  deferred_from_month: z.string().regex(/^\d{4}-\d{2}$/).nullable().optional(),
   is_demo: z.literal(true),
 });
 export type Need = z.infer<typeof NeedSchema>;
@@ -142,3 +145,166 @@ export const BusinessEventSchema = z.object({
   is_demo: z.literal(true),
 });
 export type BusinessEvent = z.infer<typeof BusinessEventSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// Lot A2b : échéances, paramètres par dispositif, réouvertures, saisie en lot.
+// ---------------------------------------------------------------------------------------------
+export const MonthStr = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
+const WeekdayNo = z.number().int().min(1).max(7);
+
+/** Règle d'un preset : nombre de jours calendaires ou ouvrés avant le début du mois cible. */
+export const PresetRuleSchema = z.object({ unit: z.enum(['calendar', 'working']), days: z.number().int().min(0).max(60) });
+export type PresetRule = z.infer<typeof PresetRuleSchema>;
+
+/** Une ligne du calendrier d'échéances (table ECHEANCES, doc 24 §7) : un mois cible, un type, un preset ou une date fixe. */
+export const DeadlineEntrySchema = z.object({
+  month: MonthStr,
+  type: z.enum(DEADLINE_TYPES),
+  /** Preset appliqué, ou null pour une date fixe. */
+  preset: z.enum(PRESET_IDS).nullable(),
+  fixed_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  author_profile: z.enum(PROFILE_IDS),
+  effective_from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  is_demo: z.literal(true),
+});
+export type DeadlineEntry = z.infer<typeof DeadlineEntrySchema>;
+
+const PresetRules = z.record(z.enum(DEADLINE_TYPES), PresetRuleSchema);
+export const DeadlineSettingsSchema = z.object({
+  default_preset: z.enum(PRESET_IDS),
+  presets: z.object({ large: PresetRules, standard: PresetRules, short: PresetRules }),
+  /** Seuils de la cascade d'alertes, en jours ouvrés avant l'échéance (5 = J-5, 0 = jour J). */
+  cascade: z.array(z.number().int().min(0).max(30)).min(1),
+  /** Jours non ouvrés pour le calcul des échéances (1 = lundi … 7 = dimanche). Distinct des jours non ouvrés de mission (W16). */
+  non_working_weekdays: z.array(WeekdayNo),
+  exclude_holidays: z.boolean(),
+  entries: z.array(DeadlineEntrySchema),
+  is_demo: z.literal(true),
+});
+export type DeadlineSettings = z.infer<typeof DeadlineSettingsSchema>;
+
+export const KmFlatRateSchema = z.object({
+  applicable: z.boolean(),
+  /** Montant HT en euros. Valeur fictive étiquetée au démonstrateur ; null = « Non chiffré », jamais 0. */
+  amount_eur_ht: z.number().min(0).nullable(),
+});
+export const EntryWindowSchema = z.object({
+  /** Q-N9-1 : « avant-dernière semaine » du mois précédent, selon la lecture retenue pour « dernière semaine ». */
+  reading: z.enum(['last_full_week', 'week_of_last_day']),
+});
+export const NonWorkingDaysSchema = z.object({ weekdays: z.array(WeekdayNo), holidays: z.boolean() });
+
+/** Paramètres d'un dispositif (F-30.10). Une valeur null signifie « valeur globale » (ou « non défini » pour min_minutes). */
+export const DispositifParamsSchema = z.object({
+  dispositif: z.enum(DISPOSITIFS),
+  min_minutes: z.number().int().min(1).max(600).nullable(),
+  km_flat_rate: KmFlatRateSchema,
+  entry_window: EntryWindowSchema.nullable(),
+  change_effect: z.literal('next_month').nullable(),
+  change_lead_days: z.number().int().min(0).max(90).nullable(),
+  /** Q-N9-2 : jours calendaires ou ouvrés. */
+  change_lead_unit: z.enum(['calendar', 'working']),
+  /** null = tous les rôles de saisie (Q-N9-3 : le rôle « CS » n'est pas défini). */
+  entry_roles: z.array(z.enum(ENTRY_PROFILES)).nullable(),
+  horizon_weeks: z.number().int().min(1).max(156).nullable(),
+  non_working_days: NonWorkingDaysSchema.nullable(),
+  days_allowed: z.array(WeekdayNo).min(1).nullable(),
+  /** Règle de modèle (H1, D128) : une campagne ne relève que d'un dispositif. Non modifiable. */
+  campaign_single_dispositif: z.literal(true),
+  is_demo: z.literal(true),
+});
+export type DispositifParams = z.infer<typeof DispositifParamsSchema>;
+
+export const PARAM_KEYS = [
+  'min_minutes', 'km_flat_rate', 'entry_window', 'change_effect', 'change_lead_days', 'change_lead_unit',
+  'entry_roles', 'horizon_weeks', 'non_working_days', 'days_allowed',
+] as const;
+export type ParamKey = (typeof PARAM_KEYS)[number];
+
+/** Valeur acceptée pour chaque clé modifiable : le Repository refuse toute autre forme. */
+export const PARAM_VALUE_SCHEMAS = {
+  min_minutes: DispositifParamsSchema.shape.min_minutes,
+  km_flat_rate: KmFlatRateSchema,
+  entry_window: DispositifParamsSchema.shape.entry_window,
+  change_effect: DispositifParamsSchema.shape.change_effect,
+  change_lead_days: DispositifParamsSchema.shape.change_lead_days,
+  change_lead_unit: DispositifParamsSchema.shape.change_lead_unit,
+  entry_roles: DispositifParamsSchema.shape.entry_roles,
+  horizon_weeks: DispositifParamsSchema.shape.horizon_weeks,
+  non_working_days: DispositifParamsSchema.shape.non_working_days,
+  days_allowed: DispositifParamsSchema.shape.days_allowed,
+} as const;
+
+/** Historique des modifications (acteur, date, ancienne et nouvelle valeur). */
+export interface ParamChange {
+  id: string;
+  seq: number;
+  dispositif: (typeof DISPOSITIFS)[number];
+  key: ParamKey;
+  old_value: unknown;
+  new_value: unknown;
+  actor_profile: (typeof PROFILE_IDS)[number];
+  changed_on: string;
+}
+
+/** Réouverture décidée par l'agence : mois (AAAA-MM) ou semaine (AAAA-Snn) clôturé, motif, durée, zone concernée, trace. */
+export const ReopeningSchema = z.object({
+  id: z.string().uuid(),
+  scope: z.enum(REOPEN_SCOPES),
+  target: z.string().regex(/^(\d{4}-\d{2}|\d{4}-S\d{2})$/),
+  zone_id: z.string().uuid(),
+  reason: z.string().min(1).max(280),
+  expires_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  decided_by: z.enum(PROFILE_IDS),
+  decided_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  request_id: z.string().uuid().nullable(),
+  is_demo: z.literal(true),
+});
+export type Reopening = z.infer<typeof ReopeningSchema>;
+
+/** Demande de réouverture : le CVR seul la dépose (D87), l'agence seule la décide. */
+export const ReopeningRequestSchema = z.object({
+  id: z.string().uuid(),
+  scope: z.enum(REOPEN_SCOPES),
+  target: z.string().regex(/^(\d{4}-\d{2}|\d{4}-S\d{2})$/),
+  zone_id: z.string().uuid(),
+  motive: z.string().min(1).max(280),
+  desired_until: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  requested_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  status: z.enum(['pending', 'granted', 'declined']),
+  is_demo: z.literal(true),
+});
+export type ReopeningRequest = z.infer<typeof ReopeningRequestSchema>;
+
+/** Ligne du tableau de saisie en lot : mêmes champs que le formulaire unitaire, en texte. */
+const BatchPeriodSchema = z.object({
+  start_date: z.string().nullable(),
+  end_date: z.string().nullable(),
+  start_week: z.string().nullable(),
+  end_week: z.string().nullable(),
+});
+const BatchRawSchema = z.object({
+  start_date: z.string().optional(),
+  end_date: z.string().optional(),
+  start_week: z.string().optional(),
+  end_week: z.string().optional(),
+});
+export const BatchRowSchema = z.object({
+  dispositif: z.string().max(40),
+  campaign_code: z.string().max(40),
+  sector_id: z.string().max(40),
+  position_label: z.string().max(60),
+  weekly_hours: z.string().max(4),
+  priority: z.string().max(2),
+  periods: z.array(BatchPeriodSchema).min(1).max(2),
+  days: z.array(WeekdayNo).max(7),
+  hours_slot: z.string().max(40),
+  store_codes: z.array(z.string().max(20)).max(60),
+  client_comment: z.string().max(280),
+  /** Valeurs brutes collées d'un tableur (W2, W13 à W15). */
+  raw: z.object({ 1: BatchRawSchema.optional(), 2: BatchRawSchema.optional() }).optional(),
+  /** Explications d'un collage qui n'a pu être converti (valeur inconnue). */
+  paste_issues: z.array(z.object({ column: z.string().max(30), raw: z.string().max(80), kind: z.string().max(30) })).max(20).optional(),
+});
+export type BatchRow = z.infer<typeof BatchRowSchema>;
+export const BatchRowsSchema = z.array(BatchRowSchema).max(60);

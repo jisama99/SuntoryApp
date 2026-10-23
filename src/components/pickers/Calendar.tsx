@@ -3,6 +3,8 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { holidayOf } from '@/domain/holidays';
+import { nonWorkingReason } from '@/domain/working-days';
+import type { CalendarRules } from '@/domain/working-days';
 import type { Locale } from '@/domain/types';
 import { addDays, isoWeekOf, storedWeekOf, weekdayOf } from '@/domain/week';
 import type { IsoDate } from '@/domain/week';
@@ -24,17 +26,33 @@ export interface CalendarProps {
   start: IsoDate | null;
   end: IsoDate | null;
   onPick: (date: IsoDate) => void;
+  /** Mois dont la saisie est close (D78) : leurs jours sont désactivés avec la date limite dépassée. */
+  lockedMonths?: ReadonlyArray<{ month: string; deadline: IsoDate }>;
+  /** Jours non ouvrés désactivés avec leur raison (calendrier d'échéances, durée de réouverture). */
+  nonWorking?: CalendarRules;
 }
 
 const INTL: Record<Locale, string> = { fr: 'fr-FR', en: 'en-GB' };
 
-export type DayReason = { key: 'outOfBounds'; min: IsoDate; max: IsoDate } | { key: 'closedWeek'; week: string };
+export type DayReason =
+  | { key: 'outOfBounds'; min: IsoDate; max: IsoDate }
+  | { key: 'closedWeek'; week: string }
+  | { key: 'afterDeadline'; month: string; deadline: IsoDate }
+  | { key: 'weekend'; weekday: number }
+  | { key: 'nonWorkingHoliday'; holiday: string };
 
 /** Raison pour laquelle un jour n'est pas sélectionnable, ou null. */
-export function disabledReason(date: IsoDate, p: Pick<CalendarProps, 'min' | 'max' | 'closedWeeks'>): DayReason | null {
+export function disabledReason(date: IsoDate, p: Pick<CalendarProps, 'min' | 'max' | 'closedWeeks' | 'lockedMonths' | 'nonWorking'>): DayReason | null {
   if (date < p.min || date > p.max) return { key: 'outOfBounds', min: p.min, max: p.max };
   const week = storedWeekOf(date);
   if (p.closedWeeks.includes(week)) return { key: 'closedWeek', week };
+  const locked = p.lockedMonths?.find((m) => m.month === date.slice(0, 7));
+  if (locked) return { key: 'afterDeadline', month: locked.month, deadline: locked.deadline };
+  if (p.nonWorking) {
+    const r = nonWorkingReason(date, p.nonWorking);
+    if (r?.kind === 'weekday') return { key: 'weekend', weekday: r.weekday };
+    if (r?.kind === 'holiday') return { key: 'nonWorkingHoliday', holiday: r.holiday };
+  }
   return null;
 }
 
@@ -103,10 +121,24 @@ export function Calendar(props: CalendarProps) {
   const focusReason = disabledReason(focus, props);
   const focusHoliday = holidayOf(focus);
 
-  const reasonText = (r: DayReason) =>
-    r.key === 'outOfBounds'
-      ? t('reason.outOfBounds', { min: formatDay(r.min), max: formatDay(r.max) })
-      : t('reason.closedWeek', { week: formatIsoWeek(r.week, locale) });
+  const reasonText = (r: DayReason) => {
+    switch (r.key) {
+      case 'outOfBounds':
+        return t('reason.outOfBounds', { min: formatDay(r.min), max: formatDay(r.max) });
+      case 'closedWeek':
+        return t('reason.closedWeek', { week: formatIsoWeek(r.week, locale) });
+      case 'afterDeadline':
+        return t('reason.afterDeadline', { month: monthName(r.month), deadline: formatDay(r.deadline) });
+      case 'weekend':
+        return t('reason.weekend', { day: weekdayName(r.weekday) });
+      case 'nonWorkingHoliday':
+        return t('reason.nonWorkingHoliday', { name: t(`holiday.${r.holiday}`) });
+    }
+  };
+  const monthName = (m: string) =>
+    new Intl.DateTimeFormat(intl, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${m}-01T00:00:00Z`));
+  const weekdayName = (wd: number) =>
+    new Intl.DateTimeFormat(intl, { weekday: 'long', timeZone: 'UTC' }).format(new Date(`${addDays('2026-11-01', wd)}T00:00:00Z`));
   const formatDay = (d: IsoDate) =>
     new Intl.DateTimeFormat(intl, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
 

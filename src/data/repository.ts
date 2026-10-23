@@ -1,9 +1,11 @@
 import type { AccessContext } from '@/domain/access';
-import type { MenuKey, ProfileId } from '@/domain/types';
+import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
+import type { DeadlineType, Dispositif, MenuKey, PresetId, ProfileId, ReopenScope } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
-  Alert, BusinessEvent, Campaign, DemoClock, DemoProfile, Need, Store, WeekClosure, Zone,
+  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, DemoClock, DemoProfile, DispositifParams, Need, ParamChange,
+  ParamKey, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from './schemas';
 
 export interface MenuEntry {
@@ -40,6 +42,113 @@ export interface Repository {
   canWriteNeeds(ctx: AccessContext): boolean;
   saveNeed(ctx: AccessContext, input: RuleInput, options?: SaveOptions): Promise<SaveResult>;
   duplicateNeed(ctx: AccessContext, needId: string, newStart: string, options?: SaveOptions): Promise<SaveResult>;
+
+  // ---- Lot A2b : échéances, blocage, paramètres par dispositif, réouvertures, saisie en lot ----
+  /** Données de calcul des échéances pour l'écran (calendrier, paramètres, réouvertures du périmètre). Le forfait kilométrique est masqué côté cliente (D08 ouvert). */
+  getDeadlineContext(ctx: AccessContext): Promise<DeadlineContext>;
+  /** Résumé des retards du périmètre, par région et par secteur (D81). */
+  getDelaySummary(ctx: AccessContext): Promise<DelayMonth[]>;
+  /** Alertes d'échéance dérivées (D79, D82), filtrées par audience et par périmètre. */
+  getDeadlineAlerts(ctx: AccessContext): Promise<DerivedAlert[]>;
+  /** Vrai pour l'agence administration : calendrier, paramètres de dispositif et décisions de réouverture. */
+  canManageSettings(ctx: AccessContext): boolean;
+  /** Paramètres complets, valeur de forfait comprise : réservés aux profils qui ont l'entrée Paramètres. */
+  getDispositifParams(ctx: AccessContext): Promise<DispositifParams[]>;
+  getParamHistory(ctx: AccessContext): Promise<ParamChange[]>;
+  updateDispositifParam(ctx: AccessContext, dispositif: Dispositif, key: ParamKey, value: unknown): Promise<MutationResult<'forbidden' | 'invalid' | 'unchanged'>>;
+  /** Rattachement d'une campagne à un dispositif : refusé par P2 si elle relève déjà d'un autre dispositif. */
+  assignCampaignDispositif(ctx: AccessContext, campaignCode: string, dispositif: Dispositif): Promise<MutationResult<'forbidden' | 'not_found' | 'p2'>>;
+  getCampaignDispositifs(ctx: AccessContext): Promise<Record<string, Dispositif[]>>;
+  updateDeadlineEntry(ctx: AccessContext, input: DeadlineEntryInput): Promise<MutationResult<'forbidden' | 'invalid'>>;
+  setDefaultPreset(ctx: AccessContext, preset: PresetId): Promise<MutationResult<'forbidden' | 'invalid'>>;
+  getReopenings(ctx: AccessContext): Promise<Reopening[]>;
+  getReopeningRequests(ctx: AccessContext): Promise<ReopeningRequest[]>;
+  /** Seul le CVR demande une réouverture (D87). */
+  requestReopening(ctx: AccessContext, input: ReopeningRequestInput): Promise<MutationResult<'forbidden' | 'invalid' | 'not_closed' | 'duplicate'>>;
+  /** L'agence administration seule décide : motif, durée, trace (D82, D147). */
+  decideReopening(ctx: AccessContext, input: ReopeningDecisionInput): Promise<MutationResult<'forbidden' | 'invalid' | 'not_found'>>;
+  /** File des courriels préparés pour validation, sans envoi (D86, D94). Réservée à l'agence et au prestataire. */
+  getOutbox(ctx: AccessContext): Promise<OutboxEntry[]>;
+  decideOutbox(ctx: AccessContext, id: string, decision: 'validated' | 'discarded'): Promise<MutationResult<'forbidden' | 'not_found'>>;
+  /** Secteurs du périmètre désignés par leur code collé d'un tableur : le code ne quitte jamais la couche données autrement. */
+  resolveSectorCodes(ctx: AccessContext, codes: string[]): Promise<Array<{ id: string; code: string }>>;
+  saveNeedsBatch(ctx: AccessContext, rows: BatchRow[], options?: BatchOptions): Promise<BatchResult>;
+  getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
+  saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
+  clearBatchDraft(ctx: AccessContext): Promise<void>;
+}
+
+export type MutationResult<E extends string = string> = { status: 'ok' } | { status: 'refused'; reason: E };
+
+/** Contexte sérialisable : l'écran recalcule échéances et bannières avec les mêmes modules purs que la couche données. */
+export interface DeadlineContext {
+  today: string;
+  settings: DeadlineSettings;
+  params: DispositifParams[];
+  reopenings: Reopening[];
+  /** Pour chaque secteur du périmètre : le secteur et ses ancêtres (pour appliquer une réouverture limitée à une zone). */
+  lineage: Record<string, string[]>;
+}
+
+export interface DeadlineEntryInput {
+  month: string;
+  type: DeadlineType;
+  /** `default` retire la ligne du mois et rend la main au preset par défaut. */
+  mode: 'default' | 'preset' | 'fixed';
+  preset?: PresetId;
+  fixedDate?: string;
+}
+
+export interface ReopeningRequestInput {
+  scope: ReopenScope;
+  target: string;
+  motive: string;
+  desiredUntil: string;
+}
+
+export interface ReopeningDecisionInput {
+  /** Demande traitée, ou null pour une réouverture décidée directement par l'agence. */
+  requestId: string | null;
+  decision: 'grant' | 'decline';
+  scope: ReopenScope;
+  target: string;
+  zoneId: string;
+  reason: string;
+  expiresOn: string;
+}
+
+export type OutboxEntry = OutboxItem & { status: 'pending' | 'validated' | 'discarded' };
+
+export interface BatchOptions {
+  /** Index des lignes dont les alertes sont confirmées. */
+  confirm?: number[];
+  /** Index des lignes reportées sur le mois suivant après une échéance. */
+  defer?: number[];
+}
+
+export interface BatchLineResult {
+  index: number;
+  status: 'saved' | 'rejected' | 'needs_confirmation' | 'ignored';
+  needId?: string;
+  needCode?: string;
+  decision?: 'draft' | 'submit' | 'merge';
+  reason?: SaveRefusal;
+  findings: ReturnedFinding[];
+  missing: string[];
+  issues?: NonNullable<BatchRow['paste_issues']>;
+}
+
+export interface BatchResult {
+  lines: BatchLineResult[];
+  saved: number;
+  rejected: number;
+  needsConfirmation: number;
+  ignored: number;
+}
+
+export interface BatchDraft {
+  updated_on: string;
+  rows: BatchRow[];
 }
 
 export interface NeedTotals {
@@ -56,6 +165,10 @@ export interface SaveOptions {
   needId?: string;
   /** Fusion : étend la période du besoin existant au lieu d'en créer un nouveau. */
   mergeInto?: string;
+  /** Report sur le mois suivant d'une demande tardive (D82) : l'échéance se juge sur le mois suivant. */
+  deferToNextMonth?: boolean;
+  /** Saisie en lot : un besoin incomplet est refusé au lieu d'être enregistré en brouillon. */
+  requireComplete?: boolean;
 }
 
 /** Constat tel que renvoyé à l'écran : le besoin lié n'est cité que s'il est dans le périmètre du profil. */
@@ -63,7 +176,9 @@ export interface ReturnedFinding extends Finding {
   relatedVisible?: boolean;
 }
 
-export type SaveRefusal = 'forbidden' | 'out_of_scope' | 'invalid_store' | 'campaign_mismatch' | 'not_found' | 'not_draft' | 'no_period' | 'blocked';
+export type SaveRefusal =
+  | 'forbidden' | 'out_of_scope' | 'invalid_store' | 'campaign_mismatch' | 'not_found' | 'not_draft' | 'no_period' | 'blocked'
+  | 'incomplete' | 'paste' | 'invalid';
 
 export type SaveResult =
   | { status: 'saved'; need: Need; decision: 'draft' | 'submit' | 'merge'; findings: ReturnedFinding[]; missing: string[] }

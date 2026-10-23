@@ -1,3 +1,5 @@
+import { rowToInput } from '@/domain/batch';
+
 /** Valeurs du formulaire de saisie et conversions : module sans composant, importable côté serveur comme côté client. */
 export interface PeriodValue {
   start_date: string | null;
@@ -30,21 +32,7 @@ export function emptyNeedForm(sectorId: string): NeedFormValue {
   };
 }
 
+/** Entrée des règles pour le formulaire unitaire : même conversion que la saisie en lot (src/domain/batch.ts). */
 export function toInput(v: NeedFormValue) {
-  return {
-    dispositif: v.dispositif || null,
-    campaign_code: v.campaign_code || null,
-    sector_id: v.sector_id,
-    position_label: v.position_label.trim() || null,
-    weekly_hours: v.weekly_hours ? Number(v.weekly_hours) : null,
-    priority: v.priority ? Number(v.priority) : null,
-    periods: v.periods
-      .map((p, i) => ({ period_no: (i + 1) as 1 | 2, ...p }))
-      .filter((p) => p.start_date || p.end_date || p.start_week || p.end_week),
-    days: v.days,
-    hours_slot: v.hours_slot.trim() || null,
-    store_codes: v.store_codes,
-    client_comment: v.client_comment.trim() || null,
-  };
+  return rowToInput(v);
 }
-

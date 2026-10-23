@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { AlertList } from '@/components/AlertList';
+import { Breadcrumb } from '@/components/Breadcrumb';
+import { DeadlineAlertList } from '@/components/DeadlineAlertList';
 import { Gallery } from '@/components/Gallery';
 import { PageHeader } from '@/components/PageHeader';
 import { EmptyState } from '@/components/States';
@@ -25,10 +27,19 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
   const title = t(`menu.${key}`);
 
   if (key === 'alerts') {
-    const [alerts, zones] = await Promise.all([repository.getAlerts(ctx), repository.getScopeZones(ctx)]);
+    const [alerts, zones, deadlineAlerts] = await Promise.all([
+      repository.getAlerts(ctx), repository.getScopeZones(ctx), repository.getDeadlineAlerts(ctx),
+    ]);
     return (
       <>
+        <Breadcrumb items={[{ label: title }]} />
         <PageHeader title={title} subtitle={t(`role.${ctx.profileId}`)} />
+        {deadlineAlerts.length > 0 ? (
+          <section aria-labelledby="deadline-alerts-title" className="mb-8 flex flex-col gap-3">
+            <h2 id="deadline-alerts-title" className="text-lg font-semibold">{t('alerts.deadlineTitle')}</h2>
+            <DeadlineAlertList alerts={deadlineAlerts} showAudience={ctx.side !== 'client'} />
+          </section>
+        ) : null}
         {alerts.length === 0 ? (
           <EmptyState title={t('states.empty.title')} body={t('home.alerts.empty')} />
         ) : (

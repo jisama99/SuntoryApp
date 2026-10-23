@@ -9,7 +9,8 @@
   },
   "nav": {
     "label": "Main navigation",
-    "open": "Menu"
+    "open": "Menu",
+    "breadcrumb": "Breadcrumb"
   },
   "locale": {
     "label": "Language",
@@ -107,6 +108,17 @@
       "need_to_confirm": "A need is waiting for your confirmation.",
       "proposal_awaiting_decision": "A proposal is waiting for a client decision.",
       "client_decision_pending": "A client decision is pending for your scope."
+    },
+    "deadlineTitle": "Entry deadlines",
+    "derived": {
+      "reminderEntry": "{stage}: need entry for {month} closes on {deadline}, {left, plural, =0 {due today} one {in # working day} other {in # working days}}.",
+      "reminderEntryMissing": "{stage}: need entry for {month} closes on {deadline}, {left, plural, =0 {due today} one {in # working day} other {in # working days}}. {missing, plural, one {# sector in your scope has not entered yet.} other {# sectors in your scope have not entered yet.}}",
+      "reminderChange": "{stage}: change requests for {month} close on {deadline}, {left, plural, =0 {due today} one {in # working day} other {in # working days}}.",
+      "reminderEntryOwn": "{stage}: {dispositif}, the entry window for {month} closes on {deadline}.",
+      "reminderChangeOwn": "{stage}: {dispositif}, the change deadline for {month} closes on {deadline}.",
+      "lateSummary": "Entry for {month} closed: {late, plural, =0 {no sector late} one {# sector late} other {# sectors late}} out of {total}.",
+      "closingReport": "Closing report for {month}: {done} sectors up to date, {late} late, {deferred} requests deferred to the following month.",
+      "reopenQueue": "{n, plural, one {# reopening request awaits a decision.} other {# reopening requests await a decision.}}"
     }
   },
   "states": {
@@ -213,7 +225,10 @@
     "reason": {
       "outOfBounds": "Outside the allowed dates, from {min} to {max}",
       "closedWeek": "Week {week} is closed, only the agency can reopen it",
-      "holiday": "Public holiday: {name}"
+      "holiday": "Public holiday: {name}",
+      "afterDeadline": "Entry for {month} closed on {deadline}",
+      "weekend": "Non-working day: {day}",
+      "nonWorkingHoliday": "Non-working public holiday: {name}"
     },
     "holiday": {
       "new_year": "New Year's Day",
@@ -267,7 +282,8 @@
       "toComplete": "To complete",
       "period": "P{n}: from {start} to {end} ({from} to {to})",
       "periodOneWeek": "P{n}: from {start} to {end} ({week})",
-      "onBehalf": "Entered by the agency for the sector manager"
+      "onBehalf": "Entered by the agency for the sector manager",
+      "deferred": "Deferred from {from} to {to}"
     },
     "state": {
       "draft": "Draft",
@@ -282,7 +298,16 @@
     "actions": {
       "complete": "Complete",
       "duplicate": "Duplicate"
-    }
+    },
+    "batch": "Batch entry",
+    "filters": {
+      "label": "Filter needs",
+      "all": "All",
+      "draft": "Drafts",
+      "submitted": "Submitted",
+      "deferred": "Deferred"
+    },
+    "emptyFilter": "No need matches this filter."
   },
   "form": {
     "note": "An incomplete need is saved as a draft and stays out of the totals. Dates are chosen in the calendar.",
@@ -357,7 +382,10 @@
       "not_found": "The requested need cannot be found.",
       "not_draft": "Only a draft can be completed here.",
       "no_period": "This need has no period to shift.",
-      "blocked": "Saving is refused: fix the blocking points below."
+      "blocked": "Saving is refused: fix the blocking points below.",
+      "incomplete": "The line is incomplete: it is not saved.",
+      "paste": "A pasted value could not be converted: fix the line.",
+      "invalid": "The values of the line are not valid."
     },
     "missing": {
       "dispositif": "Scheme",
@@ -368,7 +396,10 @@
       "period": "Period dates",
       "days": "Working days",
       "hours_slot": "Hours"
-    }
+    },
+    "deferNote": "This late request can be saved for the following month. It will be marked as deferred.",
+    "defer": "Defer to {month}",
+    "deferredSaved": "The request is marked as deferred to the following month."
   },
   "duplicate": {
     "title": "Duplicate need {code}",
@@ -411,6 +442,363 @@
     "J1": "None of the ticked days falls between {start} and {end}.",
     "J2": "The ticked day ({weekday}) is a public holiday over the whole period.",
     "J3": "{weekday} is not offered by this scheme.",
-    "B1": "Dates must be between {min} and {max}."
+    "B1": "Dates must be between {min} and {max}.",
+    "P1": "The slot length ({actual} minutes) is below the minimum length for this scheme: {min} minutes.",
+    "P2": "A campaign can belong to one scheme only. Campaign {campaign} is attached to several schemes.",
+    "P3": "The entry window of this scheme for {month} closed on {deadline}. {canDefer, select, yes {You can defer the request to {next}.} other {The following month is closed as well.}}",
+    "P4": "The change deadline of this scheme for {month} closed on {deadline}. {canDefer, select, yes {{effect, select, next_month {This change will take effect the following month ({next}).} other {You can defer the request to {next}.}}} other {The following month is closed as well.}}",
+    "P5": "Mileage flat rate not filled in for this scheme: the line stays unpriced.",
+    "P6": "This scheme is not open to your role.",
+    "E1": "Need entry for {month} has been closed since {deadline}. {canDefer, select, yes {You can defer the request to {next}.} other {The following month is closed as well.}}",
+    "E2": "Change requests for {month} have been closed since {deadline}. {canDefer, select, yes {You can defer the request to {next}.} other {The following month is closed as well.}}"
+  },
+  "deadline": {
+    "unsaved": "Some changes are not saved yet. Leave this page?",
+    "type": {
+      "needs_entry": "Need entry",
+      "change_request": "Change requests"
+    },
+    "stage": {
+      "zero": "Deadline day",
+      "n": "D-{n}"
+    },
+    "source": {
+      "dispositif": "Scheme rule",
+      "preset": "Global preset",
+      "fixed": "Fixed date"
+    },
+    "state": {
+      "closed": "Closed",
+      "open": "Open"
+    },
+    "preset": {
+      "large": "Wide",
+      "standard": "Standard",
+      "short": "Short"
+    },
+    "banner": {
+      "title": "Entry deadlines",
+      "scheme": "Scheme: {name}",
+      "closedTag": "Closed",
+      "closed": "{what}: closed since {deadline}.",
+      "openTag": "Open",
+      "upcoming": "{what}: before {deadline} ({left, plural, =0 {due today} one {in # working day} other {in # working days}}).",
+      "window": "Entry window from {from} to {to}.",
+      "none": "No upcoming deadline.",
+      "reopenedTag": "Reopened",
+      "reopened": "{target}: reopened by the agency until {until}."
+    },
+    "calendar": {
+      "title": "Deadlines by target month",
+      "scope": "Calendar scope",
+      "global": "Global calendar",
+      "span": "Number of months shown",
+      "months": "{n} months",
+      "caption": "Deadline applied to each target month, with the rule that sets it",
+      "noWindow": "No window",
+      "cols": {
+        "month": "Target month",
+        "type": "Deadline",
+        "rule": "Rule applied",
+        "date": "Deadline date",
+        "window": "Window",
+        "state": "Status"
+      }
+    },
+    "editor": {
+      "title": "Edit the calendar",
+      "presetTitle": "Default preset",
+      "presetHelp": "The preset applies to every month without its own setting. Standard is proposed and can be changed.",
+      "defaultPreset": "Default preset",
+      "choose": "Choose",
+      "savePreset": "Save the preset",
+      "saved": "Saved",
+      "refused": {
+        "forbidden": "Reserved to the agency administration.",
+        "invalid": "The value is not valid."
+      },
+      "entryTitle": "Deadline of one month",
+      "entryHelp": "Choose a preset or a fixed date for one month and one deadline. Non-working days are disabled with their reason.",
+      "month": "Target month",
+      "type": "Deadline",
+      "mode": "Setting",
+      "modeDefault": "Back to the default preset",
+      "modePreset": "Preset for this month",
+      "modeFixed": "Fixed date",
+      "presetOfMonth": "Preset of this month",
+      "fixedDate": "Deadline date",
+      "fixedHint": "A working day before the start of the target month. Fictitious demonstration date, to be confirmed.",
+      "saveEntry": "Save the deadline"
+    }
+  },
+  "delay": {
+    "title": "Entry delays",
+    "months": "Target month",
+    "open": "Entry for {month} closes on {deadline} ({left, plural, =0 {due today} one {in # working day} other {in # working days}}).",
+    "closed": "Entry for {month} has been closed since {deadline}.",
+    "status": {
+      "up_to_date": "Up to date",
+      "to_follow": "To follow",
+      "late": "Late"
+    },
+    "onTotal": "out of {total, plural, one {# sector} other {# sectors}}",
+    "toHandle": "To handle",
+    "byRegion": "Sectors by region and status",
+    "cols": {
+      "region": "Region"
+    },
+    "sectorsTitle": "Sectors to chase",
+    "drafts": "{n, plural, one {# draft} other {# drafts}}",
+    "allDone": "Every sector is up to date."
+  },
+  "reopen": {
+    "title": "Request a reopening",
+    "help": "Only the agency reopens a month or a week, with a reason, a duration and a trace. Your request is passed on to it.",
+    "nothingClosed": "No closed month or week to reopen.",
+    "target": "Month or week to reopen",
+    "targetMonth": "Entry for {month}",
+    "targetWeek": "Week {week}",
+    "choose": "Choose",
+    "motive": "Reason for the request",
+    "motiveHint": "Do not enter any personal data or medical reason.",
+    "until": "Requested duration, until",
+    "submit": "Send the request",
+    "sent": "Request sent to the agency",
+    "refused": {
+      "forbidden": "Only a CVR can request a reopening.",
+      "invalid": "Fill in the target, the reason and the duration.",
+      "not_closed": "This target is not closed.",
+      "duplicate": "An identical request is already pending.",
+      "not_found": "Target not found."
+    },
+    "mine": "Your requests",
+    "status": {
+      "pending": "Pending",
+      "granted": "Granted",
+      "declined": "Declined"
+    },
+    "desired": "Requested until {date}",
+    "requestsTitle": "Reopening requests",
+    "noPending": "No reopening request is pending.",
+    "motiveOf": "Reason: {motive}",
+    "requestedOn": "Requested on {date}, wanted until {until}.",
+    "reason": "Reason for the decision",
+    "reasonHint": "The reason is kept in the reopening trace.",
+    "grantUntil": "Reopened until",
+    "grant": "Reopen",
+    "decline": "Decline",
+    "decided": "Decision saved",
+    "directTitle": "Reopen without a request",
+    "zone": "Zone concerned",
+    "traceTitle": "Reopening trace",
+    "noTrace": "No reopening decided yet.",
+    "traceLine": "Reason: {reason}. Until {until}, decided on {on} by {by}."
+  },
+  "batch": {
+    "title": "Batch entry",
+    "intro": "Enter several needs at once or paste them from a spreadsheet. Each line follows the same rules as single entry. Valid lines are created, the others are explained.",
+    "paste": {
+      "title": "Paste from a spreadsheet",
+      "help": "Copy the cells in the spreadsheet then paste them below. Days are written MON;TUE;THU. Stores are separated by a semicolon.",
+      "sectorColumn": "Sector",
+      "columns": "Scheme, Campaign, Position, Priority, Hours, Start, End, Start week, End week, Days, Time slot, Stores, Comment",
+      "label": "Pasted cells",
+      "convert": "Convert to lines",
+      "nothing": "No line recognised in the pasted text.",
+      "done": "{n, plural, one {# line added.} other {# lines added.}}",
+      "blank": "{n, plural, one {# blank line ignored.} other {# blank lines ignored.}}",
+      "header": "The header line was recognised."
+    },
+    "rows": {
+      "title": "{n, plural, one {# line} other {# lines}}",
+      "line": "Line {n}",
+      "savedTag": "Saved {code}",
+      "rejectedTag": "Rejected",
+      "confirmTag": "To confirm",
+      "copy": "Duplicate the line",
+      "remove": "Remove the line",
+      "stores": "Stores ({n})",
+      "add": "Add a line",
+      "addFive": "Add five lines",
+      "clear": "Clear the batch"
+    },
+    "draft": {
+      "saving": "Draft being saved",
+      "saved": "Draft saved, you can resume after closing",
+      "none": "Automatic draft active"
+    },
+    "issue": {
+      "unknown_sector": "Sector \"{raw}\" is unknown.",
+      "unknown_dispositif": "Scheme \"{raw}\" is unknown.",
+      "unknown_campaign": "Campaign \"{raw}\" is unknown.",
+      "unknown_position": "Position \"{raw}\" is unknown.",
+      "unknown_priority": "Priority \"{raw}\" is unknown.",
+      "unknown_hours": "Hours \"{raw}\" are not in the allowed list.",
+      "unknown_day": "Day \"{raw}\" is unknown.",
+      "too_long": "The comment exceeds 280 characters and was cut."
+    },
+    "result": {
+      "title": "Saving result",
+      "saved": "Lines saved",
+      "rejected": "Lines rejected",
+      "confirm": "Lines to confirm",
+      "filters": "Filter the lines",
+      "filter": {
+        "all": "All",
+        "saved": "Saved",
+        "rejected": "Rejected",
+        "confirm": "To confirm"
+      },
+      "confirmAll": "Confirm {n, plural, one {# line} other {# lines}} with alerts"
+    },
+    "summary": {
+      "title": "Summary before submission",
+      "hint": "Check the number of lines, the incomplete lines and the total hours before submitting.",
+      "open": "See the summary",
+      "filled": "Lines filled",
+      "complete": "Complete lines",
+      "hours": "Hours per week",
+      "ignored": "Blank lines ignored",
+      "incomplete": "{n, plural, one {# incomplete line will not be saved:} other {# incomplete lines will not be saved:}}",
+      "incompleteNote": "Complete them before submitting, otherwise they are rejected with an explanation.",
+      "pasteIssues": "{n, plural, one {# line holds a pasted value to fix.} other {# lines hold a pasted value to fix.}}",
+      "submit": "Submit {n, plural, one {# complete line} other {# complete lines}}",
+      "edit": "Edit the batch",
+      "byDispositif": "{name}: {n}"
+    }
+  },
+  "settings": {
+    "readOnly": "Your profile views these settings. Editing is reserved to the agency administration.",
+    "open": "Open",
+    "deadlines": {
+      "title": "Deadline calendar",
+      "body": "Two deadlines per month, default preset, fixed dates, reopenings and prepared emails.",
+      "intro": "Two deadlines per target month: need entry and change requests. After the deadline, entry for the month is blocked in the data layer.",
+      "novemberNote": "For November 2026, the fixed date of 30/10/2026 is a fictitious demonstration date (D80), to be confirmed by T. SOEFOU."
+    },
+    "dispositifs": {
+      "title": "Scheme settings",
+      "body": "Minimum length, flat rate, entry window, change deadline, roles, horizon and days.",
+      "intro": "Workshop values are starting values to be validated. None is written in the code: changing a setting changes the behaviour of rules P1 to P6."
+    }
+  },
+  "params": {
+    "scopeLabel": "Scheme",
+    "allDispositifs": "All",
+    "compareCaption": "Settings of each scheme",
+    "detailCaption": "Settings of the {name} scheme",
+    "cols": {
+      "param": "Setting",
+      "value": "Current value",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "keys": {
+      "min_minutes": "Minimum intervention length",
+      "km_flat_rate": "Mileage flat rate",
+      "entry_window": "Entry window",
+      "change_effect": "Effect of a change during the month",
+      "change_lead_days": "Change deadline before the following month",
+      "change_lead_unit": "Unit of the change deadline",
+      "entry_roles": "Entry roles",
+      "horizon_weeks": "Entry horizon",
+      "non_working_days": "Non-working mission days",
+      "days_allowed": "Days offered"
+    },
+    "status": {
+      "toValidate": "To validate",
+      "toUpdate": "To update",
+      "partlyBlocking": "Partly blocking",
+      "validated": "Validated"
+    },
+    "edit": "Edit",
+    "saved": "Saved",
+    "save": "Save",
+    "cancel": "Cancel",
+    "refused": {
+      "forbidden": "Reserved to the agency administration.",
+      "invalid": "The value is not valid.",
+      "unchanged": "The value is identical."
+    },
+    "editor": {
+      "choose": "Choose",
+      "number": "Value",
+      "emptyIsDefault": "Leave empty for the global or undefined value.",
+      "kmMode": "Flat rate",
+      "kmValue": "Amount filled in",
+      "amount": "Amount excluding VAT in euros",
+      "fictive": "Fictitious demonstration value, the real value will come from the dated rate grid.",
+      "reading": "Window",
+      "effect": "Effect",
+      "unit": "Unit",
+      "roles": "Allowed roles",
+      "csUndefined": "The \"CS\" role is not defined (Q-N9-3): it is not offered.",
+      "useGlobal": "Use the global value"
+    },
+    "value": {
+      "undefined": "Not defined",
+      "minutes": "{n} minutes",
+      "notApplicable": "Not applicable",
+      "unpriced": "Unpriced",
+      "amountFictive": "{amount} EUR excl. VAT (fictitious value)",
+      "calendar": "Global calendar (D80, D82)",
+      "window": {
+        "last_full_week": "Second-to-last week of the previous month, reading A (last full week of the month)",
+        "week_of_last_day": "Second-to-last week of the previous month, reading B (the last week is the one of the last day)"
+      },
+      "nextMonth": "Following month",
+      "days": "{n} days",
+      "unit": {
+        "calendar": "Calendar days",
+        "working": "Working days"
+      },
+      "allRoles": "All entry roles",
+      "weeks": "{n} weeks",
+      "global": "Global value",
+      "holidays": "public holidays"
+    },
+    "roles": {
+      "rs": "RS",
+      "agency_operator": "Agency (operator)",
+      "agency_admin": "Agency (administrator)"
+    },
+    "h2": {
+      "title": "Worked example for December 2026",
+      "label": "Hypothesis H2, to be confirmed",
+      "lead": "Change deadline of the second placement for December 2026: {date}, computed from the scheme setting.",
+      "readingA": "Reading A of the second-to-last week of November: from {from} to {to}.",
+      "readingB": "Reading B of the second-to-last week of November: from {from} to {to}."
+    },
+    "history": {
+      "title": "Change history",
+      "filter": "Filter the history",
+      "empty": "No setting has been changed yet.",
+      "caption": "Setting changes, most recent first",
+      "cols": {
+        "date": "Date",
+        "actor": "Actor",
+        "dispositif": "Scheme",
+        "param": "Setting",
+        "old": "Previous value",
+        "new": "New value"
+      }
+    },
+    "campaigns": {
+      "title": "Campaigns and schemes",
+      "help": "A campaign belongs to one scheme only (H1). Attaching it to a second scheme is refused by rule P2."
+    }
+  },
+  "outbox": {
+    "title": "Prepared emails",
+    "help": "Deadline-day reminders and Monday summary, prepared for validation. No email is sent in the demonstrator.",
+    "validate": "Validate",
+    "discard": "Discard",
+    "status": {
+      "pending": "To validate",
+      "validated": "Validated",
+      "discarded": "Discarded"
+    },
+    "mondaySummary": "Monday summary of {date} for the client",
+    "reminder": "Reminder of {date} for the entry of {month} ({n, plural, one {# sector concerned} other {# sectors concerned}})"
   }
 }

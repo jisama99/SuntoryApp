@@ -13,12 +13,15 @@ export interface PickerBounds {
   min: IsoDate;
   max: IsoDate;
   closedWeeks?: readonly string[];
+  lockedMonths?: ReadonlyArray<{ month: string; deadline: IsoDate }>;
+  nonWorking?: import('@/domain/working-days').CalendarRules;
 }
 
 /** Sélecteur d'une date (D133). La valeur interne est ISO AAAA-MM-JJ ; l'affichage suit la langue. */
-export function DatePicker({ id, label, value, onChange, hint, error, ...bounds }: PickerBounds & {
+export function DatePicker({ id, label, labelHidden, value, onChange, hint, error, ...bounds }: PickerBounds & {
   id: string;
   label: string;
+  labelHidden?: boolean;
   value: IsoDate | null;
   onChange: (value: IsoDate) => void;
   hint?: string;
@@ -31,6 +34,7 @@ export function DatePicker({ id, label, value, onChange, hint, error, ...bounds 
     <PickerField
       id={id}
       label={label}
+      labelHidden={labelHidden}
       valueText={value ? formatDate(value, locale) : null}
       placeholder={t('choose')}
       hint={hint}

@@ -1,4 +1,5 @@
 import type { Need, NeedInput } from '@/data/schemas';
+import { evaluateDispositifRules } from './dispositif-rules';
 import { findDuplicates } from './duplicates';
 import type { DupCandidate } from './duplicates';
 import { applyGravities } from './rules';
@@ -51,7 +52,7 @@ export function checkNeed(input: RuleInput, env: RuleEnv, existing: Need[], iden
     store_codes: input.store_codes,
     periods,
   };
-  const raw = [...evaluateSingleNeedRules(input, env), ...findDuplicates(candidate, existing)];
+  const raw = [...evaluateSingleNeedRules(input, env), ...evaluateDispositifRules(input, env), ...findDuplicates(candidate, existing)];
   const findings = applyGravities(raw, env.config);
   const missing = missingFields(input);
   const complete = missing.length === 0 && !findings.some((f) => f.rule === 'W9');

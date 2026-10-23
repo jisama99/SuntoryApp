@@ -1,0 +1,13 @@
+[
+  {
+    "id": "8f72c595-eccb-42a4-b727-f844636a2acf",
+    "scope": "month",
+    "target": "2026-11",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "motive": "Besoin tardif de la cliente sur un secteur du CVR (donnée fictive).",
+    "desired_until": "2026-11-06",
+    "requested_on": "2026-10-22",
+    "status": "pending",
+    "is_demo": true
+  }
+]

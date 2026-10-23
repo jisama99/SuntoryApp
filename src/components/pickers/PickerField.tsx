@@ -9,9 +9,11 @@ import { UI_ICONS } from '../icons';
  * Champ commun des sélecteurs de date, de période et de semaine (D133) : bouton en lecture seule qui ouvre un
  * calendrier. Aucune saisie au clavier de la date : la valeur vient toujours du calendrier.
  */
-export function PickerField({ id, label, valueText, placeholder, hint, error, open, onOpenChange, panelLabel, children }: {
+export function PickerField({ id, label, labelHidden = false, valueText, placeholder, hint, error, open, onOpenChange, panelLabel, children }: {
   id: string;
   label: string;
+  /** Libellé masqué visuellement (tableau de saisie en lot), toujours lu par les lecteurs d'écran. */
+  labelHidden?: boolean;
   valueText: string | null;
   placeholder: string;
   hint?: string;
@@ -47,7 +49,7 @@ export function PickerField({ id, label, valueText, placeholder, hint, error, op
   const described = [hint ? `${hintId}-hint` : null, error ? `${hintId}-error` : null].filter(Boolean).join(' ') || undefined;
   return (
     <div ref={root} className="relative flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-semibold">
+      <label htmlFor={id} className={labelHidden ? 'sr-only' : 'text-sm font-semibold'}>
         {label}
       </label>
       <button

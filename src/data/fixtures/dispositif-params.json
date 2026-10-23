@@ -1,0 +1,88 @@
+[
+  {
+    "dispositif": "permanent",
+    "min_minutes": null,
+    "km_flat_rate": {
+      "applicable": false,
+      "amount_eur_ht": null
+    },
+    "entry_window": null,
+    "change_effect": null,
+    "change_lead_days": null,
+    "change_lead_unit": "calendar",
+    "entry_roles": null,
+    "horizon_weeks": null,
+    "non_working_days": null,
+    "days_allowed": null,
+    "campaign_single_dispositif": true,
+    "is_demo": true
+  },
+  {
+    "dispositif": "seasonal",
+    "min_minutes": null,
+    "km_flat_rate": {
+      "applicable": false,
+      "amount_eur_ht": null
+    },
+    "entry_window": null,
+    "change_effect": null,
+    "change_lead_days": null,
+    "change_lead_unit": "calendar",
+    "entry_roles": null,
+    "horizon_weeks": null,
+    "non_working_days": null,
+    "days_allowed": null,
+    "campaign_single_dispositif": true,
+    "is_demo": true
+  },
+  {
+    "dispositif": "hourly_merch",
+    "min_minutes": null,
+    "km_flat_rate": {
+      "applicable": false,
+      "amount_eur_ht": null
+    },
+    "entry_window": null,
+    "change_effect": null,
+    "change_lead_days": null,
+    "change_lead_unit": "calendar",
+    "entry_roles": null,
+    "horizon_weeks": null,
+    "non_working_days": null,
+    "days_allowed": null,
+    "campaign_single_dispositif": true,
+    "is_demo": true
+  },
+  {
+    "dispositif": "second_placement",
+    "min_minutes": 45,
+    "km_flat_rate": {
+      "applicable": true,
+      "amount_eur_ht": 10
+    },
+    "entry_window": {
+      "reading": "last_full_week"
+    },
+    "change_effect": "next_month",
+    "change_lead_days": 10,
+    "change_lead_unit": "calendar",
+    "entry_roles": null,
+    "horizon_weeks": 52,
+    "non_working_days": {
+      "weekdays": [
+        7
+      ],
+      "holidays": true
+    },
+    "days_allowed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "campaign_single_dispositif": true,
+    "is_demo": true
+  }
+]

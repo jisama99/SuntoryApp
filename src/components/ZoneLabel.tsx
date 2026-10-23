@@ -25,3 +25,11 @@ export function zoneText(zone: Zone, locale: Locale): string {
   const label = locale === 'en' ? zone.label_en : zone.label_fr;
   return `${label} · ${zone.responsible_name} · ${zone.code}`;
 }
+
+/**
+ * Libellé de zone seul, sans nom de personne ni code : pour les résumés de retard de la cliente (doc 24 §5, « secteurs,
+ * pas personnes »). Les codes et les noms ne s'affichent toujours que par ZoneLabel (D106).
+ */
+export function zoneLabelOnly(zone: Zone, locale: Locale): string {
+  return locale === 'en' ? zone.label_en : zone.label_fr;
+}

@@ -20,10 +20,11 @@ export interface FindingDto {
   relatedNeedId?: string;
   relatedVisible?: boolean;
   fix?: { periodNo: 1 | 2; field: 'start_week' | 'end_week'; value: string };
+  defer?: { toMonth: string };
 }
 
 export type SaveState =
-  | { status: 'saved'; decision: 'draft' | 'submit' | 'merge'; needId: string; needCode: string; findings: FindingDto[]; missing: string[] }
+  | { status: 'saved'; decision: 'draft' | 'submit' | 'merge'; needId: string; needCode: string; deferred: boolean; findings: FindingDto[]; missing: string[] }
   | { status: 'needs_confirmation'; findings: FindingDto[]; missing: string[] }
   | { status: 'refused'; reason: SaveRefusal; findings: FindingDto[]; missing: string[] }
   | { status: 'invalid' };
@@ -33,7 +34,7 @@ const toDto = (f: ReturnedFinding, locale: Locale): FindingDto => ({ ...f, param
 function toState(r: SaveResult, locale: Locale): SaveState {
   const findings = r.findings.map((f) => toDto(f, locale));
   if (r.status === 'saved') {
-    return { status: 'saved', decision: r.decision, needId: r.need.id, needCode: r.need.need_code, findings, missing: r.missing };
+    return { status: 'saved', decision: r.decision, needId: r.need.id, needCode: r.need.need_code, deferred: Boolean(r.need.deferred_from_month), findings, missing: r.missing };
   }
   if (r.status === 'needs_confirmation') return { status: 'needs_confirmation', findings, missing: r.missing };
   return { status: 'refused', reason: r.reason, findings, missing: r.missing };
@@ -47,6 +48,7 @@ export async function saveNeedAction(payload: {
   confirm?: boolean;
   needId?: string;
   mergeInto?: string;
+  deferToNextMonth?: boolean;
 }): Promise<SaveState> {
   const locale = asLocale(payload.locale);
   const parsed = NeedInputSchema.safeParse(payload.input);
@@ -56,6 +58,7 @@ export async function saveNeedAction(payload: {
     confirm: payload.confirm === true,
     needId: payload.needId,
     mergeInto: payload.mergeInto,
+    deferToNextMonth: payload.deferToNextMonth === true,
   });
   if (result.status === 'saved') revalidatePath('/', 'layout');
   return toState(result, locale);
@@ -66,11 +69,29 @@ export async function duplicateNeedAction(payload: {
   needId: string;
   newStart: string;
   confirm?: boolean;
+  deferToNextMonth?: boolean;
 }): Promise<SaveState> {
   const locale = asLocale(payload.locale);
   if (!locale || !isValidIsoDate(payload.newStart)) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
-  const result = await repository.duplicateNeed(ctx, payload.needId, payload.newStart, { confirm: payload.confirm === true });
+  const result = await repository.duplicateNeed(ctx, payload.needId, payload.newStart, { confirm: payload.confirm === true, deferToNextMonth: payload.deferToNextMonth === true });
   if (result.status === 'saved') revalidatePath('/', 'layout');
   return toState(result, locale);
+}
+
+export async function requestReopeningAction(payload: {
+  locale: string;
+  scope: 'month' | 'week';
+  target: string;
+  motive: string;
+  desiredUntil: string;
+}): Promise<{ status: 'ok' } | { status: 'refused'; reason: string } | { status: 'invalid' }> {
+  const locale = asLocale(payload.locale);
+  if (!locale || (payload.scope !== 'month' && payload.scope !== 'week') || !isValidIsoDate(payload.desiredUntil)) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await repository.requestReopening(ctx, {
+    scope: payload.scope, target: payload.target, motive: String(payload.motive), desiredUntil: payload.desiredUntil,
+  });
+  if (r.status === 'ok') revalidatePath('/', 'layout');
+  return r;
 }
