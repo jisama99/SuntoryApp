@@ -126,6 +126,17 @@
       "lateSummary": "Entry for {month} closed: {late, plural, =0 {no sector late} one {# sector late} other {# sectors late}} out of {total}.",
       "closingReport": "Closing report for {month}: {done} sectors up to date, {late} late, {deferred} requests deferred to the following month.",
       "reopenQueue": "{n, plural, one {# reopening request awaits a decision.} other {# reopening requests await a decision.}}"
+    },
+    "pipelineTitle": "Proposals and decisions",
+    "pipeline": {
+      "open": "Open the proposals",
+      "proposalLate": "{n, plural, one {# proposal is late in preparation.} other {# proposals are late in preparation.}}",
+      "qualifyLate": "{n, plural, one {# need has waited for qualification beyond the deadline.} other {# needs have waited for qualification beyond the deadline.}}",
+      "costingIncomplete": "{n, plural, one {# proposal has incomplete costing.} other {# proposals have incomplete costing.}}",
+      "decisionsPending": "{n, plural, one {# proposal awaits a decision from the client.} other {# proposals await a decision from the client.}}",
+      "decisionsLate": "{n, plural, one {# client decision is past its deadline.} other {# client decisions are past their deadline.}}",
+      "clarificationPending": "{n, plural, one {# need awaits clarification from the RS.} other {# needs await clarification from the RS.}}",
+      "startLate": "{n, plural, one {# start of assignment is past the planned date.} other {# starts of assignment are past the planned date.}}"
     }
   },
   "states": {
@@ -913,5 +924,463 @@
     "attention": "What needs your attention",
     "signIn": "Sign in",
     "manageAccess": "Manage access"
+  },
+  "pipeline": {
+    "title": "Proposals and decisions",
+    "funnelLink": "Recruitment funnel",
+    "filters": {
+      "label": "Filter the needs",
+      "mine": "Mine to handle",
+      "all": "All",
+      "overdue": "Overdue",
+      "decision": "Awaiting decision"
+    },
+    "tiles": {
+      "toAct": "For you to handle",
+      "toActNote": "Needs where you must act",
+      "overdue": "Overdue",
+      "awaiting": "Awaiting decision",
+      "awaitingNote": "Proposals sent without a decision"
+    },
+    "caption": "Needs, proposals and decisions in your scope",
+    "cols": {
+      "need": "Need",
+      "sector": "Sector",
+      "funnel": "Recruitment",
+      "position": "Position",
+      "proposal": "Proposal",
+      "next": "Who must act",
+      "due": "Due"
+    },
+    "emptyTitle": "Nothing to show",
+    "empty": "No need in your scope.",
+    "emptyFilter": "No need matches this filter.",
+    "linkHelp": "Open a need to follow its proposals, decisions and recruitment.",
+    "none": "None",
+    "outside": "Outside the funnel",
+    "due": "Before {date}",
+    "noDue": "No due date",
+    "lateDays": "{n, plural, one {# working day late} other {# working days late}}",
+    "urgency": {
+      "overdue": "Overdue",
+      "urgent": "Urgent",
+      "soon": "Soon",
+      "normal": "On time"
+    },
+    "version": "Version {n}",
+    "notRecorded": "Not recorded",
+    "stopped": "Stopped",
+    "funnel": {
+      "to_recruit": "To recruit",
+      "recruiting": "Recruiting",
+      "proposed": "Proposed",
+      "approved": "Approved",
+      "hired": "Hiring completed",
+      "started": "In post",
+      "unavailable": "Data unavailable"
+    },
+    "position": {
+      "to_recruit": "To recruit",
+      "recruiting": "Recruiting",
+      "proposed": "Proposed",
+      "approved": "Approved",
+      "filled": "In post",
+      "withdrawal": "Withdrawal",
+      "termination": "Termination",
+      "cancelled": "Cancelled",
+      "refused": "Refused"
+    },
+    "intake": {
+      "to_qualify": "To qualify",
+      "taken": "Taken in charge",
+      "clarification": "Clarification requested",
+      "rejected": "Rejected"
+    },
+    "situation": {
+      "new": "New recruitment",
+      "reassigned": "Reassigned",
+      "white_zone": "White zone"
+    },
+    "proposalStatus": {
+      "in_progress": "In preparation",
+      "proposed": "Sent",
+      "withdrawn": "Withdrawn",
+      "superseded": "Replaced"
+    },
+    "outcome": {
+      "approved": "Approved",
+      "refused": "Refused",
+      "revision": "Revision requested"
+    },
+    "decisionStatus": {
+      "valid": "In force",
+      "invalidated": "Invalidated"
+    },
+    "invalidation": {
+      "new_version": "Invalidated on {date} by a new version.",
+      "withdrawn": "Invalidated on {date}: the proposal was withdrawn.",
+      "need_changed": "Invalidated on {date}: the need changed after the proposal."
+    },
+    "actor": {
+      "rs": "The RS",
+      "agency": "The agency",
+      "decider": "The client",
+      "none": "Nobody"
+    },
+    "action": {
+      "complete_need": "Complete the need",
+      "qualify": "Qualify the need",
+      "clarify": "Answer the clarification request",
+      "prepare_proposal": "Prepare a proposal",
+      "send_proposal": "Send the proposal",
+      "decide": "Decide on the proposal",
+      "revise_proposal": "Revise the proposal",
+      "new_proposal": "Propose another profile",
+      "finalise_hiring": "Complete the hiring",
+      "start_work": "Record the start of assignment",
+      "none": "No action"
+    },
+    "dimension": {
+      "need": "Need",
+      "proposal": "Proposal",
+      "recruitment": "Recruitment",
+      "execution": "Execution"
+    },
+    "audience": {
+      "agency": "Agency only",
+      "client": "Visible to the client",
+      "both": "Agency and client"
+    },
+    "actorProfile": {
+      "direction_client": "Client management",
+      "dr_client": "Client DR",
+      "cvr_client": "Client CVR",
+      "rs": "RS",
+      "agency_operator": "Agency, operations",
+      "agency_admin": "Agency, administration",
+      "provider_admin": "Provider"
+    },
+    "event": {
+      "EV-01": "Need entered",
+      "EV-02": "Need submitted",
+      "EV-03": "Need changed",
+      "EV-04": "Entry blocked or deferred",
+      "EV-05": "Anomaly detected",
+      "EV-09": "Need qualified by the agency",
+      "EV-10": "Proposal sent",
+      "EV-11": "Client decision",
+      "EV-12": "Decision invalidated",
+      "EV-13": "Recruitment under way",
+      "EV-14": "Hiring completed",
+      "EV-15": "Training completed",
+      "EV-16": "Assignment started",
+      "EV-17": "Vehicle handed over",
+      "EV-18": "Reassignment",
+      "EV-19": "Need stopped",
+      "EV-20": "White zone",
+      "EV-21": "Withdrawal or departure from the position",
+      "EV-44": "Note added or withdrawn",
+      "EV-45": "Proposal withdrawn"
+    },
+    "detail": {
+      "title": "Need {code}",
+      "statuses": "Four separate statuses",
+      "hours": "{n} hours per week",
+      "reassignedFrom": "Original sector:",
+      "counters": "Refusals: {refusals}. Withdrawals: {withdrawals}.",
+      "startWork": "Start of assignment",
+      "vehicle": "Vehicle handover",
+      "billableFrom": "Billable from {date}",
+      "next": "Who must act",
+      "needChanged": "The need changed after the proposal",
+      "motive": {
+        "clarification": "Clarification requested: {motive}",
+        "rejected": "Reason for rejection: {motive}",
+        "taken": "{motive}",
+        "to_qualify": "{motive}"
+      },
+      "stoppedMotive": "Reason for stopping: {motive}",
+      "versions": "Proposals and decisions",
+      "noProposal": "No proposal for this need.",
+      "sentOn": "Sent on {date}",
+      "range": "from {start} to {end}",
+      "withdrawnOn": "Withdrawn on {date}",
+      "decidedOn": "Decided on {date}",
+      "journal": "Need journal"
+    },
+    "batch": {
+      "title": "Decide on several proposals",
+      "help": "Tick the proposals, choose the decision and write one shared reason. Each proposal is checked on its own.",
+      "legend": "Proposals awaiting a decision",
+      "all": "Tick all",
+      "none": "Untick all",
+      "version": "Version {n}",
+      "due": "Before {date}",
+      "overdue": "Overdue",
+      "motive": "Shared reason",
+      "motiveHint": "Required for a revision or a refusal.",
+      "approve": "Approve the selection",
+      "revision": "Request a revision",
+      "refuse": "Refuse the selection",
+      "nothingPicked": "Tick at least one proposal.",
+      "motiveRequired": "A shared reason is required for a revision or a refusal.",
+      "summary": "{decided} decided, {refused} refused by the check.",
+      "reason": {
+        "forbidden": "Your profile does not decide.",
+        "not_found": "Proposal not found in your scope.",
+        "invalid": "Invalid decision.",
+        "motive_required": "Reason required.",
+        "not_decidable": "Proposal replaced or withdrawn.",
+        "already_decided": "Decision already made."
+      }
+    },
+    "qualify": {
+      "title": "Qualify the need",
+      "help": "Take it in charge, ask the RS for clarification or reject it with a reason.",
+      "outcome": "Agency decision",
+      "choose": "Choose",
+      "outcomes": {
+        "take": "Take in charge",
+        "clarify": "Ask for clarification",
+        "reject": "Reject"
+      },
+      "motive": "Reason or question",
+      "motiveHint": "Required for a clarification or a rejection.",
+      "submit": "Save",
+      "refused": {
+        "motive_required": "A reason is required.",
+        "forbidden": "Your profile does not qualify needs.",
+        "not_found": "Need not found.",
+        "invalid": "Invalid entry.",
+        "not_submitted": "The need is not submitted.",
+        "already": "The need is already qualified."
+      }
+    },
+    "decide": {
+      "title": "Your decision on version {n}",
+      "outcome": "Decision",
+      "choose": "Choose",
+      "outcomes": {
+        "approved": "Approve",
+        "revision": "Request a revision",
+        "refused": "Refuse"
+      },
+      "motive": "Reason",
+      "motiveHint": "Required for a revision or a refusal.",
+      "submit": "Save the decision",
+      "refused": {
+        "outcome_required": "Choose a decision.",
+        "motive_required": "A reason is required.",
+        "forbidden": "Your profile does not decide.",
+        "not_found": "Proposal not found.",
+        "invalid": "Invalid entry.",
+        "not_decidable": "This version is replaced or withdrawn.",
+        "already_decided": "A decision is already in force on this version."
+      }
+    },
+    "withdraw": {
+      "open": "Withdraw the proposal",
+      "invalidates": "The decision in force on this version will be invalidated and stay on file.",
+      "motive": "Reason for withdrawal",
+      "submit": "Withdraw",
+      "cancel": "Cancel",
+      "refused": {
+        "motive_required": "A reason is required.",
+        "forbidden": "Your profile does not withdraw proposals.",
+        "not_found": "Proposal not found.",
+        "not_withdrawable": "This version can no longer be withdrawn.",
+        "invalid": "Invalid entry."
+      }
+    },
+    "proposal": {
+      "title": "Proposal, version {n}",
+      "help": "Save a draft, then send it to the client. Sending creates the version and replaces the previous one.",
+      "hours": "Hours per week",
+      "days": "Days",
+      "slot": "Time slot",
+      "slotHint": "Example: 09:00-17:00.",
+      "period": "Period",
+      "stores": "Stores",
+      "noStores": "No store available for this sector.",
+      "deviations": "Differences from the need",
+      "noDeviation": "No difference",
+      "deviation": {
+        "hours": "Hours",
+        "days": "Days",
+        "slot": "Time slot",
+        "period": "Period",
+        "stores": "Stores"
+      },
+      "note": "Explanation of the difference",
+      "noteRequired": "Required to send: describe each difference.",
+      "noteHint": "Optional while there is no difference.",
+      "cost": "Costing",
+      "costHint": "Visible to the agency only. An unknown cost stays \"Not costed\".",
+      "choose": "Choose",
+      "costStatus": {
+        "complete": "Costing complete",
+        "partial": "Costing partial",
+        "not_priced": "Not costed"
+      },
+      "invalidatesWarning": "Sending will invalidate the agreement in force if a determining element changes.",
+      "saveDraft": "Save the draft",
+      "send": "Send to the client",
+      "sent": "Proposal sent",
+      "sentInvalidated": "Proposal sent. {n} decision(s) invalidated.",
+      "draftSaved": "Draft saved",
+      "incomplete": "Complete the reference, hours, days and period.",
+      "refused": {
+        "forbidden": "Your profile does not propose.",
+        "not_found": "Need not found.",
+        "invalid": "Invalid entry.",
+        "invalid_store": "A store does not belong to this sector.",
+        "not_ready": "The need is not taken in charge.",
+        "issues": "Sending is refused.",
+        "no_draft": "No draft."
+      },
+      "issue": {
+        "period_order": "The end is before the start.",
+        "deviation_unexplained": "A difference from the need is not explained.",
+        "no_change": "No determining element changed since the version sent."
+      },
+      "worker": "Worker reference",
+      "workerHint": "Fictional reference in the form INT-001."
+    },
+    "steps": {
+      "title": "Recruitment and execution",
+      "help": "Each step is recorded with its date. Start of assignment and vehicle handover are two separate events.",
+      "recordedOn": "Recorded on {date}",
+      "date": "Date",
+      "fromSector": "Original sector",
+      "choose": "Choose",
+      "motive": "Reason",
+      "names": {
+        "start_search": "Search started",
+        "hired": "Hiring completed",
+        "training": "Training completed",
+        "start_work": "Start of assignment",
+        "vehicle_handover": "Vehicle handover",
+        "reassign": "Reassignment",
+        "stop": "Need stopped",
+        "white_zone": "White zone",
+        "lift_white_zone": "End of white zone",
+        "withdrawal": "Withdrawal or departure"
+      },
+      "hints": {
+        "start_search": "Moves the need to \"Recruiting\".",
+        "hired": "Requires an agreement in force from the client.",
+        "training": "Requires a completed hiring.",
+        "start_work": "Can be planned; \"In post\" appears once the date is reached.",
+        "vehicle_handover": "No effect on the recruitment state.",
+        "reassign": "A worker already on another sector takes this need.",
+        "stop": "Reason required. The need leaves the funnel and the rates.",
+        "white_zone": "Cannot be filled: the line is counted apart and leaves the hours rate.",
+        "lift_white_zone": "The need returns to the rates.",
+        "withdrawal": "Returns to \"Recruiting\" and keeps the history."
+      },
+      "actions": {
+        "start_search": "Record the start of search",
+        "hired": "Record the hiring",
+        "training": "Record the training",
+        "start_work": "Record the start of assignment",
+        "vehicle_handover": "Record the handover",
+        "reassign": "Record the reassignment",
+        "stop": "Stop the need",
+        "white_zone": "Declare the white zone",
+        "lift_white_zone": "Lift the white zone",
+        "withdrawal": "Record the withdrawal"
+      },
+      "blocked": {
+        "not_taken": "The need must be taken in charge first.",
+        "no_accord": "No agreement in force from the client.",
+        "not_hired": "The hiring must be completed first.",
+        "closed": "The need has left the process.",
+        "forbidden": "Step reserved to another profile.",
+        "already": "Step already recorded."
+      },
+      "refused": {
+        "forbidden": "Step reserved to another profile.",
+        "not_found": "Need not found.",
+        "invalid": "Invalid date or entry.",
+        "not_taken": "The need must be taken in charge first.",
+        "closed": "The need has left the process.",
+        "no_accord": "No agreement in force from the client.",
+        "not_hired": "The hiring must be completed first.",
+        "motive_required": "A reason is required.",
+        "already": "Step already recorded.",
+        "invalid_sector": "Choose another sector.",
+        "nothing_to_withdraw": "Nothing to withdraw for this need."
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "empty": "No note.",
+      "visibility": {
+        "agency_internal": "Agency internal",
+        "shared_client": "Shared with the client",
+        "shared_recipient": "Shared with a recipient"
+      },
+      "withdrawnOn": "Withdrawn on {date}",
+      "by": "On {date}",
+      "withdraw": "Withdraw the note",
+      "text": "New note",
+      "visibilityLabel": "Visibility",
+      "choose": "Choose",
+      "recipient": "Recipient",
+      "confirmShare": "I confirm sharing this note.",
+      "add": "Add the note",
+      "refused": {
+        "forbidden": "Your profile does not write notes.",
+        "not_found": "Object not found.",
+        "invalid": "Invalid note.",
+        "confirm_required": "Confirm the sharing before adding the note.",
+        "invalid_recipient": "Choose a recipient concerned by this need.",
+        "already": "Note already withdrawn."
+      }
+    },
+    "funnelPage": {
+      "title": "Recruitment funnel",
+      "demanded": "Hours requested per week",
+      "demandedNote": "Excluding white zone and stopped needs",
+      "hiredRate": "Hours hired rate",
+      "hiredRateNote": "Hiring completed or in post",
+      "startedRate": "Hours in post rate",
+      "startedRateNote": "Start of assignment reached",
+      "returns": "Refusals and withdrawals",
+      "returnsNote": "{refusals, plural, one {# refusal} other {# refusals}}, {withdrawals, plural, one {# withdrawal} other {# withdrawals}}, {needs, plural, one {# need} other {# needs}} back to \"Recruiting\"",
+      "stock": "Needs by state",
+      "stockCaption": "{n} needs in the funnel",
+      "state": "State",
+      "needs": "Needs",
+      "hours": "Hours per week",
+      "share": "Share of needs",
+      "outside": "Outside the funnel",
+      "outsideHelp": "These positions are counted apart. The white zone and stopped needs leave the hours rate.",
+      "outsideKinds": {
+        "toQualify": "To qualify",
+        "whiteZone": "White zone",
+        "stopped": "Stopped",
+        "rejected": "Rejected",
+        "reassigned": "Reassigned (counted in their state)"
+      },
+      "needsAndHours": "{needs, plural, one {# need} other {# needs}}, {hours} hours",
+      "delays": "Delays by situation",
+      "delaysHelp": "Median, range and count for each situation. Below {min} cases, the page draws no conclusion.",
+      "delaysCaption": "Delays in calendar days",
+      "situation": "Situation",
+      "milestone": {
+        "j1": "Submission to proposal",
+        "j2": "Proposal to decision",
+        "j3": "Decision to hiring completed",
+        "j4": "Decision to start of assignment"
+      },
+      "noDelay": "No delay: vacancy age below",
+      "tooFew": "Sample too small to conclude ({n})",
+      "delayValue": "{median} days, from {min} to {max}, over {n} cases",
+      "delaysNote": "Starting values to validate: calendar days and a configurable minimum sample.",
+      "vacancy": "Vacancy age of white zones",
+      "noVacancy": "No white zone.",
+      "vacancyAge": "{n, plural, one {Vacant for # day} other {Vacant for # days}}"
+    }
   }
 }

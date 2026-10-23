@@ -73,8 +73,13 @@ export type PositionStatus = (typeof POSITION_STATUSES)[number];
  * EV-40 à EV-43 (comptes, D189, codes proposés hors catalogue) : compte créé, attribution modifiée, compte désactivé ou réactivé,
  * mot de passe réinitialisé. Jamais de mot de passe dans les données.
  * EV-39 : écriture annulée par son auteur juste après coup, code proposé hors catalogue ; l'événement annulé reste au journal.
+ * Lot A3 : EV-09 à EV-21 du catalogue (doc 26 §3). EV-44 (note ajoutée, partagée ou retirée, D162) et EV-45 (proposition
+ * retirée) sont des codes proposés hors catalogue, à inscrire au doc 26. EV-06 à EV-08 (validation CVR, escalade DR) ne sont pas émis en A3.
  */
-export const EVENT_CODES = ['EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43'] as const;
+export const EVENT_CODES = [
+  'EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-09', 'EV-10', 'EV-11', 'EV-12', 'EV-13', 'EV-14', 'EV-15', 'EV-16', 'EV-17',
+  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45',
+] as const;
 export type EventCode = (typeof EVENT_CODES)[number];
 
 /** Jours de la semaine : 1 = lundi … 7 = dimanche. */
@@ -94,3 +99,59 @@ export type EntryProfile = (typeof ENTRY_PROFILES)[number];
 
 export const REOPEN_SCOPES = ['month', 'week'] as const;
 export type ReopenScope = (typeof REOPEN_SCOPES)[number];
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3 : circuit besoin, proposition, décision, recrutement. Chaque dimension a son propre statut (STATUTS_ET_ETATS.md).
+// ---------------------------------------------------------------------------------------------
+/** Qualification du besoin par l'agence (F-30.4) : dimension « besoin », distincte du brouillon et du poste. */
+export const INTAKE_STATES = ['to_qualify', 'taken', 'clarification', 'rejected'] as const;
+export type IntakeState = (typeof INTAKE_STATES)[number];
+
+/** Statut de la proposition (dimension « proposition »). Seule une proposition envoyée est visible de la cliente. */
+export const PROPOSAL_STATUSES = ['in_progress', 'proposed', 'withdrawn', 'superseded'] as const;
+export type ProposalStatus = (typeof PROPOSAL_STATUSES)[number];
+
+/** Décision de la cliente (dimension « décision ») et son état : une décision invalidée reste au dossier. */
+export const DECISION_OUTCOMES = ['approved', 'refused', 'revision'] as const;
+export type DecisionOutcome = (typeof DECISION_OUTCOMES)[number];
+export const DECISION_STATUSES = ['valid', 'invalidated'] as const;
+export type DecisionStatus = (typeof DECISION_STATUSES)[number];
+export const INVALIDATION_REASONS = ['new_version', 'withdrawn', 'need_changed'] as const;
+export type InvalidationReason = (typeof INVALIDATION_REASONS)[number];
+
+/** Les six états de l'entonnoir de recrutement (D92). « En poste » est le « Pourvu » des rapports. */
+export const FUNNEL_STATES = ['to_recruit', 'recruiting', 'proposed', 'approved', 'hired', 'started'] as const;
+export type FunnelState = (typeof FUNNEL_STATES)[number];
+
+/** Situation du recrutement (D85, D93) : les délais sont mesurés par situation, jamais en moyenne unique. */
+export const SITUATIONS = ['new', 'reassigned', 'white_zone'] as const;
+export type Situation = (typeof SITUATIONS)[number];
+
+/** État de chiffrage d'une proposition. Un coût inconnu n'est jamais 0 (CLAUDE.md). Réservé à l'agence. */
+export const COST_STATUSES = ['complete', 'partial', 'not_priced'] as const;
+export type CostStatus = (typeof COST_STATUSES)[number];
+
+export const DEVIATION_KINDS = ['hours', 'days', 'slot', 'period', 'stores'] as const;
+export type DeviationKind = (typeof DEVIATION_KINDS)[number];
+
+/** Étapes de recrutement enregistrées par l'agence, ou par le RS pour la prise de poste et la remise du véhicule (F-30.8). */
+export const RECRUITMENT_STEPS = [
+  'start_search', 'hired', 'training', 'start_work', 'vehicle_handover', 'reassign', 'stop', 'white_zone', 'lift_white_zone', 'withdrawal',
+] as const;
+export type RecruitmentStep = (typeof RECRUITMENT_STEPS)[number];
+
+export const NEXT_ACTIONS = [
+  'complete_need', 'qualify', 'clarify', 'prepare_proposal', 'send_proposal', 'decide', 'revise_proposal', 'new_proposal',
+  'finalise_hiring', 'start_work', 'none',
+] as const;
+export type NextAction = (typeof NEXT_ACTIONS)[number];
+export const ACTORS = ['rs', 'agency', 'decider', 'none'] as const;
+export type Actor = (typeof ACTORS)[number];
+export const URGENCIES = ['overdue', 'urgent', 'soon', 'normal'] as const;
+export type Urgency = (typeof URGENCIES)[number];
+
+/** Visibilité d'une note (D162) : interne par défaut ; la visibilité est choisie à chaque note et ne se rouvre pas. */
+export const NOTE_VISIBILITIES = ['agency_internal', 'shared_client', 'shared_recipient'] as const;
+export type NoteVisibility = (typeof NOTE_VISIBILITIES)[number];
+export const NOTE_OBJECT_KINDS = ['proposal', 'decision'] as const;
+export type NoteObjectKind = (typeof NOTE_OBJECT_KINDS)[number];

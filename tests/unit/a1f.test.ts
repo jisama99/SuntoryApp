@@ -219,7 +219,7 @@ describe('gestion des comptes : audience (D118, D189)', () => {
     expect(dump).not.toContain(reset.temporaryPassword);
     expect(dump).not.toMatch(/password|hash|salt/i);
     // Une personne cliente ne lit pas ces événements (audience agence).
-    expect((await repo.getEvents(ctxOf('direction_client'))).filter((e) => e.code.startsWith('EV-4') && e.code !== 'EV-04')).toEqual([]);
+    expect((await repo.getEvents(ctxOf('direction_client'))).filter((e) => ['EV-40', 'EV-41', 'EV-42', 'EV-43'].includes(e.code))).toEqual([]);
   });
 
   it('création annulable : l\'annulation retire le compte', async () => {

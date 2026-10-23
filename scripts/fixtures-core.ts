@@ -4,9 +4,11 @@
  * Codes selon docs/FIXTURES.md §3 ; chaque entité porte is_demo: true.
  */
 import type {
-  Alert, BusinessEvent, Campaign, DeadlineSettings, DemoClock, DemoProfile, DispositifParams, Need, Period, Reopening,
-  ReopeningRequest, Store, WeekClosure, Zone,
+  Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
+  Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from '../src/data/schemas';
+import { blankRecruitment, computeDeviations, needSpan } from '../src/domain/pipeline';
+import type { CostStatus, DecisionOutcome, EventCode, InvalidationReason, Situation } from '../src/domain/types';
 import { addDays, storedWeekOf } from '../src/domain/week';
 
 export const SEED = 20261023;
@@ -279,8 +281,172 @@ export function buildFixtures() {
   ];
   const reopenings: Reopening[] = [];
 
+
+  // ---- Lot A3 : généré après tout le reste, donc sans modifier aucune valeur des lots précédents. ----
+  // Un besoin par cas repère du circuit (voir docs/COMPTE_RENDU_A3.md). Les dates sont des décalages en jours depuis la
+  // création du besoin ; le générateur échoue si une date d'événement dépasse la date de démonstration (hors prise de poste planifiée).
+  type PSpec = {
+    sent: number | null; decision?: { at: number; outcome: DecisionOutcome; motive?: string; invalid?: { at: number; reason: InvalidationReason } };
+    withdrawn?: { at: number; motive: string }; cost?: CostStatus; gap?: boolean;
+  };
+  type Spec = {
+    taken?: number; clarify?: { at: number; motive: string }; reject?: { at: number; motive: string }; search?: number; props?: PSpec[];
+    hired?: number; training?: number; start?: number | string; vehicle?: number | string; situation?: Situation; from?: number; white?: number;
+    stopped?: { at: number; reason: string }; exitOn?: number; refusals?: number;
+  };
+  const specs: Record<number, Spec> = {
+    0: { taken: 1, search: 1, props: [{ sent: 3, decision: { at: 5, outcome: 'approved' } }], hired: 7, training: 8, start: 9, vehicle: 8 },
+    1: { taken: 1, search: 2, props: [{ sent: 14 }] },
+    2: { taken: 1, search: 1, situation: 'reassigned', from: 11, props: [{ sent: 3, decision: { at: 4, outcome: 'approved' } }], hired: 6, start: 8, vehicle: 7 },
+    3: { taken: 1, search: 1, props: [{ sent: 3, decision: { at: 6, outcome: 'approved' } }] },
+    4: { taken: 1, search: 1, props: [{ sent: 10, gap: true }] },
+    5: { taken: 1, search: 1, props: [{ sent: 2 }] },
+    6: { taken: 1, search: 1, props: [{ sent: null, cost: 'partial' }] },
+    7: { taken: 1, search: 2 },
+    8: { taken: 1, search: 1, refusals: 1, props: [{ sent: 2, decision: { at: 4, outcome: 'refused', motive: 'Profil non adapté au créneau demandé.' } }] },
+    9: { taken: 1 },
+    11: { clarify: { at: 1, motive: 'Préciser les magasins concernés.' } },
+    13: { reject: { at: 1, motive: 'Besoin hors périmètre de la mission.' } },
+    14: { taken: 1, search: 1, stopped: { at: 3, reason: 'Fermeture du magasin.' } },
+    15: { taken: 1, search: 1, situation: 'white_zone', white: 1 },
+    16: { taken: 0, search: 0, props: [{ sent: 0, withdrawn: { at: 2, motive: 'Désistement de la candidate.' }, decision: { at: 0, outcome: 'approved', invalid: { at: 2, reason: 'withdrawn' } } }], hired: 1, exitOn: 2 },
+    17: { taken: 0, search: 0, props: [{ sent: 0, decision: { at: 0, outcome: 'approved', invalid: { at: 1, reason: 'new_version' } } }, { sent: 1 }] },
+    18: { taken: 1, search: 1, props: [{ sent: 3, decision: { at: 4, outcome: 'approved' } }], hired: 6, start: 8 },
+    19: { taken: 1, search: 1, props: [{ sent: 4, decision: { at: 6, outcome: 'approved' } }], hired: 9, start: 10 },
+    20: { taken: 1, search: 1, props: [{ sent: 5, decision: { at: 7, outcome: 'approved' } }], hired: 9 },
+    21: { taken: 1, search: 1, props: [{ sent: 2, decision: { at: 3, outcome: 'approved' } }], hired: 5, start: 7 },
+    22: { taken: 1, search: 1, props: [{ sent: 3, decision: { at: 4, outcome: 'approved' } }], hired: 7, start: 9, vehicle: 8 },
+    23: { taken: 1, search: 1, props: [{ sent: 3, decision: { at: 5, outcome: 'approved' } }], hired: 8, start: '2026-11-02', vehicle: 12 },
+    24: { taken: 1, search: 2 },
+    26: { taken: 1, search: 1, props: [{ sent: 9 }] },
+    27: { taken: 1, search: 1, props: [{ sent: 4, decision: { at: 6, outcome: 'approved' } }] },
+  };
+  const TODAY = clock.date;
+  const recruitments: Recruitment[] = [];
+  const proposals: Proposal[] = [];
+  const decisions: Decision[] = [];
+  const notes: Note[] = [];
+  const a3Events: BusinessEvent[] = [];
+  const ev = (code: EventCode, n: Need, date: string, data: BusinessEvent['data'] = {}, audience: BusinessEvent['audience'] = 'both', actor: BusinessEvent['actor_profile'] = 'agency_operator', recorded = date) => {
+    if (recorded > TODAY) throw new Error(`Date d'événement après la date de démonstration : ${n.need_code} ${code} ${recorded}`);
+    a3Events.push({ id: uuid(), code, seq: 0, actor_profile: actor, zone_id: n.sector_id, need_id: n.id, effect_date: date, recorded_at: recorded, audience, data: { need_code: n.need_code, ...data }, is_demo: true });
+  };
+  const pad = (n: number) => String(n).padStart(3, '0');
+  for (const [key, spec] of Object.entries(specs)) {
+    const idx = Number(key);
+    const n = needs[idx] as Need;
+    const at = (k: number) => addDays(n.created_at, k);
+    const dateOf = (v: number | string) => (typeof v === 'string' ? v : at(v));
+    const r: Recruitment = { ...blankRecruitment(n.id), refusal_count: spec.refusals ?? 0, withdrawal_count: spec.exitOn !== undefined ? 1 : 0 };
+    if (spec.clarify) {
+      r.intake = 'clarification'; r.intake_motive = spec.clarify.motive;
+      ev('EV-09', n, at(spec.clarify.at), { outcome: 'clarify' });
+    }
+    if (spec.reject) {
+      r.intake = 'rejected'; r.intake_motive = spec.reject.motive;
+      ev('EV-09', n, at(spec.reject.at), { outcome: 'reject' });
+    }
+    if (spec.taken !== undefined) {
+      r.intake = 'taken'; r.qualified_on = at(spec.taken);
+      ev('EV-09', n, at(spec.taken), { outcome: 'take' });
+    }
+    if (spec.search !== undefined) { r.search_started_on = at(spec.search); ev('EV-13', n, at(spec.search)); }
+    if (spec.situation) r.situation = spec.situation;
+    if (spec.from !== undefined) { r.reassigned_from_sector_id = (rsZones[spec.from] as Zone).id; ev('EV-18', n, at(spec.taken ?? 0)); }
+    if (spec.white !== undefined) { r.white_zone_since = at(spec.white); ev('EV-20', n, at(spec.white), { action: 'declared' }); }
+    if (spec.stopped) { r.stopped = { reason: spec.stopped.reason, on: at(spec.stopped.at) }; ev('EV-19', n, at(spec.stopped.at)); }
+    const span = needSpan(n);
+    (spec.props ?? []).forEach((ps, i) => {
+      const version = i + 1;
+      const last = i === (spec.props ?? []).length - 1;
+      const id = uuid();
+      const base = {
+        candidate_ref: `INT-${pad(100 + idx * 3 + version)}`, weekly_hours: n.weekly_hours as number, days: [...n.days], hours_slot: n.hours_slot,
+        start_date: span?.start as string, end_date: span?.end as string, store_codes: [...n.store_codes],
+      };
+      const p: Proposal = {
+        id, need_id: n.id, version, ...base, deviation_note: null, cost_status: ps.cost ?? 'complete', deviations: computeDeviations(n, base),
+        status: ps.sent === null ? 'in_progress' : ps.withdrawn ? 'withdrawn' : last ? 'proposed' : 'superseded', author_profile: 'agency_operator',
+        created_on: at(ps.sent ?? spec.search ?? 1), sent_on: ps.sent === null ? null : at(ps.sent), due_on: null,
+        withdrawn_on: ps.withdrawn ? at(ps.withdrawn.at) : null, withdrawn_motive: ps.withdrawn?.motive ?? null, is_demo: true,
+      };
+      proposals.push(p);
+      if (ps.sent !== null) ev('EV-10', n, at(ps.sent), { version, deviations: p.deviations.length });
+      if (ps.decision) {
+        const d: Decision = {
+          id: uuid(), proposal_id: id, need_id: n.id, version, outcome: ps.decision.outcome, motive: ps.decision.motive ?? null,
+          status: ps.decision.invalid ? 'invalidated' : 'valid', decided_by: 'cvr_client', decided_on: at(ps.decision.at),
+          invalidated_on: ps.decision.invalid ? at(ps.decision.invalid.at) : null, invalidated_reason: ps.decision.invalid?.reason ?? null,
+          invalidated_by_proposal_id: ps.decision.invalid?.reason === 'new_version' ? null : null, is_demo: true,
+        };
+        decisions.push(d);
+        ev('EV-11', n, at(ps.decision.at), { version, outcome: ps.decision.outcome }, 'both', 'cvr_client');
+        if (ps.decision.invalid) ev('EV-12', n, at(ps.decision.invalid.at), { version, reason: ps.decision.invalid.reason });
+      }
+      if (ps.withdrawn) ev('EV-45', n, at(ps.withdrawn.at), { version, cause: 'withdrawal' });
+    });
+    // Remplacement : la décision de la version 1 est invalidée par l'envoi de la version 2.
+    const reps = proposals.filter((p) => p.need_id === n.id);
+    for (const d of decisions.filter((x) => x.need_id === n.id && x.invalidated_reason === 'new_version')) {
+      d.invalidated_by_proposal_id = (reps.find((p) => p.version === d.version + 1) as Proposal).id;
+    }
+    if (spec.hired !== undefined) { r.hired_on = at(spec.hired); ev('EV-14', n, at(spec.hired), { date: at(spec.hired) }); }
+    if (spec.training !== undefined) { r.training_on = at(spec.training); ev('EV-15', n, at(spec.training), { date: at(spec.training) }); }
+    if (spec.start !== undefined) {
+      r.start_work_date = dateOf(spec.start);
+      ev('EV-16', n, r.start_work_date, { date: r.start_work_date }, 'both', 'agency_operator', typeof spec.start === 'string' ? at(spec.hired ?? 0) : r.start_work_date);
+    }
+    if (spec.vehicle !== undefined) { r.vehicle_handover_date = dateOf(spec.vehicle); ev('EV-17', n, r.vehicle_handover_date, { date: r.vehicle_handover_date }); }
+    if (spec.exitOn !== undefined) {
+      r.exits = [{ kind: 'withdrawal', on: at(spec.exitOn), hired_on: r.hired_on, start_work_date: null } satisfies RecruitmentExit];
+      r.hired_on = null; r.search_started_on = at(spec.exitOn);
+      ev('EV-21', n, at(spec.exitOn), { kind: 'withdrawal' });
+    }
+    recruitments.push(r);
+  }
+  // Date cible des propositions : cinq jours ouvrés après la soumission (valeur de départ, D93), calculée comme le dépôt de données.
+  const dueFor = (created: string): string => {
+    let d = created;
+    let left = 5;
+    while (left > 0) {
+      d = addDays(d, 1);
+      const wd = new Date(`${d}T00:00:00Z`).getUTCDay();
+      if (wd !== 0 && wd !== 6) left -= 1;
+    }
+    return d;
+  };
+  for (const p of proposals) p.due_on = dueFor((needs.find((x) => x.id === p.need_id) as Need).created_at);
+
+  // Notes (D162) : une interne, une partagée avec la cliente, une adressée au CVR de démonstration, une partagée puis retirée.
+  const proposalOf = (idx: number): Proposal => proposals.find((p) => p.need_id === (needs[idx] as Need).id && p.status !== 'superseded') as Proposal;
+  const addNote = (idx: number, over: Partial<Note> & Pick<Note, 'text' | 'visibility'>) => {
+    const p = proposalOf(idx);
+    const n = needs[idx] as Need;
+    notes.push({
+      id: uuid(), object_kind: 'proposal', object_id: p.id, need_id: n.id, sector_id: n.sector_id, recipient_zone_id: null,
+      author_profile: 'agency_operator', created_on: '2026-10-21', seq: notes.length + 1, withdrawn_on: null, withdrawn_by: null, is_demo: true, ...over,
+    });
+  };
+  addNote(4, { text: 'Rappeler la candidate avant la décision (note de démonstration).', visibility: 'agency_internal' });
+  addNote(5, { text: 'Les disponibilités de la candidate ont été confirmées (note de démonstration).', visibility: 'shared_client' });
+  addNote(1, { text: 'Merci de décider avant lundi si possible (note de démonstration).', visibility: 'shared_recipient', recipient_zone_id: cvr1.id });
+  addNote(0, { text: 'Note partagée puis retirée (démonstration).', visibility: 'shared_client', withdrawn_on: '2026-10-22', withdrawn_by: 'agency_operator' });
+  for (const nt of notes) {
+    const n = needs.find((x) => x.id === nt.need_id) as Need;
+    a3Events.push({
+      id: uuid(), code: 'EV-44', seq: 0, actor_profile: nt.author_profile, zone_id: nt.sector_id, need_id: nt.need_id, effect_date: nt.created_on, recorded_at: nt.created_on,
+      audience: nt.visibility === 'shared_client' ? 'both' : 'agency', data: { need_code: n.need_code, action: 'added', visibility: nt.visibility, object: 'proposal' }, is_demo: true,
+    });
+  }
+
+  // Les événements de A3 prolongent le journal sans réécrire les numéros existants.
+  let seq = events.reduce((m, e) => Math.max(m, e.seq), 0);
+  a3Events.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
+  for (const e of a3Events) events.push({ ...e, seq: ++seq });
+
   return {
     zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events,
     deadlineSettings, dispositifParams, reopeningRequests, reopenings,
+    recruitments, proposals, decisions, notes,
   };
 }

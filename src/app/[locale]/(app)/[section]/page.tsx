@@ -4,6 +4,7 @@ import { AlertList } from '@/components/AlertList';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { DeadlineAlertList } from '@/components/DeadlineAlertList';
 import { Gallery } from '@/components/Gallery';
+import { PipelineAlertList } from '@/components/PipelineAlertList';
 import { HeroHeader } from '@/components/HeroHeader';
 import { PageHeader } from '@/components/PageHeader';
 import { EmptyState } from '@/components/States';
@@ -28,8 +29,8 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
   const title = t(`menu.${key}`);
 
   if (key === 'alerts') {
-    const [alerts, zones, deadlineAlerts] = await Promise.all([
-      repository.getAlerts(ctx), repository.getScopeZones(ctx), repository.getDeadlineAlerts(ctx),
+    const [alerts, zones, deadlineAlerts, pipelineAlerts] = await Promise.all([
+      repository.getAlerts(ctx), repository.getScopeZones(ctx), repository.getDeadlineAlerts(ctx), repository.getPipelineAlerts(ctx),
     ]);
     return (
       <>
@@ -39,6 +40,12 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
           <section aria-labelledby="deadline-alerts-title" className="mb-8 flex flex-col gap-3">
             <h2 id="deadline-alerts-title" className="text-lg font-semibold">{t('alerts.deadlineTitle')}</h2>
             <DeadlineAlertList alerts={deadlineAlerts} showAudience={ctx.side !== 'client'} />
+          </section>
+        ) : null}
+        {pipelineAlerts.length > 0 ? (
+          <section aria-labelledby="pipeline-alerts-title" className="mb-8 flex flex-col gap-3">
+            <h2 id="pipeline-alerts-title" className="text-lg font-semibold">{t('alerts.pipelineTitle')}</h2>
+            <PipelineAlertList alerts={pipelineAlerts} showAudience={ctx.side !== 'client'} />
           </section>
         ) : null}
         {alerts.length === 0 ? (

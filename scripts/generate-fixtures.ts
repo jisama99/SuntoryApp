@@ -20,6 +20,10 @@ write('deadline-settings.json', f.deadlineSettings);
 write('dispositif-params.json', f.dispositifParams);
 write('reopening-requests.json', f.reopeningRequests);
 write('reopenings.json', f.reopenings);
+write('recruitments.json', f.recruitments);
+write('proposals.json', f.proposals);
+write('decisions.json', f.decisions);
+write('notes.json', f.notes);
 console.log(
-  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements.`,
+  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements, ${f.recruitments.length} suivis de recrutement, ${f.proposals.length} propositions, ${f.decisions.length} décisions, ${f.notes.length} notes.`,
 );

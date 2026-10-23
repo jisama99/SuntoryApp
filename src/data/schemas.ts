@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import {
-  AUDIENCES, DEADLINE_TYPES, DISPOSITIFS, ENTRY_PROFILES, EVENT_CODES, NEED_STATES, POSITION_STATUSES, PRESET_IDS,
-  PROFILE_IDS, REOPEN_SCOPES, SEVERITIES, SIDES, ZONE_KINDS,
+  AUDIENCES, COST_STATUSES, DEADLINE_TYPES, DECISION_OUTCOMES, DECISION_STATUSES, DEVIATION_KINDS, DISPOSITIFS, ENTRY_PROFILES,
+  EVENT_CODES, INTAKE_STATES, INVALIDATION_REASONS, NEED_STATES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, POSITION_STATUSES, PRESET_IDS,
+  PROFILE_IDS, PROPOSAL_STATUSES, REOPEN_SCOPES, SEVERITIES, SIDES, SITUATIONS, ZONE_KINDS,
 } from '@/domain/types';
 
 export const ZoneSchema = z.object({
@@ -329,3 +330,118 @@ export type Account = z.infer<typeof AccountSchema>;
 
 /** Compte tel que l'écran le voit : jamais d'empreinte. */
 export type PublicAccount = Omit<Account, 'password'>;
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3 : qualification et recrutement, propositions versionnées, décisions, notes (D162).
+// ---------------------------------------------------------------------------------------------
+const Uuid = z.string().uuid();
+const NullableDate = IsoDateStr.nullable();
+
+/** Une sortie du poste (désistement ou rupture) : rien n'est effacé, le cycle terminé reste au dossier (D97). */
+export const RecruitmentExitSchema = z.object({
+  kind: z.enum(['withdrawal', 'termination']),
+  on: IsoDateStr,
+  hired_on: NullableDate,
+  start_work_date: NullableDate,
+});
+export type RecruitmentExit = z.infer<typeof RecruitmentExitSchema>;
+
+/**
+ * Suivi de recrutement d'un besoin. Un besoin soumis sans enregistrement est « à qualifier ». Les jalons sont des dates :
+ * l'état de l'entonnoir s'en déduit (domain/pipeline.ts), il n'est jamais stocké en un champ unique.
+ */
+export const RecruitmentSchema = z.object({
+  need_id: Uuid,
+  intake: z.enum(INTAKE_STATES),
+  intake_motive: z.string().max(280).nullable(),
+  qualified_on: NullableDate,
+  situation: z.enum(SITUATIONS),
+  reassigned_from_sector_id: Uuid.nullable(),
+  white_zone_since: NullableDate,
+  stopped: z.object({ reason: z.string().min(1).max(280), on: IsoDateStr }).nullable(),
+  search_started_on: NullableDate,
+  hired_on: NullableDate,
+  training_on: NullableDate,
+  start_work_date: NullableDate,
+  vehicle_handover_date: NullableDate,
+  refusal_count: z.number().int().min(0),
+  withdrawal_count: z.number().int().min(0),
+  exits: z.array(RecruitmentExitSchema),
+  is_demo: z.literal(true),
+});
+export type Recruitment = z.infer<typeof RecruitmentSchema>;
+
+const DaysArray = z.array(z.number().int().min(1).max(7));
+const INT_REF = /^INT-\d{3}$/;
+
+/** Ce que l'agence saisit. Les éléments déterminants sont comparés à ceux de la version précédente (domain/pipeline.ts). */
+export const ProposalInputSchema = z.object({
+  candidate_ref: z.string().regex(INT_REF),
+  weekly_hours: z.number().int().min(1).max(60),
+  days: DaysArray.min(1),
+  hours_slot: z.string().max(40).nullable(),
+  start_date: IsoDateStr,
+  end_date: IsoDateStr,
+  store_codes: z.array(z.string().regex(/^MAG-DEMO-\d{3}$/)),
+  deviation_note: z.string().max(280).nullable(),
+  cost_status: z.enum(COST_STATUSES),
+});
+export type ProposalInput = z.infer<typeof ProposalInputSchema>;
+
+export const ProposalSchema = ProposalInputSchema.extend({
+  /** Chiffrage : réservé à l'agence. Nul dans la vue de la cliente ; un coût inconnu n'est jamais 0. */
+  cost_status: z.enum(COST_STATUSES).nullable(),
+  id: Uuid,
+  need_id: Uuid,
+  version: z.number().int().min(1),
+  status: z.enum(PROPOSAL_STATUSES),
+  deviations: z.array(z.enum(DEVIATION_KINDS)),
+  author_profile: z.enum(PROFILE_IDS),
+  created_on: IsoDateStr,
+  sent_on: NullableDate,
+  /** Date cible de la proposition (délai de proposition, valeur de départ à valider D93). */
+  due_on: NullableDate,
+  withdrawn_on: NullableDate,
+  withdrawn_motive: z.string().max(280).nullable(),
+  is_demo: z.literal(true),
+});
+export type Proposal = z.infer<typeof ProposalSchema>;
+
+export const DecisionSchema = z.object({
+  id: Uuid,
+  proposal_id: Uuid,
+  need_id: Uuid,
+  /** Version de la proposition décidée. */
+  version: z.number().int().min(1),
+  outcome: z.enum(DECISION_OUTCOMES),
+  motive: z.string().max(280).nullable(),
+  status: z.enum(DECISION_STATUSES),
+  decided_by: z.enum(PROFILE_IDS),
+  decided_on: IsoDateStr,
+  invalidated_on: NullableDate,
+  invalidated_reason: z.enum(INVALIDATION_REASONS).nullable(),
+  /** Proposition dont l'envoi a invalidé la décision, le cas échéant. */
+  invalidated_by_proposal_id: Uuid.nullable(),
+  is_demo: z.literal(true),
+});
+export type Decision = z.infer<typeof DecisionSchema>;
+
+export const NoteSchema = z.object({
+  id: Uuid,
+  object_kind: z.enum(NOTE_OBJECT_KINDS),
+  object_id: Uuid,
+  need_id: Uuid,
+  /** Secteur du besoin : sert au filtrage par périmètre. */
+  sector_id: Uuid,
+  text: z.string().min(1).max(500),
+  visibility: z.enum(NOTE_VISIBILITIES),
+  /** Zone du destinataire (DR, CVR ou RS) pour une note partagée avec un destinataire. */
+  recipient_zone_id: Uuid.nullable(),
+  author_profile: z.enum(PROFILE_IDS),
+  created_on: IsoDateStr,
+  seq: z.number().int().min(1),
+  withdrawn_on: NullableDate,
+  withdrawn_by: z.enum(PROFILE_IDS).nullable(),
+  is_demo: z.literal(true),
+});
+export type Note = z.infer<typeof NoteSchema>;

@@ -49,3 +49,9 @@ export function presentParams(params: Record<string, string | number>, locale: L
   }
   return out;
 }
+
+/** Noms courts des jours (1 = lundi … 7 = dimanche), selon la langue, séparés par des virgules. */
+export function formatWeekdays(days: readonly number[], locale: Locale): string {
+  const fmt = new Intl.DateTimeFormat(INTL_LOCALE[locale], { weekday: 'short', timeZone: 'UTC' });
+  return [...days].sort((a, b) => a - b).map((d) => fmt.format(new Date(Date.UTC(2026, 10, 1 + d)))).join(', ');
+}
