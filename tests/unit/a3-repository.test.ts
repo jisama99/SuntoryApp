@@ -387,15 +387,13 @@ describe('recrutement : sorties, hors entonnoir, délais', () => {
     expect(report.params.min_sample).toBe(5);
   });
   it('taux : nul (donnée indisponible) quand aucune heure n\'est demandée, jamais 0', async () => {
-    const report = await repo.getFunnelReport(ctxOf('rs'));
-    expect(report.summary.demandedHours).toBeGreaterThan(0);
-    const other = { ...ctxOf('rs'), scope: { kind: 'rs' as const, ids: [zones.find((z) => z.kind === 'rs' && z.parent_id !== CVR_ZONE && z.responsible_name !== '')!.id] } };
-    const empty = { ...other, scope: { kind: 'rs' as const, ids: [zones.filter((z) => z.kind === 'rs').at(-1)!.id] } };
+    expect((await repo.getFunnelReport(ctxOf('rs'))).summary.demandedHours).toBeGreaterThan(0);
+    // Le douzième secteur n'a ni besoin ni magasin : aucune heure demandée.
+    const empty = { ...ctxOf('rs'), scope: { kind: 'rs' as const, ids: [zones.filter((z) => z.kind === 'rs').at(-1)!.id] } };
     const r = await repo.getFunnelReport(empty);
-    if (r.summary.demandedHours === 0) {
-      expect(r.summary.hiredRate).toBeNull();
-      expect(r.summary.startedRate).toBeNull();
-    }
+    expect(r.summary.demandedHours).toBe(0);
+    expect(r.summary.hiredRate).toBeNull();
+    expect(r.summary.startedRate).toBeNull();
   });
 });
 

@@ -27,6 +27,8 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   setRequestLocale(locale);
   const ctx = await getAccessContext(locale as Locale);
   const loc = ctx.locale;
+  // Ponctuation propre à la langue : espace avant les deux-points en français seulement.
+  const colon = loc === 'en' ? ':' : ' :';
   const thread = await repository.getNeedThread(ctx, id);
   if (!thread) notFound();
   const { row, proposals, decisions, events, notes } = thread;
@@ -126,8 +128,8 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           {dimension(t('dimension.execution'), (
             <>
               {row.positionStatus ? <StatusTag tone={POSITION_TONE[row.positionStatus]}>{t(`position.${row.positionStatus}`)}</StatusTag> : <span className="text-muted">{t('none')}</span>}
-              <span className="text-sm">{t('detail.startWork')} : {rec.start_work_date ? formatDate(rec.start_work_date, loc) : t('notRecorded')}</span>
-              <span className="text-sm">{t('detail.vehicle')} : {rec.vehicle_handover_date ? formatDate(rec.vehicle_handover_date, loc) : t('notRecorded')}</span>
+              <span className="text-sm">{t('detail.startWork')}{colon} {rec.start_work_date ? formatDate(rec.start_work_date, loc) : t('notRecorded')}</span>
+              <span className="text-sm">{t('detail.vehicle')}{colon} {rec.vehicle_handover_date ? formatDate(rec.vehicle_handover_date, loc) : t('notRecorded')}</span>
               {agency && row.billableFrom ? <span className="text-sm text-muted">{t('detail.billableFrom', { date: formatDate(row.billableFrom, loc) })}</span> : null}
             </>
           ))}
@@ -136,7 +138,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
 
       <section aria-labelledby="next-title" data-testid="next-step" className="mb-8 flex flex-col gap-3 rounded-card bg-tint-aqua p-5 text-ink shadow-card">
         <h2 id="next-title" className="text-lg font-semibold">{t('detail.next')}</h2>
-        <p className="text-lg font-semibold">{t(`actor.${row.next.actor}`)} : {t(`action.${row.next.action}`)}</p>
+        <p className="text-lg font-semibold">{t(`actor.${row.next.actor}`)}{colon} {t(`action.${row.next.action}`)}</p>
         <div className="flex flex-wrap items-center gap-3">
           {row.next.due ? <span>{t('due', { date: formatDate(row.next.due, loc) })}</span> : null}
           {row.next.urgency ? <StatusTag tone={URGENCY_TONE[row.next.urgency]}>{t(`urgency.${row.next.urgency}`)}</StatusTag> : null}
@@ -167,18 +169,18 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
                     {agency && p.cost_status ? <StatusTag tone={p.cost_status === 'complete' ? 'ok' : 'attention'}>{t(`proposal.costStatus.${p.cost_status}`)}</StatusTag> : null}
                   </div>
                   <dl className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-                    <div><dt className="inline font-semibold">{t('proposal.hours')} : </dt><dd className="inline">{p.weekly_hours}</dd></div>
-                    <div><dt className="inline font-semibold">{t('proposal.days')} : </dt><dd className="inline">{formatWeekdays(p.days, loc)}</dd></div>
-                    <div><dt className="inline font-semibold">{t('proposal.slot')} : </dt><dd className="inline">{p.hours_slot ?? t('none')}</dd></div>
-                    <div><dt className="inline font-semibold">{t('proposal.period')} : </dt><dd className="inline">{t('detail.range', { start: formatDate(p.start_date, loc), end: formatDate(p.end_date, loc) })}</dd></div>
-                    <div><dt className="inline font-semibold">{t('proposal.stores')} : </dt><dd className="inline">{p.store_codes.length}</dd></div>
+                    <div><dt className="inline font-semibold">{t('proposal.hours')}{colon} </dt><dd className="inline">{p.weekly_hours}</dd></div>
+                    <div><dt className="inline font-semibold">{t('proposal.days')}{colon} </dt><dd className="inline">{formatWeekdays(p.days, loc)}</dd></div>
+                    <div><dt className="inline font-semibold">{t('proposal.slot')}{colon} </dt><dd className="inline">{p.hours_slot ?? t('none')}</dd></div>
+                    <div><dt className="inline font-semibold">{t('proposal.period')}{colon} </dt><dd className="inline">{t('detail.range', { start: formatDate(p.start_date, loc), end: formatDate(p.end_date, loc) })}</dd></div>
+                    <div><dt className="inline font-semibold">{t('proposal.stores')}{colon} </dt><dd className="inline">{p.store_codes.length}</dd></div>
                   </dl>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm font-semibold">{t('proposal.deviations')}</span>
                     {p.deviations.length === 0 ? <StatusTag tone="ok">{t('proposal.noDeviation')}</StatusTag> : p.deviations.map((d) => <StatusTag key={d} tone="attention">{t(`proposal.deviation.${d}`)}</StatusTag>)}
                   </div>
                   {p.deviation_note ? <p>{p.deviation_note}</p> : null}
-                  {p.withdrawn_on ? <p className="text-muted">{t('detail.withdrawnOn', { date: formatDate(p.withdrawn_on, loc) })}{p.withdrawn_motive ? ` : ${p.withdrawn_motive}` : ''}</p> : null}
+                  {p.withdrawn_on ? <p className="text-muted">{t('detail.withdrawnOn', { date: formatDate(p.withdrawn_on, loc) })}{p.withdrawn_motive ? `${colon} ${p.withdrawn_motive}` : ''}</p> : null}
                   {own.map((d) => (
                     <div key={d.id} data-decision-status={d.status} className="flex flex-col gap-2 rounded-ctl bg-alt px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
