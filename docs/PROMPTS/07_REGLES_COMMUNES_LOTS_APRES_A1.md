@@ -66,6 +66,7 @@ CONVENTIONS À RESPECTER
     confirmation visible et annulable après toute écriture, focus replacé ; tableaux en cartes sous 640 px ; cibles
     tactiles de 44 px, police de base 16 px ; police Inter chargée en local (règle 10). Tests de style étendus à chaque lot.
 17. Économie de modèles et de sous-agents (D192) : ne délègue à un sous-agent que ce qui est volumineux ou mécanique, avec le modèle **le plus économique suffisant** : le plus léger pour chercher, lister, extraire, lancer une commande et résumer sa sortie ; un modèle intermédiaire pour une relecture ordinaire ou la rédaction de tests ; le modèle principal pour l'architecture, la sécurité, les droits, la vie privée, les arbitrages et le verdict. Pas de sous-agent pour une tâche courte. Demande des sorties résumées et vérifiables (fichier, ligne, commande). Un résultat douteux est refait avec un modèle supérieur. La décision, le verdict, l'inscription au registre et la fusion ne sont jamais délégués. Mêmes interdits de données et de réseau pour les sous-agents.
+18. Garde-fou C3 à chaque lot (D212 proposée) : lance le contrôle C3 (`npx vitest run tests/unit/guards.test.ts`) sur un poste où `.denylist.local` existe, avant le compte rendu et après toute nouvelle chaîne de texte (messages, fixtures, tests). Un échec C3 n'est ni ignoré ni contourné : identifie mot par mot les termes qui correspondent, vérifie qu'il s'agit de vocabulaire générique (français courant, anglais technique, libellé métier) et non d'une donnée réelle, puis ajoute chaque mot à `C3_SAFE_WORDS` de `tests/unit/guards.test.ts` en listant les mots, les fichiers et la justification dans le compte rendu. Un doute sur un mot (nom propre, enseigne, adresse, identifiant) = fuite présumée : reformule le texte au lieu d'élargir la liste. Si `.denylist.local` est absent, C3 est écrit « non exécuté » en tête du compte rendu et le lot ne se déclare pas conforme à C3 ; la revue ou le poste du prestataire l'exécute avant la fusion.
 
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.
@@ -76,7 +77,7 @@ APERÇU ET PREUVES
 
 GARDE-FOUS DE DONNÉES
 - Aucune lecture de data_real*, ref_reel*, ref_magasins*, communes_*, *_pack.js ni de classeur Excel réel.
-- C1 à C7 de docs/FIXTURES.md §5 relancés à chaque lot ; C3 signalé « non exécuté » sans .denylist.local.
+- C1 à C7 de docs/FIXTURES.md §5 relancés à chaque lot ; C3 selon la règle 18 (jamais « non exécuté » sans le dire en tête du compte rendu).
 
 GIT ET LIVRAISON
 - Aucun commit ni push sans demande explicite de T. SOEFOU. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu et les contrôles reportés, commit et push de la branche de session uniquement ; jamais sur main, jamais de pull request. La fusion dans main est faite après relecture. Exception (D191) : une session de revue lancée avec `docs/PROMPTS/31_PROMPT_REVUE_ET_FUSION.md` peut fusionner la branche d'un lot dans `main` et pousser `main`, après contrôles verts et validation de T. SOEFOU, jamais en force ni par pull request.

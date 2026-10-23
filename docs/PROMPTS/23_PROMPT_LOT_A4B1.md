@@ -21,6 +21,7 @@ Poser la chaîne budgétaire (D153) sur données fictives : la cliente saisit l'
 5. Besoin au-delà du disponible : autorisé avec alerte à la cliente et à l'agence, puis arbitrage, jamais bloqué (D156) ; événement au journal.
 6. Poste pourvu : le prévisionnel devient consommé (branché sur l'état des postes de A3).
 7. Journal : événements avec audience et motif pour toute modification ; coûts masqués par défaut côté cliente selon l'audience.
+7 bis. Couche de jetons des graphiques (D213 et D214 proposées, validées le 24/10/2026, docs/propositions/PROPOSITION_JEUX_COULEURS_GRAPHIQUES_V0.1.md et PROPOSITION_STYLES_GRAPHIQUES_V0.1.md) : les jauges, barres et répartitions de l'enveloppe lisent des jetons de graphique (séries 1 à 6, série clé, neutre, rayons, forme des bouts) définis dans un fichier de jetons dédié avec le jeu B et le style Doux par défaut, variantes du mode sombre comprises ; aucune couleur ni forme en dur. Les réglages (Paramètres, sélecteur d'affichage), les jeux A et C et les styles Exécutif et Directionnel sont livrés par A4a, qui complète cette couche. Statuts ok, alerte, danger hors des jeux.
 8. Anglais et navigation (règles 14 et 15) ; captures docs/captures/A4b1/.
 
 HORS PÉRIMÈTRE

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aperçu des jeux de couleurs des graphiques</title>
+<style>
+:root{
+  --page:#f4f8fa; --surface:#ffffff; --alt:#f0f6f9; --ink:#16222a; --muted:#5e717c; --title:#08071e;
+  --ok:#1b7b45; --ok-soft:#e3f5ea; --warn:#8a5a00; --warn-soft:#fff1d6; --danger:#b3202a; --danger-soft:#fde4e6;
+  --anchor:#1a1950; --on-anchor:#ffffff; --focus:#1a1950;
+  --r:22px; --gap:16px;
+}
+:root[data-mode="dark"]{
+  --page:#0e1316; --surface:#161e23; --alt:#1c272d; --ink:#e9f1f4; --muted:#9db1bb; --title:#f4f8fa;
+  --ok:#6fd49a; --ok-soft:#14301f; --warn:#f0c36a; --warn-soft:#33270c; --danger:#ff8a93; --danger-soft:#3a1a1d;
+  --anchor:#232a6b; --on-anchor:#ffffff; --focus:#9fdceb;
+}
+/* Jeu A : Marvesting signature */
+:root[data-set="A"]{--c1:#ED2567;--c2:#2A2A91;--c3:#0E0D30;--c4:#00829B;--cn:#E5E1D3;--key:#ED2567}
+:root[data-set="A"][data-mode="dark"]{--c1:#FF5C93;--c2:#8A8AF0;--c3:#E5E1D3;--c4:#5BC2DC;--cn:#4a4636;--key:#FF5C93}
+/* Jeu B : mixte Suntory et Marvesting */
+:root[data-set="B"]{--c1:#00829B;--c2:#1A1950;--c3:#5BC2DC;--c4:#8F8FD0;--cn:#E1E8EC;--key:#E52365}
+:root[data-set="B"][data-mode="dark"]{--c1:#5BC2DC;--c2:#8A89E0;--c3:#9FDCEB;--c4:#6c6cb8;--cn:#2b3a42;--key:#FF5C93}
+/* Jeu C : sobre et accessible */
+:root[data-set="C"]{--c1:#1A1950;--c2:#2F4F9C;--c3:#2E86AB;--c4:#5BC2DC;--cn:#E1E8EC;--key:#E52365}
+:root[data-set="C"][data-mode="dark"]{--c1:#9FA0F0;--c2:#7C9BE0;--c3:#6FB8D8;--c4:#A7E3F2;--cn:#2b3a42;--key:#FF5C93}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 48px}
+.banner{display:inline-block;background:var(--warn-soft);color:var(--warn);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+h1{font-size:26px;margin:14px 0 4px;color:var(--title)}
+p.sub{margin:0 0 16px;color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:var(--gap)}
+.group{display:flex;gap:6px;background:var(--surface);padding:6px;border-radius:999px}
+.group label{cursor:pointer}
+.group input{position:absolute;opacity:0;pointer-events:none}
+.group span{display:inline-block;min-height:44px;line-height:44px;padding:0 18px;border-radius:999px;color:var(--ink);font-weight:600;transition:background .2s ease,color .2s ease}
+.group input:checked + span{background:var(--anchor);color:var(--on-anchor)}
+.group input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}
+.card{background:var(--surface);border-radius:var(--r);padding:20px}
+.card h2{font-size:16px;margin:0 0 4px;color:var(--title)}
+.card .hint{margin:0 0 14px;font-size:14px;color:var(--muted)}
+.tile{grid-column:span 3}
+.tile.anchor{background:var(--anchor);color:var(--on-anchor)}
+.tile .k{font-size:14px;opacity:.85}
+.tile .v{font-size:30px;font-weight:700;margin-top:2px}
+.tile .d{font-size:14px;margin-top:4px}
+.t-a{background:#e7f5f9}.t-b{background:#ecebf7}.t-c{background:#f1efea}
+:root[data-mode="dark"] .t-a{background:#12353f}
+:root[data-mode="dark"] .t-b{background:#1e1d3a}
+:root[data-mode="dark"] .t-c{background:#232019}
+.span6{grid-column:span 6}.span4{grid-column:span 4}.span8{grid-column:span 8}.span12{grid-column:span 12}
+.track{height:28px;border-radius:999px;background:var(--cn);display:flex;gap:4px;padding:0}
+.seg{height:28px;border-radius:999px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:14px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:6px;vertical-align:-2px}
+.donut{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donut svg{width:190px;height:190px;flex:none}
+.rows{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:120px 1fr 74px;gap:10px;align-items:center;font-size:14px}
+.rb{height:22px;border-radius:999px;background:var(--cn)}
+.rb b{display:block;height:22px;border-radius:999px}
+.pill{display:inline-block;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:600}
+.p-ok{background:var(--ok-soft);color:var(--ok)}.p-warn{background:var(--warn-soft);color:var(--warn)}.p-danger{background:var(--danger-soft);color:var(--danger)}
+.val{font-weight:700;text-align:right}
+.cols{display:flex;align-items:flex-end;gap:14px;height:170px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%}
+.col .st{width:100%;max-width:56px;display:flex;flex-direction:column;gap:3px;justify-content:flex-end}
+.col .st b{display:block;border-radius:14px}
+.col small{color:var(--muted)}
+table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px}
+td,th{padding:8px 12px;text-align:left}
+th{color:var(--muted);font-weight:600}
+td{background:var(--alt)}
+td:first-child{border-radius:14px 0 0 14px}td:last-child{border-radius:0 14px 14px 0}
+.note{margin-top:var(--gap);color:var(--muted);font-size:14px}
+@media (max-width:760px){.tile{grid-column:span 6}.span6,.span4,.span8{grid-column:span 12}.row{grid-template-columns:96px 1fr 64px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="banner">DONNÉES FICTIVES</span>
+  <h1>Pilotage budget : aperçu des jeux de couleurs</h1>
+  <p class="sub">Même cockpit, trois jeux dérivés du design Marvesting. Les couleurs de statut (vert, ambre, rouge) ne changent jamais.</p>
+
+  <div class="bar">
+    <div class="group" role="radiogroup" aria-label="Jeu de couleurs">
+      <label><input type="radio" name="set" value="A"><span>A · Marvesting signature</span></label>
+      <label><input type="radio" name="set" value="B" checked><span>B · Mixte Suntory</span></label>
+      <label><input type="radio" name="set" value="C"><span>C · Sobre et accessible</span></label>
+    </div>
+    <div class="group" role="radiogroup" aria-label="Mode d'affichage">
+      <label><input type="radio" name="mode" value="light" checked><span>Clair</span></label>
+      <label><input type="radio" name="mode" value="dark"><span>Sombre</span></label>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card tile anchor"><div class="k">Budget de l'année</div><div class="v">1 240 k€</div><div class="d">Enveloppe cliente</div></div>
+    <div class="card tile t-a"><div class="k">Consommé</div><div class="v">712 k€</div><div class="d">57 % de l'enveloppe</div></div>
+    <div class="card tile t-b"><div class="k">Prévisionnel</div><div class="v">388 k€</div><div class="d">31 % de l'enveloppe</div></div>
+    <div class="card tile t-c"><div class="k">Disponible</div><div class="v">140 k€</div><div class="d">12 % de l'enveloppe</div></div>
+
+    <div class="card span12">
+      <h2>Consommé, prévisionnel et disponible</h2>
+      <p class="hint">Jauge unique, valeurs écrites. Le disponible garde la couleur neutre.</p>
+      <div class="track" role="img" aria-label="Consommé 57 %, prévisionnel 31 %, disponible 12 %">
+        <div class="seg" style="width:57%;background:var(--c1)"></div>
+        <div class="seg" style="width:31%;background:var(--c2)"></div>
+        <div class="seg" style="width:12%;background:var(--cn)"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--c1)"></i>Consommé 57 %</span>
+        <span><i style="background:var(--c2)"></i>Prévisionnel 31 %</span>
+        <span><i style="background:var(--cn)"></i>Disponible 12 %</span>
+      </div>
+    </div>
+
+    <div class="card span6">
+      <h2>Répartition par dispositif</h2>
+      <p class="hint">Donut de 4 parts, total au centre, bouts arrondis.</p>
+      <div class="donut">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Merch horaire 46 %, Permanent 28 %, Saisonnier 18 %, Autres 8 %">
+          <circle cx="60" cy="60" r="44" fill="none" stroke="var(--alt)" stroke-width="16"/>
+          <g fill="none" stroke-width="16" stroke-linecap="round" transform="rotate(-90 60 60)">
+            <circle cx="60" cy="60" r="44" stroke="var(--c1)" stroke-dasharray="118 276.5" stroke-dashoffset="0"/>
+            <circle cx="60" cy="60" r="44" stroke="var(--c2)" stroke-dasharray="64 276.5" stroke-dashoffset="-128"/>
+            <circle cx="60" cy="60" r="44" stroke="var(--c3)" stroke-dasharray="38 276.5" stroke-dashoffset="-202"/>
+            <circle cx="60" cy="60" r="44" stroke="var(--cn)" stroke-dasharray="10 276.5" stroke-dashoffset="-250"/>
+          </g>
+          <text x="60" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="var(--title)">712 k€</text>
+          <text x="60" y="74" text-anchor="middle" font-size="9" fill="var(--muted)">consommé</text>
+        </svg>
+        <div class="legend" style="flex-direction:column;margin-top:0">
+          <span><i style="background:var(--c1)"></i>Merch horaire 46 %</span>
+          <span><i style="background:var(--c2)"></i>Permanent 28 %</span>
+          <span><i style="background:var(--c3)"></i>Saisonnier 18 %</span>
+          <span><i style="background:var(--cn)"></i>Autres 8 %</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card span6">
+      <h2>Consommé par région</h2>
+      <p class="hint">Barres classées. La série clé (région en alerte) prend la couleur d'action.</p>
+      <div class="rows">
+        <div class="row"><span>Île-de-France</span><div class="rb"><b style="width:92%;background:var(--key)"></b></div><span class="val">164 k€</span></div>
+        <div class="row"><span>Sud-Est</span><div class="rb"><b style="width:74%;background:var(--c1)"></b></div><span class="val">132 k€</span></div>
+        <div class="row"><span>Nord</span><div class="rb"><b style="width:61%;background:var(--c1)"></b></div><span class="val">109 k€</span></div>
+        <div class="row"><span>Ouest</span><div class="rb"><b style="width:47%;background:var(--c1)"></b></div><span class="val">84 k€</span></div>
+        <div class="row"><span>Sud-Ouest</span><div class="rb"><b style="width:36%;background:var(--c1)"></b></div><span class="val">64 k€</span></div>
+      </div>
+    </div>
+
+    <div class="card span8">
+      <h2>Réalisé et prévisionnel par mois</h2>
+      <p class="hint">Colonnes empilées, valeurs en dessous.</p>
+      <div class="cols">
+        <div class="col"><div class="st"><b style="height:30px;background:var(--c2)"></b><b style="height:62px;background:var(--c1)"></b></div><small>Juin</small></div>
+        <div class="col"><div class="st"><b style="height:28px;background:var(--c2)"></b><b style="height:76px;background:var(--c1)"></b></div><small>Juil.</small></div>
+        <div class="col"><div class="st"><b style="height:40px;background:var(--c2)"></b><b style="height:70px;background:var(--c1)"></b></div><small>Août</small></div>
+        <div class="col"><div class="st"><b style="height:58px;background:var(--c2)"></b><b style="height:60px;background:var(--c1)"></b></div><small>Sept.</small></div>
+        <div class="col"><div class="st"><b style="height:84px;background:var(--c2)"></b><b style="height:34px;background:var(--c1)"></b></div><small>Oct.</small></div>
+        <div class="col"><div class="st"><b style="height:96px;background:var(--c2)"></b></div><small>Nov.</small></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--c1)"></i>Réalisé</span>
+        <span><i style="background:var(--c2)"></i>Prévisionnel</span>
+      </div>
+    </div>
+
+    <div class="card span4">
+      <h2>Statuts (couleurs fixes)</h2>
+      <p class="hint">Jamais tirés du jeu choisi. Le rose n'est jamais une erreur.</p>
+      <div class="rows" style="gap:10px">
+        <div><span class="pill p-ok">Dans l'enveloppe</span></div>
+        <div><span class="pill p-warn">Seuil à 90 % atteint</span></div>
+        <div><span class="pill p-danger">Enveloppe dépassée</span></div>
+      </div>
+    </div>
+
+    <div class="card span12">
+      <h2>Alternative tableau</h2>
+      <p class="hint">Chaque graphique a son tableau de valeurs.</p>
+      <table>
+        <tr><th>Dispositif</th><th>Consommé</th><th>Part</th></tr>
+        <tr><td>Merch horaire</td><td>328 k€</td><td>46 %</td></tr>
+        <tr><td>Permanent</td><td>199 k€</td><td>28 %</td></tr>
+        <tr><td>Saisonnier</td><td>128 k€</td><td>18 %</td></tr>
+        <tr><td>Autres</td><td>57 k€</td><td>8 %</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="note">Aperçu indicatif. Couleurs source : gabarit Marvesting (#ED2567, #2A2A91, #0E0D30, #E5E1D3) et jetons actuels de l'interface (#00829B, #1A1950, #5BC2DC, #E52365). Les contrastes seront testés dans A4a.</p>
+</div>
+<script>
+(function(){
+  var root=document.documentElement;
+  function apply(){
+    var s=document.querySelector('input[name=set]:checked').value;
+    var m=document.querySelector('input[name=mode]:checked').value;
+    root.setAttribute('data-set',s); root.setAttribute('data-mode',m);
+  }
+  document.querySelectorAll('input[name=set],input[name=mode]').forEach(function(i){i.addEventListener('change',apply)});
+  apply();
+})();
+</script>
+</body>
+</html>
