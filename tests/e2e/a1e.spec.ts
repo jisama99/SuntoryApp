@@ -11,8 +11,8 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
   test('sans profil choisi, l\'accueil mène à l\'écran d\'entrée : visuel de la forêt, aucun menu, aucune requête externe', async ({ page }) => {
     const w = watch(page);
     await page.goto('/fr');
-    await expect(page).toHaveURL(/\/fr\/start$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Pilotage merchandising' })).toBeVisible();
+    await expect(page).toHaveURL(/\/fr\/start(\?|$)/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
     expect(await page.locator('picture img').first().getAttribute('src')).toContain('/visuels/forest-');
     await expect(page.locator('#app-sidebar')).toHaveCount(0);
     await expect(page.getByLabel('Identifiant')).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
 
   test('connexion en anglais : l\'accueil s\'ouvre dans la langue choisie avec les menus du glossaire', async ({ page }) => {
     await page.goto('/en/start');
-    await expect(page.getByRole('heading', { level: 1, name: 'Merchandising steering' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Sign in' })).toBeVisible();
     await page.getByLabel('Username').fill('DemoAgence01');
     await page.getByLabel('Password').fill(demoPassword('DemoAgence01'));
     await page.getByRole('button', { name: 'Sign in' }).click();

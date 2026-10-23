@@ -861,7 +861,6 @@
     "invalid": "Le mot de passe temporaire est incorrect."
   },
   "accounts": {
-    "title": "Comptes",
     "body": "Créer, attribuer, désactiver et réinitialiser les identifiants.",
     "caption": "Comptes de connexion",
     "filters": {
@@ -901,5 +900,18 @@
       "protected": "Les comptes du prestataire ne se gèrent pas ici.",
       "self": "Vous ne pouvez pas désactiver votre propre compte."
     }
+  },
+  "titles": {
+    "newNeed": "Saisir un besoin",
+    "batch": "Saisir plusieurs besoins",
+    "deadlineSettings": "Fixer les échéances de saisie",
+    "deadlinesByMonth": "Dates limites mois par mois",
+    "schemeSettings": "Régler les dispositifs",
+    "reopeningsToDecide": "Réouvertures à décider",
+    "entriesToChase": "Saisies à relancer",
+    "emailsToApprove": "Courriels à valider",
+    "attention": "Ce qui demande votre attention",
+    "signIn": "Connexion",
+    "manageAccess": "Gérer les accès"
   }
 }

@@ -154,7 +154,7 @@ Conservés tels quels (déjà formulés en action ou en objet clair) : Vos besoi
 | Étapes pour reproduire | Steps to reproduce | |
 | Résultat attendu | Expected result | |
 
-## 4 ter. Connexion et comptes (D188, D189), ajout du lot A1f
+## 4 septies. Connexion et comptes (D188, D189), compléments du lot A1f
 Les cinq premiers termes sont donnés par le prompt du lot A1f. **Les suivants sont proposés par le prestataire et à valider** : le glossaire reste le seul référentiel.
 | FR | EN | Statut |
 |---|---|---|

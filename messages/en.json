@@ -861,7 +861,6 @@
     "invalid": "The temporary password is incorrect."
   },
   "accounts": {
-    "title": "Accounts",
     "body": "Create, assign, disable and reset usernames.",
     "caption": "Sign-in accounts",
     "filters": {
@@ -901,5 +900,18 @@
       "protected": "Provider accounts are not managed here.",
       "self": "You cannot disable your own account."
     }
+  },
+  "titles": {
+    "newNeed": "Enter a need",
+    "batch": "Enter several needs",
+    "deadlineSettings": "Set entry deadlines",
+    "deadlinesByMonth": "Deadlines month by month",
+    "schemeSettings": "Configure schemes",
+    "reopeningsToDecide": "Reopenings to decide",
+    "entriesToChase": "Entries to chase",
+    "emailsToApprove": "Emails to approve",
+    "attention": "What needs your attention",
+    "signIn": "Sign in",
+    "manageAccess": "Manage access"
   }
 }

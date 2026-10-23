@@ -27,8 +27,8 @@ export default async function BatchPage({ params }: { params: Promise<{ locale: 
   for (const d of DISPOSITIFS) for (const name of [d, fr(d), en(d)]) dispositifNames[normalizeToken(name)] = d;
   return (
     <>
-      <Breadcrumb items={[{ label: t('menu.needs'), href: '/needs' }, { label: t('batch.title') }]} />
-      <PageHeader title={t('batch.title')} subtitle={t(`role.${ctx.profileId}`)} />
+      <Breadcrumb items={[{ label: t('menu.needs'), href: '/needs' }, { label: t('titles.batch') }]} />
+      <PageHeader title={t('titles.batch')} subtitle={t(`role.${ctx.profileId}`)} />
       <BatchTable
         initialRows={draft?.rows ?? []}
         hadDraft={draft !== null}

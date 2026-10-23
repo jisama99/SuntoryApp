@@ -10,7 +10,7 @@ import { Button } from './Button';
 import { Field } from './Field';
 
 /** Changement du mot de passe temporaire. Les champs portent les attributs `autocomplete` standard pour le trousseau. */
-export function ChangePasswordForm() {
+export function ChangePasswordForm({ next: returnTo }: { next: string | null }) {
   const t = useTranslations('changePassword');
   const tl = useTranslations('login');
   const ta = useTranslations('auth');
@@ -28,7 +28,7 @@ export function ChangePasswordForm() {
       return;
     }
     setPending(true);
-    const result = await changePasswordAction({ locale, current, next });
+    const result = await changePasswordAction({ locale, current, next, returnTo });
     setPending(false);
     setProblem(result.status === 'ok' ? null : result.reason);
   };

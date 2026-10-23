@@ -70,7 +70,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           )}
         </section>
         <section aria-labelledby="alerts-title" className="flex flex-col gap-3">
-          <h2 id="alerts-title" className="text-lg font-semibold">{t('home.alerts.title')}</h2>
+          <h2 id="alerts-title" className="text-lg font-semibold">{t('titles.attention')}</h2>
           {recent.length === 0 ? (
             <EmptyState title={t('states.empty.title')} body={t('home.alerts.empty')} />
           ) : (

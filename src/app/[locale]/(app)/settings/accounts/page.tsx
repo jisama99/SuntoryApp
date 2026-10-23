@@ -75,8 +75,8 @@ export default async function AccountsPage({ params, searchParams }: {
 
   return (
     <>
-      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('accounts.title') }]} />
-      <PageHeader title={t('accounts.title')} subtitle={t(`role.${ctx.profileId}`)} />
+      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('titles.manageAccess') }]} />
+      <PageHeader title={t('titles.manageAccess')} subtitle={t(`role.${ctx.profileId}`)} />
       <AccountCreateForm profiles={CREATABLE_PROFILES} zones={zoneOptions} />
       <div className="mb-4">
         <FilterTabs

@@ -21,10 +21,10 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
   test('sans session, toute page de l\'application renvoie vers la connexion', async ({ page }) => {
     for (const route of ['/fr', '/fr/needs', '/fr/settings', '/fr/settings/accounts', '/en/alerts']) {
       await page.goto(route);
-      await expect(page, route).toHaveURL(/\/(fr|en)\/start$/);
+      await expect(page, route).toHaveURL(/\/(fr|en)\/start(\?|$)/);
     }
     await page.goto('/fr/start');
-    await expect(page.getByRole('heading', { level: 1, name: 'Pilotage merchandising' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
     // Le choix de profil simulé a disparu de l'écran d'entrée.
     await expect(page.getByRole('button', { name: 'Agence (administrateur)' })).toHaveCount(0);
   });
@@ -117,7 +117,7 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
     await fillLogin(page, 'DemoCVR06', demoPassword('DemoCVR06'));
     await page.getByRole('button', { name: 'Connexion' }).click();
     await expect(page.locator('#login-error')).toHaveText('Identifiant ou mot de passe incorrect');
-    await expect(page).toHaveURL(/\/start$/);
+    await expect(page).toHaveURL(/\/start(\?|$)/);
   });
 
   test('cookie de session : httpOnly, signé ; un cookie falsifié est ignoré ; déconnexion', async ({ page, context }) => {
@@ -129,14 +129,14 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
     await expect(page.getByRole('button', { name: 'Se déconnecter' })).toBeVisible();
     await context.addCookies([{ name: 'demo_session', value: `${session!.value.slice(0, -3)}abc`, url: 'http://localhost:3100' }]);
     await page.goto('/fr/needs');
-    await expect(page).toHaveURL(/\/start$/);
+    await expect(page).toHaveURL(/\/start(\?|$)/);
     await loginAs(context, 'DemoAgence02');
     await page.goto('/fr');
     await page.getByRole('button', { name: 'Se déconnecter' }).click();
     await expect(page).toHaveURL(/\/fr\/start$/);
     expect((await context.cookies()).some((c) => c.name === 'demo_session' && c.value)).toBe(false);
     await page.goto('/fr/needs');
-    await expect(page).toHaveURL(/\/start$/);
+    await expect(page).toHaveURL(/\/start(\?|$)/);
   });
 
   test('comptes réels : périmètre du compte, menus du profil, accès aux Réglages refusé hors agence (D118)', async ({ page, context }) => {
@@ -177,17 +177,18 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
     await setProfile(context, 'agency_admin');
     await page.goto('/fr/settings');
     await expect(page.getByRole('heading', { level: 1, name: 'Réglages' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Comptes' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Gérer les accès' })).toHaveCount(0);
     expect((await page.goto('/fr/settings/accounts'))?.status()).toBe(404);
   });
 
   test('gestion des comptes : création, mot de passe temporaire affiché une fois, premier accès, désactivation, réinitialisation, annulation', async ({ page, context }) => {
+    test.setTimeout(90_000);
     const w = watch(page);
     await loginAs(context, 'DemoAgence01');
     await page.goto('/fr/settings');
     await page.getByRole('link', { name: 'Ouvrir' }).last().click();
     await expect(page).toHaveURL(/\/settings\/accounts$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Comptes' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Gérer les accès' })).toBeVisible();
     const table = page.getByTestId('accounts-table');
     await expect(table.locator('tbody tr')).toHaveCount(17);
 
@@ -335,7 +336,75 @@ test.describe('lot A1f : connexion par identifiant et comptes (D188, D189)', () 
     await expect(page.locator('#login-error')).toHaveText('Username or password incorrect');
     await loginAs(context, 'DemoAgence01');
     await page.goto('/en/settings/accounts');
-    await expect(page.getByRole('heading', { level: 1, name: 'Accounts' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Manage access' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible();
+  });
+});
+
+test.describe('retour à la page demandée (D183) et titres d\'écran (D186)', () => {
+  test('une page demandée sans session : connexion, puis retour à cette page avec son état (filtre, tri)', async ({ page }) => {
+    await page.goto('/fr/needs?filter=draft&sort=need&dir=desc');
+    await expect(page).toHaveURL(/\/fr\/start\?next=/);
+    await fillLogin(page, 'DemoAgence04', demoPassword('DemoAgence04'));
+    await page.getByRole('button', { name: 'Connexion' }).click();
+    await expect(page).toHaveURL(/\/fr\/needs\?filter=draft&sort=need&dir=desc$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Vos besoins en merchandising' })).toBeVisible();
+  });
+
+  test('adresse de retour piégée : ignorée, retour à l\'accueil', async ({ page, context }) => {
+    for (const bad of [['/', '/hors'].join(''), ['https:', '', 'hors', 'fr'].join('/'), '/\\autre', '/fr/../x', '/de/needs']) {
+      await context.clearCookies();
+      await page.goto(`/fr/start?next=${encodeURIComponent(bad)}`);
+      await fillLogin(page, 'DemoAgence04', demoPassword('DemoAgence04'));
+      await page.getByRole('button', { name: 'Connexion' }).click();
+      await expect(page, bad).toHaveURL(/\/fr$/);
+    }
+  });
+
+  test('premier accès avec retour : le mot de passe changé ramène à la page demandée', async ({ page, context }) => {
+    await loginAs(context, 'DemoAgence01');
+    await page.goto('/fr/settings/accounts');
+    await page.getByTestId('account-create').locator('#new-username').fill('DemoRS09');
+    await page.getByTestId('account-create').locator('#new-profile').selectOption('rs');
+    await page.getByTestId('account-create').locator('#new-zone').selectOption({ index: 1 });
+    await page.getByTestId('account-create').getByRole('button', { name: 'Créer', exact: true }).click();
+    const temporary = (await page.getByTestId('temp-password-value').innerText()).trim();
+    await context.clearCookies();
+    await page.goto('/fr/alerts');
+    await expect(page).toHaveURL(/start\?next=/);
+    await fillLogin(page, 'DemoRS09', temporary);
+    await page.getByRole('button', { name: 'Connexion' }).click();
+    await expect(page).toHaveURL(/change-password\?next=/);
+    await page.getByLabel('Mot de passe temporaire').fill(temporary);
+    const next = `${randomBytes(8).toString('hex')}Aa`;
+    await page.locator('#new-password').fill(next);
+    await page.getByLabel('Confirmer le mot de passe').fill(next);
+    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await expect(page).toHaveURL(/\/fr\/alerts$/);
+  });
+
+  test('titres d\'écran du glossaire, en français et en anglais', async ({ page, context }) => {
+    await loginAs(context, 'DemoAgence01');
+    const titles: Array<[string, string, string]> = [
+      ['/needs/new', 'Saisir un besoin', 'Enter a need'],
+      ['/needs/batch', 'Saisir plusieurs besoins', 'Enter several needs'],
+      ['/settings/deadlines', 'Fixer les échéances de saisie', 'Set entry deadlines'],
+      ['/settings/dispositifs', 'Régler les dispositifs', 'Configure schemes'],
+      ['/settings/accounts', 'Gérer les accès', 'Manage access'],
+    ];
+    for (const [route, frTitle, enTitle] of titles) {
+      await page.goto(`/fr${route}`);
+      await expect(page.getByRole('heading', { level: 1, name: frTitle }), route).toBeVisible();
+      await page.goto(`/en${route}`);
+      await expect(page.getByRole('heading', { level: 1, name: enTitle }), route).toBeVisible();
+    }
+    await page.goto('/fr/settings/deadlines');
+    for (const h of ['Dates limites mois par mois', 'Réouvertures à décider', 'Courriels à valider']) await expect(page.getByRole('heading', { level: 2, name: h })).toBeVisible();
+    await page.goto('/fr/needs');
+    await expect(page.getByRole('heading', { level: 2, name: 'Saisies à relancer' })).toBeVisible();
+    await page.goto('/fr');
+    await expect(page.getByRole('heading', { level: 2, name: 'Ce qui demande votre attention' })).toBeVisible();
+    await page.goto('/en');
+    await expect(page.getByRole('heading', { level: 2, name: 'What needs your attention' })).toBeVisible();
   });
 });

@@ -6,11 +6,14 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { Visual } from '@/components/Visual';
 import type { Locale } from '@/domain/types';
 import { redirect } from '@/i18n/navigation';
+import { safeReturnTo } from '@/lib/return-to';
 import { requireSession } from '@/lib/session';
 
 /** Changement du mot de passe temporaire à la première connexion (D189). Sans mot de passe temporaire, retour à l'accueil. */
-export default async function ChangePasswordPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ChangePasswordPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { locale } = await params;
+  const raw = (await searchParams).next;
+  const next = safeReturnTo(Array.isArray(raw) ? raw[0] : raw);
   setRequestLocale(locale);
   const session = await requireSession(locale as Locale);
   if (!session.account.must_change_password) redirect({ href: '/', locale: locale as Locale });
@@ -30,7 +33,7 @@ export default async function ChangePasswordPage({ params }: { params: Promise<{
       >
         <BrandLogo brand="suntory" className="h-10 self-start" />
         <h1 id="change-title" className="text-xl font-extrabold tracking-tight text-title">{t('title')}</h1>
-        <ChangePasswordForm />
+        <ChangePasswordForm next={next} />
         <BrandMark className="mt-2 self-start" />
       </section>
     </main>

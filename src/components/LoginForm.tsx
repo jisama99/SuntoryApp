@@ -13,7 +13,7 @@ import { Field } from './Field';
  * « Connexion » ou Entrée tapée) : ni la saisie, ni le remplissage automatique, ni un changement de champ ne déclenchent
  * d'appel. Le message d'échec est unique.
  */
-export function LoginForm() {
+export function LoginForm({ next }: { next: string | null }) {
   const t = useTranslations('login');
   const router = useRouter();
   const [failed, setFailed] = useState(false);
@@ -32,7 +32,9 @@ export function LoginForm() {
       });
       const body = (await response.json().catch(() => null)) as { ok?: boolean; mustChangePassword?: boolean } | null;
       if (response.ok && body?.ok) {
-        router.replace(body.mustChangePassword ? '/change-password' : '/');
+        if (body.mustChangePassword) router.replace(next ? `/change-password?next=${encodeURIComponent(next)}` : '/change-password');
+        else if (next) window.location.assign(next);
+        else router.replace('/');
         return;
       }
       setFailed(true);

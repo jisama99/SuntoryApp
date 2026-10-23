@@ -19,8 +19,8 @@ export default async function NewNeedPage({ params }: { params: Promise<{ locale
   const data = await loadFormData(ctx);
   return (
     <>
-      <Breadcrumb items={[{ label: t('menu.needs'), href: '/needs' }, { label: t('needs.new') }]} />
-      <PageHeader title={t('needs.new')} subtitle={t(`role.${ctx.profileId}`)} />
+      <Breadcrumb items={[{ label: t('menu.needs'), href: '/needs' }, { label: t('titles.newNeed') }]} />
+      <PageHeader title={t('titles.newNeed')} subtitle={t(`role.${ctx.profileId}`)} />
       <NeedForm mode="new" initial={emptyNeedForm(data.sectors.length === 1 ? (data.sectors[0]?.id ?? '') : '')} {...data} />
     </>
   );

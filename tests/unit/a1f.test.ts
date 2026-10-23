@@ -291,3 +291,40 @@ describe('formulaire de connexion : attributs du trousseau et aucun envoi automa
     expect(src).toContain('onSubmit={submit}');
   });
 });
+
+describe('retour à la page demandée : chemins internes seulement (D183)', async () => {
+  const { safeReturnTo } = await import('@/lib/return-to');
+  it('accepte les pages de l\'application, requête comprise', () => {
+    expect(safeReturnTo('/fr/needs')).toBe('/fr/needs');
+    expect(safeReturnTo('/en/settings/accounts?filter=active&sort=username&dir=desc')).toBe('/en/settings/accounts?filter=active&sort=username&dir=desc');
+    expect(safeReturnTo('/fr')).toBe('/fr');
+  });
+  it('refuse tout ce qui sort de l\'application ou boucle', () => {
+    for (const bad of [['/', '/hors'].join(''), '/\\autre', ['https:', '', 'hors', 'fr'].join('/'), 'javascript:alert(1)', '/fr/../admin', '/fr/%2e%2e/admin', '%2F%2Fhors', '/de/needs', 'fr/needs', '', '/fr/start', '/fr/change-password', '/fr/needs\n', `/fr/${'a'.repeat(600)}`, ['/fr/x:', '', 'hors'].join('/'), undefined, null, 42]) {
+      expect(safeReturnTo(bad as never), String(bad)).toBeNull();
+    }
+  });
+});
+
+describe('titres d\'écran du glossaire 4 quinquies (D186)', () => {
+  const glossary = read(path.join(ROOT, 'docs/GLOSSAIRE_FR_EN.md'));
+  const section = glossary.slice(glossary.indexOf('## 4 quinquies'), glossary.indexOf('## 4 sexies'));
+  const fr = JSON.parse(read(path.join(ROOT, 'messages/fr.json'))) as { titles: Record<string, string> };
+  const en = JSON.parse(read(path.join(ROOT, 'messages/en.json'))) as { titles: Record<string, string> };
+  const rows = section.split('\n').filter((l) => l.startsWith('| ') && !l.startsWith('| Écran') && !l.startsWith('|---')).map((l) => l.split('|').map((c) => c.trim()));
+  it('chaque titre du glossaire est repris tel quel, en français et en anglais, avec les mêmes clés', () => {
+    const KEYS: Record<string, string> = {
+      'Saisir un besoin': 'newNeed', 'Saisir plusieurs besoins': 'batch', 'Fixer les échéances de saisie': 'deadlineSettings',
+      'Dates limites mois par mois': 'deadlinesByMonth', 'Régler les dispositifs': 'schemeSettings', 'Réouvertures à décider': 'reopeningsToDecide',
+      'Saisies à relancer': 'entriesToChase', 'Courriels à valider': 'emailsToApprove', 'Ce qui demande votre attention': 'attention',
+      'Connexion': 'signIn', 'Gérer les accès': 'manageAccess',
+    };
+    expect(Object.keys(fr.titles).sort()).toEqual(Object.keys(en.titles).sort());
+    for (const [frTitle, key] of Object.entries(KEYS)) {
+      const row = rows.find((r) => r[3] === frTitle);
+      expect(row, frTitle).toBeTruthy();
+      expect(fr.titles[key]).toBe(frTitle);
+      expect(en.titles[key]).toBe(row![4]);
+    }
+  });
+});
