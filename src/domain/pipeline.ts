@@ -228,7 +228,7 @@ export function nextStep(
   const active = activeProposal(i.proposals);
   const decision = sent ? validDecisionOn(sent.id, i.decisions) : null;
   if (r.hired_on && r.start_work_date && r.start_work_date <= today) {
-    // D212 : poste occupé, « En poste » est maintenu. Tant que l'accord n'est pas rétabli (besoin modifié, accord invalidé),
+    // D230 : poste occupé, « En poste » est maintenu. Tant que l'accord n'est pas rétabli (besoin modifié, accord invalidé),
     // l'agence renvoie la proposition pour confirmation ; une version envoyée sans décision attend la cliente.
     if (!i.needChanged && sent && !decision) return withDue('decider', 'decide', sent.sent_on ? addWorkingDays(sent.sent_on, params.decision_due_days, cal) : null);
     if (!i.needChanged && decision?.outcome === 'approved') return withDue('none', 'none', null);

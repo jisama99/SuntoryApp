@@ -14,7 +14,7 @@ import { addDays } from '@/domain/week';
 import type { CalendarRules } from '@/domain/working-days';
 import { formatDate } from '@/lib/format';
 
-/** Heures de prise de poste proposées, par demi-heure (D216) : saisie par sélecteur, jamais en texte libre. */
+/** Heures de prise de poste proposées, par demi-heure (D231) : saisie par sélecteur, jamais en texte libre. */
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const v = `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`;
   return { value: v, text: v };

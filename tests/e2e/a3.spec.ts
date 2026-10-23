@@ -126,7 +126,7 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     await page.locator('[data-step="vehicle_handover"]').getByRole('button', { name: 'Enregistrer la remise' }).click();
     await expect(page.locator('[data-step="vehicle_handover"]')).toContainText('Enregistrée le');
     await expect(page.getByTestId('dimensions')).not.toContainText('En poste');
-    // D216 : la décision porte son heure ; l'heure de prise de poste se choisit par sélecteur (facultative).
+    // D231 : la décision porte son heure ; l'heure de prise de poste se choisit par sélecteur (facultative).
     await expect(page.locator('[data-proposal-version="2"] [data-decision-status="valid"]')).toContainText(/ à \d{2}:\d{2}/);
     await page.selectOption('#step-start_work-time', '11:00');
     await page.locator('[data-step="start_work"]').getByRole('button', { name: 'Enregistrer la prise de poste' }).click();

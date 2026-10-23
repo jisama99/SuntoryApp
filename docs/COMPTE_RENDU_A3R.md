@@ -38,21 +38,21 @@ Constats : (a) à 390 px, « MAG-DEMO-003 » se coupait en fin de ligne dans la 
 ## 6. Mise à jour du registre proposée (non inscrite)
 | N° proposé | Sujet | Contenu |
 |---|---|---|
-| D212 | État finalisé et accord | « Recrutement finalisé » exige l'accord en vigueur ; accord invalidé : retour à « Proposé », rien d'effacé ; « En poste » indépendant de l'accord. Précise D198 |
-| D217 | Besoin stoppé et taux | Mise en œuvre de D211 : heures effectuées avant l'arrêt comptées (besoin stoppé après sa prise de poste), stoppé avant démarrage exclu, rejeté jamais compté |
-| D216 | Écart acceptation et poste démarré | Mise en œuvre de D210 en dates ; « plus tard dans la journée » vide tant que l'heure n'est pas enregistrée ; prise de poste un jour non ouvré rangée avec « jour ouvré suivant ou plus » |
-| D215 | Statut d'exécution | Quatre valeurs, distinctes du statut de poste calculé ; libellés à ajouter au glossaire |
+| D230 | État finalisé et accord | « Recrutement finalisé » exige l'accord en vigueur ; accord invalidé : retour à « Proposé », rien d'effacé ; « En poste » indépendant de l'accord. Précise D198 |
+| D233 | Besoin stoppé et taux | Mise en œuvre de D211 : heures effectuées avant l'arrêt comptées (besoin stoppé après sa prise de poste), stoppé avant démarrage exclu, rejeté jamais compté |
+| D231 | Écart acceptation et poste démarré | Mise en œuvre de D210 en dates ; « plus tard dans la journée » vide tant que l'heure n'est pas enregistrée ; prise de poste un jour non ouvré rangée avec « jour ouvré suivant ou plus » |
+| D232 | Statut d'exécution | Quatre valeurs, distinctes du statut de poste calculé ; libellés à ajouter au glossaire |
 
 ## 7. Suite donnée (23/10/2026)
-Validées par T. SOEFOU et inscrites : D212 (« En poste » maintenu, alerte et action à coder), D216 (horodatage automatique de l'acceptation, heure de prise de poste facultative, sens à confirmer avec la cliente), D215 (libellés d'exécution, « Poste terminé »). D217 (mise en œuvre de D211) n'a pas été soumise : elle reste proposée.
+Validées par T. SOEFOU et inscrites : D230 (« En poste » maintenu, alerte et action à coder), D231 (horodatage automatique de l'acceptation, heure de prise de poste facultative, sens à confirmer avec la cliente), D232 (libellés d'exécution, « Poste terminé »). D233 (mise en œuvre de D211) n'a pas été soumise : elle reste proposée.
 
-## 8. Codage de D212 et D216 (après validation)
+## 8. Codage de D230 et D231 (après validation)
 
-- **D212** : `nextStep` reçoit `needChanged`. Poste déjà en poste, accord invalidé : l'agence « renvoie la proposition pour confirmation » (échéance = date d'invalidation + délai de proposition) ; une version envoyée sans décision revient à la cliente. « En poste » est maintenu. Alerte `accordLost`, audience agence seule (testée : invisible pour direction, DR, CVR, RS).
-- **D216** : l'heure d'acceptation est posée automatiquement (HH:MM, Paris) ; l'heure de prise de poste se choisit par sélecteur (facultative, validée HH:MM, remise à zéro par un désistement). « Plus tard dans la journée » se calcule avec les deux heures. Seule lecture de l'horloge du poste : l'heure du jour (le jour reste celui de l'horloge de démonstration), remplaçable par `setTimeSource` en test.
-- **D217** : rien de nouveau codé (comportement D211 déjà en place) ; reste « proposée » au registre.
+- **D230** : `nextStep` reçoit `needChanged`. Poste déjà en poste, accord invalidé : l'agence « renvoie la proposition pour confirmation » (échéance = date d'invalidation + délai de proposition) ; une version envoyée sans décision revient à la cliente. « En poste » est maintenu. Alerte `accordLost`, audience agence seule (testée : invisible pour direction, DR, CVR, RS).
+- **D231** : l'heure d'acceptation est posée automatiquement (HH:MM, Paris) ; l'heure de prise de poste se choisit par sélecteur (facultative, validée HH:MM, remise à zéro par un désistement). « Plus tard dans la journée » se calcule avec les deux heures. Seule lecture de l'horloge du poste : l'heure du jour (le jour reste celui de l'horloge de démonstration), remplaçable par `setTimeSource` en test.
+- **D233** : rien de nouveau codé (comportement D211 déjà en place) ; reste « proposée » au registre.
 - Contrôles exécutés : `tsc`, `lint`, Vitest (681 passés, 1 ignoré : C3), `build`, Playwright 110/110, captures A3 régénérées (7 tests).
 - Captures : 5 images modifiées (parcours refus/nouvelle proposition, fil de refus). Les images pleine page sont trop longues pour être relues en détail ici : **non relues ligne à ligne**. Elles affichent l'heure réelle de la décision : elles changent à chaque régénération.
 - Non exécuté : C3 (fichier `.denylist.local` absent).
 
-Renumérotation à la fusion dans `main` : la session des graphiques avait réservé D213 (jeux de couleurs) et D214 (styles de tracé). Les décisions de ce lot « heure d'acceptation et de prise de poste » (ex-D214) et « besoin stoppé et taux » (ex-D213, proposée) deviennent **D216** et **D217**. D212 et D215 sont inchangées.
+Renumérotation à la fusion dans `main` : la session voisine a réservé D212 (C3), D213 (jeux de couleurs) et D214 (styles de tracé), et ses propositions suivantes commencent à D215. Les décisions de ce lot sont donc **D230** (ex-D212, état finalisé et « En poste »), **D231** (ex-D214, heures), **D232** (ex-D215, libellés d'exécution) et **D233** (ex-D213, besoin stoppé et taux, proposée). Les mentions D212 à D214 du reste du dépôt désignent la session voisine.

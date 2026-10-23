@@ -339,7 +339,7 @@ export interface StepInput {
   /** Date de l'étape (aaaa-mm-jj). Par défaut : la date du jour de démonstration. */
   date?: string;
   motive?: string;
-  /** Heure de prise de poste (HH:MM, Paris), en option (D216). */
+  /** Heure de prise de poste (HH:MM, Paris), en option (D231). */
   time?: string;
   /** Secteur d'origine d'une réattribution. */
   fromSectorId?: string;

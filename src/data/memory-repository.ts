@@ -69,7 +69,7 @@ const alerts = z.array(AlertSchema).parse(alertsJson);
 const clock = DemoClockSchema.parse(clockJson);
 
 /**
- * D216 : heure du jour à Paris (HH:MM), seule lecture de l'horloge du poste : le jour reste celui de l'horloge de démonstration.
+ * D231 : heure du jour à Paris (HH:MM), seule lecture de l'horloge du poste : le jour reste celui de l'horloge de démonstration.
  * `format()` sans argument lit l'instant courant. Remplaçable en test ; sans argument, `setTimeSource` rétablit cette lecture.
  */
 const parisTime = (): string =>

@@ -663,7 +663,7 @@ describe('reprises de la revue A3', () => {
   });
 });
 
-describe('D212 et D216 : codés après validation', () => {
+describe('D230 et D231 : codés après validation', () => {
   const change = (n: Need) => repo.saveNeed(ctxOf('rs'), {
     dispositif: 'permanent', campaign_code: 'CMP-DEMO-01', sector_id: OWN, position_label: 'Poste 4', weekly_hours: 14, priority: 2,
     periods: [period(1, '2026-12-14', '2026-12-20')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: n.store_codes, client_comment: null,
@@ -676,7 +676,7 @@ describe('D212 et D216 : codés après validation', () => {
     await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY });
     return n;
   }
-  it('D212 : poste démarré puis besoin modifié : « En poste » maintenu, action et alerte pour l\'agence jusqu\'au rétablissement de l\'accord', async () => {
+  it('D230 : poste démarré puis besoin modifié : « En poste » maintenu, action et alerte pour l\'agence jusqu\'au rétablissement de l\'accord', async () => {
     const n = await started();
     expect((await rowOf(n)).next.action).toBe('none');
     await change(n);
@@ -698,7 +698,7 @@ describe('D212 et D216 : codés après validation', () => {
     await decide(again.proposal.id, 'approved');
     expect((await rowOf(n)).next.action).toBe('none');
   });
-  it('D216 : l\'acceptation est horodatée automatiquement (heure de Paris), jamais saisie', async () => {
+  it('D231 : l\'acceptation est horodatée automatiquement (heure de Paris), jamais saisie', async () => {
     setTimeSource(() => '09:30');
     const n = await submitNeed();
     await take(n);
@@ -707,7 +707,7 @@ describe('D212 et D216 : codés après validation', () => {
     expect(d.decided_time).toBe('09:30');
     expect(d.decided_on).toBe(TODAY);
   });
-  it('D216 : l\'heure de prise de poste est facultative, validée, et remise à zéro par un désistement', async () => {
+  it('D231 : l\'heure de prise de poste est facultative, validée, et remise à zéro par un désistement', async () => {
     const n = await submitNeed();
     await take(n);
     await decide((await send(n)).id, 'approved');
@@ -719,7 +719,7 @@ describe('D212 et D216 : codés après validation', () => {
     await repo.recordStep(AG(), n.id, 'withdrawal');
     expect((await rowOf(n)).recruitment.start_work_time).toBeNull();
   });
-  it('D216 : « plus tard dans la journée » se remplit quand les deux heures existent', async () => {
+  it('D231 : « plus tard dans la journée » se remplit quand les deux heures existent', async () => {
     setTimeSource(() => '09:30');
     const n = await submitNeed();
     await take(n);
