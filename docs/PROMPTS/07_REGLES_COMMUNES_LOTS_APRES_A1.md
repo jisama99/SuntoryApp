@@ -65,6 +65,7 @@ CONVENTIONS À RESPECTER
     de 150 à 250 ms, désactivées en mouvement réduit ; trois états par route (squelette de chargement, vide, erreur) ;
     confirmation visible et annulable après toute écriture, focus replacé ; tableaux en cartes sous 640 px ; cibles
     tactiles de 44 px, police de base 16 px ; police Inter chargée en local (règle 10). Tests de style étendus à chaque lot.
+17. Économie de modèles et de sous-agents (D192) : ne délègue à un sous-agent que ce qui est volumineux ou mécanique, avec le modèle **le plus économique suffisant** : le plus léger pour chercher, lister, extraire, lancer une commande et résumer sa sortie ; un modèle intermédiaire pour une relecture ordinaire ou la rédaction de tests ; le modèle principal pour l'architecture, la sécurité, les droits, la vie privée, les arbitrages et le verdict. Pas de sous-agent pour une tâche courte. Demande des sorties résumées et vérifiables (fichier, ligne, commande). Un résultat douteux est refait avec un modèle supérieur. La décision, le verdict, l'inscription au registre et la fusion ne sont jamais délégués. Mêmes interdits de données et de réseau pour les sous-agents.
 
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.

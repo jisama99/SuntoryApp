@@ -59,3 +59,5 @@ RÈGLES NON NÉGOCIABLES
 - Il sépare le démonstrateur (montrer les fonctionnalités) du MVP (données réelles), en cohérence avec la position D03.
 - Il impose la lecture du registre avant chaque lot : Claude Code ne transforme pas une hypothèse en décision.
 - Il garde les garde-fous du cadrage (pas de faux zéro, pas de masquage seul, pas de donnée réelle) tout au long du développement.
+
+Économie de modèles (D192, règle commune 17) : délègue aux sous-agents seulement le volumineux ou le mécanique, avec le modèle le plus économique suffisant ; le principal garde les décisions, la sécurité et le verdict.
