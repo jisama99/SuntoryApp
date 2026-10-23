@@ -13,7 +13,11 @@
     "breadcrumb": "Fil d'Ariane",
     "collapse": "Réduire le menu",
     "expand": "Déployer le menu",
-    "close": "Fermer le menu"
+    "close": "Fermer le menu",
+    "create": "Nouveau besoin",
+    "more": "Plus",
+    "moreTitle": "Autres sections",
+    "mobile": "Navigation mobile"
   },
   "locale": {
     "label": "Langue",

@@ -26,7 +26,7 @@ Intégration de `origin/main` : la règle commune 14 (navigation web, D151) et D
 | 5. Saisie en lot | Cartes de lignes (voir §5), collage depuis un tableur, jours collés `LUN;MAR` convertis en cases cochées, validation ligne par ligne par les règles d'A2a, rejets expliqués, aucune ligne perdue en silence (lignes vides comptées, valeurs collées inconnues signalées) |
 | 6. Brouillon et résumé | Brouillon automatique côté données, par profil, repris après rechargement. Résumé avant soumission (lignes saisies, complètes, incomplètes, heures, dispositifs) |
 | 7. Écrans | `/needs/batch`, `/settings/deadlines` (calendrier, éditeur, demandes de réouverture, trace, courriels préparés), `/settings/dispositifs`, bannière d'échéance (liste, saisie, lot), résumé des retards (liste des besoins), alertes d'échéance (page Alertes). Textes FR et EN |
-| 8. Captures | `docs/captures/A2b/` : 104 images (§3) |
+| 8. Captures | `docs/captures/A2b/` : 108 images (§3) |
 | Courriels (blocage connu) | Modélisés dans une **file à valider sans envoi** : rappel du jour J (un message par responsable concerné) et résumé du lundi de la cliente (sans chiffre). L'agence administration valide ou écarte, rien ne part (D86, D94) |
 
 ## 1 bis. Règles 14 et 15 appliquées (D149, D151)
@@ -46,9 +46,9 @@ Retour de T. SOEFOU : le menu latéral n'a pas de volet dépliable, il reste en 
 | Élément | Réalisation | Vérification |
 |---|---|---|
 | Bureau | Menu latéral **collant** sur toute la hauteur de l'écran (plus de vide), **repliable en rail d'icônes** par un bouton (`aria-expanded`), libellés conservés pour les lecteurs d'écran et en info-bulle, préférence mémorisée dans le cookie `demo_sidebar` lu côté serveur (aucun saut à l'affichage) | e2e : repli, rechargement, position fixe pendant le défilement |
-| Mobile | Barre **fixe** en haut et tiroir de menu : se ferme à Échap, au choix d'une entrée et au changement de page, focus rendu au bouton | e2e : barre visible après défilement, tiroir, aucun débordement |
-| Captures | 16 vues **à la taille de l'écran** (`shell_*`) : bureau déployé, défilé, replié, sombre ; mobile fermé, défilé, tiroir ouvert, en français et en anglais ; les 88 captures pleine page ont été régénérées avec le nouveau gabarit | relues : `shell_desktop_expanded_scrolled_fr`, `shell_desktop_collapsed_params_fr`, `shell_mobile_drawer_open_fr`, `shell_desktop_expanded_top_en`, `shell_desktop_dark_batch_fr` ; les autres vues `shell_*` ne sont pas relues |
-Un défaut trouvé à la relecture (bouton « Fermer le menu » sur deux lignes à 390 px) a été corrigé avant la dernière génération. Les captures de l'A1 et de l'A2a n'ont pas été régénérées : elles montrent l'ancien gabarit.
+| Mobile | **Barre d'onglets fixe en bas**, colonnes de largeur égale (Accueil, Besoins, Alertes, puis « Plus » pour les autres sections), bouton **« + » central** qui ouvre la saisie complète d'un besoin (`/needs/new` : bannière d'échéances, règles W, D, J, P et E côté données, brouillon, report sur M+1). Le « + » n'existe que pour les profils qui peuvent saisir (RS, agence) ; les profils en lecture ont quatre onglets. Volet « Plus » fermé par Échap, au choix d'une entrée ou au changement de page. Marge basse réservée : aucun contenu masqué par la barre, zone de sécurité des téléphones prise en compte | e2e : barre collée en bas pendant le défilement, quatre colonnes de même largeur (écart d'un pixel au plus), volet, « + » présent ou absent selon le profil, enregistrement d'un brouillon depuis le « + », aucun débordement |
+| Captures | 20 vues **à la taille de l'écran** (`shell_*`) : bureau déployé, défilé, replié, sombre ; mobile barre du bas (haut de page, défilé), volet « Plus » ouvert, profil en lecture sans « + », saisie ouverte depuis le « + », en français et en anglais ; les 88 captures pleine page ont été régénérées avec le nouveau gabarit | relues : `shell_desktop_expanded_scrolled_fr`, `shell_desktop_collapsed_params_fr`, `shell_desktop_expanded_top_en`, `shell_desktop_dark_batch_fr`, `shell_mobile_closed_scrolled_fr`, `shell_mobile_more_open_fr`, `shell_mobile_readonly_profile_en`, `shell_mobile_new_need_agency_fr` ; les autres vues `shell_*` ne sont pas relues |
+Le tiroir mobile du premier jet (bouton « Menu » en haut) a été remplacé par la barre du bas à la demande suivante de T. SOEFOU. Les captures de l'A1 et de l'A2a n'ont pas été régénérées : elles montrent l'ancien gabarit.
 
 ## 2. Non réalisé (hors périmètre, conforme au prompt)
 Propositions et décisions, indicateurs, courriels réels (aucun envoi), import Excel, base de données. Pas d'écran d'affectation d'une campagne à un dispositif (P2 est testée au niveau du Repository et affichée en lecture). Pas de chaîne de reports (un report ne se reporte pas). Pas de modification d'un besoin soumis (A3). Événements EV-30 et EV-31 **non émis** : sans planificateur, les alertes sont dérivées à la lecture (voir §4, H-A2b-11).
@@ -59,8 +59,8 @@ Propositions et décisions, indicateurs, courriels réels (aucun envoi), import 
 | `npm run typecheck` | OK, 0 erreur |
 | `npm run lint` | OK, 0 erreur, 0 avertissement |
 | `npm test` | **24 fichiers, 494 tests passés, 1 ignoré** (C3) |
-| `npm run test:e2e` | **54 passés sur 54** (23 de l'A1, 14 de l'A2a, 14 de l'A2b, 3 du gabarit), après `npm run build` automatique |
-| Captures | `npx playwright test --config=playwright.shots.config.ts a2b` : 7 parcours passés, 104 images (88 pleine page + 16 vues à la taille de l'écran), console vide et aucune requête externe vérifiées sur chaque parcours |
+| `npm run test:e2e` | **56 passés sur 56** (23 de l'A1, 14 de l'A2a, 14 de l'A2b, 5 du gabarit), après `npm run build` automatique |
+| Captures | `npx playwright test --config=playwright.shots.config.ts a2b` : 7 parcours passés, 108 images (88 pleine page + 20 vues à la taille de l'écran), console vide et aucune requête externe vérifiées sur chaque parcours |
 | C1, C2 | Passés (`tests/unit/fixtures-a2b.test.ts` et existants) |
 | C3 | **Non exécuté** : `.denylist.local` absent |
 | C4, C5, C7 | Passés (`tests/unit/guards.test.ts`) |
@@ -69,7 +69,7 @@ Propositions et décisions, indicateurs, courriels réels (aucun envoi), import 
 
 Couverture des critères d'acceptation : P1 à P6 une fois chacune (`dispositif-rules.test.ts`, `a2b-repository.test.ts`), priorité dispositif sur preset avec recul à la veille ouvrée et fériés (`deadlines.test.ts`), refus d'écriture par le Repository après échéance puis rétablissement par la réouverture de l'agence, un CVR ne peut pas rouvrir lui-même, ni aucun autre profil que l'agence administration, audience (aucune alerte agence côté cliente, CVR, DR, RS), lot partiellement invalide qui ne crée que les lignes valides et liste les rejets, aucun événement sans audience.
 
-### Captures `docs/captures/A2b/` (104 images)
+### Captures `docs/captures/A2b/` (108 images)
 30 vues, en français et en anglais (les vues de la phase 2 en français à 1440 px, hors alertes J-2 et bandeau de réouverture, faits dans les deux langues et largeurs), 1440 et 390 px, clair ; mode sombre sur la liste, le lot, le calendrier et les paramètres. Liste : `list_*`, `form_banner_*`, `calendar_locked_november_rs`, `batch_*` (vide, collé, résumé, résultat avec blocage après échéance), `deadlines_admin`, `params_*`, `alerts_j5_*`, `alerts_j2_rs`, `reopen_*`, `calendar_nonworking_admin`, `params_editor_open_admin`, `params_history_admin`, `deadlines_after_edit_admin`, `*_dark_*`.
 
 **Relues image par image :** `batch_result_blocked_rs_fr_1440`, `calendar_locked_november_rs_fr_1440`, `list_direction_client_fr_1440`, `alerts_j2_rs_fr_1440`, `reopen_request_cvr_fr_1440`, `calendar_nonworking_admin_fr_1440`, `params_dark_admin_fr_1440`, `batch_summary_rs_en_1440` (relue avant la correction du séparateur « Permanent : 3 », régénérée depuis sans nouvelle relecture), ainsi que les premiers aperçus du lot, de la liste, du calendrier et des paramètres (régénérés depuis). `batch_result_blocked_rs_fr_390` : **relue en partie seulement** (haut de page et début de la ligne rejetée, découpe de 1 600 px sur 6 335).

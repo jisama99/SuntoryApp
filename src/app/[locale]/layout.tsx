@@ -51,7 +51,11 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <AppShell
             items={items}
             collapsedInitial={await getSidebarCollapsed()}
-            labels={{ brand: tApp('name'), nav: tNav('label'), open: tNav('open'), close: tNav('close'), collapse: tNav('collapse'), expand: tNav('expand') }}
+            canCreate={repository.canWriteNeeds(ctx)}
+            labels={{
+              brand: tApp('name'), nav: tNav('label'), mobile: tNav('mobile'), more: tNav('more'), moreTitle: tNav('moreTitle'),
+              create: tNav('create'), collapse: tNav('collapse'), expand: tNav('expand'),
+            }}
             toolbar={
               <>
                 <ThemeSwitcher />

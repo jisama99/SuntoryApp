@@ -13,7 +13,11 @@
     "breadcrumb": "Breadcrumb",
     "collapse": "Collapse the menu",
     "expand": "Expand the menu",
-    "close": "Close the menu"
+    "close": "Close the menu",
+    "create": "New need",
+    "more": "More",
+    "moreTitle": "Other sections",
+    "mobile": "Mobile navigation"
   },
   "locale": {
     "label": "Language",
