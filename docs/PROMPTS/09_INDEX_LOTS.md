@@ -9,6 +9,7 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 | 1 | A2a | `10_PROMPT_LOT_A2A.md` | A1 | Règles W et D retrouvées (`docs/REGLES_SEMAINE_ET_DOUBLONS_V0.4.md`) ; Q6 à Q8, D22 / Q7 (valeurs par défaut) | Tests W1 à W22 et D1 à D7, captures |
 | 2 | A2b | `11_PROMPT_LOT_A2B.md` | A2a | D80 (date de novembre), D82 proposée (Standard, cascade, report) ; paramètres par dispositif ajoutés (D128, Q-N9-1 à Q-N9-5) | Blocage après échéance et alertes par audience |
 | 2 bis | A1e | `24_PROMPT_LOT_A1E.md` | A2b | D160 à D163 | Titres, visuels, skin d'accueil |
+| 2 ter | A1f | `28_PROMPT_LOT_A1F.md` | A1e | D188, D189 | Connexion identifiant et mot de passe, trousseau, comptes gérés par l'agence |
 | 3 | A3 | `12_PROMPT_LOT_A3.md` | A2b | Table de correspondance des anciens statuts (D11), D93 à D97 | Scénarios refus, remplacement, deux propositions |
 | 4 bis | A4b1 | `23_PROMPT_LOT_A4B1.md` | A3 | D07 (montants réels) ; D153 à D157 | Enveloppe cliente, allocation agence, prévisionnel par besoin |
 | 4 | A4a | `13_PROMPT_LOT_A4A.md` | A3 | D05 (consommé : montants fictifs), P3 (graphiques, décidé dans le lot) ; comparaison N / N-1 ajoutée (D127) | Tableau de bord par rôle, audience des alertes |
