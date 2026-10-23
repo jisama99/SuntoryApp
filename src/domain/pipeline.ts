@@ -209,7 +209,7 @@ export function urgencyOf(due: IsoDate, today: IsoDate, params: PipelineParams, 
 }
 
 export function nextStep(
-  i: Facts & { needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null },
+  i: Facts & { needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null; needChanged?: boolean },
   today: IsoDate,
   params: PipelineParams,
   cal: CalendarRules,
@@ -227,7 +227,14 @@ export function nextStep(
   const sent = sentProposal(i.proposals);
   const active = activeProposal(i.proposals);
   const decision = sent ? validDecisionOn(sent.id, i.decisions) : null;
-  if (r.hired_on && r.start_work_date && r.start_work_date <= today) return withDue('none', 'none', null);
+  if (r.hired_on && r.start_work_date && r.start_work_date <= today) {
+    // D212 : poste occupé, « En poste » est maintenu. Tant que l'accord n'est pas rétabli (besoin modifié, accord invalidé),
+    // l'agence renvoie la proposition pour confirmation ; une version envoyée sans décision attend la cliente.
+    if (!i.needChanged && sent && !decision) return withDue('decider', 'decide', sent.sent_on ? addWorkingDays(sent.sent_on, params.decision_due_days, cal) : null);
+    if (!i.needChanged && decision?.outcome === 'approved') return withDue('none', 'none', null);
+    const lost = i.decisions.filter((d) => d.status === 'invalidated' && d.invalidated_on).map((d) => d.invalidated_on as IsoDate).sort().pop();
+    return withDue('agency', 'reconfirm_proposal', addWorkingDays(lost ?? i.submittedOn, params.proposal_due_days, cal));
+  }
   if (decision?.outcome === 'approved') {
     return r.hired_on ? withDue('agency', 'start_work', r.start_work_date ?? i.requestedStart) : withDue('agency', 'finalise_hiring', null);
   }
@@ -336,7 +343,7 @@ export function startLagSample(f: Facts, today: IsoDate): StartLagSample | null 
   const sent = sentProposal(f.proposals);
   const accord = sent ? validDecisionOn(sent.id, f.decisions) : null;
   if (accord?.outcome !== 'approved') return null;
-  const kind = startLagKind(accord.decided_on, r.start_work_date);
+  const kind = startLagKind(accord.decided_on, r.start_work_date, accord.decided_time, r.start_work_time);
   return kind ? { situation: r.situation, kind, days: daysBetween(accord.decided_on, r.start_work_date) } : null;
 }
 

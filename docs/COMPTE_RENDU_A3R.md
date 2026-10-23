@@ -45,3 +45,12 @@ Constats : (a) à 390 px, « MAG-DEMO-003 » se coupait en fin de ligne dans la 
 
 ## 7. Suite donnée (23/10/2026)
 Validées par T. SOEFOU et inscrites : D212 (« En poste » maintenu, alerte et action à coder), D214 (horodatage automatique de l'acceptation, heure de prise de poste facultative, sens à confirmer avec la cliente), D215 (libellés d'exécution, « Poste terminé »). D213 (mise en œuvre de D211) n'a pas été soumise : elle reste proposée.
+
+## 8. Codage de D212 et D214 (après validation)
+
+- **D212** : `nextStep` reçoit `needChanged`. Poste déjà en poste, accord invalidé : l'agence « renvoie la proposition pour confirmation » (échéance = date d'invalidation + délai de proposition) ; une version envoyée sans décision revient à la cliente. « En poste » est maintenu. Alerte `accordLost`, audience agence seule (testée : invisible pour direction, DR, CVR, RS).
+- **D214** : l'heure d'acceptation est posée automatiquement (HH:MM, Paris) ; l'heure de prise de poste se choisit par sélecteur (facultative, validée HH:MM, remise à zéro par un désistement). « Plus tard dans la journée » se calcule avec les deux heures. Seule lecture de l'horloge du poste : l'heure du jour (le jour reste celui de l'horloge de démonstration), remplaçable par `setTimeSource` en test.
+- **D213** : rien de nouveau codé (comportement D211 déjà en place) ; reste « proposée » au registre.
+- Contrôles exécutés : `tsc`, `lint`, Vitest (681 passés, 1 ignoré : C3), `build`, Playwright 110/110, captures A3 régénérées (7 tests).
+- Captures : 5 images modifiées (parcours refus/nouvelle proposition, fil de refus). Les images pleine page sont trop longues pour être relues en détail ici : **non relues ligne à ligne**. Elles affichent l'heure réelle de la décision : elles changent à chaque régénération.
+- Non exécuté : C3 (fichier `.denylist.local` absent).

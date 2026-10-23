@@ -128,7 +128,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           {dimension(t('dimension.execution'), (
             <>
               {row.execution ? <StatusTag tone={EXECUTION_TONE[row.execution]}>{t(`execution.${row.execution}`)}</StatusTag> : <span className="text-muted">{t('none')}</span>}
-              <span className="text-sm">{t('detail.startWork')}{colon} {rec.start_work_date ? formatDate(rec.start_work_date, loc) : t('notRecorded')}</span>
+              <span className="text-sm">{t('detail.startWork')}{colon} {rec.start_work_date ? (rec.start_work_time ? t('steps.dateAt', { date: formatDate(rec.start_work_date, loc), time: rec.start_work_time }) : formatDate(rec.start_work_date, loc)) : t('notRecorded')}</span>
               <span className="text-sm">{t('detail.vehicle')}{colon} {rec.vehicle_handover_date ? formatDate(rec.vehicle_handover_date, loc) : t('notRecorded')}</span>
               {agency && row.billableFrom ? <span className="text-sm text-muted">{t('detail.billableFrom', { date: formatDate(row.billableFrom, loc) })}</span> : null}
             </>
@@ -191,7 +191,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
                       <div className="flex flex-wrap items-center gap-2">
                         <StatusTag tone={OUTCOME_TONE[d.outcome]}>{t(`outcome.${d.outcome}`)}</StatusTag>
                         <StatusTag tone={d.status === 'valid' ? 'ok' : 'neutral'}>{t(`decisionStatus.${d.status}`)}</StatusTag>
-                        <span className="text-sm text-muted">{t('detail.decidedOn', { date: formatDate(d.decided_on, loc) })}</span>
+                        <span className="text-sm text-muted">{t('detail.decidedOn', { date: d.decided_time ? t('steps.dateAt', { date: formatDate(d.decided_on, loc), time: d.decided_time }) : formatDate(d.decided_on, loc) })}</span>
                       </div>
                       {d.motive ? <p>{d.motive}</p> : null}
                       {d.status === 'invalidated' && d.invalidated_reason ? (

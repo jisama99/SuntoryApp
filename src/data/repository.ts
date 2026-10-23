@@ -309,7 +309,7 @@ export interface PipelineAlert {
   audience: Alert['audience'];
   severity: Severity;
   /** Clé sous `alerts.pipeline`. */
-  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate';
+  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate' | 'accordLost';
   params: Record<string, string | number>;
   created_at: string;
 }
@@ -339,6 +339,8 @@ export interface StepInput {
   /** Date de l'étape (aaaa-mm-jj). Par défaut : la date du jour de démonstration. */
   date?: string;
   motive?: string;
+  /** Heure de prise de poste (HH:MM, Paris), en option (D214). */
+  time?: string;
   /** Secteur d'origine d'une réattribution. */
   fromSectorId?: string;
 }

@@ -136,7 +136,8 @@
       "decisionsPending": "{n, plural, one {# proposal awaits a decision from the client.} other {# proposals await a decision from the client.}}",
       "decisionsLate": "{n, plural, one {# client decision is past its deadline.} other {# client decisions are past their deadline.}}",
       "clarificationPending": "{n, plural, one {# need awaits clarification from the RS.} other {# needs await clarification from the RS.}}",
-      "startLate": "{n, plural, one {# start of assignment is past the planned date.} other {# starts of assignment are past the planned date.}}"
+      "startLate": "{n, plural, one {# start of assignment is past the planned date.} other {# starts of assignment are past the planned date.}}",
+      "accordLost": "The approval no longer stands on {n, plural, one {# post in place} other {# posts in place}}: the need changed, the proposal must be resent for confirmation."
     }
   },
   "states": {
@@ -1038,6 +1039,7 @@
       "new_proposal": "Propose another profile",
       "finalise_hiring": "Complete the hiring",
       "start_work": "Record the start of assignment",
+      "reconfirm_proposal": "Resend the proposal for confirmation",
       "none": "No action"
     },
     "dimension": {
@@ -1250,6 +1252,9 @@
     "steps": {
       "title": "Recruitment and execution",
       "help": "Each step is recorded with its date. Start of assignment and vehicle handover are two separate events.",
+      "dateAt": "{date} at {time}",
+      "time": "Time (optional)",
+      "timeNone": "Not specified",
       "recordedOn": "Recorded on {date}",
       "date": "Date",
       "fromSector": "Original sector",

@@ -67,6 +67,18 @@ const zones = z.array(ZoneSchema).parse(zonesJson);
 const profiles = z.array(ProfileSchema).parse(profilesJson);
 const alerts = z.array(AlertSchema).parse(alertsJson);
 const clock = DemoClockSchema.parse(clockJson);
+
+/**
+ * D214 : heure du jour à Paris (HH:MM), seule lecture de l'horloge du poste : le jour reste celui de l'horloge de démonstration.
+ * `format()` sans argument lit l'instant courant. Remplaçable en test ; sans argument, `setTimeSource` rétablit cette lecture.
+ */
+const parisTime = (): string =>
+  new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format();
+let timeSource: () => string = parisTime;
+export function setTimeSource(fn?: () => string): void {
+  timeSource = fn ?? parisTime;
+}
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const stores = z.array(StoreSchema).parse(storesJson);
 const campaigns = z.array(CampaignSchema).parse(campaignsJson);
 const weekClosures = z.array(WeekClosureSchema).parse(weekClosuresJson);
@@ -296,7 +308,9 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
   const today = clock.date;
   const sub = submittedOn(n);
   const span = n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null;
-  let next = nextStep({ ...facts, needState: n.need_state, submittedOn: sub, requestedStart: span }, today, state().pipelineParams, calOf());
+  const sentNow = sentProposal(facts.proposals);
+  const changed = sentNow ? needChangedSince(n, sentNow) : false;
+  let next = nextStep({ ...facts, needState: n.need_state, submittedOn: sub, requestedStart: span, needChanged: changed }, today, state().pipelineParams, calOf());
   // Le retard interne de l'agence n'est pas communiqué à la cliente (D108) : elle sait qui doit agir, pas l'échéance interne.
   if (client && next.actor === 'agency') next = { ...next, due: null, urgency: null, lateDays: 0 };
   const proposal = (client ? sentProposal(facts.proposals) : null) ?? activeProposal(facts.proposals) ?? [...facts.proposals].sort((a, b) => b.version - a.version)[0] ?? null;
@@ -435,7 +449,7 @@ function decideOne(ctx: AccessContext, proposalId: string, input: DecisionInput)
   if (validDecisionOn(p.id, st.decisions)) return { status: 'refused', reason: 'already_decided' };
   st.decisions.push({
     id: crypto.randomUUID(), proposal_id: p.id, need_id: need.id, version: p.version, outcome: input.outcome, motive: motive || null, status: 'valid',
-    decided_by: ctx.profileId, decided_on: clock.date, invalidated_on: null, invalidated_reason: null, invalidated_by_proposal_id: null, is_demo: true,
+    decided_by: ctx.profileId, decided_on: clock.date, decided_time: timeSource(), invalidated_on: null, invalidated_reason: null, invalidated_by_proposal_id: null, is_demo: true,
   });
   if (input.outcome === 'refused') ensureRecruitment(need.id).refusal_count += 1;
   emit('EV-11', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, version: p.version, outcome: input.outcome });
@@ -486,7 +500,9 @@ function recordStepImpl(ctx: AccessContext, needId: string, step: RecruitmentSte
       if (!target.hired_on) return { status: 'refused', reason: 'not_hired' };
       // La prise de poste peut être planifiée ; « En poste » n'apparaît qu'à la date atteinte.
       if (date < target.hired_on || date > addDays(today, 365)) return { status: 'refused', reason: 'invalid' };
+      if (input.time && !TIME_RE.test(input.time)) return { status: 'refused', reason: 'invalid' };
       target.start_work_date = date;
+      target.start_work_time = input.time || null;
       emit('EV-16', ctx.profileId, need.sector_id, need.id, 'both', { ...base, date }, date);
       return { status: 'ok' };
     case 'vehicle_handover':
@@ -532,6 +548,7 @@ function recordStepImpl(ctx: AccessContext, needId: string, step: RecruitmentSte
       target.hired_on = null;
       target.training_on = null;
       target.start_work_date = null;
+      target.start_work_time = null;
       target.vehicle_handover_date = null;
       target.search_started_on = date;
       if (sent) {
@@ -558,7 +575,10 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   const today = clock.date;
   const needs = st.needs.filter((n) => n.need_state === 'submitted' && zoneInScope(zones, n.sector_id, ctx.scope));
   const rows = needs.map((n) => ({ n, f: factsOf(n.id, false) })).map(({ n, f }) => ({
-    n, f, next: nextStep({ ...f, needState: n.need_state, submittedOn: submittedOn(n), requestedStart: n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null }, today, st.pipelineParams, calOf()),
+    n, f, next: nextStep({
+      ...f, needState: n.need_state, submittedOn: submittedOn(n), requestedStart: n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null,
+      needChanged: (() => { const s = sentProposal(f.proposals); return s ? needChangedSince(n, s) : false; })(),
+    }, today, st.pipelineParams, calOf()),
   }));
   const out: PipelineAlert[] = [];
   const push = (key: PipelineAlert['message_key'], audience: Audience, severity: Severity, n: number, extra: Record<string, number> = {}) => {
@@ -573,6 +593,7 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   push('decisionsPending', 'client', 'attention', pending.length);
   push('decisionsLate', 'client', 'risk', pending.filter((r) => r.next.urgency === 'overdue').length);
   push('clarificationPending', 'both', 'attention', rows.filter((r) => r.next.action === 'clarify').length);
+  push('accordLost', 'agency', 'attention', rows.filter((r) => r.next.action === 'reconfirm_proposal').length);
   push('startLate', 'both', 'attention', rows.filter((r) => r.next.action === 'start_work' && r.next.urgency === 'overdue').length);
   return out;
 }

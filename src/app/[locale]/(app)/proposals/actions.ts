@@ -83,11 +83,11 @@ export async function decideBatchAction(payload: { locale: string; proposalIds: 
   };
 }
 
-const Step = z.object({ step: z.enum(RECRUITMENT_STEPS), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), motive: z.string().max(280).optional(), fromSectorId: Id.optional() });
+const Step = z.object({ step: z.enum(RECRUITMENT_STEPS), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), motive: z.string().max(280).optional(), time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(), fromSectorId: Id.optional() });
 
-export async function recordStepAction(payload: { locale: string; needId: string; step: string; date?: string; motive?: string; fromSectorId?: string }): Promise<WriteState> {
+export async function recordStepAction(payload: { locale: string; needId: string; step: string; date?: string; motive?: string; time?: string; fromSectorId?: string }): Promise<WriteState> {
   const locale = asLocale(payload.locale);
-  const parsed = Step.safeParse({ step: payload.step, date: payload.date || undefined, motive: payload.motive || undefined, fromSectorId: payload.fromSectorId || undefined });
+  const parsed = Step.safeParse({ step: payload.step, date: payload.date || undefined, motive: payload.motive || undefined, time: payload.time || undefined, fromSectorId: payload.fromSectorId || undefined });
   if (!locale || !Id.safeParse(payload.needId).success || !parsed.success) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
   const { step, ...rest } = parsed.data;

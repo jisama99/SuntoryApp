@@ -136,7 +136,8 @@
       "decisionsPending": "{n, plural, one {# proposition attend une décision de la cliente.} other {# propositions attendent une décision de la cliente.}}",
       "decisionsLate": "{n, plural, one {# décision de la cliente dépasse son échéance.} other {# décisions de la cliente dépassent leur échéance.}}",
       "clarificationPending": "{n, plural, one {# besoin attend une précision du RS.} other {# besoins attendent une précision du RS.}}",
-      "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}"
+      "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}",
+      "accordLost": "L'accord n'est plus en vigueur sur {n, plural, one {# poste en poste} other {# postes en poste}} : le besoin a changé, la proposition est à renvoyer pour confirmation."
     }
   },
   "states": {
@@ -1038,6 +1039,7 @@
       "new_proposal": "Proposer un autre profil",
       "finalise_hiring": "Finaliser le recrutement",
       "start_work": "Enregistrer la prise de poste",
+      "reconfirm_proposal": "Renvoyer la proposition pour confirmation",
       "none": "Aucune action"
     },
     "dimension": {
@@ -1250,6 +1252,9 @@
     "steps": {
       "title": "Recrutement et exécution",
       "help": "Chaque étape est enregistrée avec sa date. La prise de poste et la remise du véhicule sont deux événements distincts.",
+      "dateAt": "{date} à {time}",
+      "time": "Heure (facultative)",
+      "timeNone": "Non précisée",
       "recordedOn": "Enregistrée le {date}",
       "date": "Date",
       "fromSector": "Secteur d'origine",

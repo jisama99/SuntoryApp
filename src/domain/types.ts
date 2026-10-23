@@ -142,7 +142,7 @@ export type RecruitmentStep = (typeof RECRUITMENT_STEPS)[number];
 
 export const NEXT_ACTIONS = [
   'complete_need', 'qualify', 'clarify', 'prepare_proposal', 'send_proposal', 'decide', 'revise_proposal', 'new_proposal',
-  'finalise_hiring', 'start_work', 'none',
+  'finalise_hiring', 'start_work', 'reconfirm_proposal', 'none',
 ] as const;
 export type NextAction = (typeof NEXT_ACTIONS)[number];
 export const ACTORS = ['rs', 'agency', 'decider', 'none'] as const;

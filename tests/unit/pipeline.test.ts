@@ -389,3 +389,34 @@ describe('reprise 3 : écart entre l\'acceptation et le poste démarré (D210)',
     expect(s.white_zone.same_day.n).toBe(0);
   });
 });
+
+// ---- D212 (action « renvoyer pour confirmation ») et D214 (heures) ----
+describe('D212 : accord perdu après la prise de poste', () => {
+  const startedRec = rec({ search_started_on: '2026-10-01', hired_on: '2026-10-05', start_work_date: '2026-10-10' });
+  const invalid = decision({ status: 'invalidated', invalidated_reason: 'need_changed', invalidated_on: '2026-10-21' });
+  const step = (f: Facts, needChanged?: boolean) =>
+    nextStep({ ...f, needState: 'submitted', submittedOn: '2026-10-01', requestedStart: '2026-10-10', ...(needChanged === undefined ? {} : { needChanged }) }, TODAY, P, CAL);
+  it('accord en vigueur : personne n\'a rien à faire', () => {
+    expect(step(facts(startedRec, [proposal()], [decision()])).actor).toBe('none');
+  });
+  it('besoin modifié, accord invalidé : l\'agence renvoie la proposition pour confirmation, avec échéance', () => {
+    const s = step(facts(startedRec, [proposal()], [invalid]), true);
+    expect(s).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal', due: '2026-10-28' });
+  });
+  it('nouvelle version envoyée : la cliente décide', () => {
+    expect(step(facts(startedRec, [proposal({ version: 2, id: ID(11) })], [invalid]), false)).toMatchObject({ actor: 'decider', action: 'decide' });
+  });
+  it('aucune proposition envoyée : l\'agence propose', () => {
+    expect(step(facts(startedRec, [], []), false)).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal' });
+  });
+});
+
+describe('D214 : heures de l\'acceptation et de la prise de poste', () => {
+  it('même jour avec heure de prise de poste postérieure : « plus tard dans la journée »', () => {
+    const r = rec({ search_started_on: '2026-10-20', hired_on: '2026-10-21', start_work_date: '2026-10-22', start_work_time: '11:00' });
+    const d = decision({ decided_on: '2026-10-22', decided_time: '09:30' });
+    expect(startLagSample(facts(r, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'later_in_day', days: 0 });
+    expect(startLagSample(facts({ ...r, start_work_time: '09:30' }, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'same_day' });
+    expect(startLagSample(facts({ ...r, start_work_time: null }, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'same_day' });
+  });
+});

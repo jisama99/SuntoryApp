@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import profilesJson from '@/data/fixtures/profiles.json';
 import zonesJson from '@/data/fixtures/zones.json';
-import { createMemoryRepository, resetDemoState } from '@/data/memory-repository';
+import { createMemoryRepository, resetDemoState, setTimeSource } from '@/data/memory-repository';
 import type { Need, Proposal, ProposalInput } from '@/data/schemas';
 import { ProfileSchema, ZoneSchema } from '@/data/schemas';
 import { buildAccessContext } from '@/domain/access';
@@ -21,7 +21,7 @@ const OWN = (ctxOf('rs').scope as { ids: string[] }).ids[0]!;
 const CVR_ZONE = (ctxOf('cvr_client').scope as { ids: string[] }).ids[0]!;
 const TODAY = '2026-10-23';
 
-beforeEach(() => resetDemoState());
+beforeEach(() => { resetDemoState(); setTimeSource(); });
 
 const byCode = async (code: string, ctx = AG()) => (await repo.getPipeline(ctx)).find((r) => r.need.need_code === code)!;
 
@@ -660,5 +660,73 @@ describe('reprises de la revue A3', () => {
     expect([row.positionStatus, row.execution]).toEqual(['approved', 'start_planned']);
     expect((await rowOf(await submitNeed({ periods: [period(1, '2026-12-14', '2026-12-20')] }))).execution).toBeNull();
     expect((await byCode('BES-DEMO-001')).execution).toBe('in_post');
+  });
+});
+
+describe('D212 et D214 : codés après validation', () => {
+  const change = (n: Need) => repo.saveNeed(ctxOf('rs'), {
+    dispositif: 'permanent', campaign_code: 'CMP-DEMO-01', sector_id: OWN, position_label: 'Poste 4', weekly_hours: 14, priority: 2,
+    periods: [period(1, '2026-12-14', '2026-12-20')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: n.store_codes, client_comment: null,
+  }, { mergeInto: n.id, confirm: true });
+  async function started(): Promise<Need> {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY });
+    return n;
+  }
+  it('D212 : poste démarré puis besoin modifié : « En poste » maintenu, action et alerte pour l\'agence jusqu\'au rétablissement de l\'accord', async () => {
+    const n = await started();
+    expect((await rowOf(n)).next.action).toBe('none');
+    await change(n);
+    let row = await rowOf(n);
+    expect([row.funnel, row.decision, row.needChanged]).toEqual(['started', null, true]);
+    expect(row.next).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal' });
+    expect((await repo.getPipelineAlerts(AG())).some((a) => a.message_key === 'accordLost' && a.audience === 'agency')).toBe(true);
+    // La cliente ne lit jamais cette alerte ni l'échéance interne.
+    for (const id of ['direction_client', 'dr_client', 'cvr_client', 'rs'] as const) {
+      expect((await repo.getPipelineAlerts(ctxOf(id))).some((a) => a.message_key === 'accordLost'), id).toBe(false);
+    }
+    expect((await rowOf(n, CVR())).next).toMatchObject({ actor: 'agency', due: null, urgency: null });
+    // L'agence renvoie la proposition mise à jour : la cliente décide, puis l'alerte disparaît.
+    const again = await repo.saveProposal(AG(), n.id, input(n, { start_date: '2026-12-07', end_date: '2026-12-20' }), { send: true });
+    if (again.status !== 'saved') throw new Error('renvoi');
+    row = await rowOf(n);
+    expect([row.funnel, row.next.actor, row.next.action]).toEqual(['started', 'decider', 'decide']);
+    expect((await repo.getPipelineAlerts(AG())).some((a) => a.message_key === 'accordLost')).toBe(false);
+    await decide(again.proposal.id, 'approved');
+    expect((await rowOf(n)).next.action).toBe('none');
+  });
+  it('D214 : l\'acceptation est horodatée automatiquement (heure de Paris), jamais saisie', async () => {
+    setTimeSource(() => '09:30');
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    const d = (await repo.getNeedThread(AG(), n.id))!.decisions[0]!;
+    expect(d.decided_time).toBe('09:30');
+    expect(d.decided_on).toBe(TODAY);
+  });
+  it('D214 : l\'heure de prise de poste est facultative, validée, et remise à zéro par un désistement', async () => {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    expect(await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '25:00' })).toMatchObject({ reason: 'invalid' });
+    expect(await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '9h30' })).toMatchObject({ reason: 'invalid' });
+    expect((await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '11:00' })).status).toBe('ok');
+    expect((await rowOf(n)).recruitment.start_work_time).toBe('11:00');
+    await repo.recordStep(AG(), n.id, 'withdrawal');
+    expect((await rowOf(n)).recruitment.start_work_time).toBeNull();
+  });
+  it('D214 : « plus tard dans la journée » se remplit quand les deux heures existent', async () => {
+    setTimeSource(() => '09:30');
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '11:00' });
+    const lags = (await repo.getFunnelReport(AG())).startLags;
+    expect(lags.new.later_in_day.n).toBe(1);
   });
 });
