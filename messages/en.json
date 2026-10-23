@@ -188,5 +188,229 @@
     "system": "System",
     "light": "Light",
     "dark": "Dark"
+  },
+  "picker": {
+    "choose": "Choose a date",
+    "choosePeriod": "Choose the period",
+    "chooseWeek": "Choose a week",
+    "rangeValue": "From {start} to {end}",
+    "rangeStartOnly": "From {start}, now choose the last day",
+    "rangeHint": "Choose the first day, then the last day.",
+    "weekValue": "{week}, from {from} to {to}",
+    "dialogDate": "Date selection calendar",
+    "dialogRange": "Period selection calendar",
+    "dialogWeek": "Week selection calendar",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "weekShort": "W",
+    "isoWeek": "ISO week number",
+    "isoWeekNumber": "Week {week}",
+    "pickWeek": "Choose week {week}",
+    "today": "today",
+    "goToday": "Go to today",
+    "legend": "Arrow keys: change day. Home and End: start and end of week. Page Up and Page Down: change month.",
+    "holidayShort": "H",
+    "reason": {
+      "outOfBounds": "Outside the allowed dates, from {min} to {max}",
+      "closedWeek": "Week {week} is closed, only the agency can reopen it",
+      "holiday": "Public holiday: {name}"
+    },
+    "holiday": {
+      "new_year": "New Year's Day",
+      "easter_monday": "Easter Monday",
+      "labour_day": "Labour Day",
+      "victory_1945": "Victory in Europe Day",
+      "ascension": "Ascension Day",
+      "whit_monday": "Whit Monday",
+      "bastille_day": "National Day",
+      "assumption": "Assumption Day",
+      "all_saints": "All Saints' Day",
+      "armistice": "Armistice Day",
+      "christmas": "Christmas Day"
+    }
+  },
+  "weekdays": {
+    "monToFri": "Mon to Fri",
+    "monToSat": "Mon to Sat",
+    "all": "All",
+    "none": "None",
+    "sundayOff": "Sunday is not offered by this scheme."
+  },
+  "dispositif": {
+    "permanent": "Permanent",
+    "seasonal": "Seasonal",
+    "hourly_merch": "Hourly merchandising",
+    "second_placement": "Second placement"
+  },
+  "gravity": {
+    "blocking": "Blocking",
+    "alert": "Alert",
+    "info": "Information"
+  },
+  "needs": {
+    "new": "New need",
+    "complete": "Complete need {code}",
+    "readOnly": "Your profile can read the needs of its scope. Entry is reserved for sector managers and the agency.",
+    "empty": "No need in your scope.",
+    "caption": "Needs in your scope",
+    "cols": {
+      "need": "Need",
+      "sector": "Sector",
+      "dispositif": "Scheme",
+      "period": "Period",
+      "hours": "Hours per week",
+      "state": "Status",
+      "actions": "Actions"
+    },
+    "list": {
+      "noPeriod": "Period to complete",
+      "toComplete": "To complete",
+      "period": "P{n}: from {start} to {end} ({from} to {to})",
+      "periodOneWeek": "P{n}: from {start} to {end} ({week})",
+      "onBehalf": "Entered by the agency for the sector manager"
+    },
+    "state": {
+      "draft": "Draft",
+      "submitted": "Submitted"
+    },
+    "tiles": {
+      "submitted": "Submitted needs",
+      "hours": "Submitted hours per week",
+      "drafts": "Drafts",
+      "draftsNote": "Left out of the totals"
+    },
+    "actions": {
+      "complete": "Complete",
+      "duplicate": "Duplicate"
+    }
+  },
+  "form": {
+    "note": "An incomplete need is saved as a draft and stays out of the totals. Dates are chosen in the calendar.",
+    "sections": {
+      "general": "Need",
+      "days": "Days",
+      "stores": "Stores and comment"
+    },
+    "fields": {
+      "sector": "Sector",
+      "dispositif": "Scheme",
+      "campaign": "Campaign",
+      "position": "Position",
+      "positionPrefix": "Position",
+      "priority": "Priority",
+      "priorityN": "Priority {n}",
+      "weeklyHours": "Hours per week",
+      "hoursN": "{n} h",
+      "hoursSlot": "Hours",
+      "dates": "Period (dates)",
+      "startWeek": "Start week",
+      "endWeek": "End week",
+      "days": "Working days",
+      "stores": "Stores concerned",
+      "comment": "Client comment"
+    },
+    "hints": {
+      "campaign": "A campaign belongs to a single scheme.",
+      "hoursSlot": "For example 09:00-12:00.",
+      "comment": "Do not enter any personal data or medical reason."
+    },
+    "periodN": "Period {n}",
+    "addPeriod": "Add a second period",
+    "removePeriod": "Remove period 2",
+    "choose": "Choose",
+    "noStores": "No store is attached to this sector.",
+    "save": "Save the need",
+    "saving": "Saving in progress",
+    "back": "Back to the list",
+    "goList": "See the list of needs",
+    "invalid": "The data sent is not valid.",
+    "confirm": "Confirm and save",
+    "confirmNote": "These alerts do not block saving. You can adjust the dates or confirm.",
+    "merge": "Merge with the existing need",
+    "adjust": "Adjust the entry",
+    "correctWeek": "Correct the week",
+    "derivedHint": "Weeks are derived from the dates.",
+    "applyWeek": "Apply {week}",
+    "openExisting": "Open the existing need",
+    "otherScope": "The need concerned is outside your scope.",
+    "stillMissing": "Fields to complete: {fields}.",
+    "required": "To complete",
+    "saved": {
+      "draft": {
+        "title": "Draft saved",
+        "body": "Need {code} is saved as a draft. It stays out of the totals while it is incomplete."
+      },
+      "submit": {
+        "title": "Need submitted",
+        "body": "Need {code} is saved and counted in the totals."
+      },
+      "merge": {
+        "title": "Need merged",
+        "body": "The period of need {code} has been extended. No new need was created."
+      }
+    },
+    "refusal": {
+      "forbidden": "Your profile cannot enter needs.",
+      "out_of_scope": "This sector is outside your scope.",
+      "invalid_store": "A selected store does not belong to this sector.",
+      "campaign_mismatch": "The selected campaign belongs to another scheme.",
+      "not_found": "The requested need cannot be found.",
+      "not_draft": "Only a draft can be completed here.",
+      "no_period": "This need has no period to shift.",
+      "blocked": "Saving is refused: fix the blocking points below."
+    },
+    "missing": {
+      "dispositif": "Scheme",
+      "campaign_code": "Campaign",
+      "position_label": "Position",
+      "weekly_hours": "Hours per week",
+      "priority": "Priority",
+      "period": "Period dates",
+      "days": "Working days",
+      "hours_slot": "Hours"
+    }
+  },
+  "duplicate": {
+    "title": "Duplicate need {code}",
+    "hint": "Choose the first day of the copy. The length of each period is kept.",
+    "noPeriod": "This need has no period to shift.",
+    "newStart": "New first day",
+    "submit": "Duplicate",
+    "done": "Copy {code} is saved."
+  },
+  "rules": {
+    "W1": "Week {week} does not exist: the year has {max} weeks at most.",
+    "W2": "Number {week} comes from a spreadsheet's default week calculation. The ISO week of this date is {expected}.",
+    "W3": "Week {week} uses the calendar year. The ISO year of this date gives {expected}.",
+    "W4": "{date} belongs to ISO week {week}, in a different year from the calendar year {year}.",
+    "W5": "The date {date} is outside week {week}. This date falls in {expected}.",
+    "W6": "The end ({end}) comes before the start ({start}).",
+    "W7": "The period runs over several weeks up to {endWeek} while only week {week} is filled in.",
+    "W8": "The mission spans two weeks. The week used is the one of the start date: {week}.",
+    "W9": "No date and no week: the need stays a draft to complete and is left out of the totals.",
+    "W10": "Week {week} has already passed (current week: {current}).",
+    "W11": "The start is beyond the entry horizon of {weeks} weeks.",
+    "W12": "Week {week} is closed. Only the agency can reopen it.",
+    "W13": "The entry \"{raw}\" was normalised to {week}.",
+    "W14": "The date \"{raw}\" may have day and month swapped.",
+    "W15": "The date \"{raw}\" is not recognised.",
+    "W16": "The start ({date}) falls on a non-working day.",
+    "W17": "The start falls mid-week: {days, plural, one {# day} other {# days}} out of {of} in week {week}.",
+    "W18": "Period 2 starts on {start}, before the end of period 1 ({end}).",
+    "W19": "Period 2 ({start}) comes before period 1 ({other}).",
+    "W20": "The mission starts before the entry date or outside the campaign window.",
+    "W21": "The seasonal need goes outside the campaign window ({start} to {end}).",
+    "W22": "Another need ({code}) of the same sector and type already covers week {week}.",
+    "D1": "Exact duplicate of need {code}: same sector, type, dates and hours.",
+    "D2": "The dates partly overlap need {code}.",
+    "D3": "The period is included in the one of need {code}, or the other way round. Probable duplicate or refinement.",
+    "D4": "The period continues need {code} without a gap. Extending the existing need is possible.",
+    "D5": "Store {store} is already in need {code} of another sector over the same period.",
+    "D6": "Same title as need {code} on another period. A recurrence is still possible.",
+    "D7": "This need is already present ({code}): update it instead of creating it.",
+    "J1": "None of the ticked days falls between {start} and {end}.",
+    "J2": "The ticked day ({weekday}) is a public holiday over the whole period.",
+    "J3": "{weekday} is not offered by this scheme.",
+    "B1": "Dates must be between {min} and {max}."
   }
 }

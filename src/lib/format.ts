@@ -16,3 +16,27 @@ export function formatDate(iso: string, locale: Locale): string {
 export function formatIsoWeek(stored: string, locale: Locale): string {
   return locale === 'en' ? stored.replace('-S', '-W') : stored;
 }
+
+/** Tiret insécable (U+2011) : un code comme BES-DEMO-032 ne se coupe plus en fin de ligne. */
+export const keepTogether = (code: string): string => code.replaceAll('-', '\u2011');
+
+const ISO_DATE_PARAM = /^\d{4}-\d{2}-\d{2}$/;
+const STORED_WEEK_PARAM = /^\d{4}-S\d{2}$/;
+
+/**
+ * Prépare les paramètres d'un constat pour le message traduit : dates selon la langue (jj/mm/aaaa), semaines
+ * (S en français, W en anglais), nom du jour pour le paramètre `weekday` (1 = lundi … 7 = dimanche).
+ */
+export function presentParams(params: Record<string, string | number>, locale: Locale): Record<string, string | number> {
+  const out: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (key === 'weekday' && typeof value === 'number') {
+      out[key] = new Intl.DateTimeFormat(INTL_LOCALE[locale], { weekday: 'long', timeZone: 'UTC' }).format(
+        new Date(Date.UTC(2026, 10, 1 + value)),
+      );
+    } else if (typeof value === 'string' && ISO_DATE_PARAM.test(value)) out[key] = formatDate(value, locale);
+    else if (typeof value === 'string' && STORED_WEEK_PARAM.test(value)) out[key] = formatIsoWeek(value, locale);
+    else out[key] = value;
+  }
+  return out;
+}

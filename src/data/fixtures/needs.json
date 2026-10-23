@@ -1,0 +1,1200 @@
+[
+  {
+    "id": "8ace01e8-6b79-435f-83d4-083760f6f828",
+    "need_code": "BES-DEMO-001",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "position_label": "Poste 1",
+    "weekly_hours": 7,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-001",
+      "MAG-DEMO-012",
+      "MAG-DEMO-023"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-05",
+    "modified_at": "2026-10-05",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-10-26",
+        "end_date": "2026-10-31",
+        "start_week": "2026-S44",
+        "end_week": "2026-S44"
+      }
+    ]
+  },
+  {
+    "id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
+    "need_code": "BES-DEMO-002",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "position_label": "Poste 2",
+    "weekly_hours": 7,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-001",
+      "MAG-DEMO-012"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-06",
+    "modified_at": "2026-10-06",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-07",
+        "end_date": "2026-12-19",
+        "start_week": "2026-S50",
+        "end_week": "2026-S51"
+      }
+    ]
+  },
+  {
+    "id": "42595953-7ee4-41a8-82da-4ecbf3797723",
+    "need_code": "BES-DEMO-003",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "position_label": "Poste 3",
+    "weekly_hours": 7,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-001",
+      "MAG-DEMO-012"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-07",
+    "modified_at": "2026-10-07",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-01-18",
+        "end_date": "2027-02-06",
+        "start_week": "2027-S03",
+        "end_week": "2027-S05"
+      }
+    ]
+  },
+  {
+    "id": "6d8ee589-2915-40cf-81d0-784a3e902924",
+    "need_code": "BES-DEMO-004",
+    "dispositif": "second_placement",
+    "campaign_code": "CMP-DEMO-04",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "position_label": "Poste 4",
+    "weekly_hours": 21,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-002"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-08",
+    "modified_at": "2026-10-08",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-02",
+        "end_date": "2026-11-14",
+        "start_week": "2026-S45",
+        "end_week": "2026-S46"
+      }
+    ]
+  },
+  {
+    "id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
+    "need_code": "BES-DEMO-005",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "position_label": "Poste 5",
+    "weekly_hours": 28,
+    "priority": 2,
+    "days": [
+      2,
+      4
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-002",
+      "MAG-DEMO-013",
+      "MAG-DEMO-024"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-09",
+    "modified_at": "2026-10-09",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-14",
+        "end_date": "2027-01-02",
+        "start_week": "2026-S51",
+        "end_week": "2026-S53"
+      }
+    ]
+  },
+  {
+    "id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
+    "need_code": "BES-DEMO-006",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "position_label": "Poste 6",
+    "weekly_hours": 7,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-002",
+      "MAG-DEMO-013",
+      "MAG-DEMO-024"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-10",
+    "modified_at": "2026-10-10",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-01-25",
+        "end_date": "2027-02-20",
+        "start_week": "2027-S04",
+        "end_week": "2027-S07"
+      }
+    ]
+  },
+  {
+    "id": "2ff343b6-8b83-43e0-9748-ef92e4908bf7",
+    "need_code": "BES-DEMO-007",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "position_label": "Poste 7",
+    "weekly_hours": 35,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-003"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-11",
+    "modified_at": "2026-10-11",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-09",
+        "end_date": "2026-11-28",
+        "start_week": "2026-S46",
+        "end_week": "2026-S48"
+      }
+    ]
+  },
+  {
+    "id": "5e4a574c-a83e-46c6-9e46-aee174e74e2c",
+    "need_code": "BES-DEMO-008",
+    "dispositif": "second_placement",
+    "campaign_code": "CMP-DEMO-04",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "position_label": "Poste 1",
+    "weekly_hours": 7,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-003"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-12",
+    "modified_at": "2026-10-12",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-21",
+        "end_date": "2027-01-16",
+        "start_week": "2026-S52",
+        "end_week": "2027-S02"
+      }
+    ]
+  },
+  {
+    "id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
+    "need_code": "BES-DEMO-009",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "position_label": "Poste 2",
+    "weekly_hours": 21,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-003"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-13",
+    "modified_at": "2026-10-13",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-02-01",
+        "end_date": "2027-02-06",
+        "start_week": "2027-S05",
+        "end_week": "2027-S05"
+      }
+    ]
+  },
+  {
+    "id": "1b18c73b-e07c-442e-ae98-152e8d05d167",
+    "need_code": "BES-DEMO-010",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "position_label": "Poste 3",
+    "weekly_hours": 10,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-004"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-14",
+    "modified_at": "2026-10-14",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-10-26",
+        "end_date": "2026-11-21",
+        "start_week": "2026-S44",
+        "end_week": "2026-S47"
+      }
+    ]
+  },
+  {
+    "id": "f6a96563-120c-4d65-9e7a-3210ffef9a2c",
+    "need_code": "BES-DEMO-011",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "position_label": "Poste 4",
+    "weekly_hours": 28,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-004",
+      "MAG-DEMO-015",
+      "MAG-DEMO-026"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-15",
+    "modified_at": "2026-10-15",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-07",
+        "end_date": "2026-12-12",
+        "start_week": "2026-S50",
+        "end_week": "2026-S50"
+      }
+    ]
+  },
+  {
+    "id": "279b4d71-79bb-49f1-b4fc-89e919fb4b60",
+    "need_code": "BES-DEMO-012",
+    "dispositif": "second_placement",
+    "campaign_code": "CMP-DEMO-04",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "position_label": "Poste 5",
+    "weekly_hours": 20,
+    "priority": 3,
+    "days": [
+      2,
+      4
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-004",
+      "MAG-DEMO-015",
+      "MAG-DEMO-026"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-16",
+    "modified_at": "2026-10-16",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-01-18",
+        "end_date": "2027-01-30",
+        "start_week": "2027-S03",
+        "end_week": "2027-S04"
+      }
+    ]
+  },
+  {
+    "id": "d83eed26-f435-4159-88ab-defaf585cf62",
+    "need_code": "BES-DEMO-013",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "position_label": "Poste 6",
+    "weekly_hours": 35,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-005",
+      "MAG-DEMO-016",
+      "MAG-DEMO-027"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-17",
+    "modified_at": "2026-10-17",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-02",
+        "end_date": "2026-11-07",
+        "start_week": "2026-S45",
+        "end_week": "2026-S45"
+      }
+    ]
+  },
+  {
+    "id": "5aa349b8-da8d-4449-8230-f0ad13ef6f1a",
+    "need_code": "BES-DEMO-014",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "position_label": "Poste 7",
+    "weekly_hours": 10,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-005",
+      "MAG-DEMO-016"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-18",
+    "modified_at": "2026-10-18",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-14",
+        "end_date": "2026-12-26",
+        "start_week": "2026-S51",
+        "end_week": "2026-S52"
+      }
+    ]
+  },
+  {
+    "id": "f375f632-3e70-4138-8e31-910688f13b70",
+    "need_code": "BES-DEMO-015",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "position_label": "Poste 1",
+    "weekly_hours": 21,
+    "priority": 3,
+    "days": [
+      1,
+      3,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-005",
+      "MAG-DEMO-016"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-19",
+    "modified_at": "2026-10-19",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-01-25",
+        "end_date": "2027-02-13",
+        "start_week": "2027-S04",
+        "end_week": "2027-S06"
+      }
+    ]
+  },
+  {
+    "id": "4a06f7dd-ac15-46bd-bbc4-a5fbe62c164b",
+    "need_code": "BES-DEMO-016",
+    "dispositif": "second_placement",
+    "campaign_code": "CMP-DEMO-04",
+    "sector_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "position_label": "Poste 2",
+    "weekly_hours": 21,
+    "priority": 1,
+    "days": [
+      1,
+      3,
+      5
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-006",
+      "MAG-DEMO-017",
+      "MAG-DEMO-028"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-20",
+    "modified_at": "2026-10-20",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-09",
+        "end_date": "2026-11-21",
+        "start_week": "2026-S46",
+        "end_week": "2026-S47"
+      }
+    ]
+  },
+  {
+    "id": "5692b42c-40de-47c3-8a51-caefad210edc",
+    "need_code": "BES-DEMO-017",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "position_label": "Poste 3",
+    "weekly_hours": 7,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-006"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-21",
+    "modified_at": "2026-10-21",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-21",
+        "end_date": "2027-01-09",
+        "start_week": "2026-S52",
+        "end_week": "2027-S01"
+      }
+    ]
+  },
+  {
+    "id": "f74789e3-9bae-456f-807b-305fa5163a35",
+    "need_code": "BES-DEMO-018",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "position_label": "Poste 4",
+    "weekly_hours": 14,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-007"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-22",
+    "modified_at": "2026-10-22",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-10-26",
+        "end_date": "2026-11-14",
+        "start_week": "2026-S44",
+        "end_week": "2026-S46"
+      }
+    ]
+  },
+  {
+    "id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
+    "need_code": "BES-DEMO-019",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "position_label": "Poste 5",
+    "weekly_hours": 21,
+    "priority": 1,
+    "days": [
+      2,
+      4
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-007"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-05",
+    "modified_at": "2026-10-05",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-07",
+        "end_date": "2027-01-02",
+        "start_week": "2026-S50",
+        "end_week": "2026-S53"
+      }
+    ]
+  },
+  {
+    "id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
+    "need_code": "BES-DEMO-020",
+    "dispositif": "second_placement",
+    "campaign_code": "CMP-DEMO-04",
+    "sector_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "position_label": "Poste 6",
+    "weekly_hours": 35,
+    "priority": 2,
+    "days": [
+      2,
+      4
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-008"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-06",
+    "modified_at": "2026-10-06",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-02",
+        "end_date": "2026-11-28",
+        "start_week": "2026-S45",
+        "end_week": "2026-S48"
+      }
+    ]
+  },
+  {
+    "id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
+    "need_code": "BES-DEMO-021",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "position_label": "Poste 7",
+    "weekly_hours": 14,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-008",
+      "MAG-DEMO-019"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-07",
+    "modified_at": "2026-10-07",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-14",
+        "end_date": "2026-12-19",
+        "start_week": "2026-S51",
+        "end_week": "2026-S51"
+      }
+    ]
+  },
+  {
+    "id": "49ccd442-d6eb-432f-8a29-632601a068b0",
+    "need_code": "BES-DEMO-022",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "position_label": "Poste 1",
+    "weekly_hours": 10,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-009"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-08",
+    "modified_at": "2026-10-08",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-09",
+        "end_date": "2026-11-14",
+        "start_week": "2026-S46",
+        "end_week": "2026-S46"
+      }
+    ]
+  },
+  {
+    "id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
+    "need_code": "BES-DEMO-023",
+    "dispositif": "hourly_merch",
+    "campaign_code": "CMP-DEMO-03",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "position_label": "Poste 2",
+    "weekly_hours": 7,
+    "priority": 2,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-009"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-09",
+    "modified_at": "2026-10-09",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-21",
+        "end_date": "2027-01-02",
+        "start_week": "2026-S52",
+        "end_week": "2026-S53"
+      }
+    ]
+  },
+  {
+    "id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
+    "need_code": "BES-DEMO-024",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "position_label": "Poste 3",
+    "weekly_hours": 20,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-010"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-10",
+    "modified_at": "2026-10-10",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-12-28",
+        "end_date": "2027-01-03",
+        "start_week": "2026-S53",
+        "end_week": "2026-S53"
+      }
+    ]
+  },
+  {
+    "id": "40f4f75b-50f6-46cb-beb7-504e506a2a76",
+    "need_code": "BES-DEMO-025",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "position_label": "Poste 4",
+    "weekly_hours": 20,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "09:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-010",
+      "MAG-DEMO-021"
+    ],
+    "store_count": 2,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-11",
+    "modified_at": "2026-10-11",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-01-04",
+        "end_date": "2027-01-10",
+        "start_week": "2027-S01",
+        "end_week": "2027-S01"
+      }
+    ]
+  },
+  {
+    "id": "9b36ea57-341e-435e-82a8-e9703037bf02",
+    "need_code": "BES-DEMO-026",
+    "dispositif": null,
+    "campaign_code": null,
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "position_label": null,
+    "weekly_hours": null,
+    "priority": null,
+    "days": [],
+    "hours_slot": null,
+    "store_codes": [],
+    "store_count": 0,
+    "client_comment": null,
+    "need_state": "draft",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-12",
+    "modified_at": "2026-10-12",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": []
+  },
+  {
+    "id": "365c9083-373e-47cb-ac7c-aee7eac707bf",
+    "need_code": "BES-DEMO-027",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "position_label": "Poste 6",
+    "weekly_hours": 28,
+    "priority": 3,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-011",
+      "MAG-DEMO-022",
+      "MAG-DEMO-033"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-13",
+    "modified_at": "2026-10-13",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-02",
+        "end_date": "2026-11-15",
+        "start_week": "2026-S45",
+        "end_week": "2026-S46"
+      },
+      {
+        "period_no": 2,
+        "start_date": "2026-11-23",
+        "end_date": "2026-11-29",
+        "start_week": "2026-S48",
+        "end_week": "2026-S48"
+      }
+    ]
+  },
+  {
+    "id": "c2b86347-6222-454b-b19f-65a49e341066",
+    "need_code": "BES-DEMO-028",
+    "dispositif": "seasonal",
+    "campaign_code": "CMP-DEMO-02",
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "position_label": "Poste 7",
+    "weekly_hours": 28,
+    "priority": 1,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "13:00-17:00",
+    "store_codes": [
+      "MAG-DEMO-011",
+      "MAG-DEMO-022",
+      "MAG-DEMO-033"
+    ],
+    "store_count": 3,
+    "client_comment": null,
+    "need_state": "submitted",
+    "position_status": null,
+    "entered_by_profile": "agency_operator",
+    "on_behalf": true,
+    "created_at": "2026-10-14",
+    "modified_at": "2026-10-14",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2026-11-30",
+        "end_date": "2026-12-13",
+        "start_week": "2026-S49",
+        "end_week": "2026-S50"
+      }
+    ]
+  },
+  {
+    "id": "35e41d90-2deb-471a-92c3-a583d3303d47",
+    "need_code": "BES-DEMO-029",
+    "dispositif": "permanent",
+    "campaign_code": "CMP-DEMO-01",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "position_label": "Poste 1",
+    "weekly_hours": null,
+    "priority": null,
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "hours_slot": "08:00-12:00",
+    "store_codes": [
+      "MAG-DEMO-009"
+    ],
+    "store_count": 1,
+    "client_comment": null,
+    "need_state": "draft",
+    "position_status": null,
+    "entered_by_profile": "rs",
+    "on_behalf": false,
+    "created_at": "2026-10-15",
+    "modified_at": "2026-10-15",
+    "record_version": 1,
+    "source_record_id": null,
+    "is_demo": true,
+    "periods": [
+      {
+        "period_no": 1,
+        "start_date": "2027-02-01",
+        "end_date": "2027-02-07",
+        "start_week": "2027-S05",
+        "end_week": "2027-S05"
+      }
+    ]
+  }
+]

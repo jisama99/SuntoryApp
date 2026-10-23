@@ -1,0 +1,38 @@
+[
+  {
+    "code": "CMP-DEMO-01",
+    "dispositif": "permanent",
+    "label_fr": "Campagne Test Permanent",
+    "label_en": "Permanent Test Campaign",
+    "window_start": "2026-01-01",
+    "window_end": "2027-12-31",
+    "is_demo": true
+  },
+  {
+    "code": "CMP-DEMO-02",
+    "dispositif": "seasonal",
+    "label_fr": "Campagne Test Saisonnier",
+    "label_en": "Seasonal Test Campaign",
+    "window_start": "2026-11-02",
+    "window_end": "2027-01-10",
+    "is_demo": true
+  },
+  {
+    "code": "CMP-DEMO-03",
+    "dispositif": "hourly_merch",
+    "label_fr": "Campagne Test Merch horaire",
+    "label_en": "Hourly Merchandising Test Campaign",
+    "window_start": "2026-09-01",
+    "window_end": "2027-06-30",
+    "is_demo": true
+  },
+  {
+    "code": "CMP-DEMO-04",
+    "dispositif": "second_placement",
+    "label_fr": "Campagne Test Second placement",
+    "label_en": "Second Placement Test Campaign",
+    "window_start": "2026-10-01",
+    "window_end": "2027-03-31",
+    "is_demo": true
+  }
+]

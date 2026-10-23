@@ -7,11 +7,13 @@ export interface Column<T> {
   numeric?: boolean;
 }
 
-export function DataTable<T>({ caption, columns, rows, rowKey }: {
+export function DataTable<T>({ caption, columns, rows, rowKey, rowId }: {
   caption: string;
   columns: Column<T>[];
   rows: T[];
   rowKey: (row: T) => string;
+  /** Ancre de ligne (liens vers un besoin existant). */
+  rowId?: (row: T) => string;
 }) {
   return (
     <div className="overflow-x-auto rounded-card bg-surface shadow-card">
@@ -28,7 +30,7 @@ export function DataTable<T>({ caption, columns, rows, rowKey }: {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={rowKey(row)} className="even:bg-alt/60">
+            <tr key={rowKey(row)} id={rowId?.(row)} className="even:bg-alt/60 target:bg-sel">
               {columns.map((c) => (
                 <td key={c.key} className={`px-4 py-3 ${c.numeric ? 'text-right tabular-nums' : ''}`}>
                   {c.render(row)}

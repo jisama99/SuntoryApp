@@ -188,5 +188,229 @@
     "system": "Système",
     "light": "Clair",
     "dark": "Sombre"
+  },
+  "picker": {
+    "choose": "Choisir une date",
+    "choosePeriod": "Choisir la période",
+    "chooseWeek": "Choisir une semaine",
+    "rangeValue": "Du {start} au {end}",
+    "rangeStartOnly": "À partir du {start}, choisissez le dernier jour",
+    "rangeHint": "Choisissez le premier jour puis le dernier jour.",
+    "weekValue": "{week}, du {from} au {to}",
+    "dialogDate": "Calendrier de sélection d'une date",
+    "dialogRange": "Calendrier de sélection d'une période",
+    "dialogWeek": "Calendrier de sélection d'une semaine",
+    "prevMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "weekShort": "S",
+    "isoWeek": "Numéro de semaine ISO",
+    "isoWeekNumber": "Semaine {week}",
+    "pickWeek": "Choisir la semaine {week}",
+    "today": "aujourd'hui",
+    "goToday": "Aller à aujourd'hui",
+    "legend": "Flèches : changer de jour. Début et Fin : début et fin de semaine. Page précédente et suivante : changer de mois.",
+    "holidayShort": "F",
+    "reason": {
+      "outOfBounds": "Hors des dates autorisées, du {min} au {max}",
+      "closedWeek": "Semaine {week} clôturée, seule l'agence peut la rouvrir",
+      "holiday": "Jour férié : {name}"
+    },
+    "holiday": {
+      "new_year": "Jour de l'an",
+      "easter_monday": "Lundi de Pâques",
+      "labour_day": "Fête du travail",
+      "victory_1945": "Victoire 1945",
+      "ascension": "Ascension",
+      "whit_monday": "Lundi de Pentecôte",
+      "bastille_day": "Fête nationale",
+      "assumption": "Assomption",
+      "all_saints": "Toussaint",
+      "armistice": "Armistice 1918",
+      "christmas": "Noël"
+    }
+  },
+  "weekdays": {
+    "monToFri": "Lun à ven",
+    "monToSat": "Lun à sam",
+    "all": "Tous",
+    "none": "Aucun",
+    "sundayOff": "Le dimanche n'est pas proposé par ce dispositif."
+  },
+  "dispositif": {
+    "permanent": "Permanent",
+    "seasonal": "Saisonnier",
+    "hourly_merch": "Merch horaire",
+    "second_placement": "Second placement"
+  },
+  "gravity": {
+    "blocking": "Bloquant",
+    "alert": "Alerte",
+    "info": "Information"
+  },
+  "needs": {
+    "new": "Nouveau besoin",
+    "complete": "Compléter le besoin {code}",
+    "readOnly": "Votre profil consulte les besoins de son périmètre. La saisie est réservée aux RS et à l'agence.",
+    "empty": "Aucun besoin dans votre périmètre.",
+    "caption": "Besoins de votre périmètre",
+    "cols": {
+      "need": "Besoin",
+      "sector": "Secteur",
+      "dispositif": "Dispositif",
+      "period": "Période",
+      "hours": "Heures par semaine",
+      "state": "Statut",
+      "actions": "Actions"
+    },
+    "list": {
+      "noPeriod": "Période à compléter",
+      "toComplete": "À compléter",
+      "period": "P{n} : du {start} au {end} ({from} à {to})",
+      "periodOneWeek": "P{n} : du {start} au {end} ({week})",
+      "onBehalf": "Saisi par l'agence pour le RS"
+    },
+    "state": {
+      "draft": "Brouillon",
+      "submitted": "Soumis"
+    },
+    "tiles": {
+      "submitted": "Besoins soumis",
+      "hours": "Heures par semaine soumises",
+      "drafts": "Brouillons",
+      "draftsNote": "Exclus des totaux"
+    },
+    "actions": {
+      "complete": "Compléter",
+      "duplicate": "Dupliquer"
+    }
+  },
+  "form": {
+    "note": "Un besoin incomplet est enregistré en brouillon et reste exclu des totaux. Les dates se choisissent dans le calendrier.",
+    "sections": {
+      "general": "Besoin",
+      "days": "Jours",
+      "stores": "Magasins et commentaire"
+    },
+    "fields": {
+      "sector": "Secteur",
+      "dispositif": "Dispositif",
+      "campaign": "Campagne",
+      "position": "Poste",
+      "positionPrefix": "Poste",
+      "priority": "Priorité",
+      "priorityN": "Priorité {n}",
+      "weeklyHours": "Heures par semaine",
+      "hoursN": "{n} h",
+      "hoursSlot": "Horaires",
+      "dates": "Période (dates)",
+      "startWeek": "Semaine de début",
+      "endWeek": "Semaine de fin",
+      "days": "Jours travaillés",
+      "stores": "Magasins concernés",
+      "comment": "Commentaire de la cliente"
+    },
+    "hints": {
+      "campaign": "Une campagne relève d'un seul dispositif.",
+      "hoursSlot": "Par exemple 09:00-12:00.",
+      "comment": "N'indiquez aucune donnée personnelle ni motif médical."
+    },
+    "periodN": "Période {n}",
+    "addPeriod": "Ajouter une seconde période",
+    "removePeriod": "Retirer la période 2",
+    "choose": "Choisir",
+    "noStores": "Aucun magasin n'est rattaché à ce secteur.",
+    "save": "Enregistrer le besoin",
+    "saving": "Enregistrement en cours",
+    "back": "Retour à la liste",
+    "goList": "Voir la liste des besoins",
+    "invalid": "Les données envoyées ne sont pas valides.",
+    "confirm": "Confirmer et enregistrer",
+    "confirmNote": "Ces alertes ne bloquent pas l'enregistrement. Vous pouvez ajuster les dates ou confirmer.",
+    "merge": "Fusionner avec le besoin existant",
+    "adjust": "Ajuster la saisie",
+    "correctWeek": "Corriger la semaine",
+    "derivedHint": "Les semaines se déduisent des dates.",
+    "applyWeek": "Appliquer {week}",
+    "openExisting": "Ouvrir le besoin existant",
+    "otherScope": "Le besoin concerné se trouve hors de votre périmètre.",
+    "stillMissing": "Champs à compléter : {fields}.",
+    "required": "À compléter",
+    "saved": {
+      "draft": {
+        "title": "Brouillon enregistré",
+        "body": "Le besoin {code} est enregistré en brouillon. Il reste exclu des totaux tant qu'il est incomplet."
+      },
+      "submit": {
+        "title": "Besoin soumis",
+        "body": "Le besoin {code} est enregistré et compté dans les totaux."
+      },
+      "merge": {
+        "title": "Besoin fusionné",
+        "body": "La période du besoin {code} a été étendue. Aucun nouveau besoin n'a été créé."
+      }
+    },
+    "refusal": {
+      "forbidden": "Votre profil ne peut pas saisir de besoin.",
+      "out_of_scope": "Ce secteur est hors de votre périmètre.",
+      "invalid_store": "Un magasin choisi n'appartient pas à ce secteur.",
+      "campaign_mismatch": "La campagne choisie relève d'un autre dispositif.",
+      "not_found": "Le besoin demandé est introuvable.",
+      "not_draft": "Seul un brouillon peut être complété ici.",
+      "no_period": "Ce besoin n'a pas de période à décaler.",
+      "blocked": "L'enregistrement est refusé : corrigez les points bloquants ci-dessous."
+    },
+    "missing": {
+      "dispositif": "Dispositif",
+      "campaign_code": "Campagne",
+      "position_label": "Poste",
+      "weekly_hours": "Heures par semaine",
+      "priority": "Priorité",
+      "period": "Dates de la période",
+      "days": "Jours travaillés",
+      "hours_slot": "Horaires"
+    }
+  },
+  "duplicate": {
+    "title": "Dupliquer le besoin {code}",
+    "hint": "Choisissez le premier jour de la copie. La durée de chaque période est conservée.",
+    "noPeriod": "Ce besoin n'a pas de période à décaler.",
+    "newStart": "Nouveau premier jour",
+    "submit": "Dupliquer",
+    "done": "La copie {code} est enregistrée."
+  },
+  "rules": {
+    "W1": "La semaine {week} n'existe pas : l'année en compte {max} au plus.",
+    "W2": "Le numéro {week} vient du calcul par défaut d'un tableur. La semaine ISO de cette date est {expected}.",
+    "W3": "La semaine {week} utilise l'année civile. L'année ISO de cette date donne {expected}.",
+    "W4": "Le {date} appartient à la semaine ISO {week}, d'une année différente de l'année civile {year}.",
+    "W5": "La date {date} n'appartient pas à la semaine {week}. La semaine de cette date est {expected}.",
+    "W6": "La fin ({end}) précède le début ({start}).",
+    "W7": "La période couvre plusieurs semaines jusqu'à {endWeek} et seule la semaine {week} est renseignée.",
+    "W8": "La mission est à cheval sur deux semaines. La semaine retenue est celle du début : {week}.",
+    "W9": "Ni date ni semaine : le besoin reste un brouillon à compléter et il est exclu des totaux.",
+    "W10": "La semaine {week} est déjà écoulée (semaine en cours : {current}).",
+    "W11": "Le début dépasse l'horizon de saisie de {weeks} semaines.",
+    "W12": "La semaine {week} est clôturée. Seule l'agence peut la rouvrir.",
+    "W13": "La saisie « {raw} » a été normalisée en {week}.",
+    "W14": "La date « {raw} » peut avoir le jour et le mois permutés.",
+    "W15": "La date « {raw} » n'est pas reconnue.",
+    "W16": "Le début ({date}) tombe un jour non ouvré.",
+    "W17": "Le début tombe en milieu de semaine : {days, plural, one {# jour} other {# jours}} sur {of} en semaine {week}.",
+    "W18": "La période 2 commence le {start}, avant la fin de la période 1 ({end}).",
+    "W19": "La période 2 ({start}) précède la période 1 ({other}).",
+    "W20": "La mission commence avant la date de saisie ou hors de la fenêtre de la campagne.",
+    "W21": "Le besoin saisonnier sort de la fenêtre de la campagne ({start} au {end}).",
+    "W22": "Un autre besoin ({code}) du même secteur et du même type occupe déjà la semaine {week}.",
+    "D1": "Doublon exact du besoin {code} : même secteur, même type, mêmes dates et mêmes heures.",
+    "D2": "Les dates chevauchent en partie le besoin {code}.",
+    "D3": "La période est incluse dans celle du besoin {code}, ou l'inverse. Probable doublon ou précision.",
+    "D4": "La période prolonge sans interruption le besoin {code}. Prolonger le besoin existant est possible.",
+    "D5": "Le magasin {store} figure déjà dans le besoin {code} d'un autre secteur sur la même période.",
+    "D6": "Même intitulé que le besoin {code} sur une autre période. Une récurrence reste possible.",
+    "D7": "Ce besoin est déjà présent ({code}) : mise à jour plutôt que création.",
+    "J1": "Aucun des jours cochés ne tombe entre le {start} et le {end}.",
+    "J2": "Le jour coché ({weekday}) est férié sur toute la période.",
+    "J3": "Le jour {weekday} n'est pas proposé par ce dispositif.",
+    "B1": "Les dates doivent se situer entre le {min} et le {max}."
   }
 }
