@@ -11,4 +11,11 @@ write('zones.json', f.zones);
 write('profiles.json', f.profiles);
 write('alerts.json', f.alerts);
 write('clock.json', f.clock);
-console.log(`Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes.`);
+write('campaigns.json', f.campaigns);
+write('stores.json', f.stores);
+write('week-closures.json', f.weekClosures);
+write('needs.json', f.needs);
+write('events.json', f.events);
+console.log(
+  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements.`,
+);

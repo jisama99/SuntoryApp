@@ -19,3 +19,9 @@ export function ZoneLabel({ zone }: { zone: Zone }) {
     </span>
   );
 }
+
+/** Version texte (options de liste) : libellé de zone, responsable, puis code, dans le même ordre que ZoneLabel. */
+export function zoneText(zone: Zone, locale: Locale): string {
+  const label = locale === 'en' ? zone.label_en : zone.label_fr;
+  return `${label} · ${zone.responsible_name} · ${zone.code}`;
+}

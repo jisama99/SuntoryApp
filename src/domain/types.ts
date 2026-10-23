@@ -38,3 +38,32 @@ export const MENU_KEYS = [
 export type MenuKey = (typeof MENU_KEYS)[number];
 
 export type Scope = { kind: 'all' } | { kind: ZoneKind; ids: string[] };
+
+/** Dispositifs (H1, D128) : anciennement les valeurs du champ `campaign`. */
+export const DISPOSITIFS = ['permanent', 'seasonal', 'hourly_merch', 'second_placement'] as const;
+export type Dispositif = (typeof DISPOSITIFS)[number];
+
+/** Statut du besoin saisi (dimension distincte du statut de poste, STATUTS_ET_ETATS.md). */
+export const NEED_STATES = ['draft', 'submitted'] as const;
+export type NeedState = (typeof NEED_STATES)[number];
+
+/** Les neuf statuts de poste validés le 23/10/2026 (D54). Renseignés à partir du lot A3 : nul en A2a. */
+export const POSITION_STATUSES = [
+  'to_recruit',
+  'recruiting',
+  'proposed',
+  'approved',
+  'filled',
+  'withdrawal',
+  'termination',
+  'cancelled',
+  'refused',
+] as const;
+export type PositionStatus = (typeof POSITION_STATUSES)[number];
+
+/** Événements métier émis par le lot A2a (catalogue du doc 26 §3, D91). */
+export const EVENT_CODES = ['EV-01', 'EV-02', 'EV-03', 'EV-05'] as const;
+export type EventCode = (typeof EVENT_CODES)[number];
+
+/** Jours de la semaine : 1 = lundi … 7 = dimanche. */
+export const WEEKDAYS = [1, 2, 3, 4, 5, 6, 7] as const;

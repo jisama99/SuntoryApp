@@ -1,5 +1,5 @@
 import {
-  Bell, ChevronDown, CircleCheck, Circle, ClipboardCheck, ClipboardList, Flag, GitMerge, House, Inbox,
+  Bell, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Circle, ClipboardCheck, ClipboardList, Flag, GitMerge, House, Inbox,
   Info, Languages, LayoutDashboard, LoaderCircle, Menu, OctagonAlert, Settings, ShieldCheck, Store,
   TriangleAlert, UserRound, Wallet, X, Sun, Moon, Monitor,
 } from 'lucide-react';
@@ -26,6 +26,9 @@ export const MENU_ICONS: Record<MenuKey, LucideIcon> = {
 
 export const UI_ICONS = {
   chevronDown: ChevronDown,
+  chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
+  calendar: CalendarDays,
   close: X,
   menu: Menu,
   language: Languages,

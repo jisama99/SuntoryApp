@@ -1,0 +1,322 @@
+[
+  {
+    "id": "265f6346-11a6-44cf-aea6-97eb7406d21b",
+    "code": "MAG-DEMO-001",
+    "label_fr": "Magasin Test 001",
+    "label_en": "Test Store 001",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "is_demo": true
+  },
+  {
+    "id": "37910cb0-3f23-41eb-9613-0d522dcf00f0",
+    "code": "MAG-DEMO-002",
+    "label_fr": "Magasin Test 002",
+    "label_en": "Test Store 002",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "is_demo": true
+  },
+  {
+    "id": "8492601c-742a-4cac-93f7-fcf0d56d6e17",
+    "code": "MAG-DEMO-003",
+    "label_fr": "Magasin Test 003",
+    "label_en": "Test Store 003",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "is_demo": true
+  },
+  {
+    "id": "c75c8a88-f5a2-4c2a-a1fe-0c8b16ab5d40",
+    "code": "MAG-DEMO-004",
+    "label_fr": "Magasin Test 004",
+    "label_en": "Test Store 004",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "is_demo": true
+  },
+  {
+    "id": "d783e305-5e8b-4e53-845f-af3dba705380",
+    "code": "MAG-DEMO-005",
+    "label_fr": "Magasin Test 005",
+    "label_en": "Test Store 005",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "is_demo": true
+  },
+  {
+    "id": "f2a74072-5bf0-46d1-b711-66fbbef93be3",
+    "code": "MAG-DEMO-006",
+    "label_fr": "Magasin Test 006",
+    "label_en": "Test Store 006",
+    "sector_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "is_demo": true
+  },
+  {
+    "id": "fdb41cc9-f296-4f5c-b76c-c6c6f301bb6b",
+    "code": "MAG-DEMO-007",
+    "label_fr": "Magasin Test 007",
+    "label_en": "Test Store 007",
+    "sector_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "is_demo": true
+  },
+  {
+    "id": "8029a2d7-56ce-4c84-ac30-d2e52720201a",
+    "code": "MAG-DEMO-008",
+    "label_fr": "Magasin Test 008",
+    "label_en": "Test Store 008",
+    "sector_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "is_demo": true
+  },
+  {
+    "id": "8b6e17cb-3e24-4cc3-83e0-7c0e6fcc482e",
+    "code": "MAG-DEMO-009",
+    "label_fr": "Magasin Test 009",
+    "label_en": "Test Store 009",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "is_demo": true
+  },
+  {
+    "id": "5b9068d5-59b7-497d-a94a-17c59f11cdb2",
+    "code": "MAG-DEMO-010",
+    "label_fr": "Magasin Test 010",
+    "label_en": "Test Store 010",
+    "sector_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "is_demo": true
+  },
+  {
+    "id": "51a6ed44-80f2-4af6-a945-3711cdb1615a",
+    "code": "MAG-DEMO-011",
+    "label_fr": "Magasin Test 011",
+    "label_en": "Test Store 011",
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "is_demo": true
+  },
+  {
+    "id": "42a21595-08f2-434b-837f-c9a06cf416bb",
+    "code": "MAG-DEMO-012",
+    "label_fr": "Magasin Test 012",
+    "label_en": "Test Store 012",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "is_demo": true
+  },
+  {
+    "id": "da5ff199-e714-47aa-aabf-1571056f12a4",
+    "code": "MAG-DEMO-013",
+    "label_fr": "Magasin Test 013",
+    "label_en": "Test Store 013",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "is_demo": true
+  },
+  {
+    "id": "b2d72654-98e3-47ed-8241-cb05c2d59fe5",
+    "code": "MAG-DEMO-014",
+    "label_fr": "Magasin Test 014",
+    "label_en": "Test Store 014",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "is_demo": true
+  },
+  {
+    "id": "38941796-a1c7-459f-a290-b4137e73a75b",
+    "code": "MAG-DEMO-015",
+    "label_fr": "Magasin Test 015",
+    "label_en": "Test Store 015",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "is_demo": true
+  },
+  {
+    "id": "10b82594-648f-4e13-ad2c-ed9bcca7e1b7",
+    "code": "MAG-DEMO-016",
+    "label_fr": "Magasin Test 016",
+    "label_en": "Test Store 016",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "is_demo": true
+  },
+  {
+    "id": "832e7baf-b0f8-468c-904a-0109742a6eae",
+    "code": "MAG-DEMO-017",
+    "label_fr": "Magasin Test 017",
+    "label_en": "Test Store 017",
+    "sector_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "is_demo": true
+  },
+  {
+    "id": "380f30d8-6506-4b79-b766-4406049b4631",
+    "code": "MAG-DEMO-018",
+    "label_fr": "Magasin Test 018",
+    "label_en": "Test Store 018",
+    "sector_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "is_demo": true
+  },
+  {
+    "id": "08c641f3-411e-4bc0-aead-0bda0bfbdf8f",
+    "code": "MAG-DEMO-019",
+    "label_fr": "Magasin Test 019",
+    "label_en": "Test Store 019",
+    "sector_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "is_demo": true
+  },
+  {
+    "id": "4794a299-4999-4d0f-9a54-3fce3b16685a",
+    "code": "MAG-DEMO-020",
+    "label_fr": "Magasin Test 020",
+    "label_en": "Test Store 020",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "is_demo": true
+  },
+  {
+    "id": "698ac437-31dc-458b-afb2-d605cd82b457",
+    "code": "MAG-DEMO-021",
+    "label_fr": "Magasin Test 021",
+    "label_en": "Test Store 021",
+    "sector_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "is_demo": true
+  },
+  {
+    "id": "5726daa5-c296-49ff-b7e8-238f48665da0",
+    "code": "MAG-DEMO-022",
+    "label_fr": "Magasin Test 022",
+    "label_en": "Test Store 022",
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "is_demo": true
+  },
+  {
+    "id": "dabb2988-031f-403c-8fe8-5d23949f6c6e",
+    "code": "MAG-DEMO-023",
+    "label_fr": "Magasin Test 023",
+    "label_en": "Test Store 023",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "is_demo": true
+  },
+  {
+    "id": "ebdc6536-eb7d-46e7-8623-f2eee997bec1",
+    "code": "MAG-DEMO-024",
+    "label_fr": "Magasin Test 024",
+    "label_en": "Test Store 024",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "is_demo": true
+  },
+  {
+    "id": "7a09e400-670c-49e4-a835-dd318322859f",
+    "code": "MAG-DEMO-025",
+    "label_fr": "Magasin Test 025",
+    "label_en": "Test Store 025",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "is_demo": true
+  },
+  {
+    "id": "11ce776a-48ff-4da0-bef3-d436fdc4f587",
+    "code": "MAG-DEMO-026",
+    "label_fr": "Magasin Test 026",
+    "label_en": "Test Store 026",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "is_demo": true
+  },
+  {
+    "id": "8e4009ca-0f70-4235-aa16-0df942e31118",
+    "code": "MAG-DEMO-027",
+    "label_fr": "Magasin Test 027",
+    "label_en": "Test Store 027",
+    "sector_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "is_demo": true
+  },
+  {
+    "id": "131c6c8f-c0fb-454c-b3b0-9b2d670f191e",
+    "code": "MAG-DEMO-028",
+    "label_fr": "Magasin Test 028",
+    "label_en": "Test Store 028",
+    "sector_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "is_demo": true
+  },
+  {
+    "id": "f8f46de7-0d3e-4573-9012-ef2fd39c0c46",
+    "code": "MAG-DEMO-029",
+    "label_fr": "Magasin Test 029",
+    "label_en": "Test Store 029",
+    "sector_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "is_demo": true
+  },
+  {
+    "id": "0a485a6d-06ab-4b6c-b85e-9a23b808b9cb",
+    "code": "MAG-DEMO-030",
+    "label_fr": "Magasin Test 030",
+    "label_en": "Test Store 030",
+    "sector_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "is_demo": true
+  },
+  {
+    "id": "e888a366-da02-4e76-8144-844c27f74eba",
+    "code": "MAG-DEMO-031",
+    "label_fr": "Magasin Test 031",
+    "label_en": "Test Store 031",
+    "sector_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "is_demo": true
+  },
+  {
+    "id": "272b9d83-228c-41ef-88f1-13561e7afe1b",
+    "code": "MAG-DEMO-032",
+    "label_fr": "Magasin Test 032",
+    "label_en": "Test Store 032",
+    "sector_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "is_demo": true
+  },
+  {
+    "id": "ab8f35d8-35a8-4454-a37a-568aae12716a",
+    "code": "MAG-DEMO-033",
+    "label_fr": "Magasin Test 033",
+    "label_en": "Test Store 033",
+    "sector_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "is_demo": true
+  },
+  {
+    "id": "b3d3bb25-21e7-4311-ae42-e527cbbc64b3",
+    "code": "MAG-DEMO-034",
+    "label_fr": "Magasin Test 034",
+    "label_en": "Test Store 034",
+    "sector_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "is_demo": true
+  },
+  {
+    "id": "742b84ec-aee1-4d12-b7bf-d7ad46bd7346",
+    "code": "MAG-DEMO-035",
+    "label_fr": "Magasin Test 035",
+    "label_en": "Test Store 035",
+    "sector_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "is_demo": true
+  },
+  {
+    "id": "4ca7f57a-7ff0-4078-84f1-19fcce57a2bb",
+    "code": "MAG-DEMO-036",
+    "label_fr": "Magasin Test 036",
+    "label_en": "Test Store 036",
+    "sector_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "is_demo": true
+  },
+  {
+    "id": "ff9bee6d-4157-4d03-9c78-d321c0bc982d",
+    "code": "MAG-DEMO-037",
+    "label_fr": "Magasin Test 037",
+    "label_en": "Test Store 037",
+    "sector_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "is_demo": true
+  },
+  {
+    "id": "46f95445-59df-437f-adec-60834af7945f",
+    "code": "MAG-DEMO-038",
+    "label_fr": "Magasin Test 038",
+    "label_en": "Test Store 038",
+    "sector_id": null,
+    "is_demo": true
+  },
+  {
+    "id": "2c10e96b-4adc-4da6-8c1e-f11ad5418deb",
+    "code": "MAG-DEMO-039",
+    "label_fr": "Magasin Test 039",
+    "label_en": "Test Store 039",
+    "sector_id": null,
+    "is_demo": true
+  },
+  {
+    "id": "2a14fd4b-be0e-4539-a039-5a337fcb0514",
+    "code": "MAG-DEMO-040",
+    "label_fr": "Magasin Test 040",
+    "label_en": "Test Store 040",
+    "sector_id": null,
+    "is_demo": true
+  }
+]

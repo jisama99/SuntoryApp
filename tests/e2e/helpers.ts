@@ -1,4 +1,4 @@
-import type { BrowserContext, Page } from '@playwright/test';
+import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 export const PROFILES = [
   'direction_client',
@@ -42,3 +42,22 @@ export const EXPECTED_MENU: Record<string, string[]> = {
   agency_admin: ['home', 'dashboard', 'needs', 'proposals', 'field', 'budget', 'alerts', 'settings'],
   provider_admin: ['home', 'dashboard', 'needs', 'proposals', 'field', 'budget', 'alerts', 'settings', 'admin'],
 };
+
+/** Ouvre un calendrier déjà affiché et clique le jour demandé, en changeant de mois au besoin. */
+export async function pickDay(page: Page, dialog: Locator, date: string) {
+  const cell = dialog.locator(`[data-date="${date}"]`);
+  for (let i = 0; i < 24 && (await cell.count()) === 0; i++) {
+    const [y, m] = date.split('-').map(Number);
+    const first = await dialog.locator('[data-date]').first().getAttribute('data-date');
+    const later = new Date(Date.UTC(y!, m! - 1, 1)).getTime() > new Date(`${first}T00:00:00Z`).getTime();
+    await page.getByRole('button', { name: later ? /Mois suivant|Next month/ : /Mois précédent|Previous month/ }).click();
+  }
+  await cell.click();
+}
+
+export async function pickRange(page: Page, id: string, start: string, end: string) {
+  await page.locator(`#${id}`).click();
+  const dialog = page.getByRole('dialog');
+  await pickDay(page, dialog, start);
+  await pickDay(page, dialog, end);
+}
