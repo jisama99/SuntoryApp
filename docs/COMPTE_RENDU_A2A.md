@@ -109,7 +109,7 @@ C3 et C8 ; essais sur Mac ; navigateurs autres que Chromium ; lecteur d'écran r
 6. Créer `.denylist.local` pour activer C3.
 
 ## 9. Mise à jour du registre : D140 à D147 validées le 23/10/2026 (par T. SOEFOU)
-Statut « validée » communiqué par T. SOEFOU. `docs/DECISIONS.md` **n'est pas encore modifié** par ce lot : l'inscription des lignes ci-dessous reste à faire (D145 et D147 : libellé non transmis à cette session, à reporter tel que décidé).
+Statut « validée » communiqué par T. SOEFOU. **D140 à D147 sont inscrites dans `docs/DECISIONS.md`** (commit `5392bb0`, fusionné dans `main`), avec D145 (horizon et jours non ouvrés en paramètres par dispositif) et D147 (réouverture : D82 et D87). Les lignes ci-dessous restent le détail du lot ; le registre fait foi. D133 est inchangée.
 | N° | Sujet | Contenu | Statut |
 |---|---|---|---|
 | D140 | Interprétations W et D | Tableau du §4 adopté comme jeu de règles par défaut de A2a, paramétrable | Validée le 23/10/2026 |
