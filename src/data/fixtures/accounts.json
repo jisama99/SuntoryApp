@@ -1,0 +1,155 @@
+[
+  {
+    "username": "AgAdmin01",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_admin",
+    "scope": { "kind": "all" },
+    "first_name": "Zoé",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "AgAdmin02",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_admin",
+    "scope": { "kind": "all" },
+    "first_name": "Romain",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "AgOp01",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_operator",
+    "scope": { "kind": "all" },
+    "first_name": "Valentin",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "AgOp02",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_operator",
+    "scope": { "kind": "all" },
+    "first_name": "Inès",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "AgOp03",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_operator",
+    "scope": { "kind": "all" },
+    "first_name": "Louis",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "AgOp04",
+    "password_hash": "3f6fbdfdaae9539776be6cf077d832c8fefd626eb6882e7cf8318a397c868c95",
+    "profile_id": "agency_operator",
+    "scope": { "kind": "all" },
+    "first_name": "Camille",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "DirClient01",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "direction_client",
+    "scope": { "kind": "all" },
+    "first_name": "Ulysse",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "DR-Alpha01",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "dr_client",
+    "scope": { "kind": "dr", "ids": ["1cf08936-8d48-4257-9eba-3ab84fe0ed99"] },
+    "first_name": "Amel",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "DR-Beta01",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "dr_client",
+    "scope": { "kind": "dr", "ids": ["f97cc5b8-dce0-43b1-a21f-e53441a8d52c"] },
+    "first_name": "Farida",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "DR-Gamma01",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "dr_client",
+    "scope": { "kind": "dr", "ids": ["5cff9a1e-38ab-4da2-b164-73630191fb39"] },
+    "first_name": "Marc",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-ZV0101",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["63a9516d-798d-410f-a0fe-03496a86b1f7"] },
+    "first_name": "Bastien",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-WY0201",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["9cb2ccfe-51c1-4ada-99f6-ec25ad212c67"] },
+    "first_name": "Nadia",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-GP0301",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["96e5d8b5-2179-40d8-abf6-a9b607286406"] },
+    "first_name": "Théo",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-NM0401",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["018e67bf-2f2e-4937-8484-099ab56b9f7b"] },
+    "first_name": "Sophie",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-MS0501",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["992cf5f3-512d-4a9e-80a5-d687308d3f8e"] },
+    "first_name": "Hugo",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "CVR-UH0601",
+    "password_hash": "3061e062eeb6a7d57bb7ae1e7e4021c197e9f4ec1ce127e4bc6228a81396a872",
+    "profile_id": "cvr_client",
+    "scope": { "kind": "cvr", "ids": ["d87ca0e1-f161-4c58-8794-fbafdd7aacb3"] },
+    "first_name": "Léa",
+    "status": "active",
+    "is_demo": true
+  },
+  {
+    "username": "Prestataire01",
+    "password_hash": "9bf95962518fb1dfd5a020fea1624e70b423fb2027d7919f2b9e1405af00e4e6",
+    "profile_id": "provider_admin",
+    "scope": { "kind": "all" },
+    "first_name": null,
+    "status": "active",
+    "is_demo": true
+  }
+]

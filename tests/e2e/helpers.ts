@@ -1,3 +1,4 @@
+import { createHmac } from 'crypto';
 import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 export const PROFILES = [
@@ -11,6 +12,21 @@ export const PROFILES = [
 ] as const;
 export const LOCALES = ['fr', 'en'] as const;
 
+/** Génère le cookie de session signé pour un utilisateur de démonstration (lot A1f, D188). */
+function encodeSessionCookie(username: string): string {
+  const secret = process.env.DEMO_SESSION_SECRET ?? 'suntory-demo-secret-2026';
+  const sig = createHmac('sha256', secret).update(username).digest('hex');
+  return `${username}.${sig}`;
+}
+
+/** Pose un cookie de session valide pour l'utilisateur donné (remplace setProfile). */
+export async function setSession(context: BrowserContext, username: string) {
+  await context.addCookies([
+    { name: 'suntory_session', value: encodeSessionCookie(username), url: 'http://localhost:3100' },
+  ]);
+}
+
+/** @deprecated Remplacé par setSession. Conservé pour les suites existantes (M1–M3). */
 export async function setProfile(context: BrowserContext, id: string) {
   await context.addCookies([
     { name: 'demo_profile_simule', value: `sim.${id}`, url: 'http://localhost:3100' },

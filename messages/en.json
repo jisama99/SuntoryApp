@@ -133,10 +133,7 @@
       "title": "Nothing to show",
       "body": "No item matches for now."
     },
-    "loading": {
-      "title": "Loading",
-      "body": "The data is on its way."
-    },
+    "loading": "Loading…",
     "error": {
       "title": "Something went wrong",
       "body": "The operation did not complete. No data was changed."
@@ -838,5 +835,51 @@
     "products": "Products",
     "nature": "Nature",
     "plain": "Plain"
+  },
+  "auth": {
+    "title": "Sign in",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "sign_out": "Sign out",
+    "error": "Incorrect username or password.",
+    "locked": "Account temporarily locked. Please try again later.",
+    "temp_password_title": "Temporary password",
+    "temp_password_hint": "You are using a temporary password. Please choose a new password to continue.",
+    "new_password": "New password",
+    "confirm_password": "Confirm password",
+    "save_password": "Save password",
+    "change_password": {
+      "invalid": "The password is invalid or the two entries do not match (6 characters minimum)."
+    }
+  },
+  "admin": {
+    "accounts": {
+      "title": "Account management",
+      "create": "Create account",
+      "username": "Username",
+      "profile": "Profile",
+      "first_name": "First name",
+      "scope": "Scope",
+      "scope_all": "All sectors",
+      "status": "Status",
+      "status_active": "Active",
+      "status_inactive": "Inactive",
+      "status_temp": "Temporary password",
+      "deactivate": "Deactivate",
+      "reset_password": "Reset password",
+      "temp_password_shown": "Temporary password (share with the user):",
+      "confirm_deactivate": "Confirm deactivation of account \"{username}\"?",
+      "confirm_reset": "Confirm password reset for \"{username}\"?",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "error": {
+        "invalid": "Invalid data.",
+        "duplicate": "This username is already taken.",
+        "forbidden": "Action not allowed.",
+        "not_found": "Account not found."
+      },
+      "empty": "No accounts."
+    }
   }
 }

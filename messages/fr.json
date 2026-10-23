@@ -133,10 +133,7 @@
       "title": "Rien à afficher",
       "body": "Aucun élément ne correspond pour le moment."
     },
-    "loading": {
-      "title": "Chargement en cours",
-      "body": "Les données arrivent."
-    },
+    "loading": "Chargement…",
     "error": {
       "title": "Une erreur est survenue",
       "body": "L'opération n'a pas abouti. Aucune donnée n'a été modifiée."
@@ -838,5 +835,51 @@
     "products": "Produits",
     "nature": "Nature",
     "plain": "Sobre"
+  },
+  "auth": {
+    "title": "Connexion",
+    "username": "Identifiant",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "sign_out": "Se déconnecter",
+    "error": "Identifiant ou mot de passe incorrect.",
+    "locked": "Compte temporairement verrouillé. Veuillez réessayer plus tard.",
+    "temp_password_title": "Mot de passe temporaire",
+    "temp_password_hint": "Vous utilisez un mot de passe temporaire. Choisissez un nouveau mot de passe pour continuer.",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "save_password": "Enregistrer le mot de passe",
+    "change_password": {
+      "invalid": "Le mot de passe est invalide ou les deux saisies ne correspondent pas (6 caractères minimum)."
+    }
+  },
+  "admin": {
+    "accounts": {
+      "title": "Gestion des comptes",
+      "create": "Créer un compte",
+      "username": "Identifiant",
+      "profile": "Profil",
+      "first_name": "Prénom",
+      "scope": "Périmètre",
+      "scope_all": "Tous secteurs",
+      "status": "État",
+      "status_active": "Actif",
+      "status_inactive": "Inactif",
+      "status_temp": "Mot de passe temporaire",
+      "deactivate": "Désactiver",
+      "reset_password": "Réinitialiser le mot de passe",
+      "temp_password_shown": "Mot de passe temporaire (à communiquer à l'utilisateur) :",
+      "confirm_deactivate": "Confirmer la désactivation du compte « {username} » ?",
+      "confirm_reset": "Confirmer la réinitialisation du mot de passe de « {username} » ?",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "error": {
+        "invalid": "Données invalides.",
+        "duplicate": "Cet identifiant est déjà utilisé.",
+        "forbidden": "Action non autorisée.",
+        "not_found": "Compte introuvable."
+      },
+      "empty": "Aucun compte."
+    }
   }
 }

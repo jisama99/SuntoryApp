@@ -18,6 +18,8 @@ import { resolvePeriod } from '@/domain/week-rules';
 import type { RuleEnv, RuleInput } from '@/domain/week-rules';
 import { calendarOf } from '@/domain/deadlines';
 import { addMonths, isWorkingDay, monthStart } from '@/domain/working-days';
+import { hashPassword, verifyPassword, constantDelay } from '@/lib/auth';
+import accountsJson from './fixtures/accounts.json';
 import alertsJson from './fixtures/alerts.json';
 import campaignsJson from './fixtures/campaigns.json';
 import clockJson from './fixtures/clock.json';
@@ -32,17 +34,18 @@ import storesJson from './fixtures/stores.json';
 import weekClosuresJson from './fixtures/week-closures.json';
 import zonesJson from './fixtures/zones.json';
 import type {
-  BatchDraft, BatchLineResult, DemoProfileDirectory, OutboxEntry, Repository, ReturnedFinding,
-  SaveOptions, SaveRefusal, SaveResult,
+  AccountRepository, BatchDraft, BatchLineResult, DemoProfileDirectory,
+  OutboxEntry, ResetResult, Repository, ReturnedFinding, SaveOptions, SaveRefusal, SaveResult,
 } from './repository';
 import {
-  AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DemoClockSchema,
-  DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS, ProfileSchema,
-  ReopeningRequestSchema, ReopeningSchema, StoreSchema, WeekClosureSchema, ZoneSchema,
+  AccountSchema, AccountsSchema, AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema,
+  DeadlineSettingsSchema, DemoClockSchema, DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema,
+  PARAM_KEYS, PARAM_VALUE_SCHEMAS, ProfileSchema, ReopeningRequestSchema, ReopeningSchema, StoreSchema,
+  WeekClosureSchema, ZoneSchema,
 } from './schemas';
 import type {
-  BusinessEvent, DeadlineSettings, DispositifParams, Need, ParamChange, Period, Reopening,
-  ReopeningRequest, Zone,
+  Account, BusinessEvent, DeadlineSettings, DispositifParams, Need, ParamChange, Period,
+  Reopening, ReopeningRequest, Zone,
 } from './schemas';
 
 const zones = z.array(ZoneSchema).parse(zonesJson);
@@ -71,6 +74,7 @@ interface DemoState {
   outbox: Record<string, 'validated' | 'discarded'>;
   homeSkinDefault: HomeSkin;
   userSkins: Partial<Record<ProfileId, HomeSkin>>;
+  accounts: Account[];
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -90,6 +94,7 @@ function state(): DemoState {
       outbox: {},
       homeSkinDefault: DEFAULT_HOME_SKIN,
       userSkins: {},
+      accounts: structuredClone(AccountsSchema.parse(accountsJson)),
     };
   }
   return globalState.__suntoryDemoState;
@@ -109,7 +114,7 @@ const UNDO_KEEP = 20;
 
 const WRITE_PROFILES: readonly ProfileId[] = ['rs', 'agency_operator', 'agency_admin'];
 
-function emit(code: EventCode, actor: ProfileId, zoneId: string, needId: string | null, audience: Audience, data: BusinessEvent['data']) {
+function emit(code: EventCode, actor: ProfileId, zoneId: string | null, needId: string | null, audience: Audience, data: BusinessEvent['data']) {
   const st = state();
   st.events.push({
     id: crypto.randomUUID(), code, actor_profile: actor, zone_id: zoneId, need_id: needId,
@@ -276,7 +281,7 @@ export function createMemoryRepository(): Repository {
 
     async getEvents(ctx) {
       return state().events
-        .filter((e) => audienceAllows(ctx.side, e.audience) && zoneInScope(zones, e.zone_id, ctx.scope))
+        .filter((e) => audienceAllows(ctx.side, e.audience) && (e.zone_id === null || zoneInScope(zones, e.zone_id, ctx.scope)))
         .sort((a, b) => b.seq - a.seq);
     },
 
@@ -746,6 +751,112 @@ export function createDemoProfileDirectory(): DemoProfileDirectory {
     },
     async get(id) {
       return profiles.find((p) => p.id === id) ?? null;
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Lot A1f : gestion des comptes (D188, D189)
+// ---------------------------------------------------------------------------------------------
+
+function canManageAccounts(ctx: AccessContext): boolean {
+  return ctx.profileId === 'agency_admin' || ctx.profileId === 'provider_admin';
+}
+
+function generateTempPassword(): string {
+  // Mot de passe temporaire à 12 caractères (démonstration). Étape B : générateur cryptographique.
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let out = 'Tmp_';
+  for (let i = 0; i < 8; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+
+export function createAccountRepository(): AccountRepository {
+  return {
+    async listAccounts(ctx) {
+      if (!canManageAccounts(ctx)) return [];
+      return state().accounts.map((a) => ({ ...a, password_hash: '***' } as Account));
+    },
+
+    async createAccount(ctx, input) {
+      if (!canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      // L'agence ne crée pas de compte prestataire (D189).
+      if (ctx.profileId === 'agency_admin' && input.profile_id === 'provider_admin') {
+        return { status: 'refused', reason: 'forbidden' };
+      }
+      const parsed = AccountSchema.safeParse({
+        username: input.username,
+        password_hash: 'a'.repeat(64),
+        profile_id: input.profile_id,
+        scope: input.scope,
+        first_name: input.first_name,
+        status: 'temp_password',
+        is_demo: true,
+      });
+      if (!parsed.success) return { status: 'refused', reason: 'invalid' };
+      const st = state();
+      if (st.accounts.some((a) => a.username.toLowerCase() === input.username.toLowerCase())) {
+        return { status: 'refused', reason: 'duplicate' };
+      }
+      const temp = generateTempPassword();
+      st.accounts.push({ ...parsed.data, password_hash: hashPassword(temp), status: 'temp_password' });
+      emit('EV-ACCOUNT-CREATE', ctx.profileId, null, null, 'agency', { username: input.username, profile_id: input.profile_id });
+      return { status: 'ok' };
+    },
+
+    async updateAccount(ctx, username, input) {
+      if (!canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const acc = st.accounts.find((a) => a.username === username);
+      if (!acc) return { status: 'refused', reason: 'not_found' };
+      if (input.profile_id !== undefined) (acc as Account & { profile_id: string }).profile_id = input.profile_id as Account['profile_id'];
+      if (input.scope !== undefined) acc.scope = input.scope;
+      if (input.first_name !== undefined) acc.first_name = input.first_name;
+      if (input.status !== undefined) acc.status = input.status;
+      return { status: 'ok' };
+    },
+
+    async deactivateAccount(ctx, username) {
+      if (!canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const acc = st.accounts.find((a) => a.username === username);
+      if (!acc) return { status: 'refused', reason: 'not_found' };
+      acc.status = 'inactive';
+      emit('EV-ACCOUNT-DEACTIVATE', ctx.profileId, null, null, 'agency', { username });
+      return { status: 'ok' };
+    },
+
+    async resetAccountPassword(ctx, username): Promise<ResetResult> {
+      if (!canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const acc = st.accounts.find((a) => a.username === username);
+      if (!acc) return { status: 'refused', reason: 'not_found' };
+      const temp = generateTempPassword();
+      acc.password_hash = hashPassword(temp);
+      acc.status = 'temp_password';
+      // Le mot de passe n'est PAS journalisé (D189).
+      emit('EV-ACCOUNT-RESET', ctx.profileId, null, null, 'agency', { username });
+      return { status: 'ok', temp_password: temp };
+    },
+
+    async authenticate(username, password) {
+      await constantDelay();
+      const acc = state().accounts.find((a) => a.username === username);
+      if (!acc || acc.status === 'inactive') return null;
+      if (!verifyPassword(password, acc.password_hash)) return null;
+      return acc;
+    },
+
+    async getAccountByUsername(username) {
+      return state().accounts.find((a) => a.username === username) ?? null;
+    },
+
+    async changePassword(username, newHash) {
+      const acc = state().accounts.find((a) => a.username === username);
+      if (!acc) return { status: 'refused', reason: 'not_found' };
+      acc.password_hash = newHash;
+      acc.status = 'active';
+      return { status: 'ok' };
     },
   };
 }

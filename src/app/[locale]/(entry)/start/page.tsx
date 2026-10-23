@@ -1,20 +1,43 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { enterAsProfile } from '@/app/actions';
 import { BrandLogo, BrandMark } from '@/components/BrandLogo';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { Visual } from '@/components/Visual';
-import { profileDirectory } from '@/data';
+import { LoginForm } from './LoginForm';
+import type { LoginFormLabels } from './LoginForm';
 
 /**
- * Écran d'entrée (D160) : choix du profil simulé sur le visuel de la forêt. Ce n'est pas une connexion : le texte le dit.
- * Mobile : l'image en haut, le choix dans une feuille qui chevauche la photo. Bureau : un panneau voilé sur l'image.
+ * Écran de connexion (D183, D188). Remplace le choix de profil simulé.
+ * Aucune connexion ne part avant la soumission explicite du formulaire.
  */
-export default async function StartPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function StartPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[]>>;
+}) {
   const { locale } = await params;
+  const sp = await searchParams;
+  const next = typeof sp.next === 'string' ? sp.next : undefined;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const profiles = await profileDirectory.list();
+
+  const labels: LoginFormLabels = {
+    username: t('auth.username'),
+    password: t('auth.password'),
+    submit: t('auth.submit'),
+    loading: t('states.loading'),
+    error: t('auth.error'),
+    locked: t('auth.locked'),
+    tempPasswordTitle: t('auth.temp_password_title'),
+    tempPasswordHint: t('auth.temp_password_hint'),
+    newPassword: t('auth.new_password'),
+    confirmPassword: t('auth.confirm_password'),
+    savePassword: t('auth.save_password'),
+    changeError: t('auth.change_password.invalid'),
+  };
+
   return (
     <main id="main" tabIndex={-1} className="relative isolate flex min-h-svh flex-col sm:items-center sm:justify-center">
       <div className="relative h-72 sm:absolute sm:inset-0 sm:-z-10 sm:h-auto">
@@ -25,26 +48,17 @@ export default async function StartPage({ params }: { params: Promise<{ locale: 
         </div>
       </div>
       <section
-        aria-labelledby="start-title"
+        aria-labelledby="login-title"
         className="relative -mt-8 flex flex-1 flex-col gap-5 rounded-t-card bg-surface p-6 pb-10 sm:mt-0 sm:w-full sm:max-w-md sm:flex-none sm:rounded-card sm:p-8 veil-sm"
       >
         <BrandLogo brand="suntory" className="h-10 self-start" />
-        <h1 id="start-title" className="text-xl font-extrabold tracking-tight text-title">{t('app.name')}</h1>
-        <p className="text-muted-strong">{t('profile.switcher')} : {t('profile.note')}</p>
-        <form action={enterAsProfile} className="flex flex-col gap-2">
-          <input type="hidden" name="locale" value={locale} />
-          {profiles.map((p) => (
-            <button
-              key={p.id}
-              type="submit"
-              name="profile"
-              value={p.id}
-              className="flex min-h-11 w-full items-center rounded-ctl bg-alt px-4 text-left font-semibold transition-colors hover:bg-sel"
-            >
-              {t(`profile.${p.id}`)}
-            </button>
-          ))}
-        </form>
+        <div>
+          <h1 id="login-title" className="text-xl font-extrabold tracking-tight text-title">
+            {t('auth.title')}
+          </h1>
+          <p className="mt-1 text-sm text-muted-strong">{t('banner.note')}</p>
+        </div>
+        <LoginForm labels={labels} locale={locale} next={next} />
         <BrandMark className="mt-2 self-start" />
       </section>
     </main>

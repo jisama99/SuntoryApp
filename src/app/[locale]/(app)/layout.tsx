@@ -3,13 +3,13 @@ import type { ReactNode } from 'react';
 import { AppShell } from '@/components/AppShell';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import type { NavItem } from '@/components/NavLinks';
-import { ProfileSwitcher } from '@/components/ProfileSwitcher';
 import { SkinSwitcher } from '@/components/SkinSwitcher';
 import { Shortcuts } from '@/components/Shortcuts';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
-import { profileDirectory, repository } from '@/data';
+import { UserBadge } from '@/components/UserBadge';
+import { repository } from '@/data';
 import type { Locale } from '@/domain/types';
-import { getAccessContext } from '@/lib/session';
+import { getAccessContext, getSessionAccount } from '@/lib/session';
 import { getSidebarCollapsed } from '@/lib/sidebar';
 
 /** Gabarit de l'application (menu, barre d'outils). La page d'entrée, elle, s'affiche sans menu. */
@@ -17,7 +17,7 @@ export default async function AppLayout({ children, params }: { children: ReactN
   const { locale } = await params;
   setRequestLocale(locale);
   const ctx = await getAccessContext(locale as Locale);
-  const [menu, profiles] = await Promise.all([repository.getMenu(ctx), profileDirectory.list()]);
+  const [menu, account] = await Promise.all([repository.getMenu(ctx), getSessionAccount()]);
   const { skin } = await repository.getHomeSkin(ctx);
   const t = await getTranslations('menu');
   const tApp = await getTranslations('app');
@@ -39,7 +39,12 @@ export default async function AppLayout({ children, params }: { children: ReactN
           <ThemeSwitcher />
           <SkinSwitcher current={skin} locale={locale} />
           <LocaleSwitcher />
-          <ProfileSwitcher profiles={profiles} current={ctx.profileId} />
+          <UserBadge
+            firstName={account?.first_name ?? null}
+            profileId={ctx.profileId}
+            username={account?.username ?? ''}
+            locale={locale}
+          />
         </>
       }
     >

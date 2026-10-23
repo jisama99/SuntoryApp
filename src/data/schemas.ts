@@ -135,7 +135,7 @@ export const BusinessEventSchema = z.object({
   id: z.string().uuid(),
   code: z.enum(EVENT_CODES),
   actor_profile: z.enum(PROFILE_IDS),
-  zone_id: z.string().uuid(),
+  zone_id: z.string().uuid().nullable(),
   need_id: z.string().uuid().nullable(),
   effect_date: IsoDateStr,
   recorded_at: IsoDateStr,
@@ -308,3 +308,23 @@ export const BatchRowSchema = z.object({
 });
 export type BatchRow = z.infer<typeof BatchRowSchema>;
 export const BatchRowsSchema = z.array(BatchRowSchema).max(60);
+
+// ---------------------------------------------------------------------------------------------
+// Lot A1f : comptes et session (D188, D189)
+// ---------------------------------------------------------------------------------------------
+export const AccountStatusSchema = z.enum(['active', 'inactive', 'temp_password']);
+export type AccountStatus = z.infer<typeof AccountStatusSchema>;
+
+export const AccountSchema = z.object({
+  /** Identifiant unique de connexion (lettres, chiffres, tiret, underscore). */
+  username: z.string().min(1).regex(/^[A-Za-z0-9_-]+$/),
+  /** SHA-256 hex de "suntory:<mot_de_passe>". Étape B : bcrypt. */
+  password_hash: z.string().length(64),
+  profile_id: z.enum(PROFILE_IDS),
+  scope: ScopeSchema,
+  first_name: z.string().min(1).nullable(),
+  status: AccountStatusSchema,
+  is_demo: z.literal(true),
+});
+export type Account = z.infer<typeof AccountSchema>;
+export const AccountsSchema = z.array(AccountSchema);

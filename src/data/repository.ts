@@ -206,3 +206,41 @@ export interface DemoProfileDirectory {
   list(): Promise<DemoProfile[]>;
   get(id: ProfileId): Promise<DemoProfile | null>;
 }
+
+// ---------------------------------------------------------------------------------------------
+// Lot A1f : gestion des comptes (D188, D189)
+// ---------------------------------------------------------------------------------------------
+export type AccountInput = {
+  username: string;
+  profile_id: string;
+  scope: import('./schemas').Account['scope'];
+  first_name: string | null;
+};
+
+export type AccountUpdate = Partial<AccountInput> & {
+  status?: import('./schemas').AccountStatus;
+};
+
+/** Résultat de réinitialisation : mot de passe temporaire lisible une seule fois, jamais stocké en clair. */
+export type ResetResult =
+  | { status: 'ok'; temp_password: string }
+  | { status: 'refused'; reason: 'forbidden' | 'not_found' };
+
+export interface AccountRepository {
+  /** Liste tous les comptes (agence admin ou prestataire uniquement). */
+  listAccounts(ctx: AccessContext): Promise<import('./schemas').Account[]>;
+  /** Crée un compte. L'agence ne crée pas de compte prestataire (D189). */
+  createAccount(ctx: AccessContext, input: AccountInput): Promise<MutationResult<'forbidden' | 'invalid' | 'duplicate'>>;
+  /** Met à jour profil, périmètre ou statut d'un compte. */
+  updateAccount(ctx: AccessContext, username: string, input: AccountUpdate): Promise<MutationResult<'forbidden' | 'invalid' | 'not_found'>>;
+  /** Désactive un compte (status → inactive). */
+  deactivateAccount(ctx: AccessContext, username: string): Promise<MutationResult<'forbidden' | 'not_found'>>;
+  /** Génère un mot de passe temporaire ; la valeur n'est retournée qu'une fois, jamais stockée en clair. */
+  resetAccountPassword(ctx: AccessContext, username: string): Promise<ResetResult>;
+  /** Vérifie identifiant + mot de passe. Null = identifiant inexistant ou mot de passe incorrect (message neutre). */
+  authenticate(username: string, password: string): Promise<import('./schemas').Account | null>;
+  /** Résout un compte par son identifiant (pour lire le profil après connexion). */
+  getAccountByUsername(username: string): Promise<import('./schemas').Account | null>;
+  /** Met à jour le hash après le changement de mot de passe temporaire. */
+  changePassword(username: string, newHash: string): Promise<MutationResult<'not_found'>>;
+}

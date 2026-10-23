@@ -1,6 +1,6 @@
 import {
   ArrowDown, ArrowUp, ArrowUpDown, Bell, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Circle, ClipboardCheck, ClipboardList, Flag, GitMerge, House, Inbox,
-  Info, Languages, LayoutDashboard, LoaderCircle, Menu, OctagonAlert, PanelLeftClose, PanelLeftOpen, Plus, Ellipsis, Settings, ShieldCheck, Store,
+  Info, Languages, LayoutDashboard, LoaderCircle, LogOut, Menu, OctagonAlert, PanelLeftClose, PanelLeftOpen, Plus, Ellipsis, Settings, ShieldCheck, Store,
   TriangleAlert, UserRound, Wallet, X, Sun, Moon, Monitor,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -52,4 +52,5 @@ export const UI_ICONS = {
   themeLight: Sun,
   themeDark: Moon,
   themeSystem: Monitor,
+  logout: LogOut,
 } satisfies Record<string, LucideIcon>;
