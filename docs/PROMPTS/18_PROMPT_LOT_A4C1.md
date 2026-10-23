@@ -39,6 +39,7 @@ CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Les PPTX et PDF générés s'ouvrent et sont rendus en images pour contrôle visuel de chaque page.
 3. Test d'audience : aucun contenu agence dans un export cliente ; coûts absents par défaut.
+4. Anglais (D149) : option de langue FR/EN par rapport ; tests : mêmes clés FR/EN, aucun texte français ni clé brute dans un export EN, dates et nombres EN ; chaque page EN rendue en image et contrôlée ; glossaire FR/EN soumis à T. SOEFOU avant livraison.
 4. Captures A4c1, C1 à C7, docs/COMPTE_RENDU_A4C1.md, mise à jour proposée du registre.
 5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 

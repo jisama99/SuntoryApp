@@ -33,6 +33,7 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 - Objectif de 80 % de travail administratif évité : mesuré sur deux cycles, pas déclaré atteint.
 
 CRITÈRES D'ACCEPTATION
+0. Anglais (D149) : e-mails, file d'automatisation et R-01 disponibles en EN, mêmes tests que A4c1.
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Test : la file validée n'envoie rien ; une alerte agence n'entre dans aucun message cliente.
 3. Test de l'horloge : avancer d'une semaine met à jour instantané, rappels et échéances.

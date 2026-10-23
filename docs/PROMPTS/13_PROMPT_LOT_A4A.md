@@ -42,7 +42,7 @@ Enveloppes et réallocation (A4b), exports PPTX et PDF (A4c1), cartographie, pho
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D05 (définition du consommé) : montants fictifs étiquetés, aucun moteur réel.
-- Carte : hors lot (plan dans docs/CARTOGRAPHIE.md), tableau des zones à la place.
+- Carte : hors lot, lot dédié A4e (D150, plan dans docs/CARTOGRAPHIE.md) ; tableau des zones à la place, qui restera l'alternative accessible. Navigation conforme à la règle 14 (D151).
 - P3 (bibliothèque de graphiques) : décidée dans ce lot, validée ensuite par T. SOEFOU.
 
 CRITÈRES D'ACCEPTATION

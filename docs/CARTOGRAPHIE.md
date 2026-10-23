@@ -33,3 +33,8 @@ Statut : cadrage uniquement. Aucun code de carte, aucun fichier de découpe lu n
 - Licence des contours (D25 / Q22).
 - Nom définitif de la variable d'environnement.
 - Alternative accessible : tableau des zones équivalent à la carte (exigence WCAG/RGAA à fixer avec Impact, D116).
+
+## 6. Mise à jour du 23/10/2026 (D152)
+- Accords agence et cliente déclarés obtenus : usage de la découpe et D25 (cartographie) levés.
+- Source locale : dossier « FICHIERS POUR DEPARTEMENTS », hors dépôt (COG 2025, codes postaux, découpe, listing magasins, table d'appartenance). Il ne contient pas de contours géométriques : un jeu ouvert est à embarquer en A4e.
+- Reste ouvert : nom de la variable d'environnement, jeu de contours retenu, trace écrite de l'accord.

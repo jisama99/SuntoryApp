@@ -19,6 +19,7 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 | Lot | Prompt | Dépend de | Bloquants connus |
 |---|---|---|---|
 | A4d | `21_PROMPT_LOT_A4D.md` | A3, A4a, A5 | Q-N1-1 (D08), Q-N3-1 | Fiche secteur et plans d'action |
+| A4e | `22_PROMPT_LOT_A4E.md` | A4a | Aucun bloquant (D152) ; choix du jeu de contours |
 | A4b | `17_PROMPT_LOT_A4B.md` | A4a | D43 et D46 (règles d'allocation), D05 à D07 |
 | A4c1 | `18_PROMPT_LOT_A4C1.md` | A4a, A4b | D61 et D69 (gabarit COPIL), D25 et D75 (droits logos et photo), D83 |
 | A4c2 | `19_PROMPT_LOT_A4C2.md` | A4c1 | D93, D94, D96 |

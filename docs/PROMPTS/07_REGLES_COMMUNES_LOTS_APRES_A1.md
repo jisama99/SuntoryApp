@@ -53,6 +53,14 @@ CONVENTIONS À RESPECTER
     LUN à DIM, un seul jour ou plusieurs, raccourcis « Lun à ven », « Tous », « Aucun », au moins un jour exigé.
     Les jours proposés viennent des paramètres du dispositif (défaut LUN à SAM, DIM désactivé).
 
+14. Navigation web (D151) : chaque écran est une vraie page web. Filtres, période, périmètre, tri et onglets vivent dans
+    l'URL (retour arrière, avant, lien profond et partage fonctionnent) ; états chargement (loading), vide et erreur
+    (error) sur chaque route ; focus visible, lien d'évitement, fil d'Ariane, navigation clavier complète, mobile 390 px,
+    mouvement réduit respecté ; aucune perte de saisie en changeant de page sans avertissement. Test e2e : retour
+    arrière, rechargement et lien profond sur les écrans du lot ; seuils de performance H3 mesurés et reportés.
+15. Anglais (D149) : tout texte visible, y compris exports, e-mails et alertes, passe par le dictionnaire FR/EN ; aucune
+    chaîne en dur ; formats de dates et nombres selon la langue ; tests i18n étendus à chaque nouvelle surface.
+
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.
   Un écran non vérifié visuellement est déclaré comme tel.
