@@ -159,7 +159,7 @@ export default async function DeadlinesPage({ params, searchParams }: {
               <li key={r.id} className="flex flex-col gap-1 rounded-ctl bg-surface px-4 py-3 shadow-card">
                 <span className="font-semibold">{targetText(r.scope, r.target)}</span>
                 <span>{byId.get(r.zone_id) ? zoneText(byId.get(r.zone_id)!, loc) : ''}</span>
-                <span className="text-muted">{t('reopen.traceLine', { reason: r.reason, until: formatDate(r.expires_on, loc), on: formatDate(r.decided_on, loc), by: t(`profile.${r.decided_by}`) })}</span>
+                <span className="text-muted">{t('reopen.traceLine', { reason: r.reason.replace(/[\s.]+$/, ''), until: formatDate(r.expires_on, loc), on: formatDate(r.decided_on, loc), by: t(`profile.${r.decided_by}`) })}</span>
               </li>
             ))}
           </ul>

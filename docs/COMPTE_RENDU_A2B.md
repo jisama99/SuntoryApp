@@ -142,7 +142,7 @@ C3 et C8 ; essais sur Mac ; navigateurs autres que Chromium ; lecteur d'écran r
 10. Forfait kilométrique fictif de 10,00 € HT pour le démonstrateur : valeur à garder ou à laisser « Non chiffré » ?
 
 ## 9. Mise à jour du registre proposée (non inscrite dans `docs/DECISIONS.md`)
-D153 à D166 sont déjà pris sur `main` (budget, règles 14 à 16, glossaire, directives, signalement, hébergement). Numéros proposés **à partir de D167**, à attribuer par T. SOEFOU ; les renvois internes de ce compte rendu à « D153 à D166 » désignent ces propositions, pas les décisions de `main`.
+D153 à D163 sont déjà pris sur `main` (budget, règles 14 à 16, glossaire, directives). Numéros proposés **à partir de D167** (D164 à D166 ont été pris sur `main` après la rédaction : signalement, hébergement, parcours de correction ; décalage de +3 appliqué à la revue), à attribuer par T. SOEFOU ; les renvois internes de ce compte rendu à « D153 à D163 » désignent ces propositions, pas les décisions de `main`.
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
 | D167 | Jours ouvrés des échéances | Lundi à vendredi hors fériés, distincts des jours non ouvrés de mission (D145) | Proposée (H-A2b-1) |
