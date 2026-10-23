@@ -33,7 +33,7 @@ RÈGLES TRANSVERSES DU LOT (D132, D133)
 Calendrier d'échéances, durée de réouverture et dates du tableau de saisie en lot : sélecteur de date (règle 12), jours désactivés avec raison. Colonne `days` du lot : WeekdayPicker en cellule, et collage de jours (LUN;MAR) accepté puis affiché en cases cochées. Paramètres par dispositif `days_allowed`, `horizon_weeks` et `non_working_days` (D145) : les règles W11 et W16 d'A2a lisent ces paramètres. Réouverture d'une semaine clôturée : agence seule, motif, durée, trace, sur demande du CVR (D82, D87, D147). Les gravités et interprétations d'A2a sont celles de D140 à D144.
 
 HORS PÉRIMÈTRE
-Propositions et décisions, indicateurs de pilotage, courriels réels (aucun envoi), import Excel, base de données, commit, push.
+Propositions et décisions, indicateurs de pilotage, courriels réels (aucun envoi), import Excel, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - Q-N9-1 à Q-N9-5 (doc 28 §7) : semaine « avant-dernière », jours calendaires ou ouvrés, rôle « CS », forfait kilométrique, nom du champ ; H1 est validée (D128) ; H2 (exemple chiffré) reste une hypothèse appliquée et étiquetée dans l'écran.
@@ -48,7 +48,7 @@ CRITÈRES D'ACCEPTATION
 3. Test d'audience : aucune alerte agence dans un profil cliente, CVR, DR ou RS.
 4. Saisie en lot : un lot partiellement invalide ne crée que les lignes valides et liste les rejets.
 5. Captures A2b, C1 à C7, docs/COMPTE_RENDU_A2B.md, mise à jour proposée du registre.
-6. Aucun commit, aucun push.
+6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A3. N'enchaîne pas.

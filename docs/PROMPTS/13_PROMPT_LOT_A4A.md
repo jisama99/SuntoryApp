@@ -38,7 +38,7 @@ RÈGLES TRANSVERSES DU LOT (D131, D133)
 Filtre de période : DateRangePicker et WeekPicker ; comparaison N / N-1 : choix de la semaine N au WeekPicker. Comparatif de campagnes côte à côte (doc 28 §2 ter) : deux ou trois campagnes choisies, mêmes indicateurs, écart par rapport à la première colonne, « Non comparable » entre unités incompatibles.
 
 HORS PÉRIMÈTRE
-Enveloppes et réallocation (A4b), exports PPTX et PDF (A4c1), cartographie, photos, import Excel, moteur financier réel, base de données, commit, push.
+Enveloppes et réallocation (A4b), exports PPTX et PDF (A4c1), cartographie, photos, import Excel, moteur financier réel, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D05 (définition du consommé) : montants fictifs étiquetés, aucun moteur réel.
@@ -53,7 +53,7 @@ CRITÈRES D'ACCEPTATION
 3. Test d'audience : aucune alerte agence côté cliente, y compris dans les données chargées par la page.
 4. Contrastes des nouvelles couleurs testés dans les deux modes ; règles de style toujours vertes.
 5. Captures A4a, C1 à C7, docs/COMPTE_RENDU_A4A.md, mise à jour proposée du registre.
-6. Aucun commit, aucun push.
+6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A5. N'enchaîne pas.

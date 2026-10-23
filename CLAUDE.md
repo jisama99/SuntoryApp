@@ -92,7 +92,7 @@ Après chaque étape de code d'un lot : lancer le serveur local, ouvrir la page 
 2. Ne pas passer au lot suivant sans validation écrite de T. SOEFOU.
 3. Fin de lot : lancer toutes les suites, produire un compte rendu (fait, non fait, écarts, vérifications non exécutées) dans `docs/`, proposer une mise à jour du registre de décisions (« mise à jour proposée », jamais « enregistré »).
 4. Présenter honnêtement la couverture de lecture et les tests non exécutés. Un ancien rapport de test n'est pas un test exécuté aujourd'hui.
-5. Ne pas commiter, pousser ni ouvrir de pull request sans demande explicite.
+5. Ne pas commiter, pousser ni ouvrir de pull request sans demande explicite. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu, commit et push de la branche de session uniquement, jamais sur main, jamais de pull request.
 6. Signature (D28) : FREELANCE, pour les livrables externes (documents, devis). Aucune signature, coordonnée ni logo dans les écrans du démonstrateur. Pas de logo d'agence. L'adresse de contact de `docs/DECISIONS.md` ne va ni dans le code, ni dans les fixtures, ni dans les tests.
 
 ## Commandes

@@ -31,7 +31,7 @@ RÈGLES TRANSVERSES DU LOT (D133)
 Dates de début et de fin d'absence, dates de remplacement : DateRangePicker (règle 12).
 
 HORS PÉRIMÈTRE
-Photos (A5b), notifications push réelles, hors ligne réel, géolocalisation réelle, comptes intervenants, import Excel, base de données, commit, push.
+Photos (A5b), notifications push réelles, hors ligne réel, géolocalisation réelle, comptes intervenants, import Excel, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D14 et D15 (hors ligne, périmètre mobile) ouvertes : tout est simulé et étiqueté ainsi.
@@ -42,7 +42,7 @@ CRITÈRES D'ACCEPTATION
 2. Aucun champ de motif médical dans le modèle, les fixtures ni les écrans (test statique).
 3. Une période clôturée refuse la saisie ; test inter-profils sur les absences.
 4. Captures A5, C1 à C7, docs/COMPTE_RENDU_A5.md, mise à jour proposée du registre.
-5. Aucun commit, aucun push.
+5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A6. N'enchaîne pas.

@@ -24,7 +24,7 @@ Recette complète, script de démonstration pour la cliente (parcours, ordre, do
 6. Mise à jour proposée du registre et liste des écarts restants.
 
 HORS PÉRIMÈTRE
-Nouvelle fonctionnalité, correction hors recette (les anomalies sont listées, corrigées seulement si bloquantes et après accord), déploiement public, commit, push.
+Nouvelle fonctionnalité, correction hors recette (les anomalies sont listées, corrigées seulement si bloquantes et après accord), déploiement public.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - Hébergement du démonstrateur : local par défaut (D02 / D19) ; Vercel seulement pour aperçus fictifs (D114).
@@ -34,7 +34,7 @@ CRITÈRES D'ACCEPTATION
 1. Toutes les suites passent ou les écarts sont expliqués ; sortie reportée.
 2. Script de démonstration relu parcours par parcours avec captures.
 3. docs/COMPTE_RENDU_A7.md et docs/SCRIPT_DEMONSTRATION.md présents.
-4. Aucun commit, aucun push.
+4. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant la démonstration. N'enchaîne pas.

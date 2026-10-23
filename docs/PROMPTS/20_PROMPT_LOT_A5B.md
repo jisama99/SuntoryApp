@@ -23,7 +23,7 @@ Fonction photos sur images générées : import simulé, pré-contrôles réels 
 6. Captures : docs/captures/A5b/.
 
 HORS PÉRIMÈTRE
-Photos réelles, stockage externe, reconnaissance d'image réelle, base de données, commit, push.
+Photos réelles, stockage externe, reconnaissance d'image réelle, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D101 (enseignes autorisées) et D102 (durée de conservation) : à fixer par Impact.
@@ -33,7 +33,7 @@ CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Test : une photo non validée n'apparaît dans aucun profil cliente ni export ; la purge supprime fichier et métadonnées.
 3. Aucun fichier image réel (C5) ; captures A5b, C1 à C7, docs/COMPTE_RENDU_A5B.md.
-4. Aucun commit, aucun push.
+4. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant la seconde démonstration. N'enchaîne pas.

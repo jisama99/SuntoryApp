@@ -23,7 +23,7 @@ Enveloppes budgétaires fictives et réallocation entre périmètres : une parti
 6. Captures : docs/captures/A4b/.
 
 HORS PÉRIMÈTRE
-Moteur financier réel, tarifs contractuels, exports (A4c1), base de données, commit, push.
+Moteur financier réel, tarifs contractuels, exports (A4c1), base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D43 et D46 : règles d'allocation à préciser avec T. SOEFOU et la cliente.
@@ -34,7 +34,7 @@ CRITÈRES D'ACCEPTATION
 2. Test : une réallocation exige deux acteurs distincts ; un refus ne change aucun montant.
 3. Test d'audience sur les coûts et alertes.
 4. Captures A4b, C1 à C7, docs/COMPTE_RENDU_A4B.md, mise à jour proposée du registre.
-5. Aucun commit, aucun push.
+5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A4c1. N'enchaîne pas.

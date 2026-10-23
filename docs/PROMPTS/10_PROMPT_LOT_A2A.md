@@ -41,7 +41,7 @@ RÈGLES TRANSVERSES DU LOT (D132, D133)
 Créer les composants communs DatePicker, DateRangePicker, WeekPicker et WeekdayPicker (règles 12 et 13) et le module pur des jours fériés. Dates de début et de fin de besoin, décalage de duplication : sélecteur de date. Champ `days` : cases à cocher LUN à DIM (docs/COMPLEMENTS_CADRAGE/28 §8), une ou plusieurs valeurs, au moins une, avertissement si aucun des jours cochés ne tombe dans la période. Test d'architecture contre type="date" et les champs de date en texte. Champ `campaign` renommé `dispositif`, nouvelle `campaign` rattachée à un seul dispositif (H1 validée, D128).
 
 HORS PÉRIMÈTRE
-Saisie en lot, collage, brouillon automatique, résumé avant soumission, échéances, blocage après échéance, propositions, indicateurs, import Excel, base de données, authentification réelle, commit, push.
+Saisie en lot, collage, brouillon automatique, résumé avant soumission, échéances, blocage après échéance, propositions, indicateurs, import Excel, base de données, authentification réelle.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - Gravités W et D : propositions de l'agence (Q7 de la V0.4), à confirmer avec la cliente.
@@ -54,7 +54,7 @@ CRITÈRES D'ACCEPTATION
 3. Un besoin incomplet ne peut pas être soumis ni compté dans un total ; une semaine clôturée refuse la modification.
 4. Test inter-profils : un RS ne lit ni n'écrit hors de son périmètre ; chaque événement porte une audience.
 5. Captures A2a, C1 à C7 relancés, docs/COMPTE_RENDU_A2A.md, mise à jour proposée du registre.
-6. Aucun commit, aucun push.
+6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A2b. N'enchaîne pas.

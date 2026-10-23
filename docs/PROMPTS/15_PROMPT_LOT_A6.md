@@ -31,7 +31,7 @@ Démontrer le pont temporaire (position D04 / Q20) : import de fichiers fictifs,
 8. Événements émis avec audience ; écrans FR et EN ; captures : docs/captures/A6/.
 
 HORS PÉRIMÈTRE
-Import de fichiers réels, branchement à un classeur de production, écriture vers SharePoint, export Excel complet (A4c1 pour les exports), base de données, commit, push.
+Import de fichiers réels, branchement à un classeur de production, écriture vers SharePoint, export Excel complet (A4c1 pour les exports), base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D51 (mécanisme du fichier branché) et D24 (sources absentes, onglet 4C vide) : fichiers fictifs seulement.
@@ -44,7 +44,7 @@ CRITÈRES D'ACCEPTATION
 2. Tests : idempotence, fichier renommé au même contenu, retour ancien, formule dans un champ texte, fichier trop volumineux.
 3. Aucune requête réseau pendant l'import (test Playwright).
 4. Captures A6, C1 à C7, docs/COMPTE_RENDU_A6.md, mise à jour proposée du registre.
-5. Aucun commit, aucun push.
+5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A7. N'enchaîne pas.

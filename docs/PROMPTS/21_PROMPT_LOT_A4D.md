@@ -53,7 +53,7 @@ CRITÈRES D'ACCEPTATION
    relance unique par action et par jour.
 5. Règles de style toujours vertes (aucun trait décoratif, aucun tiret dans les textes, rose seulement sur les actions) ; contrastes testés.
 6. Captures A4d, C1 à C7, docs/COMPTE_RENDU_A4D.md, mise à jour proposée du registre.
-7. Aucun commit, aucun push.
+7. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A6. N'enchaîne pas.

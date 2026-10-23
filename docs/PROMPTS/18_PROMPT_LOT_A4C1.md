@@ -28,7 +28,7 @@ Moteur de reporting paramétrable : catalogue de diapositives, graphiques sélec
 6. Aperçu des pages dans l'application ; captures : docs/captures/A4c1/.
 
 HORS PÉRIMÈTRE
-Envoi automatique de rapports, boucles d'automatisation (A4c2), cartographie, logos réels tant que D25 est ouvert, base de données, commit, push.
+Envoi automatique de rapports, boucles d'automatisation (A4c2), cartographie, logos réels tant que D25 est ouvert, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D61 et D69 : gabarit COPIL réel non fourni ; trame minimale en attendant.
@@ -40,7 +40,7 @@ CRITÈRES D'ACCEPTATION
 2. Les PPTX et PDF générés s'ouvrent et sont rendus en images pour contrôle visuel de chaque page.
 3. Test d'audience : aucun contenu agence dans un export cliente ; coûts absents par défaut.
 4. Captures A4c1, C1 à C7, docs/COMPTE_RENDU_A4C1.md, mise à jour proposée du registre.
-5. Aucun commit, aucun push.
+5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A4c2. N'enchaîne pas.

@@ -43,7 +43,7 @@ APRÈS
   vérifications non exécutées, questions pour T. SOEFOU.
 - Proposer une mise à jour du registre de décisions (« mise à jour proposée »),
   sans écrire de décision non validée.
-- Ne pas commiter ni pousser sans demande explicite.
+- Ne pas commiter ni pousser sans demande explicite. Exception (D148) : en fin de lot, après le compte rendu, commit et push de la branche de session uniquement, jamais sur main.
 
 RÈGLES NON NÉGOCIABLES
 - Aucune donnée réelle (seule exception : D109 bis, découpe locale), aucun tarif fictif présenté comme réel, aucun coût inconnu à 0 €.

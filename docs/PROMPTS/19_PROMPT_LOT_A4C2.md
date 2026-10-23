@@ -26,7 +26,7 @@ Rapport R-01 (état des besoins et recrutements), boucles d'automatisation AUT-0
 7. Captures : docs/captures/A4c2/.
 
 HORS PÉRIMÈTRE
-Envoi réel de courriels ou de messages, connecteurs externes, base de données, commit, push.
+Envoi réel de courriels ou de messages, connecteurs externes, base de données.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
 - D93, D94, D96 : seuils et délais à confirmer ; paramètres par défaut proposés.
@@ -37,7 +37,7 @@ CRITÈRES D'ACCEPTATION
 2. Test : la file validée n'envoie rien ; une alerte agence n'entre dans aucun message cliente.
 3. Test de l'horloge : avancer d'une semaine met à jour instantané, rappels et échéances.
 4. Captures A4c2, C1 à C7, docs/COMPTE_RENDU_A4C2.md, mise à jour proposée du registre.
-5. Aucun commit, aucun push.
+5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A5b. N'enchaîne pas.
