@@ -30,7 +30,7 @@ Compléter la saisie : tableau multi-lignes et collage, brouillon automatique, r
 8. Captures : docs/captures/A2b/ (lot, blocage après échéance, alerte J-2, réouverture).
 
 RÈGLES TRANSVERSES DU LOT (D132, D133)
-Calendrier d'échéances, durée de réouverture et dates du tableau de saisie en lot : sélecteur de date (règle 12), jours désactivés avec raison. Colonne `days` du lot : WeekdayPicker en cellule, et collage de jours (LUN;MAR) accepté puis affiché en cases cochées. Paramètre `days_allowed` par dispositif.
+Calendrier d'échéances, durée de réouverture et dates du tableau de saisie en lot : sélecteur de date (règle 12), jours désactivés avec raison. Colonne `days` du lot : WeekdayPicker en cellule, et collage de jours (LUN;MAR) accepté puis affiché en cases cochées. Paramètres par dispositif `days_allowed`, `horizon_weeks` et `non_working_days` (D145) : les règles W11 et W16 d'A2a lisent ces paramètres. Réouverture d'une semaine clôturée : agence seule, motif, durée, trace, sur demande du CVR (D82, D87, D147). Les gravités et interprétations d'A2a sont celles de D140 à D144.
 
 HORS PÉRIMÈTRE
 Propositions et décisions, indicateurs de pilotage, courriels réels (aucun envoi), import Excel, base de données, commit, push.

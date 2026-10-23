@@ -31,6 +31,8 @@ Table `dispositif_params`, modifiable par l'agence seule, **jamais codée en dur
 | Effet d'une modification en cours de mois | `change_effect` | mois suivant | calendrier D80 / D82 | À valider |
 | Délai de modification avant le début du mois suivant | `change_lead_days` | 10 jours | preset Standard (5 jours ouvrés) | À valider, jours calendaires ou ouvrés ? |
 | Saisie ouverte à | `entry_roles` | rôles à définir (« CS » non défini, Q ouverte) | tous les rôles de saisie | **Bloquant partiel** |
+| Horizon de saisie (D145) | `horizon_weeks` | 52 semaines (valeur de départ) | valeur globale | À valider |
+| Jours non ouvrés (D145) | `non_working_days` | dimanche et fériés (valeur de départ) | valeur globale | À valider |
 | Jours de la semaine proposés | `days_allowed` | LUN à SAM | LUN à SAM | DIM désactivé par défaut, Q-J1 |
 | Campagne unique par dispositif | `campaign_single_dispositif` | oui | oui | Règle de modèle (H1) |
 

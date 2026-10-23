@@ -300,3 +300,16 @@ D107 et D108 validées le 23/10/2026 (recommandations suivies).
 | D137 | Gestion des profils d'import | Profils gérés par l'agence en mode administration seule ; doublons de code mission mis en attente ; données de personnes exclues par défaut à l'import | Décidée par T. SOEFOU le 23/10/2026 | DPO (données de personnes) |
 | D138 | Statut en cas de divergence | Une source de référence par dimension : plateforme pour décision cliente, proposition, poste et facturation ; extraction en lecture seule pour le statut de mission LOGA ; divergence = alerte d'écart d'audience agence, aucune correction automatique | Décidée par T. SOEFOU le 23/10/2026 | Cliente |
 | D139 | Codes magasin textuels | File « à rapprocher » visible de l'agence seule, suggestion sans application, confirmation humaine, rapprochement mémorisé, ligne non rapprochée comptée sous « Magasin non rapproché » | Décidée par T. SOEFOU le 23/10/2026 | Agence |
+
+### Validation du 23/10/2026 après le lot A2a (recommandations suivies)
+
+| N° | Sujet | Décision | Statut | À confirmer par |
+|---|---|---|---|---|
+| D140 | Interprétations W et D | Tableau du §4 de `COMPTE_RENDU_A2A.md` adopté comme jeu de règles par défaut de A2a, paramétrable (en particulier « type = dispositif » pour D1 à D3) | Validée par T. SOEFOU le 23/10/2026 | Cliente (valeurs finales) |
+| D141 | Modèle du besoin | Périodes P1 et P2 imbriquées, secteur par référence de zone, magasins par code, états brouillon et soumis, statut de poste nul avant A3, **liste fermée « Poste 1 à 7 »** conservée jusqu'aux profils d'import (D134) | Validée par T. SOEFOU le 23/10/2026 | |
+| D142 | W2 | Règle réservée aux saisies brutes (import, collage) | Validée par T. SOEFOU le 23/10/2026 | |
+| D143 | Fusion de doublons | Extension de la période du besoin existant, autres champs conservés, **aperçu avant et après avant confirmation**, événement EV-03 ; comparaison champ par champ avec l'historique des révisions (A3) | Validée par T. SOEFOU le 23/10/2026 | Cliente |
+| D144 | Journal | Anomalies EV-05 d'audience agence ; besoins EV-01 et EV-02 d'audience les deux | Validée par T. SOEFOU le 23/10/2026 | |
+| D145 | Horizon et jours non ouvrés | W11 (horizon de saisie, 52 semaines au départ) et W16 (jours non ouvrés, dimanche et fériés au départ) deviennent des **paramètres par dispositif**, avec une valeur globale par défaut ; ajoutés à F-30.10 (`horizon_weeks`, `non_working_days`) en A2b | Validée par T. SOEFOU le 23/10/2026 | Cliente |
+| D146 | Semaines dans le formulaire | Semaines de début et de fin **déduites des dates et affichées**, non demandées ; correction par un lien « corriger la semaine » ; W5 et W8 restent actives pour les imports et collages | Validée par T. SOEFOU le 23/10/2026 | |
+| D147 | Réouverture d'une semaine clôturée | Aucune nouvelle décision : D82 et D87 s'appliquent (agence seule, motif, durée, trace ; demande par le CVR) ; mécanisme en A2b | Confirmée le 23/10/2026 | |
