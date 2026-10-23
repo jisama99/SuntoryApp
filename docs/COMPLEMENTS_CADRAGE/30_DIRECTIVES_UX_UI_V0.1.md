@@ -1,4 +1,4 @@
-# Directives UX et UI : 10 priorités (proposition)
+# Directives UX et UI : 10 priorités (validées, D159)
 
 Version du 23/10/2026. **Validée par T. SOEFOU le 23/10/2026 (D159).** Fait suite à D149, D150, D151. Constats tirés de l'état fusionné (A2a) : `src/app/globals.css`, `States.tsx`, `DataTable.tsx`, tests de style.
 

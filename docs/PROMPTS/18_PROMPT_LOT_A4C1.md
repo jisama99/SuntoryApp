@@ -41,7 +41,8 @@ CRITÈRES D'ACCEPTATION
 3. Test d'audience : aucun contenu agence dans un export cliente ; coûts absents par défaut.
 4. Anglais (D149) : option de langue FR/EN par rapport ; tests : mêmes clés FR/EN, aucun texte français ni clé brute dans un export EN, dates et nombres EN ; chaque page EN rendue en image et contrôlée ; glossaire FR/EN soumis à T. SOEFOU avant livraison.
 4. Captures A4c1, C1 à C7, docs/COMPTE_RENDU_A4C1.md, mise à jour proposée du registre.
-5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
+5. Design et navigation (règles 14 à 16, D151, D159) : chaque écran du lot a son état dans l'URL (retour arrière, rechargement, lien profond testés), ses trois états (squelette, vide, erreur), ses tableaux en cartes sous 640 px, ses transitions sobres, sa confirmation annulable après écriture, ses cibles de 44 px ; aucune valeur de style en dur ; seuils de performance mesurés et reportés (2 s, 100 ms) ; captures 390 px.
+6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A4c2. N'enchaîne pas.

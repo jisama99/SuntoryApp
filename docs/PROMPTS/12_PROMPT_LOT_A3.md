@@ -47,7 +47,8 @@ CRITÈRES D'ACCEPTATION
 3. Jamais un statut unique : besoin, proposition, recrutement et exécution évoluent séparément.
 4. Test d'audience sur tous les événements et alertes émis.
 5. Captures A3, C1 à C7, docs/COMPTE_RENDU_A3.md, mise à jour proposée du registre.
-6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
+6. Design et navigation (règles 14 à 16, D151, D159) : chaque écran du lot a son état dans l'URL (retour arrière, rechargement, lien profond testés), ses trois états (squelette, vide, erreur), ses tableaux en cartes sous 640 px, ses transitions sobres, sa confirmation annulable après écriture, ses cibles de 44 px ; aucune valeur de style en dur ; seuils de performance mesurés et reportés (2 s, 100 ms) ; captures 390 px.
+7. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A4a. N'enchaîne pas.
