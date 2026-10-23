@@ -22,7 +22,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A4c2 | R-01 État des besoins et recrutements, boucles AUT-06 à 11, horloge | A4c1 ; événements de A2/A3 | D93, D94, D96 | Garde ; dépend de l'émission d'événements dès A2 |
 | A5 | Terrain mobile, absences | A3 | D14/D15 révisées par D42, Q19 | À relire à la lumière de D42 (pas de compte intervenant) |
 | A4f | Vue Planning (D190) | A5 | Aucune | Noyau, après A5 ; prompt `30_PROMPT_LOT_A4F.md` |
-| A4g | Notifications et préférences d'alerte : réglages agence, « Mes notifications », centre, file push simulée (D197 à D200 proposées) | A3, A4a, A4f | Alertes obligatoires, heures calmes (hypothèses à valider) | Noyau si le calendrier du 10/11 le permet, sinon seconde démonstration ; prompt `32_PROMPT_LOT_A4G.md` ; aucun envoi réel |
+| A4g | Notifications et préférences d'alerte : réglages agence, « Mes notifications », centre, file push simulée (D205 à D208 proposées) | A3, A4a, A4f | Alertes obligatoires, heures calmes (hypothèses à valider) | Noyau si le calendrier du 10/11 le permet, sinon seconde démonstration ; prompt `32_PROMPT_LOT_A4G.md` ; aucun envoi réel |
 | A5b | Photos terrain sur images fictives | A5 | D101 (enseignes), D102 (durée par Impact) | Garde ; images générées |
 | A6 | Import Excel en quarantaine | A2 | D04/Q20, D51, P4 (bibliothèque) | Garde |
 | A7 | Recette, script de démonstration, captures | A1 à A6 | Q1–Q23 à provoquer | Garde |

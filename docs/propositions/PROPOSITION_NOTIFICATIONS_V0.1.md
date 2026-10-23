@@ -13,10 +13,10 @@ Statut : proposition du prestataire, non inscrite au registre. Exigence exprimé
 ## 2. Entrées de registre proposées (numéros à confirmer après le dernier du registre)
 | N° proposé | Sujet | Décision proposée |
 |---|---|---|
-| D197 | Notifications et canaux | Trois canaux (application, push, e-mail). Préférence par utilisateur, type d'alerte et canal ; fréquence immédiate ou résumé quotidien ; heures calmes. L'utilisateur règle dans « Mes notifications » (près du sélecteur d'affichage), l'agence fixe défauts par profil et alertes obligatoires dans Paramètres. |
-| D198 | Push simulé puis réel | En étape A, push et e-mail sont simulés (file à valider, aucun envoi, essai de deux cycles comme D94). Web Push réel en A9 après abonnement OVHcloud ; installation PWA requise sur iPhone. |
-| D199 | Contenu et audience | Texte sans chiffre, lien vers l'application. Audience filtrée avant création de la notification ; une préférence ne peut pas élargir l'audience. Alertes d'échéance obligatoires (hypothèse à valider). |
-| D200 | Lot A4g | Lot dédié après A4f ; premier candidat au report en seconde démonstration. |
+| D205 | Notifications et canaux | Trois canaux (application, push, e-mail). Préférence par utilisateur, type d'alerte et canal ; fréquence immédiate ou résumé quotidien ; heures calmes. L'utilisateur règle dans « Mes notifications » (près du sélecteur d'affichage), l'agence fixe défauts par profil et alertes obligatoires dans Paramètres. |
+| D206 | Push simulé puis réel | En étape A, push et e-mail sont simulés (file à valider, aucun envoi, essai de deux cycles comme D94). Web Push réel en A9 après abonnement OVHcloud ; installation PWA requise sur iPhone. |
+| D207 | Contenu et audience | Texte sans chiffre, lien vers l'application. Audience filtrée avant création de la notification ; une préférence ne peut pas élargir l'audience. Alertes d'échéance obligatoires (hypothèse à valider). |
+| D208 | Lot A4g | Lot dédié après A4f ; premier candidat au report en seconde démonstration. |
 
 ## 3. Lignes à ajouter (à faire par la session de revue ou le prestataire, pas par un lot)
 - `09_INDEX_LOTS.md`, noyau : `| 5 ter | A4g | 32_PROMPT_LOT_A4G.md | A4f | Liste des alertes obligatoires, heures calmes | Réglages, centre, file simulée, test d'audience |`
