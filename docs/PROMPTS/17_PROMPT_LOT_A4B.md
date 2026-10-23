@@ -1,9 +1,9 @@
-# SUNTORY REFONTE V3 · Prompt du lot A4b (prêt à coller)
+# SUNTORY REFONTE V3 · Prompt du lot A4b2 (prêt à coller)
 
-Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`, avec `REFONTE_V3` en lecture seule. Prérequis : A4a validé, seconde démonstration (hors noyau du 10/11).
+Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`, avec `REFONTE_V3` en lecture seule. Prérequis : A4b1 et A4a validés (l'enveloppe et l'allocation existent déjà, D153), seconde démonstration (hors noyau du 10/11).
 
 ```text
-LOT A4b · ENVELOPPES ET RÉALLOCATION À DOUBLE VALIDATION
+LOT A4b2 · RÉALLOCATION À DOUBLE VALIDATION ET RALLONGES (D157)
 
 OBJECTIF
 Enveloppes budgétaires fictives et réallocation entre périmètres : une partie propose, l'autre valide, l'effet est visible dans les autres espaces (D43, D46).
@@ -20,6 +20,7 @@ Enveloppes budgétaires fictives et réallocation entre périmètres : une parti
 3. Effet visible dans les espaces concernés après validation ; une réallocation refusée n'a aucun effet.
 4. Règles d'allocation incomplètes (D43, D46) : paramètres par défaut proposés, non décidés.
 5. Événements avec audience ; coûts masqués par défaut côté cliente, l'agence décide de leur affichage dans les exports.
+5 bis. Rallonges (D158, F-50.3) : la cliente ajoute une rallonge (nouvelle version d'enveloppe, motif, descend à l'agence) ; l'agence demande une rallonge (montant, périmètre, motif) que la cliente accepte, refuse ou modifie ; l'agence ne crée jamais de budget seule ; historique et événements avec audience; lien avec l'alerte de dépassement (D156).
 6. Captures : docs/captures/A4b/.
 
 HORS PÉRIMÈTRE
@@ -32,6 +33,7 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Test : une réallocation exige deux acteurs distincts ; un refus ne change aucun montant.
+2 bis. Test : une rallonge ne s'applique qu'après décision de la cliente ; la demande refusée ne change aucun budget ; l'agence ne peut pas augmenter l'enveloppe.
 3. Test d'audience sur les coûts et alertes.
 4. Captures A4b, C1 à C7, docs/COMPTE_RENDU_A4B.md, mise à jour proposée du registre.
 5. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).

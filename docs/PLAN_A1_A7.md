@@ -10,10 +10,11 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A1 | Socle, navigation par profil, i18n, accessibilité, aperçu | A0 validé | D25 (logos, fonds de carte), D30–D31 | **À lancer en premier** ; comprend l'installation, `.gitignore` corrigé, workflow d'aperçu |
 | A2 | Saisie des besoins, semaine ISO, doublons, échéances | A1, A0b | Q6–Q8, D78–D82 | **À scinder** en A2a et A2b (voir §2) |
 | A3 | Propositions, décisions, qui doit agir, entonnoir | A2 | D11/D92, D97 | Charge élevée ; scission optionnelle A3a / A3b |
+| A4b1 | Enveloppe cliente, allocation agence, prévisionnel par besoin (D153, D157) | A3 | D07 | Noyau ; prompt `23_PROMPT_LOT_A4B1.md` |
 | A4a | Lecture, indicateurs, alertes, tableau de bord cliente | A3 | D05–D08 (moteur financier : montants fictifs seulement), P3 graphiques | Garde ; fixer le choix de bibliothèque de graphiques en début de lot |
 | A4d | Fiche secteur unique et plans d'action sur dépassement (D127) | A3, A4a, A5 | Q-N1-1 (D08), Q-N3-1 | Seconde démonstration ; prompt `21_PROMPT_LOT_A4D.md` |
 | A4e | Carte de France interactive (D150) | A4a | Débloqué (D152) | Seconde démonstration ; prompt `22_PROMPT_LOT_A4E.md` |
-| A4b | Enveloppes et réallocation à double validation | A4a | D43, D46 (règles d'allocation à préciser) | Garde ; dépend de règles incomplètes |
+| A4b2 | Réallocation à double validation et rallonges | A4b1, A4a | D43, D46 (règles d'allocation à préciser) | Garde ; dépend de règles incomplètes |
 | A4c1 | Moteur de reporting, COPIL mensuel/trimestriel (PPTX, PDF) | A4a, A4b | D25, D69, D75 (droits logos, photo, gabarit), D83 | **Bloqué en partie** : gabarit COPIL « à produire avant » (D61), aucune trame réelle fournie (D69) |
 | A4c2 | R-01 État des besoins et recrutements, boucles AUT-06 à 11, horloge | A4c1 ; événements de A2/A3 | D93, D94, D96 | Garde ; dépend de l'émission d'événements dès A2 |
 | A5 | Terrain mobile, absences | A3 | D14/D15 révisées par D42, Q19 | À relire à la lumière de D42 (pas de compte intervenant) |

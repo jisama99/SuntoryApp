@@ -106,11 +106,14 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 |---|---|---|---|---|
 | F-50.1 | **Enveloppes** National › DR › CVR, **datées et versionnées** (quota affecté, dépensé, restant, prévisionnel) | Cl, Ag-adm | A fictif, B réel / A4, B6 | Fichiers TBB |
 | F-50.2 | **Réallocation et ajustement** avec propagation de visibilité (§5) | Cl, Ag-adm | A / A4 | D46 |
-| F-50.3 | Rallonges avec historique | Cl, Ag-adm | B / B6 | WF-A1 |
+| F-50.3 | **Rallonges** : ajout par la cliente (nouvelle version d'enveloppe) ; demande par l'agence, décision de la cliente ; historique (D158) | Cl, Ag-adm | A / A4b2 | WF-A1, D158 |
 | F-50.4 | Réalimentation du quota par jours de carence valorisés | Ag-adm | B / B6 | Fichiers TBB |
 | F-50.5 | Chiffrage d'une ligne (heures × semaines × taux + formation), taux datés | Ag-op | B / B6 | WF-C4 (tarifs réels D06 ouvert) |
 | F-50.6 | **Couverture de calcul** (numérateur / dénominateur) ; « Non chiffré », « Budget non renseigné » | Tous | A / A4 | Cadrage |
 | F-50.7 | Rapprochement activité / facturation | Ag, Cl | C | WF-A9 (hors MVP) |
+| F-50.8 | **Enveloppe cliente** saisie dans son espace, versionnée, qui descend à l'agence (D153) | Cl, Ag-adm | A / A4b1 | D153 |
+| F-50.9 | **Allocation agence** par dispositif, campagne, DR, CVR ; total borné par l'enveloppe ; prévisionnel par besoin ; dépassement autorisé avec alerte (D156) | Ag-adm | A / A4b1 | D153, D156 |
+| F-50.10 | **Cockpit budget** (lecture cliente épurée) ; mode administration et **mode présentation** agence (D154) | Cl, Ag | A / A4a | D154 |
 
 ## 4. Indicateurs (catalogue)
 
