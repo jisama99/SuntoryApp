@@ -78,5 +78,5 @@ Constat. Les lots prévoient des automatisations de **sortie** (AUT-01 à AUT-05
 **Mise à jour proposée du registre (non enregistrée)**
 | Réf. | Objet | Proposition |
 |---|---|---|
-| D134 | Imports configurables | N17 à N19 ajoutés au périmètre de A6 comme profils d'import versionnés ; l'analyse de structure sur extractions réelles se fait en local, sans valeur versionnée, sous les conditions de D109 bis |
+| D134 | Imports configurables (**validée le 23/10/2026**) | N17 à N19 ajoutés au périmètre de A6 comme profils d'import versionnés ; l'analyse de structure sur extractions réelles se fait en local, sans valeur versionnée, sous les conditions de D109 bis |
 | D135 | Ingestion et annulation | N20 et N21 réservés à l'étape B (dépendent de D21, D02, D19) ; N22 reprend `MAPPING_SOURCES.md` §3 en A6 |
