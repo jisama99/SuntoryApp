@@ -38,3 +38,6 @@ communes_*
 *.db
 .denylist.local
 data-local/
+
+# Fichiers incrémentaux TypeScript
+*.tsbuildinfo

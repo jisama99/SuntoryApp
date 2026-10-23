@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
+    "pretest:e2e": "npm run build",
     "test:e2e": "playwright test",
+    "prepreview:shots": "npm run build",
     "preview:shots": "playwright test --config=playwright.shots.config.ts",
     "fixtures": "tsx scripts/generate-fixtures.ts"
   },
