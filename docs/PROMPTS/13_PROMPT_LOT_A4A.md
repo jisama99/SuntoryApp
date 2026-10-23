@@ -24,6 +24,7 @@ Lecture d'un coup d'œil sur données fictives : tableau de bord par rôle, acti
 3. Couleurs de quota paramétrables ; quotas permanent et saisonnier « à définir » en gris (Q6 sans réponse) ;
    barre d'alerte segmentée, clic = filtre. Pas de quota par secteur (quota au niveau DR et CVR).
 4. Classement des secteurs (pas des personnes). Filtres DR, CVR (multiple), RS, campagne, période ; vues enregistrées.
+4 ter. Lecture analytique par dispositif et par campagne (docs/COMPLEMENTS_CADRAGE/28 §2 ter) : filtre hiérarchique Dispositif puis Campagne appliqué à tous les écrans de lecture et aux exports, vue « Par campagne » avec sous-totaux, réconciliation des totaux, groupe « Sans campagne », « Non applicable » et « Budget non renseigné » jamais à 0.
 4 bis. Comparaison semaine N / N-1 (D127, F-10.14, docs/COMPLEMENTS_CADRAGE/28_CADRAGE_AXES_N1_N2_N3_N9_V0.1.md §3) : bascule sur les tuiles et le tableau, variation en valeur et en pourcentage, « Non comparable » si N-1 absente ou non chiffrée, jamais 0, S01 comparée à la dernière semaine ISO de l'année précédente. Étendre la fixture déterministe à deux semaines consécutives sans modifier les valeurs existantes.
 5. Chaque indicateur : période, périmètre, unité, définition, date de calcul, détail selon les droits.
 6. « Non chiffré » et « Budget non renseigné » jamais à 0 ; couverture avec numérateur et dénominateur ; lignes sans
@@ -44,6 +45,7 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Test : S01 2027 contre S53 2026, N-1 manquante, N-1 non chiffrée, division par zéro, aucun montant côté RS.
+2 ter. Test : somme des campagnes = total du dispositif = total global ; « Sans campagne » inclus ; le filtre s'applique à chaque écran et à l'export.
 2 bis. Test : un coût manquant ne devient jamais 0 ; une ligne sans géolocalisation reste dans les totaux.
 3. Test d'audience : aucune alerte agence côté cliente, y compris dans les données chargées par la page.
 4. Contrastes des nouvelles couleurs testés dans les deux modes ; règles de style toujours vertes.

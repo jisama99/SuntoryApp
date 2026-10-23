@@ -22,6 +22,7 @@ Un écran par secteur qui réunit besoins, propositions, absences, consommation,
    CVR ses secteurs, DR les siens, agence tout, cliente selon D08 (par défaut refus des montants).
 3. Règles : « Non chiffré » jamais à 0 ; zone blanche en ligne séparée ; pas de quota de secteur (D85) ; absences en
    catégories génériques côté cliente ; secteurs classés, jamais les personnes.
+3 bis. Filtre Dispositif et Campagne (doc 28 §2 ter) appliqué à chaque bloc de la fiche : un secteur se lit par campagne sans perdre le total.
 4. Liens d'entrée : classement des secteurs, alertes, tableau de bord. Modèle ReportTemplate, rendu A4 (D125).
 5. Plans d'action (F-10.15) : objet `action_plan` (alerte, secteur, responsable par rôle, description limitée, échéance,
    statut Ouverte / En cours / Faite / Abandonnée avec motif, audience, journal). Méthodes du Repository avec

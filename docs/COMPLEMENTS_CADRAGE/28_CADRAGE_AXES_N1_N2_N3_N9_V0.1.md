@@ -65,6 +65,23 @@ Saisie dans l'application collaborateur de l'agence (le Workshop l'évoque en qu
 5. Aucune alerte agence côté cliente, CVR, DR, RS (audience).
 6. Captures : paramètres, refus P1, bannière de fenêtre, report P4, FR et EN, clair et sombre.
 
+## 2 ter. Lecture analytique par dispositif et par campagne (exigence transversale, D128)
+
+Chaque dispositif et chaque campagne se lisent **indépendamment**, en plus de la vue globale.
+
+| Règle | Contenu |
+|---|---|
+| Filtre hiérarchique | Barre de filtres commune à tous les écrans de lecture : Dispositif puis Campagne (choix multiple), avec DR, CVR, RS et période (F-10.9). Choisir un dispositif restreint la liste des campagnes ; le filtre est porté par l'adresse de la page et enregistrable en vue |
+| Portée du filtre | Tuiles, graphiques et leur alternative tableau, classement des secteurs, comparaison N / N-1 (F-10.14), fiche secteur (F-10.13), alertes, plans d'action, exports et rapports : tous obéissent au même filtre, aucun écran ne l'ignore |
+| Vue « Par campagne » | Tableau d'analyse, une ligne par campagne (et sous-total par dispositif) avec les mêmes indicateurs : besoins, taux pourvu, délai de prise de poste, heures, consommé fictif, couverture, dépassements, variation N / N-1, part du total |
+| Réconciliation | Somme des campagnes = total du dispositif ; somme des dispositifs = total global. Écart affiché et testé, jamais masqué |
+| Lignes sans campagne | Groupe « Sans campagne » visible et inclus dans les totaux, jamais éliminé |
+| Indicateur non applicable | Un indicateur qui n'a pas de sens pour un dispositif (exemple : forfait kilométrique hors 2nd placement) affiche « Non applicable », jamais 0 ; aucune moyenne ne mélange des unités différentes |
+| Budget | Budget de campagne absent = « Budget non renseigné », jamais 0 (F-10.2) |
+| Droits | Le filtre ne change jamais le périmètre d'accès : il restreint à l'intérieur de `AccessContext` |
+
+Tests : réconciliation campagnes / dispositif / global ; « Sans campagne » inclus ; filtre appliqué à chaque écran listé ; liste de campagnes restreinte par le dispositif ; filtre conservé après rechargement et dans l'export.
+
 ## 3. N2 · Comparaison semaine N / N-1 (F-10.14)
 
 - **Objet** : afficher la tendance des heures, des montants fictifs étiquetés et du nombre de dépassements d'une semaine à la précédente. Lecture seule.
