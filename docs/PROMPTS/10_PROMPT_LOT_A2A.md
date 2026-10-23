@@ -12,8 +12,10 @@ OBJECTIF
 1. CLAUDE.md, docs/DECISIONS.md (registre complet, D105 à D126 en particulier), docs/COMPTE_RENDU_A1.md.
 2. docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md (déjà collé), docs/PROMPTS/03_LOTS_DEV.md (section du lot),
    docs/PLAN_A1_A7.md, docs/GLOSSAIRE.md, docs/FIXTURES.md, docs/DICTIONNAIRE_DONNEES.md, docs/STATUTS_ET_ETATS.md.
-3. La présentation V0.4 (C.WEEKS, C.DUPS) : localiser le fichier via docs/FIXTURES.md (F-3), docs/ECARTS_A0.md et
-   docs/INVENTAIRE_V4_CODE.md (C-11). Si le fichier est introuvable, le signaler : ne pas reconstituer les règles de mémoire.
+3. docs/REGLES_SEMAINE_ET_DOUBLONS_V0.4.md : les 22 cas W1 à W22 et les 7 règles D1 à D7, extraits de
+   REFONTE_V3/PROPOSITION CLEINTE VIA AGENCE/Refonte_V3_Plateforme_Pilotage_Live_Presentation_Cliente_V0.4.html
+   (variables C.WEEKS et C.DUPS). Source de vérité des tests ; si une ligne te paraît incohérente avec la page
+   d'origine, le signaler sans corriger.
 4. docs/COMPLEMENTS_CADRAGE/16 (catalogue fonctionnel), 17 (données Excel), 26 (fonctions, événements, rapports),
    docs/PROMPTS/04_JEUX_ESSAI_ET_RECETTE.md (jeux d'essai des règles).
 
@@ -39,7 +41,7 @@ HORS PÉRIMÈTRE
 Saisie en lot, collage, brouillon automatique, résumé avant soumission, échéances, blocage après échéance, propositions, indicateurs, import Excel, base de données, authentification réelle, commit, push.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
-- Contenu exact de C.WEEKS et C.DUPS : à retrouver ; sans lui, les tests sont écrits sur les seuls cas lisibles et le reste est déclaré non couvert.
+- Gravités W et D : propositions de l'agence (Q7 de la V0.4), à confirmer avec la cliente.
 - Q6 à Q8 (quotas, arbitrages) : paramètres par défaut proposés, non décidés.
 - D22 / Q7 : position de gravité à confirmer avec la cliente.
 
