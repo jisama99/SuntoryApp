@@ -6,7 +6,7 @@ Version de travail du 22/10/2026. Toutes les données ci-dessous sont **fictives
 
 | Entité | Volume proposé | Remarque |
 |---|---|---|
-| DR | 3 (F1, F2, F3) | Libellés fictifs |
+| DR | 3 | Codes et libellés fictifs selon le motif de `docs/FIXTURES.md` §3 (ne jamais reprendre les codes réels) |
 | CVR | 6 | Au moins un DR avec trois CVR pour tester la sélection multiple |
 | RS | 12 | Dont un secteur sans besoin |
 | Magasins | 40 | Dont 3 sans rattachement et 2 sans géolocalisation |
@@ -34,7 +34,7 @@ Règles : codes en texte ; périodes en dates ISO ; semaines avec année ISO ; m
 | Besoin avec coût inconnu | « Non chiffré », jamais 0 |
 | Magasin sans code RS | Quarantaine / « actions à traiter » |
 
-Les tests des règles (W1 à W22, D1 à D7) sont écrits **table par table** à partir de la présentation V0.2 ; les cas « à arbitrer » sont paramétrables.
+Les tests des règles (W1 à W22, D1 à D7) sont écrits **table par table** à partir de la présentation V0.4 (C.WEEKS, C.DUPS) ; les cas « à arbitrer » sont paramétrables.
 
 ## 3. Profils de démo et visibilité attendue
 
@@ -43,8 +43,8 @@ Les tests des règles (W1 à W22, D1 à D7) sont écrits **table par table** à 
 | Direction cliente | Synthèse de son périmètre | Coûts internes agence, données personnelles non nécessaires |
 | DR cliente | Son DR | Autres DR |
 | CVR cliente | Son CVR | Coûts, sauf habilitation (D08 ouvert : le démonstrateur affiche « Non communiqué » par défaut) |
-| RS / demandeur | Son secteur | Budgets nationaux |
-| Intervenant terrain | Ses missions | Budgets, autres intervenants |
+| RS | Son secteur ; saisie des besoins (D44) et saisie terrain pour le compte de l'intervenant (D42, aucun compte intervenant) | Budgets nationaux |
+| Prestataire (administrateur technique) | Paramètres et journaux de démonstration | Rien de plus que l'administrateur agence ; pas de donnée réelle par construction |
 | Agence (opérateur) | Besoins et ressources de la mission | Droits d'administration |
 | Agence (administrateur) | Périmètre de la mission, paramètres | Données de l'organisation cliente hors mission |
 
@@ -92,7 +92,7 @@ Aucun chiffre de la démonstration n'est présenté comme réel.
 
 ## 7. Critères de fin de l'étape A
 - Toutes les suites passent, ou les écarts sont expliqués.
-- Aucune donnée réelle dans le dépôt (contrôle de balayage sur noms, codes et montants des classeurs sources).
+- Aucune donnée réelle dans le dépôt (contrôles C1 à C8 de `docs/FIXTURES.md` §5, dont le balayage par empreintes C3).
 - Aucun appel réseau sortant observé pendant les parcours.
 - Compte rendu de chaque lot présent dans `docs/`.
 - Liste des décisions à obtenir de la cliente, avec décideur attendu.

@@ -17,6 +17,11 @@ Version de travail du 22/10/2026. Signature des livrables externes : FREELANCE (
 | `02_PROMPT_MAITRE_DEV.md` | Prompt à coller à chaque session |
 | `03_LOTS_DEV.md` | Lots A0 à A7 (démonstrateur) et B0 à B9 (MVP, interdits pour l'instant) |
 | `04_JEUX_ESSAI_ET_RECETTE.md` | Données fictives, cas de test, parcours de recette, script de démonstration |
+| `05_PROMPT_LOT_A0.md` | Lot A0 (fait le 23/10/2026) |
+| `00B_PROMPT_DE_LANCEMENT.md` | À coller en premier : usage des connecteurs GitHub, Supabase, Vercel |
+| `05B_PROMPT_LOT_A0B.md` | Lot A0b : cadrage des données Excel (documents) |
+| `06_PROMPT_LOT_A1.md` | Lot A1 : socle, profils, i18n, aperçu |
+| `00_DEMARRAGE_CLAUDE_CODE.md` | Liste de contrôle du poste avant la première session |
 
 ## Lien avec l'existant
 - Les lots reprennent la convention de `PROMPTS_AJUSTEMENTS_V4` (un lot par session, validation entre lots, compte rendu).
@@ -25,6 +30,6 @@ Version de travail du 22/10/2026. Signature des livrables externes : FREELANCE (
 
 ## Points de vigilance avant le premier lot
 - **Signature** : FREELANCE pour les livrables externes. Aucun logo, nom ni coordonnée dans les écrans du démonstrateur.
-- **Hébergement** : refacturé à l'agence Impact sur une ligne dédiée du devis (chaîne Suntory → Impact → prestataire → hébergeur) ; aucune donnée réelle en ligne avant le choix complet de l'hébergeur et le contrat article 28.
+- **Hébergement** : refacturé au devis ; aucune donnée réelle en ligne avant le choix complet de l'hébergeur et le contrat article 28.
 - **Langues** : le démonstrateur est bilingue FR / EN dès le lot A1 ; la charge supplémentaire est à chiffrer.
 - **Date** : le 10/11/2026 vaut hypothèse de date cible du démonstrateur, pas du MVP.

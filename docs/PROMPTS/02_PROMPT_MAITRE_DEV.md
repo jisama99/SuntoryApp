@@ -17,7 +17,7 @@ CONTEXTE
   par le prestataire, points à valider par l'agence (Impact) et la cliente, et points ouverts.
 
 ÉTAPE EN COURS
-Étape A : démonstrateur cliquable sur données fictives. L'étape B (MVP, base réelle,
+Étape A : démonstrateur cliquable sur données fictives (périmètre du 10/11 : D110). L'étape B (MVP, base réelle,
 authentification réelle, imports réels) est interdite sans « feu vert B » écrit dans
 docs/DECISIONS.md.
 
@@ -46,11 +46,11 @@ APRÈS
 - Ne pas commiter ni pousser sans demande explicite.
 
 RÈGLES NON NÉGOCIABLES
-- Aucune donnée réelle, aucun tarif fictif présenté comme réel, aucun coût inconnu à 0 €.
+- Aucune donnée réelle (seule exception : D109 bis, découpe locale), aucun tarif fictif présenté comme réel, aucun coût inconnu à 0 €.
 - Aucune donnée interne protégée par un simple masquage dans l'écran.
 - Aucun changement silencieux des calculs, des identifiants ou des historiques.
 - Aucune validation, notification externe ou publication par une IA.
-- Signature FREELANCE pour les livrables externes (D28) ; ni signature, ni coordonnées, ni logo dans les écrans du démonstrateur.
+- Signature FREELANCE pour les livrables externes (D28) ; ni signature, ni coordonnées du prestataire, ni logo d'agence dans les écrans du démonstrateur. Logos Suntory et Marvesting : selon D113.
 - Interface en français et en anglais : aucune chaîne en dur.
 - Sources originales en lecture seule.
 ```

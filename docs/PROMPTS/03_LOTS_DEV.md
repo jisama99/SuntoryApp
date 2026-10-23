@@ -9,11 +9,17 @@ Chaque lot se lance après le prompt maître (`02_PROMPT_MAITRE_DEV.md`). Les du
 | Lot | Objet | Dépend de |
 |---|---|---|
 | A0 | Lecture, état réel, pile, dépôt vide, jeux d'essai | Aucun (aucun code applicatif) |
-| A1 | Socle : design V4, navigation par rôle, profils de démo | A0 validé |
-| A2 | Saisie des besoins : unitaire, en lot, contrôles de semaine et doublons | A1 |
+| A0b | **Cadrage des données Excel (D50 à D53)** : dictionnaire, mapping, structure cible du fichier branché, glossaire FR/EN, jeux d'essai anonymisés. Voir doc. 17 | A0 |
+| A1 | Socle : design V4, navigation par rôle, profils de démo, `ZoneLabel`, contexte d'accès, audience des alertes, aperçu (D104, D106 à D108) | A0 validé (A0b n'est plus un préalable, D112) |
+| A2 | Saisie des besoins : unitaire, en lot, contrôles de semaine et doublons ; **blocage après échéance (D78, doc. 24)** | A1, A0b |
+| A2a / A2b | **Scission validée le 23/10/2026 (D112).** A2a : règles pures (semaine ISO, W1–W22, D1–D7), événements, saisie unitaire et duplication. A2b : saisie en lot, brouillon, résumé, échéances et blocage (D78 à D82) | A1, A0b |
 | A3 | Propositions, décisions, qui doit agir, urgence | A2 |
-| A4 | Pilotage : tableau de bord, couleurs de quota, alertes, classement, filtres | A3 |
-| A5 | Terrain mobile et absences génériques | A3 |
+| A4 | Pilotage : tableau de bord, couleurs de quota, alertes, classement, filtres. **Scindé (D48) : A4a lecture et indicateurs, alertes d'échéance et cockpit cliente (doc. 24), A4b enveloppes et réallocation à double validation (D46)** | A3 |
+| A4c1 | **Moteur de reporting et COPIL mensuel (PPTX et PDF) sur données fictives** : gabarit COPIL Marvesting, catalogue de diapositives, graphiques sélectionnables (doc. 20, 22, 25), pages de détail (doc. 23), COPIL trimestriel (R-02, R-03). **Scission validée le 23/10/2026 (D95)** | A4a, A4b |
+| A4c2 | **État des besoins et recrutements (R-01, doc. 26 §7) et boucles d'automatisation AUT-06 à 11, horloge de démonstration, instantané hebdomadaire.** Lit les événements émis dès A2 et A3 (D91) | A4c1 |
+| A4c (ancien libellé) | Remplacé par A4c1 et A4c2 : charte douce (D62), mode recrutements (D68), trame Marvesting à 70 % (D70), pages paramétrées (D71) restent dans leur périmètre | |
+| A5 | Terrain mobile et absences génériques. **Révisé par D42 : saisie par RS / CVR / agence pour le compte de l'intervenant, sans compte intervenant** | A3 |
+| A5b | **Photos terrain sur images fictives (D98 à D103, doc. 27)** : import simulé, pré-contrôles réels sur fixtures, validation, galerie, retrait, purge à horloge simulée. La page `photos` de A4c1 lit ces fixtures | A5 |
 | A6 | Import Excel en quarantaine (fichiers fictifs) | A2 |
 | A7 | Recette, script de démonstration, captures | A1 à A6 |
 

@@ -27,3 +27,14 @@ sources-reelles/
 # Système
 .DS_Store
 Thumbs.db
+
+# Données réelles locales (D109 bis, D111) : jamais versionnées
+data_real*
+ref_reel*
+ref_magasins*
+communes_*
+*_pack.js
+*.sqlite
+*.db
+.denylist.local
+data-local/
