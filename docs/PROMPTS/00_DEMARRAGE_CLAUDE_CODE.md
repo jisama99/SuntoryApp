@@ -41,3 +41,6 @@ Chemins à interdire en lecture : `REFONTE_V3/01_SOURCE_SAISONNIER`, `REFONTE_V3
 - Accord d'Impact et de la cliente pour l'usage de la découpe réelle (avant toute démonstration, D109 bis).
 - Construction du fichier d'empreintes `.denylist.local` (contrôle C3), hors dépôt.
 - Réponses aux questions 9 et 10 si vous voulez remplacer mes valeurs par défaut (D107, D108).
+
+## 7. Après A1 (mise à jour du 23/10/2026)
+A1 est livré (A1 bis à quater inclus : mode sombre, direction visuelle D123 à D126, icônes harmonisées, tuiles colorées). Pour enchaîner : `09_INDEX_LOTS.md` donne l'ordre, les prompts `10_` à `20_` couvrent A2a à A5b, et `07_REGLES_COMMUNES_LOTS_APRES_A1.md` se colle avant chaque prompt de lot. Relancer d'abord les contrôles sur votre poste (§1 de l'index).
