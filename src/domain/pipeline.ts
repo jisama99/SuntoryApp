@@ -240,7 +240,7 @@ export function nextStep(
 
 /**
  * Statut d'exécution : où en est la prise de poste, indépendamment du statut de poste calculé (qui mêle accord et recrutement).
- * « Terminée » : besoin stoppé après la prise de poste, ou rupture sans nouvelle prise de poste.
+ * « Poste terminé » : besoin stoppé après la prise de poste, ou rupture sans nouvelle prise de poste.
  */
 export function executionStatus(f: Facts, today: IsoDate): ExecutionStatus | null {
   const r = f.recruitment;

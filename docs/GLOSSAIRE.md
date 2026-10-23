@@ -56,6 +56,7 @@ Colonnes : code = identifiant dans le code (anglais, stable) ; libellé affiché
 | Désistement | Désistement | Withdrawal | `withdrawal` | D97 : retour à « En recrutement » + compteur |
 | Réattribué / Stoppé / Zone blanche | Réattribué / Stoppé / Zone blanche | Reassigned / Stopped / White zone | `status.*` | D85 : libellés complets à relire dans le registre |
 | Urgence / Retard de proposition | Urgence / Retard | Urgency / Late | `urgency`, `late` | A3 |
+| Statut d'exécution | Non démarrée · Prise de poste planifiée · En poste · Poste terminé | Not started · Start planned · In post · Post ended | `execution.*` | D215 |
 
 ## 4. Temps et calendrier
 

@@ -42,3 +42,6 @@ Constats : (a) à 390 px, « MAG-DEMO-003 » se coupait en fin de ligne dans la 
 | D213 | Besoin stoppé et taux | Mise en œuvre de D211 : heures effectuées avant l'arrêt comptées (besoin stoppé après sa prise de poste), stoppé avant démarrage exclu, rejeté jamais compté |
 | D214 | Écart acceptation et poste démarré | Mise en œuvre de D210 en dates ; « plus tard dans la journée » vide tant que l'heure n'est pas enregistrée ; prise de poste un jour non ouvré rangée avec « jour ouvré suivant ou plus » |
 | D215 | Statut d'exécution | Quatre valeurs, distinctes du statut de poste calculé ; libellés à ajouter au glossaire |
+
+## 7. Suite donnée (23/10/2026)
+Validées par T. SOEFOU et inscrites : D212 (« En poste » maintenu, alerte et action à coder), D214 (horodatage automatique de l'acceptation, heure de prise de poste facultative, sens à confirmer avec la cliente), D215 (libellés d'exécution, « Poste terminé »). D213 (mise en œuvre de D211) n'a pas été soumise : elle reste proposée.
