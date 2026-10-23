@@ -21,7 +21,8 @@ Démontrer le pont temporaire (position D04 / Q20) : import de fichiers fictifs,
 2. Lecture : contrat commun du fichier (empreinte, version du contrat, provenance fichier, onglet, ligne).
 2 bis. Profils d'import configurables (D134, doc 29) : signature de structure, détection de l'onglet, de la ligne d'en-tête et du bandeau de groupes, colonne désignée par groupe + libellé normalisé + rang, correspondances avec chaîne de transformation, sensibilité S0 à S3 par colonne (S2 exclue par défaut), tables de valeurs, jointures interne, vers référentiel et entre fichiers avec taux de rapprochement, proposition automatique de correspondances avec score expliqué et validation humaine, détection de dérive de structure. Traitement local et déterministe.
 2 ter. Table opération vers dispositif (D136) : écran d'administration de l'agence, opération inconnue = ligne bloquée et proposée au rattachement, jamais rattachée automatiquement. Profils d'import gérés par l'agence en mode administration seule (D137).
-2 quater. Générateur de variantes fictives (colonnes réordonnées, renommées, supprimées, ajoutées, bandeau absent, en-tête décalée, doublons d'en-tête, colonnes vides) et mesure de reconnaissance reportée au compte rendu, sans seuil inventé.
+2 quater. Statuts (D138) : une source de référence par dimension, le statut de mission LOGA est en lecture seule avec date d'extraction, toute divergence avec la plateforme produit une alerte d'écart d'audience agence sans correction automatique. File « à rapprocher » (D139) : codes magasin textuels, suggestion par ville et adresse, confirmation par l'agence seule, rapprochement mémorisé, ligne non rapprochée comptée sous « Magasin non rapproché ».
+2 quinquies. Générateur de variantes fictives (colonnes réordonnées, renommées, supprimées, ajoutées, bandeau absent, en-tête décalée, doublons d'en-tête, colonnes vides) et mesure de reconnaissance reportée au compte rendu, sans seuil inventé.
 3. Aperçu : créations, modifications, inchangés, rejets, conflits ; validation humaine ; rapport téléchargeable.
 4. Idempotence : un lot réimporté ne crée aucun doublon ; fichier renommé au même contenu reconnu ; retour ancien refusé.
 5. Conflit de version : refus d'écraser, présentation des deux versions.
@@ -38,6 +39,7 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 
 CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
+2 ter. Tests : un import ne modifie jamais une décision cliente, une proposition ni un poste ; divergence de statut = alerte agence seule ; pseudo-code jamais rapproché sans confirmation ; ligne non rapprochée présente dans les totaux.
 2 bis. Tests : reconnaissance sur variantes, en-têtes en double distingués, colonne S2 jamais persistée côté cliente, jointure non rapprochée mise en attente, dérive de structure signalée à l'agence seule, détection par contenu et non par nom de fichier.
 2. Tests : idempotence, fichier renommé au même contenu, retour ancien, formule dans un champ texte, fichier trop volumineux.
 3. Aucune requête réseau pendant l'import (test Playwright).

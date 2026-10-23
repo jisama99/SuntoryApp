@@ -71,10 +71,10 @@ Un générateur produit, à partir du gabarit fictif, des **variantes** : colonn
 | N° | Question | Réponse ou hypothèse | Statut |
 |---|---|---|---|
 | Q-I1 | Les deux opérations de l'export sont-elles deux campagnes d'un même dispositif ? | **Le second placement est un dispositif à part** (le Workshop le distingue du merch horaire). Une opération de l'extraction est une **campagne** ; la table `operation_dispositif` rattache chaque opération à un dispositif et est tenue par l'agence administration. Les deux opérations de l'export relèvent donc de deux dispositifs distincts (second placement, merch horaire ponctuel) | Décidée par T. SOEFOU le 23/10/2026 (D136) |
-| Q-I2 | Quel statut fait foi quand l'extraction et la plateforme divergent ? | La plateforme pour les décisions cliente ; l'extraction pour le statut LOGA (lecture seule) | Hypothèse, ouverte |
+| Q-I2 | Quel statut fait foi quand l'extraction et la plateforme divergent ? | Aucune source globale : une source de référence par dimension. Décision cliente, proposition agence, poste calculé et facturation (D54) : la plateforme, jamais modifiés par un import. Statut de mission LOGA : l'extraction, en lecture seule, avec date d'extraction affichée. Divergence : alerte d'écart d'audience agence avec les deux valeurs, aucune correction automatique | Validée (D138) |
 | Q-I3 | Doublons de code mission | Alerte et mise en attente, jamais d'écrasement | Validée (D137) |
 | Q-I4 | Qui crée et valide les profils d'import ? | **L'agence en mode administration**, seule | Validée (D137) |
 | Q-I5 | Référence d'intervenant : exclusion ou pseudonyme ? | Exclusion par défaut des données de personnes | Validée (D137) |
-| Q-I6 | Code magasin textuel (pseudo-codes) : rapprochement par ville et adresse ? | Non au démonstrateur, mise en attente | Hypothèse, ouverte |
+| Q-I6 | Code magasin textuel (pseudo-codes) : rapprochement par ville et adresse ? | Suggestion oui, application non : file « à rapprocher » visible de l'agence seule, suggestion du magasin probable, confirmation humaine, rapprochement mémorisé dans la table de correspondance (N18). Ligne non rapprochée comptée sous « Magasin non rapproché », jamais éliminée. File démontrée sur pseudo-codes fictifs | Validée (D139) |
 
 Table `operation_dispositif` : code d'opération source, libellé, campagne, dispositif, dates de validité, auteur, date. Une opération inconnue bloque la ligne et est présentée à l'agence pour rattachement (jamais rattachée automatiquement). Une campagne n'a qu'un dispositif (H1, D128).
