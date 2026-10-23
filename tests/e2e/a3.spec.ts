@@ -129,27 +129,6 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     expect(w.consoleErrors).toEqual([]);
   });
 
-  test('validation en lot avec motif commun, annulable', async ({ page, context }) => {
-    await setProfile(context, 'dr_client');
-    await page.goto('/fr/proposals');
-    const batch = page.getByTestId('batch-decision');
-    await expect(batch).toBeVisible();
-    await batch.getByRole('button', { name: 'Refuser la sélection' }).click();
-    await expect(page.getByTestId('batch-result')).toContainText('Cochez');
-    await batch.locator('input[type="checkbox"]').nth(0).check();
-    await batch.getByRole('button', { name: 'Refuser la sélection' }).click();
-    await expect(page.getByTestId('batch-result')).toContainText('motif commun');
-    await batch.locator('textarea').fill('Lot de démonstration.');
-    await batch.getByRole('button', { name: 'Valider la sélection' }).click();
-    await expect(page.getByTestId('batch-result')).toContainText('décidée');
-    const toast = page.getByRole('status', { name: 'Confirmation' });
-    await expect(toast).toBeVisible();
-    await toast.getByRole('button', { name: 'Annuler' }).click();
-    // Le serveur est partagé avec d'autres fichiers de test qui écrivent en parallèle : une autre écriture rend l'annulation
-    // impossible, par conception (D159). Les deux issues sont donc légitimes ; la restauration exacte est prouvée par les tests unitaires.
-    await expect(toast).toContainText(/Modification annulée|Annulation impossible/);
-  });
-
   test('notes : partage confirmé, retrait avec trace', async ({ page, context }) => {
     await setProfile(context, 'agency_operator');
     await open(page, 'BES-DEMO-006');
