@@ -18,7 +18,7 @@ Ordre de lancement : A2a, A2b (avec N9), A3, A4a (avec N2), A5, **A4d** (N1 puis
 ### 2.1 Constat et vocabulaire
 - Notre dictionnaire contient un champ `campaign` dont les valeurs sont Permanent, Saisonnier, Merch Horaire, Second placement. Ce sont en réalité des **dispositifs**.
 - La source demande de distinguer le merch horaire du 2nd placement et d'éviter qu'une même campagne serve aux deux dispositifs.
-- **Hypothèse H1** : introduire deux niveaux. `dispositif` (liste fermée, quatre valeurs actuelles) et `campagne` (instance rattachée à **un seul** dispositif, avec dates). Le champ actuel `campaign` devient `dispositif` ; la campagne est ajoutée. Décision de modèle à valider avant A2b.
+- **Hypothèse H1 (validée par T. SOEFOU le 23/10/2026)** : introduire deux niveaux. `dispositif` (liste fermée, quatre valeurs actuelles) et `campagne` (instance rattachée à **un seul** dispositif, avec dates). Le champ actuel `campaign` devient `dispositif` ; la campagne est ajoutée. Décision de modèle à valider avant A2b.
 
 ### 2.2 Jeu de paramètres par dispositif (F-30.10)
 Table `dispositif_params`, modifiable par l'agence seule, **jamais codée en dur** (A10 de la source). Les valeurs de départ ci-dessous viennent du Workshop et sont **à valider** par la cliente.
@@ -31,6 +31,7 @@ Table `dispositif_params`, modifiable par l'agence seule, **jamais codée en dur
 | Effet d'une modification en cours de mois | `change_effect` | mois suivant | calendrier D80 / D82 | À valider |
 | Délai de modification avant le début du mois suivant | `change_lead_days` | 10 jours | preset Standard (5 jours ouvrés) | À valider, jours calendaires ou ouvrés ? |
 | Saisie ouverte à | `entry_roles` | rôles à définir (« CS » non défini, Q ouverte) | tous les rôles de saisie | **Bloquant partiel** |
+| Jours de la semaine proposés | `days_allowed` | LUN à SAM | LUN à SAM | DIM désactivé par défaut, Q-J1 |
 | Campagne unique par dispositif | `campaign_single_dispositif` | oui | oui | Règle de modèle (H1) |
 
 ### 2.3 Règles de validation (F-30.11)
@@ -79,8 +80,9 @@ Chaque dispositif et chaque campagne se lisent **indépendamment**, en plus de l
 | Indicateur non applicable | Un indicateur qui n'a pas de sens pour un dispositif (exemple : forfait kilométrique hors 2nd placement) affiche « Non applicable », jamais 0 ; aucune moyenne ne mélange des unités différentes |
 | Budget | Budget de campagne absent = « Budget non renseigné », jamais 0 (F-10.2) |
 | Droits | Le filtre ne change jamais le périmètre d'accès : il restreint à l'intérieur de `AccessContext` |
+| Comparatif côte à côte (D131) | Dans la vue « Par campagne », choix de deux ou trois campagnes (ou dispositifs) comparées colonne par colonne sur les mêmes indicateurs, avec écart en valeur et en pourcentage par rapport à la première colonne ; « Non comparable » entre unités incompatibles ; le filtre de période s'applique aux colonnes ; export A4 |
 
-Tests : réconciliation campagnes / dispositif / global ; « Sans campagne » inclus ; filtre appliqué à chaque écran listé ; liste de campagnes restreinte par le dispositif ; filtre conservé après rechargement et dans l'export.
+Tests : comparatif de campagnes (unités incompatibles, écart à la première colonne) ; réconciliation campagnes / dispositif / global ; « Sans campagne » inclus ; filtre appliqué à chaque écran listé ; liste de campagnes restreinte par le dispositif ; filtre conservé après rechargement et dans l'export.
 
 ## 3. N2 · Comparaison semaine N / N-1 (F-10.14)
 
@@ -151,6 +153,33 @@ Tests : réconciliation campagnes / dispositif / global ; « Sans campagne » in
 | Q-N9-3 | « CS » : qui est ce rôle ? Qui peut saisir le 2nd placement ? | Cliente | `entry_roles` non restreint au démonstrateur, rôle vide signalé |
 | Q-N9-4 | Forfait kilométrique : valeur de référence, périodicité d'actualisation, visibilité côté cliente | Cliente, agence | Valeur fictive étiquetée, masquée côté cliente |
 | Q-N9-5 | Un dispositif unique par campagne : confirmé ? Changement de nom du champ `campaign` acceptable ? | T. SOEFOU | Oui (H1) |
+| Q-J1 | Le dimanche est-il à proposer pour certains dispositifs ? | Cliente, agence | DIM désactivé par défaut |
 | Q-N2-1 | La semaine N-1 est-elle la semaine ISO précédente ou la même période de l'an passé ? | T. SOEFOU | Semaine ISO précédente |
 | Q-N1-1 | La cliente voit-elle les montants au secteur ? | Cliente (D08) | Non, par défaut refus |
 | Q-N3-1 | Qui peut créer une action sur un dépassement de la cliente ? | Cliente, agence | CVR, DR, agence |
+
+## 8. Saisie des jours de la semaine (D132)
+
+- Le champ `days` d'un besoin devient un **sélecteur de cases à cocher** : un seul jour ou plusieurs (composant `WeekdayPicker`), sur toutes les saisies de besoin (unitaire, lot, duplication).
+- Jours proposés : LUN à DIM. Le dictionnaire portait LUN à SAM : écart signalé, DIM **désactivé par défaut** et activable par dispositif (paramètre `days_allowed`, F-30.10). Question Q-J1 : le dimanche est-il à proposer pour certains dispositifs ?
+- Raccourcis : « Lun à ven », « Lun à sam », « Tous », « Aucun ». Au moins un jour est exigé (message explicite).
+- Contrôles : avertissement non bloquant si aucun des jours cochés ne tombe entre la date de début et la date de fin du besoin ; avertissement si un jour coché est férié sur toute la période.
+- Saisie en lot : le collage de jours (LUN;MAR;JEU) est accepté et converti en cases cochées ; valeur inconnue = ligne rejetée avec explication.
+- Stockage : liste de codes ISO (1 à 7) ; affichage FR (lun, mar) et EN (Mon, Tue). Accessibilité : groupe de cases étiqueté, navigation clavier, état coché lisible sans la couleur.
+
+## 9. Sélecteur de date partout (D133)
+
+Aucune date ne se tape à la main. Composants communs `DatePicker` (une date), `DateRangePicker` (période) et `WeekPicker` (semaine ISO). Spécification : règle 12 de `PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md`.
+
+| Écran ou axe | Lot | Composant | Jours désactivés |
+|---|---|---|---|
+| Début et fin de besoin ; décalage de duplication | A2a | DateRangePicker, DatePicker | Hors bornes paramétrées, fériés signalés |
+| Calendrier d'échéances (N9, D80), durée de réouverture | A2b | DatePicker, DateRangePicker | Non ouvrés, fériés |
+| Dates du tableau de saisie en lot | A2b | DatePicker en cellule | Après échéance (D78) |
+| Prise de poste, remise du véhicule, dates limites de décision | A3 | DatePicker | Avant la décision |
+| Filtre de période, choix de la semaine N (N2) | A4a | DateRangePicker, WeekPicker | Hors données disponibles |
+| Début et fin d'absence, remplacement | A5 | DateRangePicker | Selon règles A5 |
+| Échéance d'un plan d'action (N3) | A4d | DatePicker | Non ouvrés |
+| Projection annuelle ou semestrielle (N10, non cadré) | futur | DateRangePicker | À définir |
+
+Exigences : semaine commençant le lundi, numéro de semaine ISO affiché, jour courant issu de l'horloge de démonstration (23/10/2026, S43), raison écrite de chaque jour désactivé, clavier complet, cibles tactiles de 44 px, mode sombre et contraste testés, format de date selon la langue (D118), valeur interne ISO. Un test d'architecture interdit `type="date"` et les champs texte de date hors de ces composants.

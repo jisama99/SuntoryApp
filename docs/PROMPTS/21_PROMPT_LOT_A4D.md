@@ -33,6 +33,9 @@ Un écran par secteur qui réunit besoins, propositions, absences, consommation,
    de bord. Textes FR et EN, mode sombre.
 8. Captures : docs/captures/A4d/ par profil, FR et EN, clair et sombre, plus rendu A4.
 
+RÈGLES TRANSVERSES DU LOT (D133)
+Échéance d'un plan d'action : sélecteur de date, jours non ouvrés désactivés (règle 12).
+
 HORS PÉRIMÈTRE
 Édition des besoins depuis la fiche, carte, photos terrain, comparaison entre secteurs, e-mails réels, fil de commentaires,
 suivi du coaching, contrôle qualité des visites, vivier, base de données, commit, push.

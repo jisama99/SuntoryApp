@@ -42,6 +42,16 @@ CONVENTIONS À RESPECTER
 10. Réseau : aucune requête externe (polices, icônes, cartes, scripts). Le test Playwright échoue sinon.
 11. Chiffres affichés : « Non chiffré » ou « Non renseigné » ne deviennent jamais 0 (D05 à D07 ouverts :
     montants fictifs étiquetés, aucun moteur financier réel).
+12. Dates (D133) : aucune date ne se tape à la main. Toute saisie ou tout filtre de date passe par les composants
+    communs DatePicker, DateRangePicker et WeekPicker (src/components), qui ouvrent un calendrier de sélection.
+    Le champ affiche la date au format de la langue et reste en lecture seule ; la valeur interne est ISO aaaa-mm-jj.
+    Calendrier : semaine commençant le lundi, numéro de semaine ISO affiché, jour courant tiré de l'horloge de
+    démonstration, jours désactivés avec leur raison écrite (férié, hors bornes, après échéance D78), navigation
+    complète au clavier, cibles tactiles de 44 px minimum, mode sombre, FR et EN, aucune requête externe. Un test
+    d'architecture interdit type="date" et tout champ texte de date en dehors de ces composants.
+13. Jours de la semaine (D132) : toute sélection de jours passe par le composant WeekdayPicker : cases à cocher
+    LUN à DIM, un seul jour ou plusieurs, raccourcis « Lun à ven », « Tous », « Aucun », au moins un jour exigé.
+    Les jours proposés viennent des paramètres du dispositif (défaut LUN à SAM, DIM désactivé).
 
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.

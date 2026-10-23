@@ -37,6 +37,9 @@ OBJECTIF
 9. Accessibilité : formulaires au clavier, erreurs associées aux champs, statuts avec forme et texte.
 10. Captures : docs/captures/A2a/ (saisie, alerte doublon, correction de semaine, liste).
 
+RÈGLES TRANSVERSES DU LOT (D132, D133)
+Créer les composants communs DatePicker, DateRangePicker, WeekPicker et WeekdayPicker (règles 12 et 13) et le module pur des jours fériés. Dates de début et de fin de besoin, décalage de duplication : sélecteur de date. Champ `days` : cases à cocher LUN à DIM (docs/COMPLEMENTS_CADRAGE/28 §8), une ou plusieurs valeurs, au moins une, avertissement si aucun des jours cochés ne tombe dans la période. Test d'architecture contre type="date" et les champs de date en texte. Champ `campaign` renommé `dispositif`, nouvelle `campaign` rattachée à un seul dispositif (H1 validée, D128).
+
 HORS PÉRIMÈTRE
 Saisie en lot, collage, brouillon automatique, résumé avant soumission, échéances, blocage après échéance, propositions, indicateurs, import Excel, base de données, authentification réelle, commit, push.
 

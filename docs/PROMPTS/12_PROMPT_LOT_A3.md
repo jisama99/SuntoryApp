@@ -28,6 +28,9 @@ Le circuit besoin, proposition, décision, visible par chaque acteur : statuts s
 7. Écrans : fil du besoin, proposition, décision, tableau « à traiter » par rôle. Textes FR et EN.
 8. Captures : docs/captures/A3/ (besoin vers proposition vers décision, refus puis nouvelle proposition).
 
+RÈGLES TRANSVERSES DU LOT (D133)
+Date de prise de poste, remise du véhicule et dates limites de décision : sélecteur de date (règle 12).
+
 HORS PÉRIMÈTRE
 Indicateurs et tableau de bord (A4a), enveloppes (A4b), exports, terrain, photos, import Excel, base de données, commit, push.
 

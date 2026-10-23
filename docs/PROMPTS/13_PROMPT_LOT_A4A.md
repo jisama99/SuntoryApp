@@ -34,6 +34,9 @@ Lecture d'un coup d'œil sur données fictives : tableau de bord par rôle, acti
 8. Écrans lisibles en mode sombre ; alternative tableau pour chaque graphique.
 9. Captures : docs/captures/A4a/ par profil concerné.
 
+RÈGLES TRANSVERSES DU LOT (D131, D133)
+Filtre de période : DateRangePicker et WeekPicker ; comparaison N / N-1 : choix de la semaine N au WeekPicker. Comparatif de campagnes côte à côte (doc 28 §2 ter) : deux ou trois campagnes choisies, mêmes indicateurs, écart par rapport à la première colonne, « Non comparable » entre unités incompatibles.
+
 HORS PÉRIMÈTRE
 Enveloppes et réallocation (A4b), exports PPTX et PDF (A4c1), cartographie, photos, import Excel, moteur financier réel, base de données, commit, push.
 

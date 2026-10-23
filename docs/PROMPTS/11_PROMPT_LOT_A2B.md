@@ -29,6 +29,9 @@ Compléter la saisie : tableau multi-lignes et collage, brouillon automatique, r
 7. Écrans : lot, calendrier (agence), bannières d'échéance, résumé des retards. Textes FR et EN.
 8. Captures : docs/captures/A2b/ (lot, blocage après échéance, alerte J-2, réouverture).
 
+RÈGLES TRANSVERSES DU LOT (D132, D133)
+Calendrier d'échéances, durée de réouverture et dates du tableau de saisie en lot : sélecteur de date (règle 12), jours désactivés avec raison. Colonne `days` du lot : WeekdayPicker en cellule, et collage de jours (LUN;MAR) accepté puis affiché en cases cochées. Paramètre `days_allowed` par dispositif.
+
 HORS PÉRIMÈTRE
 Propositions et décisions, indicateurs de pilotage, courriels réels (aucun envoi), import Excel, base de données, commit, push.
 

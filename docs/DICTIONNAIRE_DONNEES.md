@@ -22,7 +22,8 @@ Propriétaire d'écriture : **C** cliente · **A** agence · **K** calculé (jam
 |---|---|---|---|---|---|---|---|
 | `need_id` | (technique) | UUID | oui | S | S0 | both | immuable, jamais réaffecté |
 | `need_code` | ID besoin / Need ID | texte | oui | C | S0 | both | unique ; doublon = blocage (CONTRAT §3) |
-| `campaign` | Campagne / Campaign | liste | oui | C | S0 | both | Permanent, Saisonnier, Merch Horaire, Second placement ; inconnue = blocage |
+| `dispositif` | Dispositif / Scheme | liste | oui | C | S0 | both | Permanent, Saisonnier, Merch Horaire, Second placement ; inconnue = blocage (anciennement `campaign`, H1 validée D128) |
+| `campaign` | Campagne / Campaign | liste | oui | C | S0 | both | rattachée à un seul dispositif ; inconnue = blocage (D128) |
 | `dr_code` | DR | code→`ZoneLabel` | oui | C | S1 | both | affiché avec nom (D106) |
 | `region` | Région | texte | oui | C | S0 | both | |
 | `cvr_code` | CVR | code→`ZoneLabel` | oui | C | S1 | both | 18 CVR ; liste fermée |
@@ -34,7 +35,7 @@ Propriétaire d'écriture : **C** cliente · **A** agence · **K** calculé (jam
 | `priority` | Priorité | liste | oui | C | S0 | both | PRIO 1 à 3 |
 | `period_no` | Période | entier | oui | C | S0 | both | 1 ou 2 |
 | `need_start` / `need_end` | Date début / fin besoin | date | oui | C | S0 | both | bornes 01/01/2026 à 31/12/2028 (module) ; à paramétrer |
-| `days` | Jours | liste multi | oui | C | S0 | both | LUN à SAM |
+| `days` | Jours | liste multi (cases à cocher) | oui | C | S0 | both | LUN à DIM proposés ; DIM désactivé par défaut (paramètre du dispositif) ; au moins un jour (D132) |
 | `hours_slot` | Horaires | texte | oui | C | S0 | both | |
 | `store_count` | Nb magasins | entier ≥ 0 | oui | C | S0 | both | |
 | `client_comment` | Commentaire cliente | texte libre | non | C | S2 | both | **risque données de santé en texte libre** (5 cas détectés par mots-clés) → consigne de saisie |

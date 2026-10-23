@@ -27,6 +27,9 @@ Montrer le parcours terrain sans promettre le hors ligne définitif : missions d
 6. Événements émis avec audience ; aucune donnée personnelle côté cliente.
 7. Captures : docs/captures/A5/ en 390 px (parcours complet) et 1440 px (validation).
 
+RÈGLES TRANSVERSES DU LOT (D133)
+Dates de début et de fin d'absence, dates de remplacement : DateRangePicker (règle 12).
+
 HORS PÉRIMÈTRE
 Photos (A5b), notifications push réelles, hors ligne réel, géolocalisation réelle, comptes intervenants, import Excel, base de données, commit, push.
 
