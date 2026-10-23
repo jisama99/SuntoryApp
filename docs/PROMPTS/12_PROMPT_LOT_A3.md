@@ -39,6 +39,8 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 - D93 à D97 : valeurs de délai à confirmer ; le modèle les mesure sans seuil figé.
 - Scission optionnelle A3a (propositions, décisions) puis A3b (entonnoir) si la session devient trop longue : la signaler plutôt que de bâcler.
 
+NOTES (D162, F-20.10) : fil de notes sur les propositions et décisions, puis réutilisable sur les autres objets ; visibilité choisie à chaque note (Interne agence, Partagée avec la cliente, Partagée avec un destinataire DR, CVR ou RS), interne par défaut, badge de visibilité, confirmation avant partage, retrait avec trace, audience par défaut refusée, événement au journal, absence des exports cliente ; tests d'audience.
+
 CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Scénarios testés : refus, modification après accord, remplacement, deux propositions sur un besoin ; aucun accord obsolète conservé silencieusement.

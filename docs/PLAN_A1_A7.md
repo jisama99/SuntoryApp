@@ -9,6 +9,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A0b | Cadrage des données Excel (D50–D53) | A0 | D24 (sources absentes, 4C vide), D51 mécanisme | Absent du prompt A0 ; à lancer **avant A2**, pas nécessairement avant A1 |
 | A1 | Socle, navigation par profil, i18n, accessibilité, aperçu | A0 validé | D25 (logos, fonds de carte), D30–D31 | **À lancer en premier** ; comprend l'installation, `.gitignore` corrigé, workflow d'aperçu |
 | A2 | Saisie des besoins, semaine ISO, doublons, échéances | A1, A0b | Q6–Q8, D78–D82 | **À scinder** en A2a et A2b (voir §2) |
+| A1e | Identité visuelle, titres, skin d'accueil (D160, D161) | A2b | D163 (droits des visuels) | Noyau ; prompt `24_PROMPT_LOT_A1E.md` |
 | A3 | Propositions, décisions, qui doit agir, entonnoir | A2 | D11/D92, D97 | Charge élevée ; scission optionnelle A3a / A3b |
 | A4b1 | Enveloppe cliente, allocation agence, prévisionnel par besoin (D153, D157) | A3 | D07 | Noyau ; prompt `23_PROMPT_LOT_A4B1.md` |
 | A4a | Lecture, indicateurs, alertes, tableau de bord cliente | A3 | D05–D08 (moteur financier : montants fictifs seulement), P3 graphiques | Garde ; fixer le choix de bibliothèque de graphiques en début de lot |

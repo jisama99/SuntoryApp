@@ -71,6 +71,25 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | Écart | Variance | |
 | Semaine N / N-1 | Week N / N-1 | |
 
+## 4 bis. Navigation, identité et notes (D160 à D162)
+| FR | EN | Remarque |
+|---|---|---|
+| Pilotage merchandising | Merchandising steering | Titre de l'application |
+| Mon cockpit | My cockpit | Accueil |
+| Pilotage | Steering | Tableau de bord |
+| Besoins merch | Merch needs | |
+| Réponses de l'agence | Agency responses | |
+| Équipes terrain | Field teams | |
+| À traiter | To handle | Alertes |
+| Réglages | Settings | |
+| Gestion de la mission | Mission management | |
+| Vos besoins en merchandising | Your merchandising needs | |
+| Skin d'accueil : Produits, Nature, Sobre | Home theme: Products, Nature, Plain | |
+| Note interne | Internal note | Agency only |
+| Partagée avec la cliente | Shared with the client | |
+| Partagée avec | Shared with | Destinataire DR, CVR ou RS |
+| Notes | Notes | |
+
 ## 5. Formats (D119)
 - Dates : FR 23/10/2026, EN 23 Oct 2026 ou format régional défini dans `format.ts`.
 - Nombres : FR 1 234,5 (espace fine insécable, virgule), EN 1,234.5.

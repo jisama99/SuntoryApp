@@ -43,6 +43,12 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-00.4 | Recherche globale et raccourcis clavier (Ctrl+K) | Tous | A / A4 | V4 |
 | F-00.5 | Mode compact, plein écran, zoom sans perte sur cartes et graphiques | Tous | A / A4 | V4 |
 
+### M0 bis · Identité visuelle (D160, D161)
+| ID | Fonction | Rôles | Phase / lot | Source |
+|---|---|---|---|---|
+| F-00.1 | Visuels d'accueil (nature), de pilotage (produits) et de connexion ; versions mobile ; titres et menus opérationnels (D160) | Tous | A / A1e | D160 |
+| F-00.2 | **Skin d'accueil réglable** : défaut fixé par l'agence dans Paramètres, choix utilisateur par le sélecteur d'affichage (D161) | Tous, Ag-adm | A / A1e | D161 |
+
 ### M1 · Pilotage (lecture analytique)
 | ID | Fonction | Rôles | Phase / lot | Source |
 |---|---|---|---|---|
@@ -74,6 +80,7 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-20.7 | Dates limites, urgence, retard de proposition | Système | A / A3 | WF-B8 |
 | F-20.8 | **Historique et révisions** : comparaison avant / après ; réexamen des validations touchées | Tous concernés | A / A3 | Cadrage |
 | F-20.9 | Fil de commentaires par besoin (remplace les e-mails) | RS, CVR, Ag | C | WF-B7 (V2 dans la présentation) |
+| F-20.10 | **Notes** à visibilité choisie : interne agence, partagée avec la cliente, partagée avec un destinataire ; interne par défaut (D162) | Ag, Cl, DR, CVR, RS | A / A3 | D162 |
 | F-20.10 | Import de besoins par Excel (reprise de l'existant) | CVR, Ag | A fictif, B réel / A6, B5 | WF-B5 |
 | F-20.11 | Saisie « pour le compte » : auteur de la saisie et personne concernée tracés séparément | RS, CVR, Ag | A / A5 | D42 |
 
