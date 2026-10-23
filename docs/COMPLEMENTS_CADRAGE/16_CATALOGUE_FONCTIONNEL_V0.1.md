@@ -58,6 +58,9 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-10.10 | **Explication d'un indicateur** : définition, formule, période, périmètre, unité, source, date, clic vers les lignes | Tous | A / A4 | Cadrage |
 | F-10.11 | Permanent et saisonnier : planning annuel, heures par mois, facturation prévue, secteurs non couverts | Cl, Ag | A fictif, B réel / A4 | Suivi Perm / Saisonnier |
 | F-10.12 | Carences et couverture : jours, heures non couvertes, valorisation | Ag, Cl (catégories génériques) | A / A5 | WF-A8 |
+| F-10.13 | **Fiche secteur unique** : besoins, propositions, absences, consommation, alertes, historique, actions | Cl, DR, CVR, RS, Ag (selon droits) | A / A4d | Piste L6, doc 28 |
+| F-10.14 | **Comparaison semaine N / N-1** des heures, montants fictifs et dépassements ; « Non comparable » si N-1 absente | Cl, DR, CVR, Ag | A / A4a | Piste L5, doc 28 |
+| F-10.15 | **Plans d'action sur dépassement** : responsable, action, échéance, statut, rattachés à une alerte | CVR, DR, Ag (Cl en lecture) | A / A4d | Piste R6, doc 28 |
 
 ### M2 · Saisie des besoins (RS)
 | ID | Fonction | Rôles | Phase / lot | Source |
@@ -86,6 +89,8 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-30.7 | Affectation et planification (statuts séparés : besoin, proposition, recrutement, exécution) | Ag-op | A / A3 | D11 |
 | F-30.8 | **Prise de poste** et **remise du véhicule** : deux événements distincts | Ag-op, RS | A / A3 | D11 |
 | F-30.9 | Clôture hebdomadaire guidée (checklist alimentée par les contrôles) ; réouverture par l'agence seule | Ag | A / A4 | WF-C8 |
+| F-30.10 | **Paramètres par dispositif** (durée minimale, forfait kilométrique, fenêtre de saisie, délai de modification, rôles de saisie), modifiables par l'agence, jamais en dur | Ag-adm | A / A2b | Piste A10, doc 28 |
+| F-30.11 | **Règles P1 à P6** de validation par dispositif ; une campagne rattachée à un seul dispositif | Système | A / A2b | Workshop 2027, doc 28 |
 
 ### M4 · Terrain et absences
 | ID | Fonction | Rôles | Phase / lot | Source |

@@ -12,6 +12,7 @@ Chaque lot se lance après le prompt maître (`02_PROMPT_MAITRE_DEV.md`). Les du
 | A0b | **Cadrage des données Excel (D50 à D53)** : dictionnaire, mapping, structure cible du fichier branché, glossaire FR/EN, jeux d'essai anonymisés. Voir doc. 17 | A0 |
 | A1 | Socle : design V4, navigation par rôle, profils de démo, `ZoneLabel`, contexte d'accès, audience des alertes, aperçu (D104, D106 à D108) | A0 validé (A0b n'est plus un préalable, D112) |
 | A2 | Saisie des besoins : unitaire, en lot, contrôles de semaine et doublons ; **blocage après échéance (D78, doc. 24)** | A1, A0b |
+| A4d | **Ajouté le 23/10/2026 (D127).** Fiche secteur unique (F-10.13) et plans d'action sur dépassement (F-10.15) ; comparaison N / N-1 (F-10.14) dans A4a ; paramètres par dispositif (F-30.10, F-30.11) dans A2b (D128) | A3, A4a, A5 |
 | A2a / A2b | **Scission validée le 23/10/2026 (D112).** A2a : règles pures (semaine ISO, W1–W22, D1–D7), événements, saisie unitaire et duplication. A2b : saisie en lot, brouillon, résumé, échéances et blocage (D78 à D82) | A1, A0b |
 | A3 | Propositions, décisions, qui doit agir, urgence | A2 |
 | A4 | Pilotage : tableau de bord, couleurs de quota, alertes, classement, filtres. **Scindé (D48) : A4a lecture et indicateurs, alertes d'échéance et cockpit cliente (doc. 24), A4b enveloppes et réallocation à double validation (D46)** | A3 |

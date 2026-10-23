@@ -2,6 +2,8 @@
 
 Date : 23/10/2026. Statut : **analyse et propositions**, aucune décision. Aucun chiffre ni nom propre de la source n'est repris ici.
 
+> **Mise à jour du 23/10/2026** : N1, N2, N3 et N9 sont cadrés (D127, D128) dans `COMPLEMENTS_CADRAGE/28_CADRAGE_AXES_N1_N2_N3_N9_V0.1.md`. D129 et D130 restent proposées. Les autres axes restent non cadrés.
+
 ## 1. Sources lues
 | Source | Contenu exploité |
 |---|---|
