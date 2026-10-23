@@ -1,12 +1,12 @@
 # Glossaire métier FR / EN (D149)
 
-Version du 23/10/2026. **Proposé, à valider par T. SOEFOU avant A4c1.** Source de départ : `messages/fr.json` et `messages/en.json` (310 clés) complétées des termes à venir (budget, rapports, carte). Un terme validé ici est le seul autorisé dans l'interface, les exports, les e-mails et les alertes. Aucun tiret décoratif ni tiret d'incise dans les textes (D125).
+Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations retenues, sigles précisés). Toute évolution passe par une décision. Source de départ : `messages/fr.json` et `messages/en.json` (310 clés) complétées des termes à venir (budget, rapports, carte). Un terme validé ici est le seul autorisé dans l'interface, les exports, les e-mails et les alertes. Aucun tiret décoratif ni tiret d'incise dans les textes (D125).
 
 ## 1. Termes déjà dans l'application
 | FR | EN proposé | Remarque |
 |---|---|---|
 | Besoin | Need | |
-| Dispositif | **Scheme** (actuel) ou Programme | Choix à trancher. « Scheme » est déjà dans l'application. « Programme » est plus courant en entreprise, mais « Campaign » est déjà pris pour campagne. Je recommande de garder « Scheme ». |
+| Dispositif | **Scheme** | Validé. « Scheme » est déjà dans l'application ; « Campaign » reste réservé à campagne. |
 | Permanent / Saisonnier / Merch horaire / Second placement | Permanent / Seasonal / Hourly merchandising / Second placement | Actuels |
 | Campagne | Campaign | |
 | Secteur | Sector | |
@@ -33,9 +33,9 @@ Version du 23/10/2026. **Proposé, à valider par T. SOEFOU avant A4c1.** Source
 ## 2. Sigles de territoire
 | FR | EN proposé | Remarque |
 |---|---|---|
-| DR | DR | Garder le sigle, expliqué au premier emploi. **Signification exacte à confirmer par T. SOEFOU.** |
-| CVR | CVR | Idem |
-| RS | RS | Idem |
+| DR (Directeur Régional) | DR (Regional Director) | Sigle conservé, développé au premier emploi |
+| CVR (Chef des Ventes Régional) | CVR (Regional Sales Manager) | Idem |
+| RS (Responsable Secteur) | RS (Sector Manager) | Idem |
 | Zone | Zone | Un code de zone ne s'affiche que via ZoneLabel (D106) |
 | Territoire | Territory | |
 
@@ -47,7 +47,7 @@ Version du 23/10/2026. **Proposé, à valider par T. SOEFOU avant A4c1.** Source
 | Affecté | Allocated | |
 | Consommé | Spent | « Actual » possible si le contexte est comptable |
 | Prévisionnel | Forecast | |
-| Atterrissage | Projected total (landing) | Terme de métier à valider : « Projected outturn » est plus britannique |
+| Atterrissage | Projected total | Validé (consommé retenu plus prévisionnel restant) |
 | Disponible | Remaining | |
 | Rallonge | Budget top-up | |
 | Demande de rallonge | Top-up request | |
@@ -77,8 +77,8 @@ Version du 23/10/2026. **Proposé, à valider par T. SOEFOU avant A4c1.** Source
 - Devise : FR 1 234 €, EN €1,234.
 - Semaines : FR 2026-S43, EN 2026-W43.
 
-## 6. Décisions demandées
-1. Dispositif : Scheme ou Programme ?
-2. Atterrissage : Projected total ou Projected outturn ?
-3. Signification des sigles DR, CVR, RS pour l'EN.
-4. Accord sur le reste du tableau tel quel.
+## 6. Décisions prises le 23/10/2026
+1. Dispositif : Scheme.
+2. Atterrissage : Projected total.
+3. Sigles : DR Directeur Régional, CVR Chef des Ventes Régional, RS Responsable Secteur.
+4. Reste du tableau : validé.
