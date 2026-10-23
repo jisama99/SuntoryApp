@@ -10,7 +10,7 @@ export function SelectField({ id, label, hint, error, options, placeholder, ...p
 }) {
   const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(' ') || undefined;
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex min-w-0 flex-col gap-1">
       <label htmlFor={id} className="text-sm font-semibold">
         {label}
       </label>
@@ -19,7 +19,7 @@ export function SelectField({ id, label, hint, error, options, placeholder, ...p
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         {...props}
-        className={`min-h-11 rounded-ctl border bg-surface px-3 text-ink ${error ? 'border-2 border-danger' : 'border-field'}`}
+        className={`min-h-11 w-full min-w-0 rounded-ctl border bg-surface px-3 text-ink ${error ? 'border-2 border-danger' : 'border-field'}`}
       >
         <option value="">{placeholder}</option>
         {options.map((o) => (

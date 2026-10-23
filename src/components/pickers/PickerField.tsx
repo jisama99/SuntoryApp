@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Icon } from '../Icon';
@@ -9,9 +10,11 @@ import { UI_ICONS } from '../icons';
  * Champ commun des sélecteurs de date, de période et de semaine (D133) : bouton en lecture seule qui ouvre un
  * calendrier. Aucune saisie au clavier de la date : la valeur vient toujours du calendrier.
  */
-export function PickerField({ id, label, valueText, placeholder, hint, error, open, onOpenChange, panelLabel, children }: {
+export function PickerField({ id, label, labelHidden = false, valueText, placeholder, hint, error, open, onOpenChange, panelLabel, children }: {
   id: string;
   label: string;
+  /** Libellé masqué visuellement (tableau de saisie en lot), toujours lu par les lecteurs d'écran. */
+  labelHidden?: boolean;
   valueText: string | null;
   placeholder: string;
   hint?: string;
@@ -24,6 +27,7 @@ export function PickerField({ id, label, valueText, placeholder, hint, error, op
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const hintId = useId();
+  const t = useTranslations('picker');
 
   useEffect(() => {
     if (!open) return;
@@ -47,7 +51,7 @@ export function PickerField({ id, label, valueText, placeholder, hint, error, op
   const described = [hint ? `${hintId}-hint` : null, error ? `${hintId}-error` : null].filter(Boolean).join(' ') || undefined;
   return (
     <div ref={root} className="relative flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-semibold">
+      <label htmlFor={id} className={labelHidden ? 'sr-only' : 'text-sm font-semibold'}>
         {label}
       </label>
       <button
@@ -76,7 +80,24 @@ export function PickerField({ id, label, valueText, placeholder, hint, error, op
         </p>
       ) : null}
       {open ? (
-        <div role="dialog" aria-label={panelLabel} className="absolute left-0 top-full z-30 mt-2 max-w-[calc(100vw-2rem)] rounded-card bg-surface p-3 shadow-card">
+        <div
+          role="dialog"
+          aria-label={panelLabel}
+          className="absolute left-0 top-full z-30 mt-2 max-w-full rounded-card bg-surface p-3 shadow-card max-sm:fixed max-sm:inset-0 max-sm:z-50 max-sm:mt-0 max-sm:flex max-sm:flex-col max-sm:items-center max-sm:gap-4 max-sm:overflow-y-auto max-sm:rounded-none max-sm:p-4"
+        >
+          <div className="flex w-full items-center justify-between gap-3 sm:hidden">
+            <span className="text-lg font-semibold">{panelLabel}</span>
+            <button
+              type="button"
+              onClick={() => {
+                onOpenChange(false);
+                trigger.current?.focus();
+              }}
+              className="inline-flex min-h-11 items-center rounded-full bg-alt px-5 text-sm font-semibold hover:bg-sel"
+            >
+              {t('close')}
+            </button>
+          </div>
           {children}
         </div>
       ) : null}

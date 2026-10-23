@@ -1,0 +1,57 @@
+{
+  "default_preset": "standard",
+  "presets": {
+    "large": {
+      "needs_entry": {
+        "unit": "calendar",
+        "days": 15
+      },
+      "change_request": {
+        "unit": "calendar",
+        "days": 15
+      }
+    },
+    "standard": {
+      "needs_entry": {
+        "unit": "working",
+        "days": 10
+      },
+      "change_request": {
+        "unit": "working",
+        "days": 5
+      }
+    },
+    "short": {
+      "needs_entry": {
+        "unit": "working",
+        "days": 3
+      },
+      "change_request": {
+        "unit": "working",
+        "days": 3
+      }
+    }
+  },
+  "cascade": [
+    5,
+    2,
+    0
+  ],
+  "non_working_weekdays": [
+    6,
+    7
+  ],
+  "exclude_holidays": true,
+  "entries": [
+    {
+      "month": "2026-11",
+      "type": "change_request",
+      "preset": null,
+      "fixed_date": "2026-10-30",
+      "author_profile": "agency_admin",
+      "effective_from": "2026-10-23",
+      "is_demo": true
+    }
+  ],
+  "is_demo": true
+}

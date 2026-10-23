@@ -24,13 +24,13 @@ export async function ReportTemplate() {
     <article aria-labelledby="g-report-title" className="flex flex-col gap-6 rounded-card bg-surface p-6 shadow-card print:p-0 print:shadow-none lg:p-8">
       <header className="flex flex-col gap-1">
         <p className="text-sm font-semibold text-muted-strong">{t('kicker')}</p>
-        <h3 id="g-report-title" className="text-2xl font-semibold tracking-tight text-title">{t('headline')}</h3>
+        <h3 id="g-report-title" className="text-xl font-semibold tracking-tight text-title">{t('headline')}</h3>
       </header>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr_1fr]">
         <Tile tone="anchor" size="xl" label={t('global')} value="74 %" className="justify-between lg:row-span-2">
           <p>{t('goalMet')}</p>
-          <span className="mt-3 block h-3 rounded-full bg-white/20">
+          <span className="mt-3 block h-3 rounded-full bg-on-fill/20">
             <span className="block h-3 rounded-full bg-aqua" style={{ width: '74%' }} />
           </span>
         </Tile>
@@ -46,7 +46,7 @@ export async function ReportTemplate() {
         <h4 id="g-report-chart" className="text-base font-semibold">{t('chart')}</h4>
         <ul className="flex flex-col gap-3">
           {bars.map((b, index) => (
-            <li key={b.id} className="grid grid-cols-[7rem_1fr_3rem] items-center gap-3">
+            <li key={b.id} className="grid grid-cols-[var(--report-label-col)_1fr_var(--report-value-col)] items-center gap-3">
               <span className="text-sm">{t(`series.${b.id}`)}</span>
               <span className="h-3 rounded-full bg-surface">
                 <span

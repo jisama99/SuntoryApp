@@ -1,13 +1,19 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { useConfirmation } from './Confirmation';
 import { useState, useTransition } from 'react';
 import { saveNeedAction } from '@/app/[locale]/needs/actions';
 import type { FindingDto, SaveState } from '@/app/[locale]/needs/actions';
+import type { DeadlineContext } from '@/data/repository';
 import { DISPOSITIFS } from '@/domain/types';
-import type { Locale } from '@/domain/types';
+import type { Dispositif, Locale } from '@/domain/types';
+import { lockedMonthsFor } from '@/lib/deadline-view';
+import { useUnsavedWarning } from '@/lib/use-unsaved-warning';
+import { DeadlineBanner } from './DeadlineBanner';
 import { isoWeekOf, formatWeek } from '@/domain/week';
 import { Link } from '@/i18n/navigation';
+import { formatMonth } from '@/lib/format';
 import { EMPTY_PERIOD, HOURS, toInput } from '@/lib/need-form-value';
 import type { NeedFormValue, PeriodValue } from '@/lib/need-form-value';
 import { Button } from './Button';
@@ -33,6 +39,9 @@ export interface NeedFormProps {
   max: string;
   closedWeeks: string[];
   daysAllowed: number[];
+  /** Jours proposés par dispositif (paramètre `days_allowed`, D132 et D145). */
+  daysByDispositif: Record<Dispositif, number[]>;
+  deadline: DeadlineContext;
 }
 
 /** Saisie unitaire d'un besoin (F-20.1) : dates et semaines par calendrier, jours par cases, règles W et D renvoyées par la couche données. */
@@ -42,12 +51,20 @@ export function NeedForm(props: NeedFormProps) {
   const locale = useLocale() as Locale;
   const [value, setValue] = useState<NeedFormValue>(props.initial);
   const [result, setResult] = useState<SaveState | null>(null);
+  const tc = useTranslations('confirmation');
+  const announce = useConfirmation();
   const [pending, startTransition] = useTransition();
   const set = <K extends keyof NeedFormValue>(key: K, v: NeedFormValue[K]) => {
     setValue((cur) => ({ ...cur, [key]: v }));
     setResult(null);
   };
-  const bounds = { today: props.today, min: props.min, max: props.max, closedWeeks: props.closedWeeks };
+  const tw = useTranslations('deadline');
+  const dispositifChoice = (DISPOSITIFS as readonly string[]).includes(value.dispositif) ? (value.dispositif as Dispositif) : null;
+  // Jours clos après échéance (D78) pour le dispositif et le secteur choisis : désactivés dans le calendrier avec leur raison.
+  const lockedMonths = lockedMonthsFor(props.deadline, dispositifChoice, value.sector_id || null, props.min, props.max);
+  const bounds = { today: props.today, min: props.min, max: props.max, closedWeeks: props.closedWeeks, lockedMonths };
+  const dirty = JSON.stringify(value) !== JSON.stringify(props.initial) && result?.status !== 'saved';
+  useUnsavedWarning(dirty, tw('unsaved'));
 
   const setPeriod = (i: number, patch: Partial<PeriodValue>) => {
     setValue((cur) => ({ ...cur, periods: cur.periods.map((p, j) => (j === i ? { ...p, ...patch } : p)) }));
@@ -66,11 +83,14 @@ export function NeedForm(props: NeedFormProps) {
   const missing = new Set(result && result.status !== 'invalid' ? result.missing : []);
   const err = (key: string) => (missing.has(key) ? t('required') : undefined);
 
-  const submit = (options: { confirm?: boolean; mergeInto?: string } = {}) =>
+  const submit = (options: { confirm?: boolean; mergeInto?: string; deferToNextMonth?: boolean } = {}) =>
     startTransition(async () => {
-      setResult(
-        await saveNeedAction({ locale, input: toInput(value), needId: props.needId, confirm: options.confirm, mergeInto: options.mergeInto }),
-      );
+      const r = await saveNeedAction({
+        locale, input: toInput(value), needId: props.needId, confirm: options.confirm, mergeInto: options.mergeInto,
+        deferToNextMonth: options.deferToNextMonth,
+      });
+      setResult(r);
+      if (r.status === 'saved') announce(tc('saved'), { undoToken: r.undoToken, onUndo: () => setResult(null) });
     });
 
   const applyFix = (fix: NonNullable<FindingDto['fix']>) => {
@@ -82,6 +102,8 @@ export function NeedForm(props: NeedFormProps) {
       ? result.findings.find((f) => ['D2', 'D3', 'D4'].includes(f.rule) && f.relatedVisible && f.relatedNeedId)?.relatedNeedId
       : undefined;
 
+  // Report possible sur le mois suivant (D82) : proposé quand une règle d'échéance le permet.
+  const deferTarget = result && result.status === 'refused' ? result.findings.find((f) => f.defer)?.defer?.toMonth : undefined;
   const dispositifOptions = DISPOSITIFS.map((d) => ({ value: d, text: td(d) }));
   const noteKey = result?.status === 'saved' ? `saved.${result.decision}` : null;
 
@@ -96,6 +118,7 @@ export function NeedForm(props: NeedFormProps) {
       aria-describedby="need-form-note"
     >
       <p id="need-form-note" className="max-w-prose text-muted">{t('note')}</p>
+      <DeadlineBanner context={props.deadline} dispositif={dispositifChoice} sectorId={value.sector_id || null} />
 
       <section aria-labelledby="f-general" className="grid gap-4 rounded-card bg-surface p-5 shadow-card sm:grid-cols-2">
         <h2 id="f-general" className="text-lg font-semibold sm:col-span-2">{t('sections.general')}</h2>
@@ -205,7 +228,14 @@ export function NeedForm(props: NeedFormProps) {
 
       <section aria-labelledby="f-days" className="flex flex-col gap-4 rounded-card bg-surface p-5 shadow-card">
         <h2 id="f-days" className="text-lg font-semibold">{t('sections.days')}</h2>
-        <WeekdayPicker id="f-weekdays" label={t('fields.days')} value={value.days} onChange={(d) => set('days', d)} allowed={props.daysAllowed} error={err('days')} />
+        <WeekdayPicker
+          id="f-weekdays"
+          label={t('fields.days')}
+          value={value.days}
+          onChange={(d) => set('days', d)}
+          allowed={dispositifChoice ? props.daysByDispositif[dispositifChoice] : props.daysAllowed}
+          error={err('days')}
+        />
       </section>
 
       <section aria-labelledby="f-stores" className="flex flex-col gap-3 rounded-card bg-surface p-5 shadow-card">
@@ -251,10 +281,11 @@ export function NeedForm(props: NeedFormProps) {
           <div className="flex flex-col gap-3 rounded-card bg-ok-soft p-5 text-ink" data-testid="saved">
             <StatusTag tone="ok">{t(`${noteKey}.title`)}</StatusTag>
             <p>{t(`${noteKey}.body`, { code: result.needCode })}</p>
+            {result.deferred ? <p data-testid="deferred-note">{t('deferredSaved')}</p> : null}
             {result.missing.length > 0 ? (
               <p className="text-muted">{t('stillMissing', { fields: result.missing.map((m) => t(`missing.${m}`)).join(', ') })}</p>
             ) : null}
-            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-hover">
+            <Link href="/needs" className="inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-fill hover:bg-primary-hover">
               {t('goList')}
             </Link>
           </div>
@@ -262,6 +293,14 @@ export function NeedForm(props: NeedFormProps) {
         {result?.status === 'refused' ? (
           <div className="flex flex-col gap-3" data-testid="refused">
             <StatusTag tone="risk">{t(`refusal.${result.reason}`)}</StatusTag>
+            {deferTarget ? (
+              <div className="flex flex-wrap items-center gap-3" data-testid="defer-actions">
+                <p className="w-full text-muted">{t('deferNote')}</p>
+                <Button type="button" disabled={pending} onClick={() => submit({ deferToNextMonth: true })}>
+                  {t('defer', { month: formatMonth(deferTarget, locale) })}
+                </Button>
+              </div>
+            ) : null}
           </div>
         ) : null}
         {result && result.status !== 'invalid' && result.findings.length > 0 ? (

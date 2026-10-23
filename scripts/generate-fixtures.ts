@@ -16,6 +16,10 @@ write('stores.json', f.stores);
 write('week-closures.json', f.weekClosures);
 write('needs.json', f.needs);
 write('events.json', f.events);
+write('deadline-settings.json', f.deadlineSettings);
+write('dispositif-params.json', f.dispositifParams);
+write('reopening-requests.json', f.reopeningRequests);
+write('reopenings.json', f.reopenings);
 console.log(
   `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements.`,
 );

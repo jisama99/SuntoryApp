@@ -20,6 +20,14 @@ export function formatIsoWeek(stored: string, locale: Locale): string {
 /** Tiret insécable (U+2011) : un code comme BES-DEMO-032 ne se coupe plus en fin de ligne. */
 export const keepTogether = (code: string): string => code.replaceAll('-', '\u2011');
 
+/** Mois stocké « 2026-11 », affiché « novembre 2026 » (FR) ou « November 2026 » (EN). */
+export function formatMonth(month: string, locale: Locale): string {
+  const [y, m] = month.split('-').map(Number);
+  if (!y || !m) return month;
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, 1)));
+}
+
+const MONTH_PARAM = /^\d{4}-(0[1-9]|1[0-2])$/;
 const ISO_DATE_PARAM = /^\d{4}-\d{2}-\d{2}$/;
 const STORED_WEEK_PARAM = /^\d{4}-S\d{2}$/;
 
@@ -36,6 +44,7 @@ export function presentParams(params: Record<string, string | number>, locale: L
       );
     } else if (typeof value === 'string' && ISO_DATE_PARAM.test(value)) out[key] = formatDate(value, locale);
     else if (typeof value === 'string' && STORED_WEEK_PARAM.test(value)) out[key] = formatIsoWeek(value, locale);
+    else if (typeof value === 'string' && MONTH_PARAM.test(value)) out[key] = formatMonth(value, locale);
     else out[key] = value;
   }
   return out;

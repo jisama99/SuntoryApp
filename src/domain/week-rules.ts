@@ -6,6 +6,7 @@ import {
 } from './week';
 import type { IsoDate } from './week';
 import type { NeedInput } from '@/data/schemas';
+import type { A2bEnv } from './a2b-env';
 
 /** Valeurs brutes (import, collage) d'une période : sert aux règles W1, W2, W3, W13, W14 et W15. */
 export interface RawPeriod {
@@ -23,6 +24,8 @@ export interface RuleEnv {
   closedWeeks: ReadonlySet<string>;
   campaign: { dispositif: string; window_start: IsoDate; window_end: IsoDate } | null;
   config: RuleConfig;
+  /** Règles du lot A2b (échéances, paramètres par dispositif). Facultatif : absent, le comportement d'A2a est inchangé. */
+  a2b?: A2bEnv;
 }
 
 /** Période dont les dates sont déduites des semaines quand seule la semaine est connue. */

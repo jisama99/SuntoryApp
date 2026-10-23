@@ -9,7 +9,15 @@
   },
   "nav": {
     "label": "Navigation principale",
-    "open": "Menu"
+    "open": "Menu",
+    "breadcrumb": "Fil d'Ariane",
+    "collapse": "Réduire le menu",
+    "expand": "Déployer le menu",
+    "close": "Fermer le menu",
+    "create": "Nouveau besoin",
+    "more": "Plus",
+    "moreTitle": "Autres sections",
+    "mobile": "Navigation mobile"
   },
   "locale": {
     "label": "Langue",
@@ -107,6 +115,17 @@
       "need_to_confirm": "Un besoin attend votre confirmation.",
       "proposal_awaiting_decision": "Une proposition attend une décision de la cliente.",
       "client_decision_pending": "Une décision cliente est en attente pour votre périmètre."
+    },
+    "deadlineTitle": "Échéances de saisie",
+    "derived": {
+      "reminderEntry": "{stage} : la saisie des besoins de {month} se clôture le {deadline}, {left, plural, =0 {aujourd'hui} one {dans # jour ouvré} other {dans # jours ouvrés}}.",
+      "reminderEntryMissing": "{stage} : la saisie des besoins de {month} se clôture le {deadline}, {left, plural, =0 {aujourd'hui} one {dans # jour ouvré} other {dans # jours ouvrés}}. {missing, plural, one {# secteur de votre périmètre n'a pas encore saisi.} other {# secteurs de votre périmètre n'ont pas encore saisi.}}",
+      "reminderChange": "{stage} : les demandes de changement de {month} se clôturent le {deadline}, {left, plural, =0 {aujourd'hui} one {dans # jour ouvré} other {dans # jours ouvrés}}.",
+      "reminderEntryOwn": "{stage} : {dispositif}, la fenêtre de saisie de {month} se clôture le {deadline}.",
+      "reminderChangeOwn": "{stage} : {dispositif}, le délai de modification pour {month} se clôture le {deadline}.",
+      "lateSummary": "Saisie de {month} close : {late, plural, =0 {aucun secteur en retard} one {# secteur en retard} other {# secteurs en retard}} sur {total}.",
+      "closingReport": "Bilan de la clôture de {month} : {done} secteurs à jour, {late} en retard, {deferred} demandes reportées sur le mois suivant.",
+      "reopenQueue": "{n, plural, one {# demande de réouverture attend une décision.} other {# demandes de réouverture attendent une décision.}}"
     }
   },
   "states": {
@@ -213,7 +232,10 @@
     "reason": {
       "outOfBounds": "Hors des dates autorisées, du {min} au {max}",
       "closedWeek": "Semaine {week} clôturée, seule l'agence peut la rouvrir",
-      "holiday": "Jour férié : {name}"
+      "holiday": "Jour férié : {name}",
+      "afterDeadline": "Saisie de {month} close depuis le {deadline}",
+      "weekend": "Jour non ouvré : {day}",
+      "nonWorkingHoliday": "Jour férié non ouvré : {name}"
     },
     "holiday": {
       "new_year": "Jour de l'an",
@@ -227,7 +249,8 @@
       "all_saints": "Toussaint",
       "armistice": "Armistice 1918",
       "christmas": "Noël"
-    }
+    },
+    "close": "Fermer"
   },
   "weekdays": {
     "monToFri": "Lun à ven",
@@ -267,7 +290,8 @@
       "toComplete": "À compléter",
       "period": "P{n} : du {start} au {end} ({from} à {to})",
       "periodOneWeek": "P{n} : du {start} au {end} ({week})",
-      "onBehalf": "Saisi par l'agence pour le RS"
+      "onBehalf": "Saisi par l'agence pour le RS",
+      "deferred": "Reportée de {from} vers {to}"
     },
     "state": {
       "draft": "Brouillon",
@@ -282,7 +306,16 @@
     "actions": {
       "complete": "Compléter",
       "duplicate": "Dupliquer"
-    }
+    },
+    "batch": "Saisie en lot",
+    "filters": {
+      "label": "Filtrer les besoins",
+      "all": "Tous",
+      "draft": "Brouillons",
+      "submitted": "Soumis",
+      "deferred": "Reportés"
+    },
+    "emptyFilter": "Aucun besoin ne correspond à ce filtre."
   },
   "form": {
     "note": "Un besoin incomplet est enregistré en brouillon et reste exclu des totaux. Les dates se choisissent dans le calendrier.",
@@ -357,7 +390,10 @@
       "not_found": "Le besoin demandé est introuvable.",
       "not_draft": "Seul un brouillon peut être complété ici.",
       "no_period": "Ce besoin n'a pas de période à décaler.",
-      "blocked": "L'enregistrement est refusé : corrigez les points bloquants ci-dessous."
+      "blocked": "L'enregistrement est refusé : corrigez les points bloquants ci-dessous.",
+      "incomplete": "La ligne est incomplète : elle n'est pas enregistrée.",
+      "paste": "Une valeur collée n'a pas pu être convertie : corrigez la ligne.",
+      "invalid": "Les valeurs de la ligne ne sont pas valides."
     },
     "missing": {
       "dispositif": "Dispositif",
@@ -368,7 +404,10 @@
       "period": "Dates de la période",
       "days": "Jours travaillés",
       "hours_slot": "Horaires"
-    }
+    },
+    "deferNote": "Cette demande tardive peut être enregistrée pour le mois suivant. Elle sera marquée reportée.",
+    "defer": "Reporter sur {month}",
+    "deferredSaved": "La demande est marquée reportée sur le mois suivant."
   },
   "duplicate": {
     "title": "Dupliquer le besoin {code}",
@@ -411,6 +450,386 @@
     "J1": "Aucun des jours cochés ne tombe entre le {start} et le {end}.",
     "J2": "Le jour coché ({weekday}) est férié sur toute la période.",
     "J3": "Le jour {weekday} n'est pas proposé par ce dispositif.",
-    "B1": "Les dates doivent se situer entre le {min} et le {max}."
+    "B1": "Les dates doivent se situer entre le {min} et le {max}.",
+    "P1": "La durée du créneau ({actual} minutes) est inférieure à la durée minimale de ce dispositif : {min} minutes.",
+    "P2": "Une campagne ne peut relever que d'un dispositif. La campagne {campaign} est rattachée à plusieurs dispositifs.",
+    "P3": "La fenêtre de saisie de ce dispositif pour {month} s'est close le {deadline}. {canDefer, select, yes {Vous pouvez reporter la demande sur {next}.} other {Le mois suivant est lui aussi clos.}}",
+    "P4": "Le délai de modification de ce dispositif pour {month} s'est clos le {deadline}. {canDefer, select, yes {{effect, select, next_month {Cette modification prendra effet le mois suivant ({next}).} other {Vous pouvez reporter la demande sur {next}.}}} other {Le mois suivant est lui aussi clos.}}",
+    "P5": "Forfait kilométrique non renseigné pour ce dispositif : la ligne reste non chiffrée.",
+    "P6": "Ce dispositif n'est pas ouvert à votre rôle.",
+    "E1": "La saisie des besoins de {month} est close depuis le {deadline}. {canDefer, select, yes {Vous pouvez reporter la demande sur {next}.} other {Le mois suivant est lui aussi clos.}}",
+    "E2": "Les demandes de changement de {month} sont closes depuis le {deadline}. {canDefer, select, yes {Vous pouvez reporter la demande sur {next}.} other {Le mois suivant est lui aussi clos.}}"
+  },
+  "deadline": {
+    "unsaved": "Des modifications ne sont pas encore enregistrées. Quitter cette page ?",
+    "type": {
+      "needs_entry": "Saisie des besoins",
+      "change_request": "Demandes de changement"
+    },
+    "stage": {
+      "zero": "Jour J",
+      "n": "J-{n}"
+    },
+    "source": {
+      "dispositif": "Règle du dispositif",
+      "preset": "Preset global",
+      "fixed": "Date fixe"
+    },
+    "state": {
+      "closed": "Clos",
+      "open": "Ouvert"
+    },
+    "preset": {
+      "large": "Large",
+      "standard": "Standard",
+      "short": "Court"
+    },
+    "banner": {
+      "title": "Échéances de saisie",
+      "scheme": "Dispositif : {name}",
+      "closedTag": "Clos",
+      "closed": "{what} : close depuis le {deadline}.",
+      "openTag": "Ouvert",
+      "upcoming": "{what} : avant le {deadline} ({left, plural, =0 {aujourd'hui} one {dans # jour ouvré} other {dans # jours ouvrés}}).",
+      "window": "Fenêtre de saisie du {from} au {to}.",
+      "none": "Aucune échéance proche.",
+      "reopenedTag": "Réouvert",
+      "reopened": "{target} : réouverture de l'agence en cours jusqu'au {until}."
+    },
+    "calendar": {
+      "title": "Échéances par mois cible",
+      "scope": "Périmètre du calendrier",
+      "global": "Calendrier global",
+      "span": "Nombre de mois affichés",
+      "months": "{n} mois",
+      "caption": "Date limite appliquée à chaque mois cible, avec la règle qui la porte",
+      "noWindow": "Pas de fenêtre",
+      "cols": {
+        "month": "Mois cible",
+        "type": "Échéance",
+        "rule": "Règle appliquée",
+        "date": "Date limite",
+        "window": "Fenêtre",
+        "state": "État"
+      }
+    },
+    "editor": {
+      "title": "Modifier le calendrier",
+      "presetTitle": "Preset par défaut",
+      "presetHelp": "Le preset s'applique à tous les mois sans réglage propre. Standard est proposé, il n'est pas figé.",
+      "defaultPreset": "Preset par défaut",
+      "choose": "Choisir",
+      "savePreset": "Enregistrer le preset",
+      "saved": "Enregistré",
+      "refused": {
+        "forbidden": "Réservé à l'agence administration.",
+        "invalid": "La valeur n'est pas valide."
+      },
+      "entryTitle": "Échéance d'un mois",
+      "entryHelp": "Choisissez un preset ou une date fixe pour un mois et une échéance. Les jours non ouvrés sont désactivés avec leur raison.",
+      "month": "Mois cible",
+      "type": "Échéance",
+      "mode": "Réglage",
+      "modeDefault": "Revenir au preset par défaut",
+      "modePreset": "Preset pour ce mois",
+      "modeFixed": "Date fixe",
+      "presetOfMonth": "Preset de ce mois",
+      "fixedDate": "Date limite",
+      "fixedHint": "Jour ouvré antérieur au début du mois cible. Date fictive de démonstration, à confirmer.",
+      "saveEntry": "Enregistrer l'échéance"
+    }
+  },
+  "delay": {
+    "title": "Retards de saisie",
+    "months": "Mois cible",
+    "open": "La saisie de {month} se clôture le {deadline} ({left, plural, =0 {aujourd'hui} one {dans # jour ouvré} other {dans # jours ouvrés}}).",
+    "closed": "La saisie de {month} est close depuis le {deadline}.",
+    "status": {
+      "up_to_date": "À jour",
+      "to_follow": "À suivre",
+      "late": "En retard"
+    },
+    "onTotal": "sur {total, plural, one {# secteur} other {# secteurs}}",
+    "toHandle": "À traiter",
+    "byRegion": "Secteurs par région et par état",
+    "cols": {
+      "region": "Région"
+    },
+    "sectorsTitle": "Secteurs à relancer",
+    "drafts": "{n, plural, one {# brouillon} other {# brouillons}}",
+    "allDone": "Tous les secteurs sont à jour."
+  },
+  "reopen": {
+    "title": "Demander une réouverture",
+    "help": "Seule l'agence rouvre un mois ou une semaine, avec un motif, une durée et une trace. Votre demande lui est transmise.",
+    "nothingClosed": "Aucun mois ni aucune semaine clos à rouvrir.",
+    "target": "Mois ou semaine à rouvrir",
+    "targetMonth": "Saisie de {month}",
+    "targetWeek": "Semaine {week}",
+    "choose": "Choisir",
+    "motive": "Motif de la demande",
+    "motiveHint": "N'indiquez aucune donnée personnelle ni motif médical.",
+    "until": "Durée souhaitée, jusqu'au",
+    "submit": "Envoyer la demande",
+    "sent": "Demande transmise à l'agence",
+    "refused": {
+      "forbidden": "Seul un CVR peut demander une réouverture.",
+      "invalid": "Complétez la cible, le motif et la durée.",
+      "not_closed": "Cette cible n'est pas close.",
+      "duplicate": "Une demande identique est déjà en attente.",
+      "not_found": "Cible introuvable."
+    },
+    "mine": "Vos demandes",
+    "status": {
+      "pending": "En attente",
+      "granted": "Accordée",
+      "declined": "Refusée"
+    },
+    "desired": "Souhaitée jusqu'au {date}",
+    "requestsTitle": "Demandes de réouverture",
+    "noPending": "Aucune demande de réouverture en attente.",
+    "motiveOf": "Motif : {motive}",
+    "requestedOn": "Demandée le {date}, souhaitée jusqu'au {until}.",
+    "reason": "Motif de la décision",
+    "reasonHint": "Le motif est conservé dans la trace de la réouverture.",
+    "grantUntil": "Rouvert jusqu'au",
+    "grant": "Rouvrir",
+    "decline": "Refuser",
+    "decided": "Décision enregistrée",
+    "directTitle": "Rouvrir sans demande",
+    "zone": "Zone concernée",
+    "traceTitle": "Trace des réouvertures",
+    "noTrace": "Aucune réouverture décidée.",
+    "traceLine": "Motif : {reason}. Jusqu'au {until}, décidée le {on} par {by}."
+  },
+  "batch": {
+    "title": "Saisie en lot",
+    "intro": "Saisissez plusieurs besoins en une fois ou collez-les depuis un tableur. Chaque ligne suit les mêmes règles que la saisie unitaire. Les lignes valides sont créées, les autres sont expliquées.",
+    "paste": {
+      "title": "Coller depuis un tableur",
+      "help": "Copiez les cellules dans le tableur puis collez-les ci-dessous. Les jours s'écrivent LUN;MAR;JEU. Les magasins s'écrivent séparés par un point-virgule.",
+      "sectorColumn": "Secteur",
+      "columns": "Dispositif, Campagne, Poste, Priorité, Heures, Début, Fin, Semaine début, Semaine fin, Jours, Horaires, Magasins, Commentaire",
+      "label": "Cellules collées",
+      "convert": "Convertir en lignes",
+      "nothing": "Aucune ligne reconnue dans le texte collé.",
+      "done": "{n, plural, one {# ligne ajoutée.} other {# lignes ajoutées.}}",
+      "blank": "{n, plural, one {# ligne vide ignorée.} other {# lignes vides ignorées.}}",
+      "header": "La ligne d'en-tête a été reconnue."
+    },
+    "rows": {
+      "title": "{n, plural, one {# ligne} other {# lignes}}",
+      "line": "Ligne {n}",
+      "savedTag": "Enregistrée {code}",
+      "rejectedTag": "Rejetée",
+      "confirmTag": "À confirmer",
+      "copy": "Dupliquer la ligne",
+      "remove": "Retirer la ligne",
+      "stores": "Magasins ({n})",
+      "add": "Ajouter une ligne",
+      "addFive": "Ajouter cinq lignes",
+      "clear": "Vider le lot"
+    },
+    "draft": {
+      "saving": "Brouillon en cours d'enregistrement",
+      "saved": "Brouillon enregistré, reprise possible après fermeture",
+      "none": "Brouillon automatique actif"
+    },
+    "issue": {
+      "unknown_sector": "Le secteur « {raw} » est inconnu.",
+      "unknown_dispositif": "Le dispositif « {raw} » est inconnu.",
+      "unknown_campaign": "La campagne « {raw} » est inconnue.",
+      "unknown_position": "Le poste « {raw} » est inconnu.",
+      "unknown_priority": "La priorité « {raw} » est inconnue.",
+      "unknown_hours": "Les heures « {raw} » ne figurent pas dans la liste autorisée.",
+      "unknown_day": "Le jour « {raw} » est inconnu.",
+      "too_long": "Le commentaire dépasse 280 caractères et a été tronqué."
+    },
+    "result": {
+      "title": "Résultat de l'enregistrement",
+      "saved": "Lignes enregistrées",
+      "rejected": "Lignes rejetées",
+      "confirm": "Lignes à confirmer",
+      "filters": "Filtrer les lignes",
+      "filter": {
+        "all": "Toutes",
+        "saved": "Enregistrées",
+        "rejected": "Rejetées",
+        "confirm": "À confirmer"
+      },
+      "confirmAll": "Confirmer {n, plural, one {# ligne} other {# lignes}} en alerte"
+    },
+    "summary": {
+      "title": "Résumé avant soumission",
+      "hint": "Vérifiez le nombre de lignes, les lignes incomplètes et le total d'heures avant de soumettre.",
+      "open": "Voir le résumé",
+      "filled": "Lignes saisies",
+      "complete": "Lignes complètes",
+      "hours": "Heures par semaine",
+      "ignored": "Lignes vides ignorées",
+      "incomplete": "{n, plural, one {# ligne incomplète ne sera pas enregistrée :} other {# lignes incomplètes ne seront pas enregistrées :}}",
+      "incompleteNote": "Complétez-les avant de soumettre, ou elles seront rejetées avec leur explication.",
+      "pasteIssues": "{n, plural, one {# ligne contient une valeur collée à corriger.} other {# lignes contiennent une valeur collée à corriger.}}",
+      "submit": "Soumettre {n, plural, one {# ligne complète} other {# lignes complètes}}",
+      "edit": "Modifier le lot",
+      "byDispositif": "{name} : {n}"
+    }
+  },
+  "settings": {
+    "readOnly": "Votre profil consulte ces réglages. La modification est réservée à l'agence administration.",
+    "open": "Ouvrir",
+    "deadlines": {
+      "title": "Calendrier des échéances",
+      "body": "Deux échéances par mois, preset par défaut, dates fixes, réouvertures et courriels préparés.",
+      "intro": "Deux échéances par mois cible : la saisie des besoins et les demandes de changement. Après la date limite, la saisie du mois est bloquée côté données.",
+      "novemberNote": "Pour novembre 2026, la date fixe du 30/10/2026 est une date fictive de démonstration (D80), à confirmer par T. SOEFOU."
+    },
+    "dispositifs": {
+      "title": "Paramètres des dispositifs",
+      "body": "Durée minimale, forfait, fenêtre de saisie, délai de modification, rôles, horizon et jours.",
+      "intro": "Les valeurs du Workshop sont des valeurs de départ à valider. Aucune n'est écrite dans le code : modifier un paramètre change le comportement des règles P1 à P6."
+    }
+  },
+  "params": {
+    "scopeLabel": "Dispositif",
+    "allDispositifs": "Tous",
+    "compareCaption": "Paramètres de chaque dispositif",
+    "detailCaption": "Paramètres du dispositif {name}",
+    "cols": {
+      "param": "Paramètre",
+      "value": "Valeur actuelle",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "keys": {
+      "min_minutes": "Durée minimale d'intervention",
+      "km_flat_rate": "Forfait kilométrique",
+      "entry_window": "Fenêtre de saisie",
+      "change_effect": "Effet d'une modification en cours de mois",
+      "change_lead_days": "Délai de modification avant le mois suivant",
+      "change_lead_unit": "Unité du délai de modification",
+      "entry_roles": "Rôles de saisie",
+      "horizon_weeks": "Horizon de saisie",
+      "non_working_days": "Jours non ouvrés de mission",
+      "days_allowed": "Jours proposés"
+    },
+    "status": {
+      "toValidate": "À valider",
+      "toUpdate": "À actualiser",
+      "partlyBlocking": "Bloquant partiel",
+      "validated": "Validé"
+    },
+    "edit": "Modifier",
+    "saved": "Enregistré",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "refused": {
+      "forbidden": "Réservé à l'agence administration.",
+      "invalid": "La valeur n'est pas valide.",
+      "unchanged": "La valeur est identique."
+    },
+    "editor": {
+      "choose": "Choisir",
+      "number": "Valeur",
+      "emptyIsDefault": "Laisser vide pour la valeur globale ou non définie.",
+      "kmMode": "Forfait",
+      "kmValue": "Montant renseigné",
+      "amount": "Montant HT en euros",
+      "fictive": "Valeur fictive de démonstration, la valeur réelle viendra de la grille de tarifs datés.",
+      "reading": "Fenêtre",
+      "effect": "Effet",
+      "unit": "Unité",
+      "roles": "Rôles autorisés",
+      "csUndefined": "Le rôle « CS » n'est pas défini (Q-N9-3) : il n'est pas proposé.",
+      "useGlobal": "Utiliser la valeur globale"
+    },
+    "value": {
+      "undefined": "Non défini",
+      "minutes": "{n} minutes",
+      "notApplicable": "Non applicable",
+      "unpriced": "Non chiffré",
+      "amountFictive": "{amount} € HT (valeur fictive)",
+      "calendar": "Calendrier global (D80, D82)",
+      "window": {
+        "last_full_week": "Avant-dernière semaine du mois précédent, lecture A (dernière semaine entière du mois)",
+        "week_of_last_day": "Avant-dernière semaine du mois précédent, lecture B (la dernière semaine est celle du dernier jour)"
+      },
+      "nextMonth": "Mois suivant",
+      "days": "{n} jours",
+      "unit": {
+        "calendar": "Jours calendaires",
+        "working": "Jours ouvrés"
+      },
+      "allRoles": "Tous les rôles de saisie",
+      "weeks": "{n} semaines",
+      "global": "Valeur globale",
+      "holidays": "jours fériés"
+    },
+    "roles": {
+      "rs": "RS",
+      "agency_operator": "Agence (opérateur)",
+      "agency_admin": "Agence (administrateur)"
+    },
+    "h2": {
+      "title": "Exemple chiffré pour décembre 2026",
+      "label": "Hypothèse H2, à confirmer",
+      "lead": "Délai de modification du second placement pour décembre 2026 : {date}, calculé avec le paramètre du dispositif.",
+      "readingA": "Lecture A de l'avant-dernière semaine de novembre : du {from} au {to}.",
+      "readingB": "Lecture B de l'avant-dernière semaine de novembre : du {from} au {to}."
+    },
+    "history": {
+      "title": "Historique des modifications",
+      "filter": "Filtrer l'historique",
+      "empty": "Aucune modification de paramètre pour le moment.",
+      "caption": "Modifications des paramètres, de la plus récente à la plus ancienne",
+      "cols": {
+        "date": "Date",
+        "actor": "Acteur",
+        "dispositif": "Dispositif",
+        "param": "Paramètre",
+        "old": "Ancienne valeur",
+        "new": "Nouvelle valeur"
+      }
+    },
+    "campaigns": {
+      "title": "Campagnes et dispositifs",
+      "help": "Une campagne ne relève que d'un dispositif (H1). Le rattachement à un second dispositif est refusé par la règle P2."
+    }
+  },
+  "outbox": {
+    "title": "Courriels préparés",
+    "help": "Rappel du jour J et résumé du lundi, préparés pour validation. Aucun courriel n'est envoyé dans le démonstrateur.",
+    "validate": "Valider",
+    "discard": "Écarter",
+    "status": {
+      "pending": "À valider",
+      "validated": "Validé",
+      "discarded": "Écarté"
+    },
+    "mondaySummary": "Résumé du lundi {date} pour la cliente",
+    "reminder": "Rappel du {date} pour la saisie de {month} ({n, plural, one {# secteur concerné} other {# secteurs concernés}})"
+  },
+  "confirmation": {
+    "region": "Confirmation",
+    "undo": "Annuler",
+    "undone": "Modification annulée",
+    "expired": "Annulation impossible : une autre modification a eu lieu depuis.",
+    "close": "Fermer",
+    "saved": "Enregistré"
+  },
+  "table": {
+    "sortLabel": "Trier le tableau",
+    "asc": "tri croissant",
+    "desc": "tri décroissant"
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "intro": "Actifs hors des champs de saisie. Aucun n'enregistre ni ne valide quoi que ce soit.",
+    "help": "Afficher cette liste",
+    "create": "Nouveau besoin",
+    "goTo": "Aller à : {page}",
+    "close": "Fermer cette liste",
+    "closeButton": "Fermer",
+    "hint": "Raccourcis clavier"
   }
 }

@@ -28,7 +28,7 @@ test.describe('saisie des besoins (A2a)', () => {
     const w = watch(page);
     await page.goto('/fr/needs');
     await expect(page.getByRole('link', { name: 'Nouveau besoin' })).toBeVisible();
-    await expect(page.getByRole('table')).toBeVisible();
+    await expect(page.getByRole('table', { name: 'Besoins de votre périmètre' })).toBeVisible();
     await page.getByRole('link', { name: 'Nouveau besoin' }).click();
     await fillRequired(page, { start: '2027-03-01', end: '2027-03-07' });
     await page.locator('input[type=checkbox]:not([name$="-day"])').first().check();
@@ -126,7 +126,7 @@ test.describe('saisie des besoins (A2a)', () => {
       await setProfile(context, profile);
       await page.goto('/fr/needs');
       await expect(page.getByRole('link', { name: 'Nouveau besoin' })).toHaveCount(0);
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(page.getByRole('table', { name: 'Besoins de votre périmètre' })).toBeVisible();
       const res = await page.goto('/fr/needs/new');
       expect(res?.status(), profile).toBe(404);
     }
@@ -198,11 +198,12 @@ test.describe('calendrier (D133)', () => {
     await closed.focus();
     await expect(closed).toHaveAttribute('aria-disabled', 'true');
     await expect(dialog.getByTestId('calendar-reason')).toContainText('clôturée');
-    // Toussaint : férié signalé
-    const holiday = dialog.locator('[data-date="2026-11-01"]');
+    // Noël : férié signalé (novembre est clos depuis A2b, D78 : le calendrier y désactive les jours avec une autre raison)
+    const holiday = dialog.locator('[data-date="2026-12-25"]');
+    await page.getByRole('button', { name: 'Mois suivant' }).click();
     await page.getByRole('button', { name: 'Mois suivant' }).click();
     await holiday.focus();
-    await expect(dialog.getByTestId('calendar-reason')).toContainText('Toussaint');
+    await expect(dialog.getByTestId('calendar-reason')).toContainText('Noël');
     await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('#f-range-0')).toBeFocused();

@@ -10,12 +10,12 @@ export function ZoneLabel({ zone }: { zone: Zone }) {
   const locale = useLocale() as Locale;
   const label = locale === 'en' ? zone.label_en : zone.label_fr;
   return (
-    <span className="inline-flex flex-wrap items-baseline gap-x-1.5" data-zone-kind={zone.kind}>
+    <span className="inline-flex flex-wrap items-baseline gap-x-2" data-zone-kind={zone.kind}>
       <span className="font-semibold text-ink">{label}</span>
       <span aria-hidden="true" className="text-muted">·</span>
       <span className="text-ink">{zone.responsible_name}</span>
       <span aria-hidden="true" className="text-muted">·</span>
-      <span className="rounded-md bg-alt px-1.5 font-mono text-xs text-muted">{zone.code}</span>
+      <span className="rounded-md bg-alt px-2 font-mono text-xs text-muted">{zone.code}</span>
     </span>
   );
 }
@@ -24,4 +24,12 @@ export function ZoneLabel({ zone }: { zone: Zone }) {
 export function zoneText(zone: Zone, locale: Locale): string {
   const label = locale === 'en' ? zone.label_en : zone.label_fr;
   return `${label} · ${zone.responsible_name} · ${zone.code}`;
+}
+
+/**
+ * Libellé de zone seul, sans nom de personne ni code : pour les résumés de retard de la cliente (doc 24 §5, « secteurs,
+ * pas personnes »). Les codes et les noms ne s'affichent toujours que par ZoneLabel (D106).
+ */
+export function zoneLabelOnly(zone: Zone, locale: Locale): string {
+  return locale === 'en' ? zone.label_en : zone.label_fr;
 }

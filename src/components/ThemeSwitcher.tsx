@@ -12,7 +12,7 @@ export async function ThemeSwitcher() {
   const t = await getTranslations('theme');
   const current = await getTheme();
   return (
-    <form action={setTheme} role="group" aria-label={t('label')} className="inline-flex rounded-full bg-alt p-0.5">
+    <form action={setTheme} role="group" aria-label={t('label')} className="inline-flex rounded-full bg-alt p-1">
       {THEMES.map((theme) => {
         const Glyph = ICONS[theme];
         const active = theme === current;
@@ -25,7 +25,7 @@ export async function ThemeSwitcher() {
             aria-pressed={active}
             aria-label={t(theme)}
             title={t(theme)}
-            className={`inline-flex min-h-10 min-w-10 items-center justify-center rounded-full ${active ? 'bg-marine text-white' : 'text-ink hover:bg-alt'}`}
+            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full ${active ? 'bg-marine text-on-fill' : 'text-ink hover:bg-alt'}`}
           >
             <Icon icon={Glyph} size="sm" />
           </button>
