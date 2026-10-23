@@ -62,8 +62,8 @@ export default async function DispositifsPage({ params, searchParams }: {
 
   return (
     <>
-      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('settings.dispositifs.title') }]} />
-      <PageHeader title={t('settings.dispositifs.title')} subtitle={t(`role.${ctx.profileId}`)} />
+      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('titles.schemeSettings') }]} />
+      <PageHeader title={t('titles.schemeSettings')} subtitle={t(`role.${ctx.profileId}`)} />
       <p className="mb-4 max-w-prose text-muted">{t('settings.dispositifs.intro')}</p>
       {canEdit ? null : <p className="mb-4 text-muted">{t('settings.readOnly')}</p>}
 

@@ -8,6 +8,7 @@ playwright-report/
 test-results/
 
 # Secrets et environnement
+.demo-passwords.local.json
 .env
 .env.*
 !.env.example
@@ -41,3 +42,4 @@ data-local/
 
 # Fichiers incrémentaux TypeScript
 *.tsbuildinfo
+docs/demo-credentials.md

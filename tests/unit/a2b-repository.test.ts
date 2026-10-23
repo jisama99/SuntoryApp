@@ -370,6 +370,18 @@ describe('saisie en lot (F-20.2)', () => {
     await repo.clearBatchDraft(ctxOf('rs'));
     expect(await repo.getBatchDraft(ctxOf('rs'))).toBeNull();
   });
+
+  it('brouillon automatique : rattaché au compte, jamais partagé entre deux comptes du même profil (A1f, hypothèse 8)', async () => {
+    const a = buildAccessContext(profiles.find((p) => p.id === 'rs')!, 'fr', { accountId: 'compte-a' });
+    const b = buildAccessContext(profiles.find((p) => p.id === 'rs')!, 'fr', { accountId: 'compte-b' });
+    expect(await repo.saveBatchDraft(a, [await row()])).toEqual({ status: 'ok' });
+    expect((await repo.getBatchDraft(a))?.rows).toHaveLength(1);
+    expect(await repo.getBatchDraft(b)).toBeNull();
+    await repo.clearBatchDraft(b);
+    expect((await repo.getBatchDraft(a))?.rows).toHaveLength(1);
+    await repo.clearBatchDraft(a);
+    expect(await repo.getBatchDraft(a)).toBeNull();
+  });
 });
 
 describe('journal : audience obligatoire sur tous les nouveaux événements', () => {

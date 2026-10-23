@@ -18,8 +18,9 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   const t = await getTranslations();
   const skinDefault = await repository.getHomeSkinDefault(ctx);
   const cards = [
-    { href: '/settings/deadlines', title: t('settings.deadlines.title'), body: t('settings.deadlines.body') },
-    { href: '/settings/dispositifs', title: t('settings.dispositifs.title'), body: t('settings.dispositifs.body') },
+    { href: '/settings/deadlines', title: t('titles.deadlineSettings'), body: t('settings.deadlines.body') },
+    { href: '/settings/dispositifs', title: t('titles.schemeSettings'), body: t('settings.dispositifs.body') },
+    ...(repository.canManageAccounts(ctx) ? [{ href: '/settings/accounts', title: t('titles.manageAccess'), body: t('accounts.body') }] : []),
   ] as const;
   return (
     <>

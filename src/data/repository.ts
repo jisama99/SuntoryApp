@@ -1,11 +1,11 @@
 import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
-import type { DeadlineType, Dispositif, HomeSkin, MenuKey, PresetId, ProfileId, ReopenScope } from '@/domain/types';
+import type { DeadlineType, Dispositif, HomeSkin, MenuKey, PresetId, ProfileId, ReopenScope, Scope } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
   Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, DemoClock, DemoProfile, DispositifParams, Need, ParamChange,
-  ParamKey, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
+  ParamKey, PublicAccount, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from './schemas';
 
 export interface MenuEntry {
@@ -86,10 +86,33 @@ export interface Repository {
   setHomeSkinDefault(ctx: AccessContext, skin: HomeSkin): Promise<MutationResult<'forbidden' | 'invalid'>>;
   /** Choix du profil simulé : une préférence d'affichage, ouverte à tous les profils, qui ne touche que le sien. */
   setUserHomeSkin(ctx: AccessContext, skin: HomeSkin): Promise<MutationResult<'invalid'>>;
+  // ---- Lot A1f : comptes de connexion (D188, D189) ----
+  /** Vérifie un identifiant et un mot de passe. Un seul résultat négatif, sans détail : inconnu, désactivé ou faux. */
+  authenticate(username: string, password: string): Promise<PublicAccount | null>;
+  getAccount(accountId: string): Promise<PublicAccount | null>;
+  /** Changement par la personne elle-même (premier accès avec le mot de passe temporaire). */
+  changePassword(accountId: string, current: string, next: string): Promise<MutationResult<'invalid_current' | 'weak' | 'same' | 'not_found'>>;
+  /** Gestion des comptes : agence administration seule, jamais en visualisation d'un autre profil (D189). */
+  canManageAccounts(ctx: AccessContext): boolean;
+  listAccounts(ctx: AccessContext): Promise<PublicAccount[]>;
+  createAccount(ctx: AccessContext, input: AccountInput): Promise<AccountSecretResult<'forbidden' | 'invalid' | 'username_taken'>>;
+  setAccountActive(ctx: AccessContext, accountId: string, active: boolean): Promise<MutationResult<'forbidden' | 'not_found' | 'protected' | 'self'>>;
+  assignAccount(ctx: AccessContext, accountId: string, input: Omit<AccountInput, 'username'>): Promise<MutationResult<'forbidden' | 'not_found' | 'protected' | 'invalid'>>;
+  resetAccountPassword(ctx: AccessContext, accountId: string): Promise<AccountSecretResult<'forbidden' | 'not_found' | 'protected'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;
 }
+
+export interface AccountInput {
+  username: string;
+  profile: ProfileId;
+  scope: Scope;
+}
+/** Résultat qui porte un mot de passe temporaire : il n'est rendu qu'une fois, jamais relu, jamais journalisé. */
+export type AccountSecretResult<E extends string> =
+  | { status: 'ok'; account: PublicAccount; temporaryPassword: string }
+  | { status: 'refused'; reason: E };
 
 export type MutationResult<E extends string = string> = { status: 'ok' } | { status: 'refused'; reason: E };
 

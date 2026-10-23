@@ -132,7 +132,7 @@ test.describe('échéances, blocage et saisie en lot (A2b)', () => {
     await expect(row.locator('[data-rule=E1]')).toContainText('November 2026');
     await expect(row.getByRole('button', { name: /Defer to December 2026/ })).toBeVisible();
     await page.goto('/en/needs');
-    await expect(page.getByTestId('delay-summary')).toContainText('Entry delays');
+    await expect(page.getByTestId('delay-summary')).toContainText('Entries to chase');
     expect(w.external).toEqual([]);
     expect(w.consoleErrors).toEqual([]);
   });

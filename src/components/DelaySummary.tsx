@@ -18,6 +18,7 @@ const TONE: Record<SectorStatus, Tone> = { up_to_date: 'ok', to_follow: 'attenti
  */
 export async function DelaySummary({ months, current, keep }: { months: DelayMonth[]; current: string; keep: Record<string, string> }) {
   const t = await getTranslations('delay');
+  const tt = await getTranslations('titles');
   const locale = (await getLocale()) as Locale;
   const month = months.find((m) => m.month === current) ?? months[0];
   if (!month) return null;
@@ -26,7 +27,7 @@ export async function DelaySummary({ months, current, keep }: { months: DelayMon
   const toFollow = month.sectors.filter((s) => s.status !== 'up_to_date');
   return (
     <section aria-labelledby="delay-title" data-testid="delay-summary" className="mb-8 flex flex-col gap-4">
-      <h2 id="delay-title" className="text-lg font-semibold">{t('title')}</h2>
+      <h2 id="delay-title" className="text-lg font-semibold">{tt('entriesToChase')}</h2>
       <FilterTabs
         label={t('months')}
         basePath="/needs"

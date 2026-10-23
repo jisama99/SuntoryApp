@@ -7,18 +7,28 @@ import { THEME_COOKIE, parseTheme } from '@/lib/theme';
 import { repository } from '@/data';
 import { HOME_SKINS, LOCALES } from '@/domain/types';
 import type { HomeSkin, Locale } from '@/domain/types';
-import { getAccessContext, PROFILE_COOKIE, PROFILE_COOKIE_PREFIX, parseProfileCookie } from '@/lib/session';
+import { SESSION_COOKIE } from '@/lib/auth';
+import { getAccessContext, getSession, PROFILE_COOKIE, PROFILE_COOKIE_PREFIX, parseProfileCookie } from '@/lib/session';
 
+/** « Visualiser comme » : réservé au compte du prestataire (D188). Choisir son propre profil revient à sa vue. */
 export async function setSimulatedProfile(formData: FormData): Promise<void> {
+  const session = await getSession();
+  if (session?.account.profile !== 'provider_admin') return;
   const raw = String(formData.get('profile') ?? '');
   const id = parseProfileCookie(`${PROFILE_COOKIE_PREFIX}${raw}`);
   const jar = await cookies();
-  jar.set(PROFILE_COOKIE, `${PROFILE_COOKIE_PREFIX}${id}`, {
-    httpOnly: true,
-    sameSite: 'lax',
-    path: '/',
-  });
+  if (raw === 'provider_admin') jar.delete(PROFILE_COOKIE);
+  else jar.set(PROFILE_COOKIE, `${PROFILE_COOKIE_PREFIX}${id}`, { httpOnly: true, sameSite: 'lax', path: '/' });
   revalidatePath('/', 'layout');
+}
+
+/** Déconnexion : le cookie de session et celui de visualisation sont supprimés, retour à la connexion. */
+export async function signOut(formData: FormData): Promise<void> {
+  const locale = String(formData.get('locale') ?? 'fr');
+  const jar = await cookies();
+  jar.delete(SESSION_COOKIE);
+  jar.delete(PROFILE_COOKIE);
+  redirect(`/${(LOCALES as readonly string[]).includes(locale) ? locale : 'fr'}/start`);
 }
 
 export async function setTheme(formData: FormData): Promise<void> {
@@ -34,11 +44,4 @@ export async function setHomeSkinAction(formData: FormData): Promise<void> {
   if (!(HOME_SKINS as readonly string[]).includes(skin) || !(LOCALES as readonly string[]).includes(locale)) return;
   await repository.setUserHomeSkin(await getAccessContext(locale as Locale), skin as HomeSkin);
   revalidatePath('/', 'layout');
-}
-
-/** Écran d'entrée : choisit le profil simulé puis ouvre l'accueil dans la langue courante. */
-export async function enterAsProfile(formData: FormData): Promise<void> {
-  const locale = String(formData.get('locale') ?? 'fr');
-  await setSimulatedProfile(formData);
-  redirect(`/${(LOCALES as readonly string[]).includes(locale) ? locale : 'fr'}`);
 }

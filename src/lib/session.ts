@@ -1,33 +1,48 @@
 import { cookies } from 'next/headers';
-import { profileDirectory } from '@/data';
-import type { DemoProfile } from '@/data/schemas';
+import { profileDirectory, repository } from '@/data';
+import type { DemoProfile, PublicAccount } from '@/data/schemas';
 import { buildAccessContext } from '@/domain/access';
 import type { AccessContext } from '@/domain/access';
-import { PROFILE_IDS } from '@/domain/types';
-import type { Locale, ProfileId } from '@/domain/types';
+import type { Locale } from '@/domain/types';
+import { redirect } from '@/i18n/navigation';
+import { readSession, SESSION_COOKIE, VIEW_AS_COOKIE } from './auth';
+import { DEFAULT_PROFILE, PROFILE_COOKIE, PROFILE_COOKIE_PREFIX, parseProfileCookie } from './profile-cookie';
 
-/**
- * Cookie de SIMULATION de profil (étape A). Nom et format volontairement distincts d'une
- * future session : il n'authentifie personne et ne doit jamais être présenté comme une connexion.
- */
-export const PROFILE_COOKIE = 'demo_profile_simule';
-export const PROFILE_COOKIE_PREFIX = 'sim.';
-export const DEFAULT_PROFILE: ProfileId = 'direction_client';
+export { DEFAULT_PROFILE, PROFILE_COOKIE, PROFILE_COOKIE_PREFIX, parseProfileCookie };
 
-export function parseProfileCookie(value: string | undefined): ProfileId {
-  if (!value || !value.startsWith(PROFILE_COOKIE_PREFIX)) return DEFAULT_PROFILE;
-  const id = value.slice(PROFILE_COOKIE_PREFIX.length);
-  return (PROFILE_IDS as readonly string[]).includes(id) ? (id as ProfileId) : DEFAULT_PROFILE;
+export interface Session {
+  account: PublicAccount;
+  /** Profil effectif : celui du compte, ou celui consulté par le prestataire. */
+  profile: DemoProfile;
+  impersonated: boolean;
 }
 
-export async function getSimulatedProfile(): Promise<DemoProfile> {
+/** Session valide : cookie signé, compte existant et actif (une désactivation coupe l'accès à la requête suivante). */
+export async function getSession(): Promise<Session | null> {
   const jar = await cookies();
-  const id = parseProfileCookie(jar.get(PROFILE_COOKIE)?.value);
-  const profile = await profileDirectory.get(id);
-  if (!profile) throw new Error('Profil de démonstration introuvable');
-  return profile;
+  const accountId = readSession(jar.get(SESSION_COOKIE)?.value);
+  if (!accountId) return null;
+  const account = await repository.getAccount(accountId);
+  if (!account || !account.active) return null;
+  const own = await profileDirectory.get(account.profile);
+  if (!own) return null;
+  const base: DemoProfile = { ...own, id: account.profile, scope: account.scope, first_name: account.first_name };
+  const viewAs = jar.get(VIEW_AS_COOKIE)?.value;
+  if (account.profile === 'provider_admin' && viewAs) {
+    const target = await profileDirectory.get(parseProfileCookie(viewAs));
+    if (target && target.id !== 'provider_admin') return { account, profile: target, impersonated: true };
+  }
+  return { account, profile: base, impersonated: false };
+}
+
+/** Session exigée : sans session, redirection vers la connexion ; mot de passe temporaire : vers son changement. */
+export async function requireSession(locale: Locale): Promise<Session> {
+  const session = await getSession();
+  if (!session) redirect({ href: '/start', locale });
+  return session as Session;
 }
 
 export async function getAccessContext(locale: Locale): Promise<AccessContext> {
-  return buildAccessContext(await getSimulatedProfile(), locale);
+  const session = await requireSession(locale);
+  return buildAccessContext(session.profile, locale, { accountId: session.account.id, impersonated: session.impersonated });
 }

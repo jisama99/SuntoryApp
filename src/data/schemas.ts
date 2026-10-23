@@ -308,3 +308,24 @@ export const BatchRowSchema = z.object({
 });
 export type BatchRow = z.infer<typeof BatchRowSchema>;
 export const BatchRowsSchema = z.array(BatchRowSchema).max(60);
+
+// ---------------------------------------------------------------------------------------------
+// Lot A1f : comptes de connexion (D188, D189). Le mot de passe n'existe qu'en empreinte (sel et hachage).
+export const USERNAME_PATTERN = /^[A-Za-z][A-Za-z0-9]{3,19}$/;
+
+export const AccountSchema = z.object({
+  id: z.string().uuid(),
+  username: z.string().regex(USERNAME_PATTERN),
+  profile: z.enum(PROFILE_IDS),
+  scope: ScopeSchema,
+  first_name: z.string().min(1).nullable(),
+  active: z.boolean(),
+  must_change_password: z.boolean(),
+  password: z.object({ salt: z.string().min(1), hash: z.string().min(1) }),
+  created_by: z.string().nullable(),
+  is_demo: z.literal(true),
+});
+export type Account = z.infer<typeof AccountSchema>;
+
+/** Compte tel que l'écran le voit : jamais d'empreinte. */
+export type PublicAccount = Omit<Account, 'password'>;

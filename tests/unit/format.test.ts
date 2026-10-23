@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formatDate, formatIsoWeek } from '@/lib/format';
-import { DEFAULT_PROFILE, parseProfileCookie } from '@/lib/session';
+import { DEFAULT_PROFILE, parseProfileCookie } from '@/lib/profile-cookie';
 
 describe('formats selon la langue', () => {
   it('date ISO affichée jj/mm/aaaa dans les deux langues (EN : Royaume-Uni, à confirmer)', () => {

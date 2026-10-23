@@ -95,14 +95,14 @@ export default async function DeadlinesPage({ params, searchParams }: {
 
   return (
     <>
-      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('settings.deadlines.title') }]} />
-      <PageHeader title={t('settings.deadlines.title')} subtitle={t(`role.${ctx.profileId}`)} />
+      <Breadcrumb items={[{ label: t('menu.settings'), href: '/settings' }, { label: t('titles.deadlineSettings') }]} />
+      <PageHeader title={t('titles.deadlineSettings')} subtitle={t(`role.${ctx.profileId}`)} />
       <p className="mb-4 max-w-prose text-muted">{t('settings.deadlines.intro')}</p>
       <p className="mb-4 max-w-prose text-muted-strong">{t('settings.deadlines.novemberNote')}</p>
       {canEdit ? null : <p className="mb-4 text-muted">{t('settings.readOnly')}</p>}
 
       <section aria-labelledby="cal-title" className="mb-8 flex flex-col gap-4">
-        <h2 id="cal-title" className="text-lg font-semibold">{t('deadline.calendar.title')}</h2>
+        <h2 id="cal-title" className="text-lg font-semibold">{t('titles.deadlinesByMonth')}</h2>
         <FilterTabs label={t('deadline.calendar.scope')} basePath="/settings/deadlines" param="dispositif" current={scope} keep={{ ...keepSpan, ...keepSort }}
           items={SCOPES.map((s) => ({ value: s, text: s === 'all' ? t('params.allDispositifs') : s === 'global' ? t('deadline.calendar.global') : t(`dispositif.${s}`) }))} />
         <FilterTabs label={t('deadline.calendar.span')} basePath="/settings/deadlines" param="months" current={span} keep={{ ...keepScope, ...keepSort }}
@@ -128,7 +128,7 @@ export default async function DeadlinesPage({ params, searchParams }: {
       ) : null}
 
       <section aria-labelledby="req-title" className="mb-8 flex flex-col gap-4">
-        <h2 id="req-title" className="text-lg font-semibold">{t('reopen.requestsTitle')}</h2>
+        <h2 id="req-title" className="text-lg font-semibold">{t('titles.reopeningsToDecide')}</h2>
         {pending.length === 0 ? (
           <EmptyState title={t('states.empty.title')} body={t('reopen.noPending')} />
         ) : (
@@ -171,7 +171,7 @@ export default async function DeadlinesPage({ params, searchParams }: {
       </section>
 
       <section aria-labelledby="outbox-title" className="mb-8 flex flex-col gap-3">
-        <h2 id="outbox-title" className="text-lg font-semibold">{t('outbox.title')}</h2>
+        <h2 id="outbox-title" className="text-lg font-semibold">{t('titles.emailsToApprove')}</h2>
         <p className="max-w-prose text-muted">{t('outbox.help')}</p>
         <ul className="flex flex-col gap-2" data-testid="outbox">
           {outbox.map((o) => (
