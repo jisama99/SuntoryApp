@@ -896,9 +896,90 @@
     "is_demo": true
   },
   {
+    "id": "85a4387f-6544-46ef-a450-bb7113bedacf",
+    "code": "EV-47",
+    "seq": 57,
+    "actor_profile": "agency_admin",
+    "zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "need_id": null,
+    "effect_date": "2026-10-02",
+    "recorded_at": "2026-10-02",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "starts_on": "2026-10-05",
+      "ends_on": "2026-10-09"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "334d2e97-0d8a-454f-ab2f-e1d5a41b4c15",
+    "code": "EV-06",
+    "seq": 58,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
+    "effect_date": "2026-10-05",
+    "recorded_at": "2026-10-05",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-001",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "fc84223e-8911-4eb0-96e9-d59c8344684f",
+    "code": "EV-06",
+    "seq": 59,
+    "actor_profile": "cvr_client",
+    "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
+    "effect_date": "2026-10-05",
+    "recorded_at": "2026-10-05",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-019",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "217a5227-568d-4907-8810-8ebed73df74f",
+    "code": "EV-06",
+    "seq": 60,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
+    "effect_date": "2026-10-06",
+    "recorded_at": "2026-10-06",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-002",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "624414b7-5e18-4021-931c-e1aba2925e1f",
+    "code": "EV-06",
+    "seq": 61,
+    "actor_profile": "cvr_client",
+    "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
+    "effect_date": "2026-10-06",
+    "recorded_at": "2026-10-06",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-020",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "89426b2b-1a7a-4d6d-8c71-2f6736f7c2b5",
     "code": "EV-09",
-    "seq": 57,
+    "seq": 62,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -914,7 +995,7 @@
   {
     "id": "a98b8bf2-76fc-48e6-998e-d341e22732b5",
     "code": "EV-13",
-    "seq": 58,
+    "seq": 63,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -929,7 +1010,7 @@
   {
     "id": "5591d3bc-0d63-420f-9e70-35f1428039c4",
     "code": "EV-09",
-    "seq": 59,
+    "seq": 64,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -945,7 +1026,7 @@
   {
     "id": "13b041d6-b714-4e3d-8f3e-327627477b7b",
     "code": "EV-13",
-    "seq": 60,
+    "seq": 65,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -958,9 +1039,41 @@
     "is_demo": true
   },
   {
+    "id": "62fcf805-00fc-4e02-a5a3-d049ab727bea",
+    "code": "EV-06",
+    "seq": 66,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
+    "effect_date": "2026-10-07",
+    "recorded_at": "2026-10-07",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-003",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "0306ea79-7045-49b1-87a3-842a9f1b1626",
+    "code": "EV-06",
+    "seq": 67,
+    "actor_profile": "cvr_client",
+    "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
+    "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
+    "effect_date": "2026-10-07",
+    "recorded_at": "2026-10-07",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-021",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "310a991d-76cc-4a33-89f9-833d8745fb54",
     "code": "EV-09",
-    "seq": 61,
+    "seq": 68,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
@@ -976,7 +1089,7 @@
   {
     "id": "c20fe721-b31d-40c4-a253-9cb7e43a119f",
     "code": "EV-09",
-    "seq": 62,
+    "seq": 69,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -992,7 +1105,7 @@
   {
     "id": "f8f1b341-0c00-421b-be57-fceeed8e3730",
     "code": "EV-13",
-    "seq": 63,
+    "seq": 70,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -1005,9 +1118,41 @@
     "is_demo": true
   },
   {
+    "id": "077d00d1-ce28-4c71-aa16-5e89e3698971",
+    "code": "EV-06",
+    "seq": 71,
+    "actor_profile": "cvr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "6d8ee589-2915-40cf-81d0-784a3e902924",
+    "effect_date": "2026-10-08",
+    "recorded_at": "2026-10-08",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-004",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "1d2631c1-e88b-4271-b4ac-fb90f4928937",
+    "code": "EV-06",
+    "seq": 72,
+    "actor_profile": "cvr_client",
+    "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
+    "effect_date": "2026-10-08",
+    "recorded_at": "2026-10-08",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-022",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "9616a45e-70ba-414b-a22b-2391736812b2",
     "code": "EV-10",
-    "seq": 64,
+    "seq": 73,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1024,7 +1169,7 @@
   {
     "id": "b782f6ef-91cd-4d15-bd67-b8fb84afcca8",
     "code": "EV-13",
-    "seq": 65,
+    "seq": 74,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
@@ -1039,7 +1184,7 @@
   {
     "id": "a309a35e-c5f0-4311-8152-2d8a34fcaf12",
     "code": "EV-09",
-    "seq": 66,
+    "seq": 75,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1055,7 +1200,7 @@
   {
     "id": "f0809e8a-681e-43ca-b24a-d72cfffde22b",
     "code": "EV-13",
-    "seq": 67,
+    "seq": 76,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1070,7 +1215,7 @@
   {
     "id": "702cbcca-6b74-43ca-8c5d-b0148488bcce",
     "code": "EV-18",
-    "seq": 68,
+    "seq": 77,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1085,7 +1230,7 @@
   {
     "id": "8973f6c0-b29f-4e0b-a145-5fbf44072612",
     "code": "EV-10",
-    "seq": 69,
+    "seq": 78,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -1102,7 +1247,7 @@
   {
     "id": "83a9dd10-1b7e-4b16-9e03-14d2101ca280",
     "code": "EV-09",
-    "seq": 70,
+    "seq": 79,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
@@ -1118,7 +1263,7 @@
   {
     "id": "56119202-e2f6-4769-b19f-2de7e2a30cc8",
     "code": "EV-13",
-    "seq": 71,
+    "seq": 80,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
@@ -1131,9 +1276,58 @@
     "is_demo": true
   },
   {
+    "id": "0cced962-2e4d-4ead-8819-efc95e9bfafb",
+    "code": "EV-06",
+    "seq": 81,
+    "actor_profile": "cvr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
+    "effect_date": "2026-10-09",
+    "recorded_at": "2026-10-09",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-005",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "7a93d6b5-e920-4623-94f1-8572bc527db4",
+    "code": "EV-06",
+    "seq": 82,
+    "actor_profile": "cvr_client",
+    "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
+    "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
+    "effect_date": "2026-10-09",
+    "recorded_at": "2026-10-09",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-023",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "e0166710-b3c0-4733-954b-ad9391a6415e",
+    "code": "EV-47",
+    "seq": 83,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-09",
+    "recorded_at": "2026-10-09",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "starts_on": "2026-10-12",
+      "ends_on": "2026-10-30"
+    },
+    "is_demo": true
+  },
+  {
     "id": "19023ae1-908d-43f7-9aae-9e6e54259f52",
     "code": "EV-09",
-    "seq": 72,
+    "seq": 84,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "6d8ee589-2915-40cf-81d0-784a3e902924",
@@ -1149,7 +1343,7 @@
   {
     "id": "50c7e576-da26-49d6-b4bc-edd3d46d2752",
     "code": "EV-13",
-    "seq": 73,
+    "seq": 85,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "6d8ee589-2915-40cf-81d0-784a3e902924",
@@ -1164,7 +1358,7 @@
   {
     "id": "44b9cf45-8f91-4835-a4c4-3d1cc0b69a17",
     "code": "EV-11",
-    "seq": 74,
+    "seq": 86,
     "actor_profile": "cvr_client",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -1181,7 +1375,7 @@
   {
     "id": "a9193859-049c-471a-bb43-422f2c94ccbe",
     "code": "EV-09",
-    "seq": 75,
+    "seq": 87,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1197,7 +1391,7 @@
   {
     "id": "622b413c-04f4-4dfd-9cec-c38ea6ebca04",
     "code": "EV-13",
-    "seq": 76,
+    "seq": 88,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1210,9 +1404,41 @@
     "is_demo": true
   },
   {
+    "id": "c5e7a0ec-633d-4f25-abee-54e16e665e79",
+    "code": "EV-06",
+    "seq": 89,
+    "actor_profile": "cvr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
+    "effect_date": "2026-10-10",
+    "recorded_at": "2026-10-10",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-006",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "076386bd-a31e-4916-881d-3ea5d58b29a6",
+    "code": "EV-06",
+    "seq": 90,
+    "actor_profile": "cvr_client",
+    "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
+    "effect_date": "2026-10-10",
+    "recorded_at": "2026-10-10",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-024",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "147484b6-8bdf-4af4-a2f4-a37876fc00f1",
     "code": "EV-11",
-    "seq": 77,
+    "seq": 91,
     "actor_profile": "cvr_client",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1229,7 +1455,7 @@
   {
     "id": "2125cc5a-21e1-4193-a83b-259cfa096b1a",
     "code": "EV-10",
-    "seq": 78,
+    "seq": 92,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1246,7 +1472,7 @@
   {
     "id": "7a2402c3-f154-4ab7-acec-c59dd33d5319",
     "code": "EV-09",
-    "seq": 79,
+    "seq": 93,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
@@ -1262,7 +1488,7 @@
   {
     "id": "dd7a173c-8991-4708-a653-0a06cc7e9f77",
     "code": "EV-13",
-    "seq": 80,
+    "seq": 94,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
@@ -1277,7 +1503,7 @@
   {
     "id": "e0d4661b-f553-4cc2-b7b2-757dcfbfd9c2",
     "code": "EV-10",
-    "seq": 81,
+    "seq": 95,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -1294,7 +1520,7 @@
   {
     "id": "4dd6f0c4-3623-487b-ac11-9ccf78281600",
     "code": "EV-10",
-    "seq": 82,
+    "seq": 96,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1311,7 +1537,7 @@
   {
     "id": "f1a4c8dc-03ec-4d69-8c3a-cbb66c232243",
     "code": "EV-09",
-    "seq": 83,
+    "seq": 97,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -1327,7 +1553,7 @@
   {
     "id": "6f301de4-9bd3-42be-a843-713ea399ecca",
     "code": "EV-13",
-    "seq": 84,
+    "seq": 98,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -1340,9 +1566,41 @@
     "is_demo": true
   },
   {
+    "id": "3a425c76-5cbe-4f0d-8b57-d60755418e1e",
+    "code": "EV-06",
+    "seq": 99,
+    "actor_profile": "cvr_client",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "2ff343b6-8b83-43e0-9748-ef92e4908bf7",
+    "effect_date": "2026-10-11",
+    "recorded_at": "2026-10-11",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-007",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "73c0e730-32bc-40b6-8926-16b237e82109",
+    "code": "EV-06",
+    "seq": 100,
+    "actor_profile": "cvr_client",
+    "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
+    "need_id": "40f4f75b-50f6-46cb-beb7-504e506a2a76",
+    "effect_date": "2026-10-11",
+    "recorded_at": "2026-10-11",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-025",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "5e3c21d5-f691-4f62-a5de-c7b133c515cd",
     "code": "EV-11",
-    "seq": 85,
+    "seq": 101,
     "actor_profile": "cvr_client",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1359,7 +1617,7 @@
   {
     "id": "36a873be-6b13-4eee-993c-f2c8eb77d886",
     "code": "EV-10",
-    "seq": 86,
+    "seq": 102,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "6d8ee589-2915-40cf-81d0-784a3e902924",
@@ -1376,7 +1634,7 @@
   {
     "id": "89f8283a-fc9f-4ee0-9a68-8350960f81cc",
     "code": "EV-09",
-    "seq": 87,
+    "seq": 103,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
@@ -1392,7 +1650,7 @@
   {
     "id": "462f38dd-74cb-455f-9fe4-70eaf582107b",
     "code": "EV-13",
-    "seq": 88,
+    "seq": 104,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
@@ -1407,7 +1665,7 @@
   {
     "id": "9f46a65d-cb2c-4570-9136-72562fe487ef",
     "code": "EV-14",
-    "seq": 89,
+    "seq": 105,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -1423,7 +1681,7 @@
   {
     "id": "a81548de-a4cf-4b50-8bf2-e8f527836228",
     "code": "EV-11",
-    "seq": 90,
+    "seq": 106,
     "actor_profile": "cvr_client",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1440,7 +1698,7 @@
   {
     "id": "efbfb18d-974c-4008-bf8d-2619d53a5399",
     "code": "EV-09",
-    "seq": 91,
+    "seq": 107,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -1456,7 +1714,7 @@
   {
     "id": "21e9b922-cd9e-42a0-b101-8f7480792a62",
     "code": "EV-13",
-    "seq": 92,
+    "seq": 108,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -1469,9 +1727,25 @@
     "is_demo": true
   },
   {
+    "id": "831c08fd-332f-494a-99d4-22ae5c51afc4",
+    "code": "EV-06",
+    "seq": 109,
+    "actor_profile": "cvr_client",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "5e4a574c-a83e-46c6-9e46-aee174e74e2c",
+    "effect_date": "2026-10-12",
+    "recorded_at": "2026-10-12",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-008",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "a9449331-4ad3-47bd-9353-a40bb91868c3",
     "code": "EV-14",
-    "seq": 93,
+    "seq": 110,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1487,7 +1761,7 @@
   {
     "id": "aa77dce2-d1ff-4bb9-82c9-65bbc2713863",
     "code": "EV-10",
-    "seq": 94,
+    "seq": 111,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
@@ -1504,7 +1778,7 @@
   {
     "id": "5b56eca9-03e8-4deb-8c47-a72675d0e18e",
     "code": "EV-09",
-    "seq": 95,
+    "seq": 112,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "2ff343b6-8b83-43e0-9748-ef92e4908bf7",
@@ -1520,7 +1794,7 @@
   {
     "id": "2db5b2a2-feb3-422a-b88c-a8bac8f31594",
     "code": "EV-13",
-    "seq": 96,
+    "seq": 113,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "2ff343b6-8b83-43e0-9748-ef92e4908bf7",
@@ -1535,7 +1809,7 @@
   {
     "id": "56ff81f7-5800-4f8a-a1f5-ea02e0cccca4",
     "code": "EV-11",
-    "seq": 97,
+    "seq": 114,
     "actor_profile": "cvr_client",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -1552,7 +1826,7 @@
   {
     "id": "0f5d1fc3-e91d-41eb-9dd1-b783f95649d6",
     "code": "EV-10",
-    "seq": 98,
+    "seq": 115,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
@@ -1569,7 +1843,7 @@
   {
     "id": "0d3bb000-8a90-44cb-809a-c64c2fa5ad0a",
     "code": "EV-10",
-    "seq": 99,
+    "seq": 116,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -1586,7 +1860,7 @@
   {
     "id": "0bc75a64-8268-418c-b8a8-5ab1dbaabe80",
     "code": "EV-09",
-    "seq": 100,
+    "seq": 117,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "40f4f75b-50f6-46cb-beb7-504e506a2a76",
@@ -1600,9 +1874,73 @@
     "is_demo": true
   },
   {
+    "id": "e9912f63-48cc-4a05-8498-c6acc506574d",
+    "code": "EV-01",
+    "seq": 118,
+    "actor_profile": "agency_operator",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "d2ee2720-3ce1-4d7e-a104-8d173813555e",
+    "effect_date": "2026-10-12",
+    "recorded_at": "2026-10-12",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-032",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "a7b6b3e4-dce2-4c94-a60d-81e9ae18ce1b",
+    "code": "EV-02",
+    "seq": 119,
+    "actor_profile": "agency_operator",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "d2ee2720-3ce1-4d7e-a104-8d173813555e",
+    "effect_date": "2026-10-12",
+    "recorded_at": "2026-10-12",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-032",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "9e890016-1c90-4ecf-bf4d-66acec80f0bd",
+    "code": "EV-06",
+    "seq": 120,
+    "actor_profile": "cvr_client",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
+    "effect_date": "2026-10-13",
+    "recorded_at": "2026-10-13",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-009",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "f5d2a85c-68c7-44f2-a451-6a6c70926bea",
+    "code": "EV-06",
+    "seq": 121,
+    "actor_profile": "cvr_client",
+    "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "need_id": "365c9083-373e-47cb-ac7c-aee7eac707bf",
+    "effect_date": "2026-10-13",
+    "recorded_at": "2026-10-13",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-027",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "09cc8f06-7dac-476c-84b8-a80276fa6bba",
     "code": "EV-15",
-    "seq": 101,
+    "seq": 122,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1618,7 +1956,7 @@
   {
     "id": "37399e9a-e84d-4116-a546-cbea80309eac",
     "code": "EV-17",
-    "seq": 102,
+    "seq": 123,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1634,7 +1972,7 @@
   {
     "id": "4e5161f6-426e-4cf0-a342-a2649a0b235a",
     "code": "EV-14",
-    "seq": 103,
+    "seq": 124,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1650,7 +1988,7 @@
   {
     "id": "bf5578f7-35a1-4a5a-8236-3822b04acf43",
     "code": "EV-09",
-    "seq": 104,
+    "seq": 125,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "5e4a574c-a83e-46c6-9e46-aee174e74e2c",
@@ -1666,7 +2004,7 @@
   {
     "id": "381c6648-87a6-4d14-b77d-9b7fce8b3870",
     "code": "EV-16",
-    "seq": 105,
+    "seq": 126,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "10843032-a7ee-46e7-941a-2e53a57ade4e",
@@ -1682,7 +2020,7 @@
   {
     "id": "287aa3a3-d738-4c07-95e4-64a87e2440b8",
     "code": "EV-14",
-    "seq": 106,
+    "seq": 127,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1698,7 +2036,7 @@
   {
     "id": "19102412-e24c-4cfb-a151-fd13888ce6b0",
     "code": "EV-11",
-    "seq": 107,
+    "seq": 128,
     "actor_profile": "cvr_client",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -1715,7 +2053,7 @@
   {
     "id": "5cb0b6e5-471d-4415-b76c-496ecba4e9dd",
     "code": "EV-10",
-    "seq": 108,
+    "seq": 129,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -1732,7 +2070,7 @@
   {
     "id": "e4f961e4-e292-4231-8d03-333f309ccffa",
     "code": "EV-13",
-    "seq": 109,
+    "seq": 130,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "40f4f75b-50f6-46cb-beb7-504e506a2a76",
@@ -1745,9 +2083,41 @@
     "is_demo": true
   },
   {
+    "id": "c19495ed-133b-4fcd-9c55-07819cf39fbb",
+    "code": "EV-06",
+    "seq": 131,
+    "actor_profile": "cvr_client",
+    "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "need_id": "1b18c73b-e07c-442e-ae98-152e8d05d167",
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-010",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "98893a1b-6c71-4668-9105-c9d10c8ae4ec",
+    "code": "EV-06",
+    "seq": 132,
+    "actor_profile": "cvr_client",
+    "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
+    "need_id": "c2b86347-6222-454b-b19f-65a49e341066",
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-028",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "42be2dec-10ed-439c-ba46-89614e2db95f",
     "code": "EV-16",
-    "seq": 110,
+    "seq": 133,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -1763,7 +2133,7 @@
   {
     "id": "a8cef1cf-3b14-486e-b436-10575d4e3e1f",
     "code": "EV-17",
-    "seq": 111,
+    "seq": 134,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1779,7 +2149,7 @@
   {
     "id": "8ffb5ee4-5ed9-453f-b8e1-5b45772b9e65",
     "code": "EV-11",
-    "seq": 112,
+    "seq": 135,
     "actor_profile": "cvr_client",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "6d8ee589-2915-40cf-81d0-784a3e902924",
@@ -1796,7 +2166,7 @@
   {
     "id": "d80546f6-4a32-4ea9-8817-258c2648a82c",
     "code": "EV-13",
-    "seq": 113,
+    "seq": 136,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "5e4a574c-a83e-46c6-9e46-aee174e74e2c",
@@ -1811,7 +2181,7 @@
   {
     "id": "2cc5e0b6-9ccb-419e-b42c-f18140bb87eb",
     "code": "EV-09",
-    "seq": 114,
+    "seq": 137,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
@@ -1827,7 +2197,7 @@
   {
     "id": "6102491c-7e51-4a17-95ff-989c6a1452c0",
     "code": "EV-13",
-    "seq": 115,
+    "seq": 138,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
@@ -1842,7 +2212,7 @@
   {
     "id": "c7223b6c-f45b-4850-a988-853ce7f59af8",
     "code": "EV-11",
-    "seq": 116,
+    "seq": 139,
     "actor_profile": "cvr_client",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
@@ -1859,7 +2229,7 @@
   {
     "id": "75f83f22-282f-4d4e-bd06-62309585c74f",
     "code": "EV-09",
-    "seq": 117,
+    "seq": 140,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "365c9083-373e-47cb-ac7c-aee7eac707bf",
@@ -1875,7 +2245,7 @@
   {
     "id": "7d723846-cc24-44ef-a4d3-c94a5251123a",
     "code": "EV-13",
-    "seq": 118,
+    "seq": 141,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "365c9083-373e-47cb-ac7c-aee7eac707bf",
@@ -1888,9 +2258,73 @@
     "is_demo": true
   },
   {
+    "id": "67f5df4e-79f7-4680-911a-a0d172e0537d",
+    "code": "EV-01",
+    "seq": 142,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "38c582cd-2649-4149-9fd5-a499a381e8a5",
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-030",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "535f2506-fdf5-4a2f-9e3a-4273020e3731",
+    "code": "EV-02",
+    "seq": 143,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "38c582cd-2649-4149-9fd5-a499a381e8a5",
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-030",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "b5efb21e-13b5-439b-a4ea-027fddaeb1e5",
+    "code": "EV-08",
+    "seq": 144,
+    "actor_profile": "cvr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "d2ee2720-3ce1-4d7e-a104-8d173813555e",
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-032",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "b9766e43-1328-46a9-b081-eb71c6b076b0",
+    "code": "EV-06",
+    "seq": 145,
+    "actor_profile": "cvr_client",
+    "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "need_id": "f6a96563-120c-4d65-9e7a-3210ffef9a2c",
+    "effect_date": "2026-10-15",
+    "recorded_at": "2026-10-15",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-011",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "4f46b7aa-bae1-45f4-9c10-edf83c173159",
     "code": "EV-16",
-    "seq": 119,
+    "seq": 146,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "42595953-7ee4-41a8-82da-4ecbf3797723",
@@ -1906,7 +2340,7 @@
   {
     "id": "f979a3a6-baa1-4edf-bc7e-de6d3533d22f",
     "code": "EV-10",
-    "seq": 120,
+    "seq": 147,
     "actor_profile": "agency_operator",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
@@ -1923,7 +2357,7 @@
   {
     "id": "af27aacd-0e9a-47e2-8a92-1bd01d2d1a45",
     "code": "EV-09",
-    "seq": 121,
+    "seq": 148,
     "actor_profile": "agency_operator",
     "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
     "need_id": "1b18c73b-e07c-442e-ae98-152e8d05d167",
@@ -1939,7 +2373,7 @@
   {
     "id": "ee550b52-f0c0-412c-837b-6d30a77d5146",
     "code": "EV-14",
-    "seq": 122,
+    "seq": 149,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -1955,7 +2389,7 @@
   {
     "id": "97d934d0-dd90-4cc4-a787-3eb6e14f101d",
     "code": "EV-16",
-    "seq": 123,
+    "seq": 150,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "49ccd442-d6eb-432f-8a29-632601a068b0",
@@ -1971,7 +2405,7 @@
   {
     "id": "6d735921-227c-40bc-b4f9-ba15b7941293",
     "code": "EV-11",
-    "seq": 124,
+    "seq": 151,
     "actor_profile": "cvr_client",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -1988,7 +2422,7 @@
   {
     "id": "42a84c96-848f-47fe-a823-67c1ef6d506a",
     "code": "EV-09",
-    "seq": 125,
+    "seq": 152,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "c2b86347-6222-454b-b19f-65a49e341066",
@@ -2004,7 +2438,7 @@
   {
     "id": "6611721d-6a04-403b-9fe5-d0a5df292e6b",
     "code": "EV-13",
-    "seq": 126,
+    "seq": 153,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "c2b86347-6222-454b-b19f-65a49e341066",
@@ -2017,9 +2451,42 @@
     "is_demo": true
   },
   {
+    "id": "056bbdaa-bdd6-4441-80ee-c19a1c1e1668",
+    "code": "EV-06",
+    "seq": 154,
+    "actor_profile": "cvr_client",
+    "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "need_id": "279b4d71-79bb-49f1-b4fc-89e919fb4b60",
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-012",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "3e4a93c0-923e-4f2c-84aa-29480fca45aa",
+    "code": "EV-47",
+    "seq": 155,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "agency",
+    "data": {
+      "action": "stopped",
+      "starts_on": "2026-10-12",
+      "ends_on": "2026-10-30"
+    },
+    "is_demo": true
+  },
+  {
     "id": "bcec4e88-d481-43c3-a40e-f1fc06c339d9",
     "code": "EV-16",
-    "seq": 127,
+    "seq": 156,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "2b4a820b-1242-409b-bd01-61f80a2b6fc4",
@@ -2035,7 +2502,7 @@
   {
     "id": "28f88781-7019-4394-8403-a625f0957d9c",
     "code": "EV-14",
-    "seq": 128,
+    "seq": 157,
     "actor_profile": "agency_operator",
     "zone_id": "19b26268-78ea-4d66-8b0a-cdf2999d86a6",
     "need_id": "13569642-57ee-41f9-8a12-8d45bd0eea0e",
@@ -2051,7 +2518,7 @@
   {
     "id": "19990fdc-c961-462a-a877-279d388f0f80",
     "code": "EV-14",
-    "seq": 129,
+    "seq": 158,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -2065,9 +2532,25 @@
     "is_demo": true
   },
   {
+    "id": "753d3fce-3b22-4a47-9a5e-d480f8a38d2a",
+    "code": "EV-06",
+    "seq": 159,
+    "actor_profile": "cvr_client",
+    "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "need_id": "d83eed26-f435-4159-88ab-defaf585cf62",
+    "effect_date": "2026-10-17",
+    "recorded_at": "2026-10-17",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-013",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "b099779b-6528-47cc-94c4-7ba67d588861",
     "code": "EV-11",
-    "seq": 130,
+    "seq": 160,
     "actor_profile": "cvr_client",
     "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
     "need_id": "b29ea6d6-c643-44d8-85c8-906c826745c7",
@@ -2084,7 +2567,7 @@
   {
     "id": "b3e5259e-3db7-44c7-bff0-6d662158e956",
     "code": "EV-09",
-    "seq": 131,
+    "seq": 161,
     "actor_profile": "agency_operator",
     "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
     "need_id": "279b4d71-79bb-49f1-b4fc-89e919fb4b60",
@@ -2100,7 +2583,7 @@
   {
     "id": "1e1ba01f-8164-4f82-ab48-54749e5852bb",
     "code": "EV-17",
-    "seq": 132,
+    "seq": 162,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -2114,9 +2597,25 @@
     "is_demo": true
   },
   {
+    "id": "22d19be5-d7c8-48c7-b99a-6a188c8fd7e4",
+    "code": "EV-06",
+    "seq": 163,
+    "actor_profile": "cvr_client",
+    "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "need_id": "5aa349b8-da8d-4449-8230-f0ad13ef6f1a",
+    "effect_date": "2026-10-18",
+    "recorded_at": "2026-10-18",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-014",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "7552a226-b62f-4292-b86e-4989cfea4098",
     "code": "EV-16",
-    "seq": 133,
+    "seq": 164,
     "actor_profile": "agency_operator",
     "zone_id": "eeb63cac-e401-42d3-9079-b517dbc05274",
     "need_id": "47bbc012-0624-433f-bbd7-c232b1c42b6e",
@@ -2132,7 +2631,7 @@
   {
     "id": "00540562-b542-4b4c-92f5-0265cc107d56",
     "code": "EV-14",
-    "seq": 134,
+    "seq": 165,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -2148,7 +2647,7 @@
   {
     "id": "0ede8d89-4c83-4b82-b6ad-5b47880e164a",
     "code": "EV-16",
-    "seq": 135,
+    "seq": 166,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -2164,7 +2663,7 @@
   {
     "id": "767e8a16-0f93-4326-8ac0-2221210d7745",
     "code": "EV-10",
-    "seq": 136,
+    "seq": 167,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "c2b86347-6222-454b-b19f-65a49e341066",
@@ -2179,9 +2678,25 @@
     "is_demo": true
   },
   {
+    "id": "64766e58-06c3-45cc-9942-d1616e417137",
+    "code": "EV-06",
+    "seq": 168,
+    "actor_profile": "cvr_client",
+    "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
+    "need_id": "f375f632-3e70-4138-8e31-910688f13b70",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-015",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "9aebc795-fee1-49cf-a4bd-6bf1f37ba416",
     "code": "EV-10",
-    "seq": 137,
+    "seq": 169,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
@@ -2198,7 +2713,7 @@
   {
     "id": "64d26477-b1bf-49bc-b479-22ffca95f6ea",
     "code": "EV-09",
-    "seq": 138,
+    "seq": 170,
     "actor_profile": "agency_operator",
     "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
     "need_id": "5aa349b8-da8d-4449-8230-f0ad13ef6f1a",
@@ -2212,9 +2727,89 @@
     "is_demo": true
   },
   {
+    "id": "eea5834d-bae7-424e-876b-fe31f111b847",
+    "code": "EV-01",
+    "seq": 171,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "0c5617e4-2ad6-4435-b6cc-a9539fdee4ce",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-033",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "4b09c6f1-5f35-48a8-8113-8a0e2cc019ed",
+    "code": "EV-02",
+    "seq": 172,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "0c5617e4-2ad6-4435-b6cc-a9539fdee4ce",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-033",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "70c3ffcd-eaed-4cce-8755-1b1a694d6208",
+    "code": "EV-01",
+    "seq": 173,
+    "actor_profile": "agency_operator",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "7e15c47e-67af-44d3-b0be-b8814134dffd",
+    "code": "EV-02",
+    "seq": 174,
+    "actor_profile": "agency_operator",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "f1bac120-b569-4dbb-bece-dd144cacba40",
+    "code": "EV-06",
+    "seq": 175,
+    "actor_profile": "cvr_client",
+    "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "need_id": "4a06f7dd-ac15-46bd-bbc4-a5fbe62c164b",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-016",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "5738d681-d245-4cee-aa93-2ed09fa68aa7",
     "code": "EV-10",
-    "seq": 139,
+    "seq": 176,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
@@ -2231,7 +2826,7 @@
   {
     "id": "9a3d85fe-87c9-4377-8bcf-7f68493a1ba1",
     "code": "EV-09",
-    "seq": 140,
+    "seq": 177,
     "actor_profile": "agency_operator",
     "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
     "need_id": "f375f632-3e70-4138-8e31-910688f13b70",
@@ -2247,7 +2842,7 @@
   {
     "id": "157d9afd-ec9c-4eaf-9126-0f20de325c7b",
     "code": "EV-13",
-    "seq": 141,
+    "seq": 178,
     "actor_profile": "agency_operator",
     "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
     "need_id": "f375f632-3e70-4138-8e31-910688f13b70",
@@ -2262,7 +2857,7 @@
   {
     "id": "f85ccc15-73b1-4261-8497-9b43f369f228",
     "code": "EV-11",
-    "seq": 142,
+    "seq": 179,
     "actor_profile": "cvr_client",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "c2b86347-6222-454b-b19f-65a49e341066",
@@ -2277,9 +2872,58 @@
     "is_demo": true
   },
   {
+    "id": "b0cca606-0dd4-426d-9aad-ea08e3ad8f6b",
+    "code": "EV-07",
+    "seq": 180,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "0c5617e4-2ad6-4435-b6cc-a9539fdee4ce",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-033",
+      "action": "escalated",
+      "case": "arbitration"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "ec28a756-00e4-4e12-8200-8589166ecc96",
+    "code": "EV-08",
+    "seq": 181,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "5b4fbed8-a048-406b-a425-7f5e047a32f0",
+    "code": "EV-06",
+    "seq": 182,
+    "actor_profile": "cvr_client",
+    "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
+    "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-017",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "09ea18e3-89de-425a-a2cc-75b6c9e7afa3",
     "code": "EV-09",
-    "seq": 143,
+    "seq": 183,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "4a06f7dd-ac15-46bd-bbc4-a5fbe62c164b",
@@ -2295,7 +2939,7 @@
   {
     "id": "cecec5f9-f3a9-490b-b04d-a2de48d6c80e",
     "code": "EV-13",
-    "seq": 144,
+    "seq": 184,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "4a06f7dd-ac15-46bd-bbc4-a5fbe62c164b",
@@ -2310,7 +2954,7 @@
   {
     "id": "d0abe2ee-af69-44a6-91f3-05eb1bdc3d31",
     "code": "EV-20",
-    "seq": 145,
+    "seq": 185,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "4a06f7dd-ac15-46bd-bbc4-a5fbe62c164b",
@@ -2326,7 +2970,7 @@
   {
     "id": "49ace5fa-1e01-4a2d-8a4e-7b4c41c2e144",
     "code": "EV-09",
-    "seq": 146,
+    "seq": 186,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2342,7 +2986,7 @@
   {
     "id": "b2da2448-d8c3-4f45-aa49-c0df59d67b76",
     "code": "EV-13",
-    "seq": 147,
+    "seq": 187,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2357,7 +3001,7 @@
   {
     "id": "ac3b0c09-63fb-4459-8692-fc4d133a8ff7",
     "code": "EV-10",
-    "seq": 148,
+    "seq": 188,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2374,7 +3018,7 @@
   {
     "id": "89979eb3-c1e5-4b6b-9ec8-edae29c62457",
     "code": "EV-11",
-    "seq": 149,
+    "seq": 189,
     "actor_profile": "cvr_client",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2391,7 +3035,7 @@
   {
     "id": "11a1022c-0ff2-4ac2-8632-63309aff363b",
     "code": "EV-44",
-    "seq": 150,
+    "seq": 190,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "be65818b-c90d-426b-b1a3-a627a92f65a4",
@@ -2409,7 +3053,7 @@
   {
     "id": "a51ae245-231c-41c7-a3b7-5434557e2185",
     "code": "EV-44",
-    "seq": 151,
+    "seq": 191,
     "actor_profile": "agency_operator",
     "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
     "need_id": "b8e9ea05-990d-4919-9ddb-6569b8848176",
@@ -2427,7 +3071,7 @@
   {
     "id": "901dc286-f2c9-4b2e-9914-81912a04d53a",
     "code": "EV-44",
-    "seq": 152,
+    "seq": 192,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "aad32923-b2a4-4dcd-bb23-e5295f192f19",
@@ -2445,7 +3089,7 @@
   {
     "id": "9ff115d0-f328-43ef-9400-f6b697c6e871",
     "code": "EV-44",
-    "seq": 153,
+    "seq": 193,
     "actor_profile": "agency_operator",
     "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
     "need_id": "8ace01e8-6b79-435f-83d4-083760f6f828",
@@ -2461,9 +3105,138 @@
     "is_demo": true
   },
   {
+    "id": "189d46c3-2499-48ff-a2f3-06f469470ef5",
+    "code": "EV-01",
+    "seq": 194,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "f48cf29c-b8c1-4630-9a02-1e7be49f8769",
+    "code": "EV-02",
+    "seq": 195,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "d36f9725-0272-4fee-b961-fc7ff92fe915",
+    "code": "EV-07",
+    "seq": 196,
+    "actor_profile": "cvr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "action": "escalated",
+      "case": "out_of_perimeter"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "167a54d2-c331-432a-86c7-fc28fe928549",
+    "code": "EV-01",
+    "seq": 197,
+    "actor_profile": "rs",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "9c01029d-5f37-4b83-94f5-003acd80fc2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-035",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "91d21215-9b99-4849-810e-28cb489d3f88",
+    "code": "EV-02",
+    "seq": 198,
+    "actor_profile": "rs",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "9c01029d-5f37-4b83-94f5-003acd80fc2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-035",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "52a9f988-b290-4fa0-9411-f48dd112de9d",
+    "code": "EV-46",
+    "seq": 199,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "584e6acb-4176-4622-92d1-455f2954227b",
+    "code": "EV-06",
+    "seq": 200,
+    "actor_profile": "cvr_client",
+    "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
+    "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-018",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "b6b52c78-c4e7-4c8e-b313-82e836ec6213",
+    "code": "EV-47",
+    "seq": 201,
+    "actor_profile": "agency_admin",
+    "zone_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "need_id": null,
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "starts_on": "2026-11-02",
+      "ends_on": "2026-11-13"
+    },
+    "is_demo": true
+  },
+  {
     "id": "32868a47-82d2-4795-9706-1a45f943237a",
     "code": "EV-19",
-    "seq": 154,
+    "seq": 202,
     "actor_profile": "agency_operator",
     "zone_id": "d5d400b4-0951-4834-a808-515f430a7c99",
     "need_id": "f375f632-3e70-4138-8e31-910688f13b70",
@@ -2478,7 +3251,7 @@
   {
     "id": "6befba59-8fb6-4816-80b7-8cd3059cff7b",
     "code": "EV-14",
-    "seq": 155,
+    "seq": 203,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2494,7 +3267,7 @@
   {
     "id": "8c76c651-4219-428b-87cf-9bdeb5f24820",
     "code": "EV-09",
-    "seq": 156,
+    "seq": 204,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
@@ -2510,7 +3283,7 @@
   {
     "id": "242b1e75-765c-4017-abbf-88fcb6c222d0",
     "code": "EV-13",
-    "seq": 157,
+    "seq": 205,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
@@ -2525,7 +3298,7 @@
   {
     "id": "1ada4458-9459-4a9f-bde7-24295b9b351d",
     "code": "EV-10",
-    "seq": 158,
+    "seq": 206,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
@@ -2542,7 +3315,7 @@
   {
     "id": "1245b7b8-648d-4261-993f-50ffcb3079f8",
     "code": "EV-11",
-    "seq": 159,
+    "seq": 207,
     "actor_profile": "cvr_client",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
@@ -2559,7 +3332,7 @@
   {
     "id": "a60d77fc-a86e-4545-9f43-e0833ad227b8",
     "code": "EV-17",
-    "seq": 160,
+    "seq": 208,
     "actor_profile": "agency_operator",
     "zone_id": "7182f42a-2037-461f-afc7-87ad94d046f2",
     "need_id": "623d27b0-d3fb-405a-9cc8-10f226d4ae6a",
@@ -2575,7 +3348,7 @@
   {
     "id": "19d06963-df29-4b90-ae62-59eddbe21f46",
     "code": "EV-10",
-    "seq": 161,
+    "seq": 209,
     "actor_profile": "agency_operator",
     "zone_id": "b7a470c5-3264-47fe-8ccc-12b545a62225",
     "need_id": "365c9083-373e-47cb-ac7c-aee7eac707bf",
@@ -2590,9 +3363,74 @@
     "is_demo": true
   },
   {
+    "id": "b5bc1114-3b12-4b98-a340-a8949caf5021",
+    "code": "EV-01",
+    "seq": 210,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "7347d5a0-d3bb-4a87-8177-d5d503462f14",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-031",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "eb106883-d979-4785-8cb4-f1dd8add0569",
+    "code": "EV-02",
+    "seq": 211,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "7347d5a0-d3bb-4a87-8177-d5d503462f14",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-031",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "b52dbeda-6f7d-405e-9e6a-51afb20555f0",
+    "code": "EV-07",
+    "seq": 212,
+    "actor_profile": "dr_client",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "action": "arbitrated",
+      "outcome": "validated"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "6023841b-60f0-4179-a4aa-73a7281ef1c4",
+    "code": "EV-06",
+    "seq": 213,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "level": "cvr"
+    },
+    "is_demo": true
+  },
+  {
     "id": "f0a78f30-91f9-4e3d-ae38-f21b0cdda91d",
     "code": "EV-12",
-    "seq": 162,
+    "seq": 214,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2609,7 +3447,7 @@
   {
     "id": "dc43cb1c-334c-4ba4-b46d-4bc1c64c5d67",
     "code": "EV-45",
-    "seq": 163,
+    "seq": 215,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2626,7 +3464,7 @@
   {
     "id": "e36b63c9-7d8b-4515-b340-7e8f18162218",
     "code": "EV-21",
-    "seq": 164,
+    "seq": 216,
     "actor_profile": "agency_operator",
     "zone_id": "1be6c9b8-aeef-4f25-a20f-f13fa94e7640",
     "need_id": "5692b42c-40de-47c3-8a51-caefad210edc",
@@ -2642,7 +3480,7 @@
   {
     "id": "8073debb-560b-4ac6-89c7-446a14fbe171",
     "code": "EV-12",
-    "seq": 165,
+    "seq": 217,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",
@@ -2659,7 +3497,7 @@
   {
     "id": "7fdb6fb4-d807-4892-a1c1-9be0c67ae0c6",
     "code": "EV-10",
-    "seq": 166,
+    "seq": 218,
     "actor_profile": "agency_operator",
     "zone_id": "42b99cd0-6c79-48c7-b868-6a71f431c45e",
     "need_id": "f74789e3-9bae-456f-807b-305fa5163a35",

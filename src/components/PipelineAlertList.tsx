@@ -25,7 +25,9 @@ export async function PipelineAlertList({ alerts, showAudience }: { alerts: Pipe
             <span className="ml-auto text-sm text-muted">{formatDate(a.created_at, locale)}</span>
           </div>
           <p className="font-medium">{t(`pipeline.${a.message_key}`, a.params)}</p>
-          <Link href="/proposals" className="inline-flex min-h-11 w-fit items-center rounded-full px-4 text-sm font-semibold text-link hover:bg-sel">{t('pipeline.open')}</Link>
+          {a.message_key === 'delegationActive' ? null : (
+            <Link href="/proposals" className="inline-flex min-h-11 w-fit items-center rounded-full px-4 text-sm font-semibold text-link hover:bg-sel">{t('pipeline.open')}</Link>
+          )}
         </li>
       ))}
     </ul>

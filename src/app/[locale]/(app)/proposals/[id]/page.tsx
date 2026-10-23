@@ -6,6 +6,8 @@ import { DecisionForm } from '@/components/pipeline/DecisionForm';
 import { NotesThread } from '@/components/pipeline/NotesThread';
 import { ProposalForm } from '@/components/pipeline/ProposalForm';
 import { QualifyForm } from '@/components/pipeline/QualifyForm';
+import { ResubmitForm } from '@/components/pipeline/ResubmitForm';
+import { ValidationPanel } from '@/components/pipeline/ValidationPanel';
 import { StepPanel } from '@/components/pipeline/StepPanel';
 import type { StepDef } from '@/components/pipeline/StepPanel';
 import { WithdrawProposalForm } from '@/components/pipeline/WithdrawProposalForm';
@@ -19,7 +21,7 @@ import { calendarOf } from '@/domain/deadlines';
 import { needSpan } from '@/domain/pipeline';
 import type { Locale } from '@/domain/types';
 import { formatDate, formatWeekdays, keepTogether } from '@/lib/format';
-import { EXECUTION_TONE, FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE } from '@/lib/pipeline-tones';
+import { EXECUTION_TONE, FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE, VALIDATION_OUTCOME_TONE, VALIDATION_TONE } from '@/lib/pipeline-tones';
 import { getAccessContext } from '@/lib/session';
 
 export default async function NeedThreadPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -31,7 +33,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   const colon = loc === 'en' ? ':' : ' :';
   const thread = await repository.getNeedThread(ctx, id);
   if (!thread) notFound();
-  const { row, proposals, decisions, events, notes } = thread;
+  const { row, proposals, decisions, events, notes, validations, escalationTargets, actingFor } = thread;
   const t = await getTranslations('pipeline');
   const tm = await getTranslations('menu');
   const tn = await getTranslations('needs');
@@ -62,6 +64,14 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   const recipients = chain.map((z) => ({ id: z.id, text: zoneText(z, loc) }));
   const rsSectors = zones.filter((z) => z.kind === 'rs' && z.id !== need.sector_id).map((z) => ({ id: z.id, text: zoneText(z, loc) }));
   const canNotes = repository.canWriteNotes(ctx);
+  // A3c : validation managériale. Le CVR agit sur un besoin à valider, le DR sur un besoin escaladé ; le RS et l'agence renvoient un besoin refusé.
+  const vstate = row.validation.state;
+  const validated = vstate === 'validated';
+  const validationLevel = ctx.profileId === 'cvr_client' ? 'cvr' : ctx.profileId === 'dr_client' ? 'dr' : null;
+  const canActValidation = need.need_state === 'submitted' && ((validationLevel === 'cvr' && vstate === 'to_validate') || (validationLevel === 'dr' && vstate === 'escalated'));
+  const canResubmit = need.need_state === 'submitted' && vstate === 'refused' && (ctx.profileId === 'rs' || agency);
+  const tv = await getTranslations('pipeline.validation');
+  const actingZone = actingFor ? zoneText(actingFor, loc) : null;
   const notesOf = (kind: 'proposal' | 'decision', objectId: string) => notes.filter((n) => n.object_kind === kind && n.object_id === objectId);
 
   const blockedFor = (step: Parameters<typeof repository.canRecord>[1]): StepDef['blocked'] | undefined =>
@@ -99,7 +109,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
 
       <section aria-labelledby="dims-title" data-testid="dimensions" className="mb-8 flex flex-col gap-4">
         <h2 id="dims-title" className="text-lg font-semibold">{t('detail.statuses')}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           {dimension(t('dimension.need'), (
             <>
               <StatusTag tone={need.need_state === 'draft' ? 'attention' : 'info'}>{tn(`state.${need.need_state}`)}</StatusTag>
@@ -107,6 +117,15 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
               {rec.stopped ? <StatusTag tone="neutral">{t('stopped')}</StatusTag> : null}
               <span className="text-sm text-muted">{t('detail.hours', { n: need.weekly_hours ?? 0 })}</span>
             </>
+          ))}
+          {dimension(t('dimension.validation'), (
+            need.need_state === 'submitted' ? (
+              <>
+                <StatusTag tone={VALIDATION_TONE[vstate]}>{t(`validationState.${vstate}`)}</StatusTag>
+                <span className="text-sm text-muted">{tv('round', { n: row.validation.round })}</span>
+                <span className="text-sm text-muted">{tv(`waiting.${vstate}`)}</span>
+              </>
+            ) : <span className="text-muted">{t('none')}</span>
           ))}
           {dimension(t('dimension.proposal'), (
             <>
@@ -155,7 +174,38 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
       </section>
 
       <div className="flex flex-col gap-8">
-        {repository.canQualify(ctx) && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} /> : null}
+        {actingZone ? (
+          <p data-testid="acting-for" className="flex flex-wrap items-center gap-2 rounded-card bg-tint-lav p-4 text-ink shadow-card">
+            <StatusTag tone="info">{tv('viaDelegation')}</StatusTag>
+            <span>{tv('actingFor', { zone: actingZone })}</span>
+          </p>
+        ) : null}
+        {canActValidation && validationLevel ? (
+          <ValidationPanel needId={need.id} level={validationLevel} targets={escalationTargets.map((z) => ({ id: z.id, text: zoneText(z, loc) }))} />
+        ) : null}
+        {canResubmit ? <ResubmitForm needId={need.id} /> : null}
+        {repository.canQualify(ctx) && validated && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} /> : null}
+
+        {validations.length > 0 ? (
+          <section aria-labelledby="validation-history-title" data-testid="validation-history" className="flex flex-col gap-3">
+            <h2 id="validation-history-title" className="text-lg font-semibold">{tv('history')}</h2>
+            <ul className="flex flex-col gap-2">
+              {validations.map((v) => (
+                <li key={v.id} data-validation-outcome={v.outcome} data-validation-level={v.level} className="flex flex-col gap-1 rounded-ctl bg-alt px-4 py-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusTag tone={VALIDATION_OUTCOME_TONE[v.outcome]}>{tv(`outcome.${v.outcome}`)}</StatusTag>
+                    <span className="font-semibold">{t(`validationLevel.${v.level}`)}</span>
+                    <span className="text-sm text-muted">{tv('round', { n: v.round })}</span>
+                    <span className="text-sm text-muted">{v.decided_time ? t('steps.dateAt', { date: formatDate(v.decided_on, loc), time: v.decided_time }) : formatDate(v.decided_on, loc)}</span>
+                    {v.via_delegation_id ? <StatusTag tone="info">{tv('viaDelegation')}</StatusTag> : null}
+                  </div>
+                  {v.escalation_case ? <p className="text-sm">{tv('case', { case: t(`escalationCase.${v.escalation_case}`) })}</p> : null}
+                  {v.motive ? <p>{tv('motive', { motive: v.motive })}</p> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <section aria-labelledby="versions-title" className="flex flex-col gap-4">
           <h2 id="versions-title" className="text-lg font-semibold">{t('detail.versions')}</h2>

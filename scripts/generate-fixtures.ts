@@ -24,6 +24,8 @@ write('recruitments.json', f.recruitments);
 write('proposals.json', f.proposals);
 write('decisions.json', f.decisions);
 write('notes.json', f.notes);
+write('validations.json', f.validations);
+write('delegations.json', f.delegations);
 console.log(
-  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements, ${f.recruitments.length} suivis de recrutement, ${f.proposals.length} propositions, ${f.decisions.length} décisions, ${f.notes.length} notes.`,
+  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements, ${f.recruitments.length} suivis de recrutement, ${f.proposals.length} propositions, ${f.decisions.length} décisions, ${f.notes.length} notes, ${f.validations.length} traces de validation, ${f.delegations.length} délégations.`,
 );

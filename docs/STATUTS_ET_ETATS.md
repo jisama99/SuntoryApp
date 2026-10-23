@@ -43,3 +43,6 @@ Le statut financier et le cycle de vie du poste sont **deux dimensions différen
 - (Table et règle validées le 23/10/2026.) Colonne « facturé ? » avec la cliente (D54 : valeurs à renseigner).
 - Règle de carence après rupture (RH / juridique, hors périmètre technique).
 - Mapping exact vers les 6 états du funnel D92 (à écrire à partir de `DECISIONS.md` en A1).
+
+## 6. Validation managériale (lot A3c, proposition)
+Cinquième dimension, stockée à part : traces `validation` (valide, refusé, escaladé, renvoyé) par besoin, l'état se déduit de la dernière trace : à valider par le CVR, escaladé au DR, validé, refusé. Elle précède la qualification de l'agence (dimension « besoin ») sans la remplacer : l'agence ne qualifie qu'un besoin validé. Un refus ouvre un tour suivant après renvoi, l'historique reste. Les besoins antérieurs à A3c sont réputés validés (D209).

@@ -5,7 +5,7 @@
  */
 import type {
   Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
-  Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
+  Delegation, Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, Validation, WeekClosure, Zone,
 } from '../src/data/schemas';
 import { blankRecruitment, computeDeviations, needSpan } from '../src/domain/pipeline';
 import type { CostStatus, DecisionOutcome, EventCode, InvalidationReason, Situation } from '../src/domain/types';
@@ -129,7 +129,7 @@ export function buildFixtures() {
     created_at: created, is_demo: true,
   }));
 
-  const clock: DemoClock = { date: '2026-10-23', iso_week: '2026-S43', is_demo: true };
+  const clock: DemoClock = { date: '2026-10-23', iso_week: '2026-S43', time: '10:30', is_demo: true };
 
   // ---- Lot A2a : générés après les données de A1, donc sans en modifier aucune valeur. ----
   const pad3 = (n: number) => String(n).padStart(3, '0');
@@ -332,6 +332,49 @@ export function buildFixtures() {
     a3Events.push({ id: uuid(), code, seq: 0, actor_profile: actor, zone_id: n.sector_id, need_id: n.id, effect_date: date, recorded_at: recorded, audience, data: { need_code: n.need_code, ...data }, is_demo: true });
   };
   const pad = (n: number) => String(n).padStart(3, '0');
+
+  // ---- Lot A3c : validation managériale et délégations. Identifiants tirés d'une seconde graine : aucun identifiant des lots
+  // précédents ne change. Les besoins existants avant A3c sont réputés validés par leur CVR le jour de leur soumission (D209) ;
+  // les besoins ajoutés plus bas couvrent chaque état du circuit. ----
+  const rand2 = mulberry32(SEED ^ 0x3c3c);
+  const uuid2 = (): string => {
+    const hex = (n: number) => Array.from({ length: n }, () => Math.floor(rand2() * 16).toString(16)).join('');
+    return `${hex(8)}-${hex(4)}-4${hex(3)}-${'89ab'[Math.floor(rand2() * 4)]}${hex(3)}-${hex(12)}`;
+  };
+  const validations: Validation[] = [];
+  const delegations: Delegation[] = [];
+  const ev2 = (code: EventCode, n: Need | null, zoneId: string, date: string, data: BusinessEvent['data'], audience: BusinessEvent['audience'], actor: BusinessEvent['actor_profile']) => {
+    if (date > TODAY) throw new Error(`Date d'événement après la date de démonstration : ${code} ${date}`);
+    a3Events.push({ id: uuid2(), code, seq: 0, actor_profile: actor, zone_id: zoneId, need_id: n?.id ?? null, effect_date: date, recorded_at: date, audience, data: n ? { need_code: n.need_code, ...data } : data, is_demo: true });
+  };
+  type VStep = { outcome: Validation['outcome']; level?: Validation['level']; on: string; actor: Validation['actor_profile']; motive?: string; escalationCase?: Validation['escalation_case']; concerned?: Zone };
+  const addValidation = (n: Need, steps: VStep[]) => {
+    let round = 1;
+    for (const s of steps) {
+      if (s.outcome === 'resubmitted') round += 1;
+      validations.push({
+        id: uuid2(), need_id: n.id, sector_id: n.sector_id, seq: validations.length + 1, round, outcome: s.outcome, level: s.level ?? 'cvr',
+        escalation_case: s.escalationCase ?? null, concerned_zone_id: s.concerned?.id ?? null, motive: s.motive ?? null, actor_profile: s.actor,
+        via_delegation_id: null, decided_on: s.on, decided_time: '09:00', is_demo: true,
+      });
+      const level = s.level ?? 'cvr';
+      if (s.outcome === 'validated') ev2(level === 'dr' ? 'EV-07' : 'EV-06', n, n.sector_id, s.on, level === 'dr' ? { action: 'arbitrated', outcome: 'validated' } : { level }, 'both', s.actor);
+      if (s.outcome === 'refused') ev2('EV-08', n, n.sector_id, s.on, { level }, 'both', s.actor);
+      if (s.outcome === 'escalated') ev2('EV-07', n, n.sector_id, s.on, { action: 'escalated', case: s.escalationCase as string }, 'both', s.actor);
+      if (s.outcome === 'resubmitted') ev2('EV-46', n, n.sector_id, s.on, {}, 'both', s.actor);
+    }
+  };
+  for (const n of needs.filter((x) => x.need_state === 'submitted')) addValidation(n, [{ outcome: 'validated', on: n.created_at, actor: 'cvr_client' }]);
+  const zoneBy = (code: string) => zones.find((z) => z.code === code) as Zone;
+  const addDelegation = (d: Omit<Delegation, 'id' | 'is_demo' | 'stopped_on' | 'stopped_by'> & Partial<Pick<Delegation, 'stopped_on' | 'stopped_by'>>) => {
+    delegations.push({ id: uuid2(), stopped_on: null, stopped_by: null, ...d, is_demo: true });
+    ev2('EV-47', null, d.absent_zone_id, d.created_on, { action: 'created', starts_on: d.starts_on, ends_on: d.ends_on }, 'agency', d.created_by);
+    if (d.stopped_on) ev2('EV-47', null, d.absent_zone_id, d.stopped_on, { action: d.stopped_on < d.starts_on ? 'cancelled' : 'stopped', starts_on: d.starts_on, ends_on: d.ends_on }, 'agency', d.created_by);
+  };
+  addDelegation({ absent_zone_id: zoneBy('CVR-GP03').id, substitute_zone_id: zoneBy('CVR-WY02').id, starts_on: '2026-10-05', ends_on: '2026-10-09', motive: 'Congés planifiés (donnée fictive).', created_by: 'agency_admin', created_on: '2026-10-02' });
+  addDelegation({ absent_zone_id: zoneBy('CVR-NM04').id, substitute_zone_id: zoneBy('CVR-MS05').id, starts_on: '2026-10-12', ends_on: '2026-10-30', motive: 'Absence prolongée (donnée fictive).', created_by: 'agency_admin', created_on: '2026-10-09', stopped_on: '2026-10-16', stopped_by: 'agency_admin' });
+  addDelegation({ absent_zone_id: zoneBy('DR-ALPHA').id, substitute_zone_id: zoneBy('DR-BETA').id, starts_on: '2026-11-02', ends_on: '2026-11-13', motive: 'Déplacement planifié (donnée fictive).', created_by: 'agency_admin', created_on: '2026-10-22' });
+
   for (const [key, spec] of Object.entries(specs)) {
     const idx = Number(key);
     const n = needs[idx] as Need;
@@ -439,6 +482,32 @@ export function buildFixtures() {
     });
   }
 
+  // ---- Lot A3c : besoins ajoutés pour couvrir chaque état de la validation managériale (après tous les tirages des lots précédents). ----
+  const period3c = (start: string) => period(1, start, addDays(start, 6));
+  const newNeed = (sectorIdx: number, created: string, start: string, steps: VStep[]) => {
+    addNeed(sectorIdx, { created_at: created, modified_at: created, periods: [period3c(start)], weekly_hours: 14, days: [1, 2, 3], hours_slot: '08:00-12:00' });
+    const n = needs[needs.length - 1] as Need;
+    const actor = n.entered_by_profile;
+    ev2('EV-01', n, n.sector_id, created, { on_behalf: n.on_behalf }, 'both', actor);
+    ev2('EV-02', n, n.sector_id, created, { on_behalf: n.on_behalf }, 'both', actor);
+    addValidation(n, steps);
+  };
+  const wy02 = zoneBy('CVR-WY02');
+  newNeed(0, '2026-10-14', '2027-03-01', []); // à valider, en retard
+  newNeed(1, '2026-10-22', '2027-03-08', []); // à valider, dans les temps
+  newNeed(1, '2026-10-12', '2027-03-15', [{ outcome: 'refused', on: '2026-10-14', actor: 'cvr_client', motive: 'Période non conforme au calendrier du secteur (motif fictif).' }]);
+  newNeed(0, '2026-10-19', '2027-03-22', [{ outcome: 'escalated', on: '2026-10-20', actor: 'cvr_client', escalationCase: 'arbitration', concerned: wy02, motive: 'Magasins partagés avec le secteur voisin (motif fictif).' }]);
+  newNeed(1, '2026-10-21', '2027-03-29', [
+    { outcome: 'escalated', on: '2026-10-21', actor: 'cvr_client', escalationCase: 'out_of_perimeter', motive: 'Demande hors du périmètre habituel du CVR (motif fictif).' },
+    { outcome: 'validated', level: 'dr', on: '2026-10-22', actor: 'dr_client', motive: 'Arbitrage favorable (motif fictif).' },
+  ]);
+  newNeed(2, '2026-10-21', '2027-04-05', []); // à valider, autre CVR
+  newNeed(0, '2026-10-19', '2027-04-12', [
+    { outcome: 'refused', on: '2026-10-20', actor: 'cvr_client', motive: 'Créneau à revoir (motif fictif).' },
+    { outcome: 'resubmitted', on: '2026-10-21', actor: 'rs' },
+    { outcome: 'validated', on: '2026-10-22', actor: 'cvr_client' },
+  ]);
+
   // Les événements de A3 prolongent le journal sans réécrire les numéros existants.
   let seq = events.reduce((m, e) => Math.max(m, e.seq), 0);
   a3Events.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
@@ -447,6 +516,6 @@ export function buildFixtures() {
   return {
     zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events,
     deadlineSettings, dispositifParams, reopeningRequests, reopenings,
-    recruitments, proposals, decisions, notes,
+    recruitments, proposals, decisions, notes, validations, delegations,
   };
 }

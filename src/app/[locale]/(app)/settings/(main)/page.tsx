@@ -20,6 +20,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   const cards = [
     { href: '/settings/deadlines', title: t('titles.deadlineSettings'), body: t('settings.deadlines.body') },
     { href: '/settings/dispositifs', title: t('titles.schemeSettings'), body: t('settings.dispositifs.body') },
+    { href: '/settings/delegations', title: t('titles.delegations'), body: t('delegations.body') },
     ...(repository.canManageAccounts(ctx) ? [{ href: '/settings/accounts', title: t('titles.manageAccess'), body: t('accounts.body') }] : []),
   ] as const;
   return (

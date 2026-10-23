@@ -11,6 +11,14 @@ const WIDTHS = [
 
 test.describe.configure({ mode: 'serial' });
 
+// Captures reproductibles : mouvement réduit (aucune transition en cours), défilement en haut, curseur masqué. L'heure de l'acceptation
+// vient de l'horloge de démonstration (10:30), jamais de l'horloge du poste : deux régénérations donnent des images identiques.
+const snap = async (page: Page, file: string) => {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: file, fullPage: true, animations: 'disabled', caret: 'hide' });
+};
+
 const openNeed = async (page: Page, locale: string, code: string) => {
   await page.goto(`/${locale}/proposals?filter=all`);
   await page.getByRole('link', { name: code, exact: true }).first().click();
@@ -20,11 +28,12 @@ const openNeed = async (page: Page, locale: string, code: string) => {
 
 for (const locale of LOCALES) {
   for (const w of WIDTHS) {
-    const shot = (page: Page, name: string) => page.screenshot({ path: path.join(OUT, `${name}_${locale}_${w.name}.png`), fullPage: true });
+    const shot = (page: Page, name: string) => snap(page, path.join(OUT, `${name}_${locale}_${w.name}.png`));
 
     test(`A3 ${locale} ${w.name} : listes, fils, entonnoir, alertes`, async ({ page, context }) => {
       test.setTimeout(180_000);
       await page.setViewportSize({ width: w.width, height: w.height });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
       const watcher = watch(page);
       for (const profile of ['agency_operator', 'cvr_client', 'rs']) {
         await setProfile(context, profile);
@@ -63,7 +72,8 @@ for (const f of FLOW) {
   test(`A3 ${f.locale} ${f.w.name} : besoin, proposition, décision, refus, nouvelle proposition`, async ({ page, context }) => {
     test.setTimeout(180_000);
     await page.setViewportSize({ width: f.w.width, height: f.w.height });
-    const shot = (name: string) => page.screenshot({ path: path.join(OUT, `flow_${name}_${f.locale}_${f.w.name}.png`), fullPage: true });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const shot = (name: string) => snap(page, path.join(OUT, `flow_${name}_${f.locale}_${f.w.name}.png`));
     const L = f.locale === 'fr'
       ? { qualify: 'Enregistrer', send: 'Envoyer à la cliente', decide: 'Enregistrer la décision', motive: 'Profil non adapté.' }
       : { qualify: 'Save', send: 'Send to the client', decide: 'Save the decision', motive: 'Profile not suitable.' };
@@ -100,9 +110,9 @@ for (const f of FLOW) {
 
 test('A3 mode sombre : liste et fil', async ({ page, context }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
   await setProfile(context, 'cvr_client');
   await page.goto('/fr/proposals');
   await page.waitForLoadState('networkidle');
-  await page.screenshot({ path: path.join(OUT, 'list_cvr_dark_fr_1440.png'), fullPage: true });
+  await snap(page, path.join(OUT, 'list_cvr_dark_fr_1440.png'));
 });

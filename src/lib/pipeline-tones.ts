@@ -1,5 +1,5 @@
 import type { Tone } from '@/components/StatusTag';
-import type { DecisionOutcome, ExecutionStatus, FunnelState, PositionStatus, ProposalStatus, Urgency } from '@/domain/types';
+import type { DecisionOutcome, DelegationStatus, ExecutionStatus, FunnelState, PositionStatus, ProposalStatus, Urgency, ValidationOutcome, ValidationState } from '@/domain/types';
 
 /** Teintes des étiquettes du circuit. Le rose (important) est réservé à ce qui attend une action ; vert, ambre et rouge aux statuts. */
 export const FUNNEL_TONE: Record<FunnelState, Tone> = {
@@ -18,3 +18,8 @@ export const FUNNEL_ORDER = ['to_recruit', 'recruiting', 'proposed', 'approved',
 export const URGENCY_ORDER = ['overdue', 'urgent', 'soon', 'normal'] as const;
 
 export const EXECUTION_TONE: Record<ExecutionStatus, Tone> = { not_started: 'neutral', start_planned: 'info', in_post: 'ok', ended: 'neutral' };
+
+/** Validation managériale (A3c) : vert validé, ambre en attente ou escaladé, rouge refusé. */
+export const VALIDATION_TONE: Record<ValidationState, Tone> = { to_validate: 'attention', escalated: 'attention', validated: 'ok', refused: 'risk' };
+export const VALIDATION_OUTCOME_TONE: Record<ValidationOutcome, Tone> = { validated: 'ok', refused: 'risk', escalated: 'attention', resubmitted: 'info' };
+export const DELEGATION_TONE: Record<DelegationStatus, Tone> = { planned: 'info', active: 'ok', ended: 'neutral', cancelled: 'neutral' };

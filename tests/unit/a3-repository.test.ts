@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import profilesJson from '@/data/fixtures/profiles.json';
 import zonesJson from '@/data/fixtures/zones.json';
-import { createMemoryRepository, resetDemoState, setTimeSource } from '@/data/memory-repository';
+import { createMemoryRepository, resetDemoState, setDemoTime } from '@/data/memory-repository';
 import type { Need, Proposal, ProposalInput } from '@/data/schemas';
 import { ProfileSchema, ZoneSchema } from '@/data/schemas';
 import { buildAccessContext } from '@/domain/access';
@@ -21,7 +21,7 @@ const OWN = (ctxOf('rs').scope as { ids: string[] }).ids[0]!;
 const CVR_ZONE = (ctxOf('cvr_client').scope as { ids: string[] }).ids[0]!;
 const TODAY = '2026-10-23';
 
-beforeEach(() => { resetDemoState(); setTimeSource(); });
+beforeEach(() => { resetDemoState(); setDemoTime(); });
 
 const byCode = async (code: string, ctx = AG()) => (await repo.getPipeline(ctx)).find((r) => r.need.need_code === code)!;
 
@@ -35,7 +35,12 @@ async function submitNeed(over: { periods?: ReturnType<typeof period>[] } = {}):
   if (r.status !== 'saved' || r.decision !== 'submit') throw new Error(`besoin non soumis : ${JSON.stringify(r)}`);
   return r.need;
 }
-const take = (n: Need) => repo.qualifyNeed(AG(), n.id, { outcome: 'take' });
+/** Le CVR valide d'abord (A3c) : l'agence ne qualifie qu'un besoin validé. */
+const validated = async (n: Need) => {
+  const r = await repo.validateNeed(CVR(), n.id, { outcome: 'validated' });
+  if (r.status !== 'ok' && r.reason !== 'not_pending') throw new Error(`validation refusée : ${JSON.stringify(r)}`); // déjà validé : sans effet
+};
+const take = async (n: Need) => { await validated(n); return repo.qualifyNeed(AG(), n.id, { outcome: 'take' }); };
 const input = (n: Need, over: Partial<ProposalInput> = {}): ProposalInput => {
   const span = needSpan(n)!;
   return {
@@ -122,6 +127,7 @@ describe('statuts séparés : besoin, proposition, recrutement, exécution', () 
   });
   it('qualification : précision et rejet exigent un motif, une seule qualification', async () => {
     const n = await submitNeed();
+    await validated(n);
     expect(await repo.qualifyNeed(AG(), n.id, { outcome: 'reject' })).toMatchObject({ reason: 'motive_required' });
     expect((await repo.qualifyNeed(AG(), n.id, { outcome: 'clarify', motive: 'Quels magasins ?' })).status).toBe('ok');
     expect((await rowOf(n)).next).toMatchObject({ actor: 'rs', action: 'clarify' });
@@ -699,13 +705,26 @@ describe('D230 et D231 : codés après validation', () => {
     expect((await rowOf(n)).next.action).toBe('none');
   });
   it('D231 : l\'acceptation est horodatée automatiquement (heure de Paris), jamais saisie', async () => {
-    setTimeSource(() => '09:30');
+    setDemoTime('09:30');
     const n = await submitNeed();
     await take(n);
     await decide((await send(n)).id, 'approved');
     const d = (await repo.getNeedThread(AG(), n.id))!.decisions[0]!;
     expect(d.decided_time).toBe('09:30');
     expect(d.decided_on).toBe(TODAY);
+  });
+  it('D231 : sans réglage, l\'heure d\'acceptation est celle de l\'horloge de démonstration, fixe et identique d\'un lancement à l\'autre', async () => {
+    const clock = await repo.getClock(AG());
+    expect(clock.time).toBe('10:30');
+    const times: Array<string | null | undefined> = [];
+    for (let run = 0; run < 2; run++) {
+      resetDemoState();
+      const n = await submitNeed();
+      await take(n);
+      await decide((await send(n)).id, 'approved');
+      times.push((await repo.getNeedThread(AG(), n.id))!.decisions[0]!.decided_time);
+    }
+    expect(times).toEqual(['10:30', '10:30']);
   });
   it('D231 : l\'heure de prise de poste est facultative, validée, et remise à zéro par un désistement', async () => {
     const n = await submitNeed();
@@ -720,7 +739,7 @@ describe('D230 et D231 : codés après validation', () => {
     expect((await rowOf(n)).recruitment.start_work_time).toBeNull();
   });
   it('D231 : « plus tard dans la journée » se remplit quand les deux heures existent', async () => {
-    setTimeSource(() => '09:30');
+    setDemoTime('09:30');
     const n = await submitNeed();
     await take(n);
     await decide((await send(n)).id, 'approved');

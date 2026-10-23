@@ -137,7 +137,12 @@
       "decisionsLate": "{n, plural, one {# client decision is past its deadline.} other {# client decisions are past their deadline.}}",
       "clarificationPending": "{n, plural, one {# need awaits clarification from the RS.} other {# needs await clarification from the RS.}}",
       "startLate": "{n, plural, one {# start of assignment is past the planned date.} other {# starts of assignment are past the planned date.}}",
-      "accordLost": "The approval no longer stands on {n, plural, one {# post in place} other {# posts in place}}: the need changed, the proposal must be resent for confirmation."
+      "accordLost": "The approval no longer stands on {n, plural, one {# post in place} other {# posts in place}}: the need changed, the proposal must be resent for confirmation.",
+      "validationPending": "{n, plural, one {# need is waiting for CVR validation.} other {# needs are waiting for CVR validation.}}",
+      "validationLate": "{n, plural, one {# CVR validation is past its due date.} other {# CVR validations are past their due date.}}",
+      "escalationPending": "{n, plural, one {# escalated need is waiting for the DR's arbitration.} other {# escalated needs are waiting for the DR's arbitration.}}",
+      "validationRefused": "{n, plural, one {# refused need is waiting to be corrected and resubmitted.} other {# refused needs are waiting to be corrected and resubmitted.}}",
+      "delegationActive": "{n, plural, one {# delegation is in progress.} other {# delegations are in progress.}}"
     }
   },
   "states": {
@@ -701,6 +706,9 @@
       "title": "Scheme settings",
       "body": "Minimum length, flat rate, entry window, change deadline, roles, horizon and days.",
       "intro": "Workshop values are starting values to be validated. None is written in the code: changing a setting changes the behaviour of rules P1 to P6."
+    },
+    "delegations": {
+      "body": "Deputies for absent CVRs and DRs, with start and end dates."
     }
   },
   "params": {
@@ -924,7 +932,8 @@
     "emailsToApprove": "Emails to approve",
     "attention": "What needs your attention",
     "signIn": "Sign in",
-    "manageAccess": "Manage access"
+    "manageAccess": "Manage access",
+    "delegations": "Manage delegations"
   },
   "pipeline": {
     "title": "Proposals and decisions",
@@ -934,14 +943,17 @@
       "mine": "Mine to handle",
       "all": "All",
       "overdue": "Overdue",
-      "decision": "Awaiting decision"
+      "decision": "Awaiting decision",
+      "validation": "To validate"
     },
     "tiles": {
       "toAct": "For you to handle",
       "toActNote": "Needs where you must act",
       "overdue": "Overdue",
       "awaiting": "Awaiting decision",
-      "awaitingNote": "Proposals sent without a decision"
+      "awaitingNote": "Proposals sent without a decision",
+      "toValidate": "To validate",
+      "toValidateNote": "Needs waiting for the CVR or the DR"
     },
     "caption": "Needs, proposals and decisions in your scope",
     "cols": {
@@ -951,7 +963,8 @@
       "position": "Position",
       "proposal": "Proposal",
       "next": "Who must act",
-      "due": "Due"
+      "due": "Due",
+      "validation": "Validation"
     },
     "emptyTitle": "Nothing to show",
     "empty": "No need in your scope.",
@@ -1026,7 +1039,9 @@
       "rs": "The RS",
       "agency": "The agency",
       "decider": "The client",
-      "none": "Nobody"
+      "none": "Nobody",
+      "cvr": "The CVR",
+      "dr": "The DR"
     },
     "action": {
       "complete_need": "Complete the need",
@@ -1040,13 +1055,17 @@
       "finalise_hiring": "Complete the hiring",
       "start_work": "Record the start of assignment",
       "reconfirm_proposal": "Resend the proposal for confirmation",
-      "none": "No action"
+      "none": "No action",
+      "validate_need": "Validate the need",
+      "arbitrate_need": "Arbitrate the escalated need",
+      "resubmit_need": "Correct and resubmit the need"
     },
     "dimension": {
       "need": "Need",
       "proposal": "Proposal",
       "recruitment": "Recruitment",
-      "execution": "Execution"
+      "execution": "Execution",
+      "validation": "Validation"
     },
     "audience": {
       "agency": "Agency only",
@@ -1082,11 +1101,16 @@
       "EV-20": "White zone",
       "EV-21": "Withdrawal or departure from the position",
       "EV-44": "Note added or withdrawn",
-      "EV-45": "Proposal withdrawn"
+      "EV-45": "Proposal withdrawn",
+      "EV-06": "Need validated",
+      "EV-07": "Need escalated or arbitrated",
+      "EV-08": "Need refused with a reason",
+      "EV-46": "Need resubmitted for validation",
+      "EV-47": "Delegation"
     },
     "detail": {
       "title": "Need {code}",
-      "statuses": "Four separate statuses",
+      "statuses": "Five separate statuses",
       "hours": "{n} hours per week",
       "reassignedFrom": "Original sector:",
       "counters": "Refusals: {refusals}. Withdrawals: {withdrawals}.",
@@ -1156,7 +1180,8 @@
         "not_found": "Need not found.",
         "invalid": "Invalid entry.",
         "not_submitted": "The need is not submitted.",
-        "already": "The need is already qualified."
+        "already": "The need is already qualified.",
+        "not_validated": "The need is not yet validated by the client chain."
       }
     },
     "decide": {
@@ -1368,7 +1393,8 @@
         "whiteZone": "White zone",
         "stopped": "Stopped",
         "rejected": "Rejected",
-        "reassigned": "Reassigned (counted in their state)"
+        "reassigned": "Reassigned (counted in their state)",
+        "toValidate": "To validate (CVR, DR)"
       },
       "needsAndHours": "{needs, plural, one {# need} other {# needs}}, {hours} hours",
       "delays": "Delays by situation",
@@ -1406,6 +1432,171 @@
       "start_planned": "Start planned",
       "in_post": "In post",
       "ended": "Post ended"
+    },
+    "validationState": {
+      "to_validate": "To validate by the CVR",
+      "escalated": "Escalated to the DR",
+      "validated": "Validated",
+      "refused": "Refused"
+    },
+    "validationLevel": {
+      "cvr": "CVR",
+      "dr": "DR"
+    },
+    "escalationCase": {
+      "arbitration": "Arbitration between CVRs",
+      "out_of_perimeter": "Out of perimeter",
+      "out_of_envelope": "Out of envelope"
+    },
+    "validation": {
+      "title": "Management validation",
+      "help": "The need follows the RS, CVR, DR chain according to the sector structure. The agency qualifies it once validation is obtained.",
+      "round": "Round {n}",
+      "history": "Validation history",
+      "none": "No validation record.",
+      "outcome": {
+        "validated": "Validated",
+        "refused": "Refused",
+        "escalated": "Escalated",
+        "resubmitted": "Resubmitted for validation"
+      },
+      "by": "{level}, on {date}",
+      "byAt": "{level}, on {date}",
+      "case": "Case: {case}",
+      "motive": "Reason: {motive}",
+      "viaDelegation": "Acting as deputy",
+      "actingFor": "You are acting as deputy for {zone}.",
+      "waiting": {
+        "to_validate": "Waiting for the CVR.",
+        "escalated": "Waiting for the DR's arbitration.",
+        "refused": "Refused: the RS corrects then resubmits the need.",
+        "validated": "Validated: qualification by the agency can start."
+      }
+    },
+    "validate": {
+      "titleCvr": "Validate the need",
+      "titleDr": "Arbitrate the escalated need",
+      "help": "Validate within your perimeter, refuse with a reason, or escalate to the DR.",
+      "helpDr": "The CVR escalated this need. Validate it or refuse it with a reason.",
+      "outcome": "Your decision",
+      "choose": "Choose",
+      "outcomes": {
+        "validated": "Validate",
+        "refused": "Refuse",
+        "escalated": "Escalate to the DR"
+      },
+      "case": "Escalation case",
+      "concerned": "CVR concerned",
+      "concernedHint": "The DR arbitrates between the two CVRs.",
+      "envelopeNote": "The envelope calculation rule is not connected yet: this case is triggered by hand, with a reason.",
+      "motive": "Reason",
+      "motiveHint": "Required for a refusal or an escalation.",
+      "submit": "Save",
+      "refused": {
+        "outcome_required": "Choose a decision.",
+        "case_required": "Choose an escalation case.",
+        "motive_required": "A reason is required.",
+        "forbidden": "Your profile has no role in this step.",
+        "not_found": "Need not found in your perimeter.",
+        "invalid": "Invalid entry.",
+        "not_submitted": "The need is not submitted.",
+        "not_pending": "The need is no longer waiting for the CVR.",
+        "not_escalated": "The need is not escalated.",
+        "not_refused": "The need is not refused.",
+        "invalid_zone": "Choose a neighbouring CVR under the same DR."
+      }
+    },
+    "resubmit": {
+      "title": "Resubmit the need for validation",
+      "help": "The CVR refused this need. Correct it if needed, then resubmit it: a new validation round opens and the history is kept.",
+      "submit": "Resubmit for validation",
+      "refused": {
+        "forbidden": "Your profile does not resubmit this need.",
+        "not_found": "Need not found in your perimeter.",
+        "not_refused": "The need is not refused."
+      }
+    },
+    "batchValidate": {
+      "title": "Validate several needs",
+      "help": "Tick the needs, choose the decision and write a shared reason. Each need is checked on its own.",
+      "legend": "Needs waiting for your validation",
+      "all": "Tick all",
+      "none": "Untick all",
+      "due": "Before {date}",
+      "overdue": "Late",
+      "motive": "Shared reason",
+      "motiveHint": "Required for a refusal.",
+      "approve": "Validate the selection",
+      "refuse": "Refuse the selection",
+      "nothingPicked": "Tick at least one need.",
+      "motiveRequired": "A shared reason is required for a refusal.",
+      "summary": "{done} processed, {refused} refused by the check.",
+      "reason": {
+        "forbidden": "Your profile has no role in this step.",
+        "not_found": "Need not found in your perimeter.",
+        "invalid": "Invalid decision.",
+        "motive_required": "Reason required.",
+        "not_submitted": "Need not submitted.",
+        "not_pending": "The need is no longer waiting for the CVR.",
+        "not_escalated": "The need is not escalated.",
+        "not_refused": "The need is not refused."
+      }
+    }
+  },
+  "delegations": {
+    "body": "Name a deputy for an absent CVR or DR, with a start date and an end date.",
+    "intro": "A deputy acts on the absent person's zone, during the chosen period, and nowhere else. One deputy at a time per absent person.",
+    "readOnly": "Your profile views the delegations. Editing is reserved to agency administration.",
+    "form": {
+      "title": "New delegation",
+      "absent": "Absent person's zone",
+      "substitute": "Deputy's zone",
+      "choose": "Choose",
+      "period": "Delegation period",
+      "motive": "Reason (optional)",
+      "submit": "Create the delegation",
+      "created": "Delegation created."
+    },
+    "caption": "Delegations and deputies",
+    "cols": {
+      "absent": "Absent",
+      "substitute": "Deputy",
+      "period": "Period",
+      "status": "Status",
+      "trace": "Trace",
+      "actions": "Actions"
+    },
+    "status": {
+      "planned": "Planned",
+      "active": "In progress",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
+    },
+    "filters": {
+      "label": "Filter the delegations",
+      "all": "All",
+      "active": "In progress",
+      "planned": "Planned",
+      "ended": "Ended"
+    },
+    "period": "From {start} to {end}",
+    "createdBy": "Created on {date}",
+    "stoppedOn": "Stopped on {date}",
+    "stop": "Stop",
+    "cancel": "Cancel",
+    "stopHelp": "Stopping takes effect today. Validations already made as a deputy stay on file.",
+    "empty": "No delegation.",
+    "refused": {
+      "forbidden": "Only agency administration manages delegations.",
+      "invalid": "Invalid entry.",
+      "invalid_zone": "Choose two CVR zones or two DR zones.",
+      "same_zone": "The absent person and the deputy are the same zone.",
+      "invalid_dates": "The period starts today at the earliest and lasts at most one year.",
+      "overlap": "This zone already has a deputy for all or part of this period.",
+      "chain": "An absent zone cannot be a deputy, nor be covered by a zone that is itself absent, over the same period.",
+      "not_found": "Delegation not found.",
+      "already": "The delegation is already ended or cancelled.",
+      "required": "Choose both zones and the period."
     }
   }
 }

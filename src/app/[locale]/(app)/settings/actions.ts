@@ -85,3 +85,25 @@ export async function setHomeSkinDefaultAction(payload: { locale: string; skin: 
   if (r.status === 'ok') revalidatePath('/', 'layout');
   return r;
 }
+
+// ---- Lot A3c : délégations (agence administration seule, vérifié par la couche données) ----
+export async function createDelegationAction(payload: { locale: string; absentZoneId: string; substituteZoneId: string; startsOn: string; endsOn: string; motive?: string }): Promise<Outcome> {
+  const locale = asLocale(payload.locale);
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!locale || !uuid.test(payload.absentZoneId) || !uuid.test(payload.substituteZoneId) || !isValidIsoDate(payload.startsOn) || !isValidIsoDate(payload.endsOn)) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.createDelegation(ctx, {
+    absentZoneId: payload.absentZoneId, substituteZoneId: payload.substituteZoneId, startsOn: payload.startsOn, endsOn: payload.endsOn, motive: String(payload.motive ?? ''),
+  }));
+  if (r.status === 'ok') revalidatePath('/', 'layout');
+  return r;
+}
+
+export async function stopDelegationAction(payload: { locale: string; delegationId: string }): Promise<Outcome> {
+  const locale = asLocale(payload.locale);
+  if (!locale || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.delegationId)) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.stopDelegation(ctx, payload.delegationId));
+  if (r.status === 'ok') revalidatePath('/', 'layout');
+  return r;
+}

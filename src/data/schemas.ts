@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   AUDIENCES, COST_STATUSES, DEADLINE_TYPES, DECISION_OUTCOMES, DECISION_STATUSES, DEVIATION_KINDS, DISPOSITIFS, ENTRY_PROFILES,
   EVENT_CODES, INTAKE_STATES, INVALIDATION_REASONS, NEED_STATES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, POSITION_STATUSES, PRESET_IDS,
-  PROFILE_IDS, PROPOSAL_STATUSES, REOPEN_SCOPES, SEVERITIES, SIDES, SITUATIONS, ZONE_KINDS,
+  PROFILE_IDS, PROPOSAL_STATUSES, REOPEN_SCOPES, SEVERITIES, SIDES, SITUATIONS, VALIDATION_LEVELS, VALIDATION_OUTCOMES, ZONE_KINDS, ESCALATION_CASES,
 } from '@/domain/types';
 
 export const ZoneSchema = z.object({
@@ -46,6 +46,8 @@ export type Alert = z.infer<typeof AlertSchema>;
 export const DemoClockSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   iso_week: z.string().regex(/^\d{4}-S\d{2}$/),
+  /** Heure fixe de démonstration (HH:MM, fuseau de Paris) : la seule heure du jour que lit l'application (D231). */
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
   is_demo: z.literal(true),
 });
 export type DemoClock = z.infer<typeof DemoClockSchema>;
@@ -449,3 +451,53 @@ export const NoteSchema = z.object({
   is_demo: z.literal(true),
 });
 export type Note = z.infer<typeof NoteSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3c : validation managériale et délégations (F-30.1 à F-30.3)
+// ---------------------------------------------------------------------------------------------
+/**
+ * Une trace de la chaîne de validation d'un besoin. Jamais modifiée ni effacée : le refus, l'escalade et le renvoi restent
+ * au dossier. Le motif est lisible dans le périmètre du lecteur, il ne figure jamais dans le journal.
+ */
+export const ValidationSchema = z.object({
+  id: Uuid,
+  need_id: Uuid,
+  /** Secteur du besoin : sert au filtrage par périmètre. */
+  sector_id: Uuid,
+  seq: z.number().int().min(1),
+  /** Tour de validation : un renvoi après refus ouvre le tour suivant. */
+  round: z.number().int().min(1),
+  outcome: z.enum(VALIDATION_OUTCOMES),
+  level: z.enum(VALIDATION_LEVELS),
+  /** Cas d'escalade, renseigné seulement pour une escalade. */
+  escalation_case: z.enum(ESCALATION_CASES).nullable(),
+  /** CVR concerné par un arbitrage entre CVR. */
+  concerned_zone_id: Uuid.nullable(),
+  motive: z.string().max(280).nullable(),
+  actor_profile: z.enum(PROFILE_IDS),
+  /** Délégation en vertu de laquelle la personne a agi, le cas échéant. */
+  via_delegation_id: Uuid.nullable(),
+  decided_on: IsoDateStr,
+  decided_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(),
+  is_demo: z.literal(true),
+});
+export type Validation = z.infer<typeof ValidationSchema>;
+
+/**
+ * Délégation (F-30.3) : le suppléant (un CVR ou un DR de même niveau) agit sur la zone de l'absent, seulement pendant la
+ * période. Un seul suppléant à la fois par absent (hypothèse, D09 ouverte). Arrêtée ou annulée, elle reste au dossier.
+ */
+export const DelegationSchema = z.object({
+  id: Uuid,
+  absent_zone_id: Uuid,
+  substitute_zone_id: Uuid,
+  starts_on: IsoDateStr,
+  ends_on: IsoDateStr,
+  motive: z.string().max(280).nullable(),
+  created_by: z.enum(PROFILE_IDS),
+  created_on: IsoDateStr,
+  stopped_on: NullableDate,
+  stopped_by: z.enum(PROFILE_IDS).nullable(),
+  is_demo: z.literal(true),
+});
+export type Delegation = z.infer<typeof DelegationSchema>;

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "fee47f33-485f-41e0-96bf-57a71b0e9501",
+    "stopped_on": null,
+    "stopped_by": null,
+    "absent_zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "substitute_zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "starts_on": "2026-10-05",
+    "ends_on": "2026-10-09",
+    "motive": "Congés planifiés (donnée fictive).",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-02",
+    "is_demo": true
+  },
+  {
+    "id": "5dff8dc3-2cd5-40ee-9024-a8cd56a61455",
+    "stopped_on": "2026-10-16",
+    "stopped_by": "agency_admin",
+    "absent_zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "substitute_zone_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "starts_on": "2026-10-12",
+    "ends_on": "2026-10-30",
+    "motive": "Absence prolongée (donnée fictive).",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-09",
+    "is_demo": true
+  },
+  {
+    "id": "bc56553c-8897-4ee1-b48e-c14424232772",
+    "stopped_on": null,
+    "stopped_by": null,
+    "absent_zone_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "substitute_zone_id": "f97cc5b8-dce0-43b1-a21f-e53441a8d52c",
+    "starts_on": "2026-11-02",
+    "ends_on": "2026-11-13",
+    "motive": "Déplacement planifié (donnée fictive).",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-22",
+    "is_demo": true
+  }
+]

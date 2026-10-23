@@ -6,7 +6,7 @@ import { repository } from '@/data';
 import type { StepInput } from '@/data/repository';
 import { ProposalInputSchema } from '@/data/schemas';
 import type { ProposalIssue } from '@/domain/pipeline';
-import { DECISION_OUTCOMES, LOCALES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, RECRUITMENT_STEPS } from '@/domain/types';
+import { DECISION_OUTCOMES, ESCALATION_CASES, LOCALES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, RECRUITMENT_STEPS } from '@/domain/types';
 import type { Locale } from '@/domain/types';
 import { getAccessContext } from '@/lib/session';
 import { undoable } from '@/lib/undoable';
@@ -119,4 +119,57 @@ export async function withdrawNoteAction(payload: { locale: string; noteId: stri
   const r = await undoable(ctx, () => repository.withdrawNote(ctx, payload.noteId));
   done(r);
   return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+// ---- Lot A3c : validation managériale (CVR, DR) ----
+const ValidationIn = z.object({ outcome: z.enum(['validated', 'refused']), motive: z.string().max(280).optional() });
+
+export async function validateNeedAction(payload: { locale: string; needId: string; outcome: string; motive?: string }): Promise<WriteState> {
+  const locale = asLocale(payload.locale);
+  const parsed = ValidationIn.safeParse({ outcome: payload.outcome, motive: payload.motive });
+  if (!locale || !Id.safeParse(payload.needId).success || !parsed.success) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.validateNeed(ctx, payload.needId, parsed.data));
+  done(r);
+  return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+const EscalationIn = z.object({ case: z.enum(ESCALATION_CASES), motive: z.string().max(280), concernedZoneId: Id.optional() });
+
+export async function escalateNeedAction(payload: { locale: string; needId: string; case: string; motive: string; concernedZoneId?: string }): Promise<WriteState> {
+  const locale = asLocale(payload.locale);
+  const parsed = EscalationIn.safeParse({ case: payload.case, motive: payload.motive ?? '', concernedZoneId: payload.concernedZoneId || undefined });
+  if (!locale || !Id.safeParse(payload.needId).success || !parsed.success) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.escalateNeed(ctx, payload.needId, parsed.data));
+  done(r);
+  return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+export async function resubmitNeedAction(payload: { locale: string; needId: string }): Promise<WriteState> {
+  const locale = asLocale(payload.locale);
+  if (!locale || !Id.safeParse(payload.needId).success) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.resubmitNeed(ctx, payload.needId));
+  done(r);
+  return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+/** Validation en lot avec motif commun : une seule annulation défait tout le lot. */
+export async function validateBatchAction(payload: { locale: string; needIds: string[]; outcome: string; motive?: string }): Promise<
+  | { status: 'ok'; undoToken?: string; done: number; refused: number; reasons: string[] }
+  | { status: 'invalid' }
+> {
+  const locale = asLocale(payload.locale);
+  const parsed = ValidationIn.safeParse({ outcome: payload.outcome, motive: payload.motive });
+  if (!locale || !parsed.success || !Array.isArray(payload.needIds) || payload.needIds.length === 0 || payload.needIds.length > 60 || !payload.needIds.every((i) => Id.safeParse(i).success)) {
+    return { status: 'invalid' };
+  }
+  const ctx = await getAccessContext(locale);
+  const { result, undoToken } = await repository.withUndo(ctx, () => repository.validateBatch(ctx, payload.needIds, parsed.data), (r) => r.done > 0);
+  if (result.done > 0) revalidatePath('/', 'layout');
+  return {
+    status: 'ok', ...(undoToken ? { undoToken } : {}), done: result.done, refused: result.refused,
+    reasons: [...new Set(result.items.flatMap((i) => (i.reason ? [i.reason] : [])))],
+  };
 }

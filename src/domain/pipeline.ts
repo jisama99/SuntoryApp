@@ -32,6 +32,8 @@ export interface PipelineParams {
   soon_within_days: number;
   /** Effectif minimal pour conclure sur un délai (D93 : valeur proposée 5). */
   min_sample: number;
+  /** Délai de validation d'un besoin par le CVR, puis d'arbitrage par le DR (valeur de départ A3c, à valider, D09 ouverte). */
+  validation_due_days: number;
 }
 
 export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
@@ -41,6 +43,7 @@ export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
   urgent_within_days: 2,
   soon_within_days: 5,
   min_sample: 5,
+  validation_due_days: 2,
 };
 
 /** Le n-ième jour ouvré après `date` (n supérieur ou égal à 1). */
@@ -209,7 +212,11 @@ export function urgencyOf(due: IsoDate, today: IsoDate, params: PipelineParams, 
 }
 
 export function nextStep(
-  i: Facts & { needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null; needChanged?: boolean },
+  i: Facts & {
+    needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null; needChanged?: boolean;
+    /** Étape de la validation managériale (A3c) tant que le besoin n'est pas validé ; absente ou nulle une fois validé. */
+    validationStep?: NextStep | null;
+  },
   today: IsoDate,
   params: PipelineParams,
   cal: CalendarRules,
@@ -220,6 +227,7 @@ export function nextStep(
   const r = i.recruitment;
   if (i.needState === 'draft') return withDue('rs', 'complete_need', null);
   if (r.intake === 'rejected' || r.stopped) return withDue('none', 'none', null);
+  if (i.validationStep) return i.validationStep;
   if (r.intake === 'to_qualify') return withDue('agency', 'qualify', addWorkingDays(i.submittedOn, params.qualify_due_days, cal));
   if (r.intake === 'clarification') return withDue('rs', 'clarify', null);
 
@@ -367,8 +375,10 @@ export interface FunnelRow {
   situation: Situation;
   /** Sorti du circuit : stoppé (motif obligatoire) ou rejeté à la qualification. */
   closed: 'stopped' | 'rejected' | null;
-  /** Besoin pas encore pris en charge par l'agence. */
+  /** Besoin validé par la chaîne mais pas encore pris en charge par l'agence. */
   toQualify: boolean;
+  /** Besoin en attente de validation (à valider, escaladé ou refusé) : la qualification de l'agence ne le concerne pas encore. */
+  toValidate?: boolean;
   hours: number | null;
   refusals: number;
   withdrawals: number;
@@ -385,6 +395,8 @@ export interface FunnelSummary {
   stoppedPerformedHours: number;
   whiteZone: { needs: number; hours: number };
   toQualify: number;
+  /** Besoins en attente de la validation du CVR ou du DR : comptés à part, jamais « à qualifier » ni dans les heures (A3c). */
+  toValidate: number;
   /** Besoin passé en « Réattribué » : compté dans son état, signalé à part. */
   reassigned: number;
   demandedHours: number;
@@ -406,6 +418,7 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
   let rejected = 0;
   let stoppedPerformed = 0;
   let toQualify = 0;
+  let toValidate = 0;
   let reassigned = 0;
   let demanded = 0;
   let hired = 0;
@@ -426,6 +439,10 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
           started += r.hours ?? 0;
         }
       } else rejected += 1;
+      continue;
+    }
+    if (r.toValidate) {
+      toValidate += 1;
       continue;
     }
     if (r.toQualify) {
@@ -449,7 +466,7 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
     if (r.state === 'started') started += r.hours ?? 0;
   }
   return {
-    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, reassigned, demandedHours: demanded,
+    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, toValidate, reassigned, demandedHours: demanded,
     hiredRate: demanded > 0 ? hired / demanded : null, startedRate: demanded > 0 ? started / demanded : null,
     refusals, withdrawals, returned,
   };

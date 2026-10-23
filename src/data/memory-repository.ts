@@ -15,7 +15,12 @@ import {
   executionStatus, funnelState, startLagSample, startLagStats, funnelSummary, needChangedSince, noteVisibleTo, nextStep, positionStatus, proposalIssues, sentProposal, validDecisionOn,
 } from '@/domain/pipeline';
 import type { Facts, FunnelRow, PipelineParams } from '@/domain/pipeline';
-import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
+import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, DISPOSITIFS, ESCALATION_CASES, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
+import {
+  activeDelegations, chainOf, delegationIssue, delegationStatus, effectiveScope, nextValidationStep, validationSince, validationState,
+  validationTransition,
+} from '@/domain/validation';
+import type { ValidationAction } from '@/domain/validation';
 import type {
   Audience, DeadlineType, Dispositif, EventCode, HomeSkin, InvalidationReason, NoteObjectKind, NoteVisibility, PresetId, ProfileId,
   RecruitmentStep, Severity,
@@ -36,6 +41,7 @@ import decisionsJson from './fixtures/decisions.json';
 import notesJson from './fixtures/notes.json';
 import proposalsJson from './fixtures/proposals.json';
 import recruitmentsJson from './fixtures/recruitments.json';
+import delegationsJson from './fixtures/delegations.json';
 import dispositifParamsJson from './fixtures/dispositif-params.json';
 import eventsJson from './fixtures/events.json';
 import needsJson from './fixtures/needs.json';
@@ -43,22 +49,23 @@ import profilesJson from './fixtures/profiles.json';
 import reopeningRequestsJson from './fixtures/reopening-requests.json';
 import reopeningsJson from './fixtures/reopenings.json';
 import storesJson from './fixtures/stores.json';
+import validationsJson from './fixtures/validations.json';
 import weekClosuresJson from './fixtures/week-closures.json';
 import zonesJson from './fixtures/zones.json';
 import type {
-  BatchDecisionResult, BatchDraft, BatchLineResult, DecisionInput, DecisionRefusal, DemoProfileDirectory, FunnelReport, MutationResult,
-  NeedThread, OutboxEntry, PipelineAlert, PipelineRow, ProposalResult, Repository, ReturnedFinding, SaveOptions,
-  SaveRefusal, SaveResult, StepInput, StepRefusal,
+  BatchDecisionResult, BatchDraft, BatchLineResult, BatchValidationResult, DecisionInput, DecisionRefusal, DelegationInput, DemoProfileDirectory,
+  EscalationInput, FunnelReport, MutationResult, NeedThread, OutboxEntry, PipelineAlert, PipelineRow, ProposalResult, Repository,
+  ReturnedFinding, SaveOptions, SaveRefusal, SaveResult, StepInput, StepRefusal, ValidationFailure, ValidationInput,
 } from './repository';
 import {
-  AccountSchema, AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DecisionSchema,
+  AccountSchema, AlertSchema, BatchRowsSchema, DelegationSchema, ValidationSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DecisionSchema,
   DemoClockSchema, DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, NoteSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS,
   ProfileSchema, ProposalInputSchema, ProposalSchema, RecruitmentSchema, ReopeningRequestSchema, ReopeningSchema, StoreSchema,
   USERNAME_PATTERN, WeekClosureSchema, ZoneSchema,
 } from './schemas';
 import type {
-  Account, BusinessEvent, DeadlineSettings, Decision, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
-  PublicAccount, Recruitment, Reopening, ReopeningRequest, Zone,
+  Account, BusinessEvent, DeadlineSettings, Decision, Delegation, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
+  PublicAccount, Recruitment, Reopening, ReopeningRequest, Validation, Zone,
 } from './schemas';
 
 import { dummyHash, generatePassword, hashPassword, verifyPassword } from './password';
@@ -69,14 +76,13 @@ const alerts = z.array(AlertSchema).parse(alertsJson);
 const clock = DemoClockSchema.parse(clockJson);
 
 /**
- * D231 : heure du jour à Paris (HH:MM), seule lecture de l'horloge du poste : le jour reste celui de l'horloge de démonstration.
- * `format()` sans argument lit l'instant courant. Remplaçable en test ; sans argument, `setTimeSource` rétablit cette lecture.
+ * D231 : l'heure du jour (HH:MM, fuseau de Paris) vient de l'horloge de démonstration (`clock.time`), fixe et déterministe,
+ * comme la date. L'application ne lit jamais l'heure du poste (garde `dates-architecture.test.ts`). `setDemoTime` ne sert
+ * qu'aux tests, pour poser une autre heure fixe ; sans argument, il rétablit l'heure de `clock.json`.
  */
-const parisTime = (): string =>
-  new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format();
-let timeSource: () => string = parisTime;
-export function setTimeSource(fn?: () => string): void {
-  timeSource = fn ?? parisTime;
+let demoTime: string = clock.time;
+export function setDemoTime(time?: string): void {
+  demoTime = time ?? clock.time;
 }
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const stores = z.array(StoreSchema).parse(storesJson);
@@ -108,6 +114,9 @@ interface DemoState {
   decisions: Decision[];
   notes: Note[];
   pipelineParams: PipelineParams;
+  // Lot A3c
+  validations: Validation[];
+  delegations: Delegation[];
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -133,6 +142,8 @@ function state(): DemoState {
       decisions: structuredClone(z.array(DecisionSchema).parse(decisionsJson)),
       notes: structuredClone(z.array(NoteSchema).parse(notesJson)),
       pipelineParams: { ...DEFAULT_PIPELINE_PARAMS },
+      validations: structuredClone(z.array(ValidationSchema).parse(validationsJson)),
+      delegations: structuredClone(z.array(DelegationSchema).parse(delegationsJson)),
     };
   }
   return globalState.__suntoryDemoState;
@@ -297,6 +308,107 @@ function factsOf(needId: string, clientView: boolean): Facts {
   return { recruitment: recruitmentOf(needId), proposals, decisions: st.decisions.filter((d) => d.need_id === needId) };
 }
 
+// ---------------------------------------------------------------------------------------------
+// Lot A3c : validation managériale (CVR, DR) et délégations. Règles dans domain/validation.ts.
+// ---------------------------------------------------------------------------------------------
+/**
+ * Contexte effectif d'un suppléant : son périmètre plus la zone de l'absent, pendant la délégation seulement. Appliqué au circuit
+ * de validation et de décision du fil du besoin ; jamais au-delà de la zone du délégant (domain/validation.ts, effectiveScope).
+ */
+function withDelegations(ctx: AccessContext): AccessContext {
+  const scope = effectiveScope(ctx.scope, state().delegations, zones, clock.date);
+  return scope === ctx.scope ? ctx : { ...ctx, scope };
+}
+
+const validationsOf = (needId: string): Validation[] => state().validations.filter((v) => v.need_id === needId).sort((a, b) => a.seq - b.seq);
+
+function validationInfo(needId: string, sub: string): PipelineRow['validation'] {
+  const records = validationsOf(needId);
+  return { state: validationState(records), round: records.reduce((m, v) => Math.max(m, v.round), 1), since: validationSince(records, sub) };
+}
+
+/** Étape de validation tant que le besoin n'est pas validé (nulle une fois validé : la qualification de l'agence prend le relais). */
+function validationStepOf(needId: string, sub: string) {
+  const v = validationInfo(needId, sub);
+  return nextValidationStep(v.state, v.since, clock.date, state().pipelineParams, calOf());
+}
+
+/** Délégation en cours par laquelle le contexte atteint ce secteur, le cas échéant (le périmètre propre ne suffit pas). */
+function delegationReaching(ctx0: AccessContext, sectorId: string) {
+  if (zoneInScope(zones, sectorId, ctx0.scope)) return null;
+  return activeDelegations(state().delegations, clock.date).find((d) => {
+    const absent = zones.find((z) => z.id === d.absent_zone_id);
+    return absent && ctx0.scope.kind !== 'all' && ctx0.scope.kind === absent.kind && ctx0.scope.ids.includes(d.substitute_zone_id)
+      && zoneInScope(zones, sectorId, { kind: absent.kind, ids: [absent.id] });
+  }) ?? null;
+}
+
+const levelOf = (ctx: AccessContext): 'cvr' | 'dr' | null => (ctx.profileId === 'cvr_client' ? 'cvr' : ctx.profileId === 'dr_client' ? 'dr' : null);
+
+function pushValidation(ctx0: AccessContext, need: Need, over: Pick<Validation, 'outcome' | 'level'> & Partial<Pick<Validation, 'escalation_case' | 'concerned_zone_id' | 'motive'>>): Validation {
+  const st = state();
+  const records = validationsOf(need.id);
+  const last = records[records.length - 1];
+  const via = delegationReaching(ctx0, need.sector_id);
+  const v: Validation = {
+    id: crypto.randomUUID(), need_id: need.id, sector_id: need.sector_id, seq: st.validations.reduce((m, x) => Math.max(m, x.seq), 0) + 1,
+    round: (last?.round ?? 1) + (over.outcome === 'resubmitted' ? 1 : 0), escalation_case: null, concerned_zone_id: null, motive: null,
+    actor_profile: ctx0.profileId, via_delegation_id: via?.id ?? null, decided_on: clock.date, decided_time: demoTime, is_demo: true, ...over,
+  };
+  st.validations.push(v);
+  return v;
+}
+
+function validateOne(ctx0: AccessContext, needId: string, input: ValidationInput): MutationResult<ValidationFailure> {
+  const level = levelOf(ctx0);
+  if (!level) return { status: 'refused', reason: 'forbidden' };
+  if (input.outcome !== 'validated' && input.outcome !== 'refused') return { status: 'refused', reason: 'invalid' };
+  const motive = (input.motive ?? '').trim();
+  if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
+  if (input.outcome === 'refused' && !motive) return { status: 'refused', reason: 'motive_required' };
+  const ctx = withDelegations(ctx0);
+  const need = state().needs.find((n) => n.id === needId);
+  if (!need || !zoneInScope(zones, need.sector_id, ctx.scope)) return { status: 'refused', reason: 'not_found' };
+  if (need.need_state !== 'submitted') return { status: 'refused', reason: 'not_submitted' };
+  const action: ValidationAction = `${level}_${input.outcome === 'validated' ? 'validate' : 'refuse'}`;
+  const move = validationTransition(validationState(validationsOf(need.id)), action);
+  if (!move.ok) return { status: 'refused', reason: move.reason };
+  pushValidation(ctx0, need, { outcome: input.outcome, level, motive: motive || null });
+  // Le motif reste dans la trace de validation, jamais dans le journal.
+  if (input.outcome === 'refused') emit('EV-08', ctx0.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, level });
+  else if (level === 'dr') emit('EV-07', ctx0.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, action: 'arbitrated', outcome: 'validated' });
+  else emit('EV-06', ctx0.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, level });
+  return { status: 'ok' };
+}
+
+function escalateOne(ctx0: AccessContext, needId: string, input: EscalationInput): MutationResult<ValidationFailure | 'invalid_zone'> {
+  if (levelOf(ctx0) !== 'cvr') return { status: 'refused', reason: 'forbidden' };
+  if (!(ESCALATION_CASES as readonly string[]).includes(input.case)) return { status: 'refused', reason: 'invalid' };
+  const motive = (input.motive ?? '').trim();
+  if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
+  if (!motive) return { status: 'refused', reason: 'motive_required' };
+  const ctx = withDelegations(ctx0);
+  const need = state().needs.find((n) => n.id === needId);
+  if (!need || !zoneInScope(zones, need.sector_id, ctx.scope)) return { status: 'refused', reason: 'not_found' };
+  if (need.need_state !== 'submitted') return { status: 'refused', reason: 'not_submitted' };
+  const move = validationTransition(validationState(validationsOf(need.id)), 'cvr_escalate');
+  if (!move.ok) return { status: 'refused', reason: move.reason };
+  let concerned: string | null = null;
+  if (input.case === 'arbitration') {
+    if (!escalationTargetsOf(need).some((z) => z.id === input.concernedZoneId)) return { status: 'refused', reason: 'invalid_zone' };
+    concerned = input.concernedZoneId as string;
+  }
+  pushValidation(ctx0, need, { outcome: 'escalated', level: 'cvr', escalation_case: input.case, concerned_zone_id: concerned, motive });
+  emit('EV-07', ctx0.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, action: 'escalated', case: input.case });
+  return { status: 'ok' };
+}
+
+/** CVR frères sous le même DR : les seuls proposables pour un arbitrage entre CVR (jamais le sien, jamais un autre DR). */
+function escalationTargetsOf(need: Need): Zone[] {
+  const { cvr, dr } = chainOf(zones, need.sector_id);
+  return cvr && dr ? zones.filter((z) => z.kind === 'cvr' && z.parent_id === dr.id && z.id !== cvr.id) : [];
+}
+
 function withPositionStatus(ctx: AccessContext, n: Need): Need {
   const status = n.need_state === 'submitted' ? positionStatus(factsOf(n.id, ctx.side === 'client'), clock.date) : null;
   return status === n.position_status ? n : { ...n, position_status: status };
@@ -310,7 +422,9 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
   const span = n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null;
   const sentNow = sentProposal(facts.proposals);
   const changed = sentNow ? needChangedSince(n, sentNow) : false;
-  let next = nextStep({ ...facts, needState: n.need_state, submittedOn: sub, requestedStart: span, needChanged: changed }, today, state().pipelineParams, calOf());
+  let next = nextStep({
+    ...facts, needState: n.need_state, submittedOn: sub, requestedStart: span, needChanged: changed, validationStep: validationStepOf(n.id, sub),
+  }, today, state().pipelineParams, calOf());
   // Le retard interne de l'agence n'est pas communiqué à la cliente (D108) : elle sait qui doit agir, pas l'échéance interne.
   if (client && next.actor === 'agency') next = { ...next, due: null, urgency: null, lateDays: 0 };
   const proposal = (client ? sentProposal(facts.proposals) : null) ?? activeProposal(facts.proposals) ?? [...facts.proposals].sort((a, b) => b.version - a.version)[0] ?? null;
@@ -331,6 +445,7 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
     submittedOn: sub,
     billableFrom: client ? null : billableFrom(rec),
     needChanged: sent ? needChangedSince(n, sent) : false,
+    validation: validationInfo(n.id, sub),
   };
 }
 
@@ -433,8 +548,9 @@ async function saveProposalImpl(ctx: AccessContext, needId: string, raw: Proposa
 
 const isClosedRecruitment = (r: Recruitment) => r.intake === 'rejected' || r.stopped !== null;
 
-function decideOne(ctx: AccessContext, proposalId: string, input: DecisionInput): MutationResult<DecisionRefusal> {
-  if (!DECIDERS.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
+function decideOne(ctx0: AccessContext, proposalId: string, input: DecisionInput): MutationResult<DecisionRefusal> {
+  if (!DECIDERS.includes(ctx0.profileId)) return { status: 'refused', reason: 'forbidden' };
+  const ctx = withDelegations(ctx0);
   const st = state();
   const p = st.proposals.find((x) => x.id === proposalId);
   const need = p && st.needs.find((n) => n.id === p.need_id);
@@ -449,7 +565,7 @@ function decideOne(ctx: AccessContext, proposalId: string, input: DecisionInput)
   if (validDecisionOn(p.id, st.decisions)) return { status: 'refused', reason: 'already_decided' };
   st.decisions.push({
     id: crypto.randomUUID(), proposal_id: p.id, need_id: need.id, version: p.version, outcome: input.outcome, motive: motive || null, status: 'valid',
-    decided_by: ctx.profileId, decided_on: clock.date, decided_time: timeSource(), invalidated_on: null, invalidated_reason: null, invalidated_by_proposal_id: null, is_demo: true,
+    decided_by: ctx.profileId, decided_on: clock.date, decided_time: demoTime, invalidated_on: null, invalidated_reason: null, invalidated_by_proposal_id: null, is_demo: true,
   });
   if (input.outcome === 'refused') ensureRecruitment(need.id).refusal_count += 1;
   emit('EV-11', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, version: p.version, outcome: input.outcome });
@@ -578,6 +694,7 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
     n, f, next: nextStep({
       ...f, needState: n.need_state, submittedOn: submittedOn(n), requestedStart: n.periods.map(resolvePeriod).find((p) => p.start)?.start ?? null,
       needChanged: (() => { const s = sentProposal(f.proposals); return s ? needChangedSince(n, s) : false; })(),
+      validationStep: validationStepOf(n.id, submittedOn(n)),
     }, today, st.pipelineParams, calOf()),
   }));
   const out: PipelineAlert[] = [];
@@ -595,6 +712,13 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   push('clarificationPending', 'both', 'attention', rows.filter((r) => r.next.action === 'clarify').length);
   push('accordLost', 'agency', 'attention', rows.filter((r) => r.next.action === 'reconfirm_proposal').length);
   push('startLate', 'both', 'attention', rows.filter((r) => r.next.action === 'start_work' && r.next.urgency === 'overdue').length);
+  // A3c : la chaîne de validation est côté cliente (audience « client », lue aussi par l'agence) ; les délégations sont internes à l'agence.
+  const toValidate = rows.filter((r) => r.next.action === 'validate_need');
+  push('validationPending', 'client', 'attention', toValidate.length);
+  push('validationLate', 'client', 'risk', toValidate.filter((r) => r.next.urgency === 'overdue').length);
+  push('escalationPending', 'client', 'attention', rows.filter((r) => r.next.action === 'arbitrate_need').length);
+  push('validationRefused', 'both', 'attention', rows.filter((r) => r.next.action === 'resubmit_need').length);
+  push('delegationActive', 'agency', 'info', activeDelegations(st.delegations, today).length);
   return out;
 }
 
@@ -607,7 +731,8 @@ export function createMemoryRepository(): Repository {
       return MENU_BY_PROFILE[ctx.profileId].map((key) => ({ key, href: MENU_HREF[key] }));
     },
 
-    async getScopeZones(ctx) {
+    async getScopeZones(ctx0) {
+      const ctx = withDelegations(ctx0);
       if (ctx.scope.kind === 'all') return zones;
       const scope = ctx.scope;
       const inside = zones.filter((z) => zoneInScope(zones, z.id, scope));
@@ -632,7 +757,7 @@ export function createMemoryRepository(): Repository {
     },
 
     async getClock() {
-      return clock;
+      return { ...clock, time: demoTime };
     },
 
     async getNeeds(ctx) {
@@ -1081,14 +1206,18 @@ export function createMemoryRepository(): Repository {
     // ---------------------------------------------------------------------------------------------
     // Lot A3
     // ---------------------------------------------------------------------------------------------
-    async getPipeline(ctx) {
+    async getPipeline(ctx0) {
+      const ctx = withDelegations(ctx0);
       return state().needs.filter((n) => zoneInScope(zones, n.sector_id, ctx.scope)).map((n) => rowFor(ctx, n));
     },
 
-    async getNeedThread(ctx, needId) {
+    async getNeedThread(ctx0, needId) {
+      const ctx = withDelegations(ctx0);
       const n = state().needs.find((x) => x.id === needId);
       if (!n || !zoneInScope(zones, n.sector_id, ctx.scope)) return null;
       const row = rowFor(ctx, n);
+      const validationRows = validationsOf(n.id);
+      const canEscalate = levelOf(ctx0) === 'cvr' && validationState(validationRows) === 'to_validate';
       const proposals = visibleProposals(ctx, n.id).map((p) => presentProposal(ctx, p)).sort((a, b) => b.version - a.version);
       const ids = new Set(proposals.map((p) => p.id));
       return {
@@ -1099,6 +1228,9 @@ export function createMemoryRepository(): Repository {
         stores: ctx.side === 'client' ? [] : stores.filter((s) => s.sector_id === n.sector_id || s.sector_id === null),
         // Une note rattachée à un brouillon de proposition reste à l'agence, quelle que soit sa visibilité.
         notes: state().notes.filter((x) => x.need_id === n.id && noteReadable(ctx, x) && !onHiddenDraft(ctx, x)).sort((a, b) => a.seq - b.seq),
+        validations: validationRows,
+        escalationTargets: canEscalate ? escalationTargetsOf(n) : [],
+        actingFor: zones.find((z) => z.id === delegationReaching(ctx0, n.sector_id)?.absent_zone_id) ?? null,
       } satisfies NeedThread;
     },
 
@@ -1114,7 +1246,7 @@ export function createMemoryRepository(): Repository {
         const r = f.recruitment;
         funnelRows.push({
           state: funnelState(f, clock.date), situation: r.situation, closed: r.stopped ? 'stopped' : r.intake === 'rejected' ? 'rejected' : null,
-          toQualify: r.intake === 'to_qualify' || r.intake === 'clarification', hours: n.weekly_hours, refusals: r.refusal_count, withdrawals: r.withdrawal_count,
+          toQualify: r.intake === 'to_qualify' || r.intake === 'clarification', toValidate: validationState(validationsOf(n.id)) !== 'validated', hours: n.weekly_hours, refusals: r.refusal_count, withdrawals: r.withdrawal_count,
           // Stoppé après sa prise de poste : les heures effectuées avant l'arrêt restent comptées (D211).
           performedBeforeStop: Boolean(r.stopped && r.hired_on && r.start_work_date && r.start_work_date <= r.stopped.on),
         });
@@ -1129,7 +1261,8 @@ export function createMemoryRepository(): Repository {
       return { summary: funnelSummary(funnelRows), delays: delayStats(samples, st.pipelineParams.min_sample), startLags: startLagStats(lags, st.pipelineParams.min_sample), params: st.pipelineParams, vacancies };
     },
 
-    async getPipelineAlerts(ctx) {
+    async getPipelineAlerts(ctx0) {
+      const ctx = withDelegations(ctx0);
       return pipelineAlerts(ctx).filter((a) => audienceAllows(ctx.side, a.audience));
     },
 
@@ -1147,6 +1280,8 @@ export function createMemoryRepository(): Repository {
       if (!['take', 'clarify', 'reject'].includes(input.outcome)) return { status: 'refused', reason: 'invalid' };
       const rec = recruitmentOf(need.id);
       if (rec.intake !== 'to_qualify' && rec.intake !== 'clarification') return { status: 'refused', reason: 'already' };
+      // A3c : l'agence ne qualifie qu'un besoin validé par la chaîne cliente (CVR, ou DR après escalade).
+      if (validationState(validationsOf(need.id)) !== 'validated') return { status: 'refused', reason: 'not_validated' };
       const motive = (input.motive ?? '').trim();
       if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
       if (input.outcome !== 'take' && !motive) return { status: 'refused', reason: 'motive_required' };
@@ -1239,6 +1374,72 @@ export function createMemoryRepository(): Repository {
       note.withdrawn_on = clock.date;
       note.withdrawn_by = ctx.profileId;
       emit('EV-44', ctx.profileId, note.sector_id, note.need_id, noteEventAudience(note.visibility), { action: 'withdrawn', visibility: note.visibility, object: note.object_kind });
+      return { status: 'ok' };
+    },
+
+    // ---- Lot A3c ----
+    canValidate: (ctx) => levelOf(ctx) !== null,
+
+    async validateNeed(ctx, needId, input) {
+      return validateOne(ctx, needId, input);
+    },
+
+    async escalateNeed(ctx, needId, input) {
+      return escalateOne(ctx, needId, input);
+    },
+
+    async resubmitNeed(ctx0, needId) {
+      if (!AGENCY_WRITERS.includes(ctx0.profileId) && ctx0.profileId !== 'rs') return { status: 'refused', reason: 'forbidden' };
+      const need = state().needs.find((n) => n.id === needId);
+      if (!need || !zoneInScope(zones, need.sector_id, ctx0.scope)) return { status: 'refused', reason: 'not_found' };
+      const move = validationTransition(validationState(validationsOf(need.id)), 'resubmit');
+      if (!move.ok) return { status: 'refused', reason: 'not_refused' };
+      pushValidation(ctx0, need, { outcome: 'resubmitted', level: 'cvr' });
+      emit('EV-46', ctx0.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code });
+      return { status: 'ok' };
+    },
+
+    async validateBatch(ctx, needIds, input): Promise<BatchValidationResult> {
+      const items: BatchValidationResult['items'] = [];
+      for (const id of [...new Set(needIds)]) {
+        const r = validateOne(ctx, id, input);
+        items.push(r.status === 'ok' ? { needId: id, status: 'ok' } : { needId: id, status: 'refused', reason: r.reason });
+      }
+      const done = items.filter((i) => i.status === 'ok').length;
+      return { items, done, refused: items.length - done };
+    },
+
+    canManageDelegations: (ctx) => isAgencyAdmin(ctx),
+
+    async getDelegations(ctx) {
+      return ctx.side === 'client' ? [] : [...state().delegations].sort((a, b) => b.starts_on.localeCompare(a.starts_on));
+    },
+
+    async createDelegation(ctx, input: DelegationInput) {
+      if (!isAgencyAdmin(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const motive = (input.motive ?? '').trim();
+      if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
+      const st = state();
+      const issue = delegationIssue(input, st.delegations, zones, clock.date);
+      if (issue) return { status: 'refused', reason: issue };
+      st.delegations.push({
+        id: crypto.randomUUID(), absent_zone_id: input.absentZoneId, substitute_zone_id: input.substituteZoneId, starts_on: input.startsOn,
+        ends_on: input.endsOn, motive: motive || null, created_by: ctx.profileId, created_on: clock.date, stopped_on: null, stopped_by: null, is_demo: true,
+      });
+      // Interne à l'agence (D108, défaut refus) : la cliente ne lit ni la liste ni le journal des délégations.
+      emit('EV-47', ctx.profileId, input.absentZoneId, null, 'agency', { action: 'created', starts_on: input.startsOn, ends_on: input.endsOn });
+      return { status: 'ok' };
+    },
+
+    async stopDelegation(ctx, delegationId) {
+      if (!isAgencyAdmin(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const d = state().delegations.find((x) => x.id === delegationId);
+      if (!d) return { status: 'refused', reason: 'not_found' };
+      const status = delegationStatus(d, clock.date);
+      if (status === 'ended' || status === 'cancelled') return { status: 'refused', reason: 'already' };
+      d.stopped_on = clock.date;
+      d.stopped_by = ctx.profileId;
+      emit('EV-47', ctx.profileId, d.absent_zone_id, null, 'agency', { action: status === 'planned' ? 'cancelled' : 'stopped', starts_on: d.starts_on, ends_on: d.ends_on });
       return { status: 'ok' };
     },
 
