@@ -576,3 +576,89 @@ describe('revue A3 : constats corrigés', () => {
     expect((await rowOf(n)).funnel).toBeNull();
   });
 });
+
+describe('reprises de la revue A3', () => {
+  const merge = (n: Need) => repo.saveNeed(ctxOf('rs'), {
+    dispositif: 'permanent', campaign_code: 'CMP-DEMO-01', sector_id: OWN, position_label: 'Poste 4', weekly_hours: 14, priority: 2,
+    periods: [period(1, '2026-12-14', '2026-12-20')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: n.store_codes, client_comment: null,
+  }, { mergeInto: n.id, confirm: true });
+
+  it('1. recrutement finalisé puis besoin modifié : l\'état revient à « Proposé », la décision invalidée reste au dossier, le nouvel accord rétablit l\'état', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const p = await send(n);
+    await decide(p.id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    expect((await rowOf(n)).funnel).toBe('hired');
+    await merge(n);
+    const row = await rowOf(n);
+    expect([row.funnel, row.positionStatus, row.decision]).toEqual(['proposed', 'proposed', null]);
+    expect(row.next).toMatchObject({ actor: 'decider', action: 'decide' });
+    const thread = (await repo.getNeedThread(AG(), n.id))!;
+    expect(thread.decisions).toHaveLength(1);
+    expect(thread.decisions[0]).toMatchObject({ status: 'invalidated', invalidated_reason: 'need_changed' });
+    expect(row.recruitment.hired_on).toBe(TODAY); // rien n'est effacé
+    // La cliente redécide : l'accord rétabli rend le recrutement finalisé.
+    const again = await repo.saveProposal(AG(), n.id, input(n, { start_date: '2026-12-07', end_date: '2026-12-20' }), { send: true });
+    if (again.status !== 'saved') throw new Error('renvoi');
+    await decide(again.proposal.id, 'approved');
+    expect((await rowOf(n)).funnel).toBe('hired');
+  });
+  it('1 bis. recrutement finalisé puis nouvelle version : plus d\'état finalisé tant que la cliente n\'a pas décidé', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const v1 = await send(n);
+    await decide(v1.id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await send(n, { candidate_ref: 'INT-902' });
+    expect((await rowOf(n)).funnel).toBe('proposed');
+  });
+  it('2. besoin stoppé en cours d\'exécution : heures effectuées comptées ; stoppé avant démarrage : exclu', async () => {
+    const before = (await repo.getFunnelReport(AG())).summary;
+    const started = await submitNeed();
+    await take(started);
+    await decide((await send(started)).id, 'approved');
+    await repo.recordStep(AG(), started.id, 'hired');
+    await repo.recordStep(AG(), started.id, 'start_work', { date: TODAY });
+    const running = (await repo.getFunnelReport(AG())).summary;
+    expect(running.demandedHours).toBe(before.demandedHours + 14);
+    await repo.recordStep(AG(), started.id, 'stop', { motive: 'Arrêt de la mission sur ce magasin.' });
+    const stopped = (await repo.getFunnelReport(AG())).summary;
+    expect(stopped.demandedHours).toBe(running.demandedHours); // les heures effectuées restent au dénominateur
+    expect(stopped.startedRate).toBeCloseTo(running.startedRate as number);
+    expect(stopped.stopped).toBe(before.stopped + 1);
+    expect(stopped.stoppedPerformedHours).toBe(14);
+    expect(stopped.byState.started.needs).toBe(running.byState.started.needs - 1);
+    const early = await submitNeed({ periods: [period(1, '2026-12-14', '2026-12-20')] });
+    await take(early);
+    await repo.recordStep(AG(), early.id, 'stop', { motive: 'Magasin fermé.' });
+    const last = (await repo.getFunnelReport(AG())).summary;
+    expect(last.demandedHours).toBe(stopped.demandedHours);
+    expect(last.stopped).toBe(stopped.stopped + 1);
+    expect(last.stoppedPerformedHours).toBe(14);
+  });
+  it('3. écart acceptation et poste démarré : classé par situation, jamais en moyenne unique', async () => {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY });
+    const lags = (await repo.getFunnelReport(AG())).startLags;
+    expect(lags.new.same_day.n).toBeGreaterThanOrEqual(1);
+    expect(lags.new.next_working_day_or_more.n).toBeGreaterThan(0); // jeu de démonstration
+    expect(lags.new.later_in_day.n).toBe(0); // l'heure n'est pas enregistrée
+    expect(lags.white_zone.same_day.n).toBe(0);
+  });
+  it('4. la carte d\'exécution suit son propre statut', async () => {
+    const n = await submitNeed();
+    await take(n);
+    expect((await rowOf(n)).execution).toBe('not_started');
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: '2026-11-02' });
+    const row = await rowOf(n);
+    expect([row.positionStatus, row.execution]).toEqual(['approved', 'start_planned']);
+    expect((await rowOf(await submitNeed({ periods: [period(1, '2026-12-14', '2026-12-20')] }))).execution).toBeNull();
+    expect((await byCode('BES-DEMO-001')).execution).toBe('in_post');
+  });
+});

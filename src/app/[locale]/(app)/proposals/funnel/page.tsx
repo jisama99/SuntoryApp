@@ -7,7 +7,7 @@ import { Tile } from '@/components/Tile';
 import { repository } from '@/data';
 import { Link } from '@/i18n/navigation';
 import { MILESTONES } from '@/domain/pipeline';
-import { FUNNEL_STATES, SITUATIONS } from '@/domain/types';
+import { FUNNEL_STATES, SITUATIONS, START_LAG_KINDS } from '@/domain/types';
 import type { FunnelState, Situation } from '@/domain/types';
 import type { Locale } from '@/domain/types';
 import { getAccessContext } from '@/lib/session';
@@ -20,7 +20,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ locale:
   const tm = await getTranslations('menu');
   const tr = await getTranslations('role');
   const [report, rows] = await Promise.all([repository.getFunnelReport(ctx), repository.getPipeline(ctx)]);
-  const { summary, delays, params: pp, vacancies } = report;
+  const { summary, delays, startLags, params: pp, vacancies } = report;
   const percent = new Intl.NumberFormat(ctx.locale === 'en' ? 'en-GB' : 'fr-FR', { style: 'percent', maximumFractionDigits: 0 });
   // Un taux sans heure demandée n'est jamais affiché 0 % : « Donnée indisponible ».
   const rate = (v: number | null) => (v === null ? t('funnel.unavailable') : percent.format(v));
@@ -49,6 +49,21 @@ export default async function FunnelPage({ params }: { params: Promise<{ locale:
         if (s === 'white_zone') return <span className="text-muted">{t('funnelPage.noDelay')}</span>;
         if (d.n === 0) return <span className="text-muted">{t('funnel.unavailable')}</span>;
         if (!d.sufficient) return <span className="text-muted">{t('funnelPage.tooFew', { n: d.n })}</span>;
+        return <span>{t('funnelPage.delayValue', { median: d.median ?? 0, min: d.min ?? 0, max: d.max ?? 0, n: d.n })}</span>;
+      },
+    })),
+  ];
+
+  const lagColumns: Column<Situation>[] = [
+    { key: 'situation', header: t('funnelPage.situation'), rowHeader: true, render: (s) => t(`situation.${s}`) },
+    ...START_LAG_KINDS.map((k): Column<Situation> => ({
+      key: k, header: t(`funnelPage.lag.${k}`),
+      render: (s) => {
+        const d = startLags[s][k];
+        if (s === 'white_zone') return <span className="text-muted">{t('funnelPage.noDelay')}</span>;
+        if (k === 'later_in_day') return <span className="text-muted">{t('funnelPage.noTime')}</span>;
+        if (d.n === 0) return <span className="text-muted">{t('funnel.unavailable')}</span>;
+        if (k === 'same_day' || !d.sufficient) return <span>{t('funnelPage.lagCount', { n: d.n })}</span>;
         return <span>{t('funnelPage.delayValue', { median: d.median ?? 0, min: d.min ?? 0, max: d.max ?? 0, n: d.n })}</span>;
       },
     })),
@@ -86,7 +101,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ locale:
           {[
             ['toQualify', String(summary.toQualify)],
             ['whiteZone', t('funnelPage.needsAndHours', { needs: summary.whiteZone.needs, hours: summary.whiteZone.hours })],
-            ['stopped', String(summary.stopped)],
+            ['stopped', summary.stoppedPerformedHours > 0 ? t('funnelPage.stoppedValue', { n: summary.stopped, hours: summary.stoppedPerformedHours }) : String(summary.stopped)],
             ['rejected', String(summary.rejected)],
             ['reassigned', String(summary.reassigned)],
           ].map(([k, v]) => (
@@ -110,6 +125,20 @@ export default async function FunnelPage({ params }: { params: Promise<{ locale:
           testId="funnel-delays"
         />
         <p className="max-w-prose text-sm text-muted">{t('funnelPage.delaysNote')}</p>
+      </section>
+
+      <section aria-labelledby="lag-title" className="mb-8 flex flex-col gap-3">
+        <h2 id="lag-title" className="text-lg font-semibold">{t('funnelPage.lagTitle')}</h2>
+        <p className="max-w-prose text-muted">{t('funnelPage.lagHelp')}</p>
+        <DataTable
+          caption={t('funnelPage.lagCaption')}
+          columns={lagColumns}
+          rows={[...SITUATIONS]}
+          rowKey={(st) => st}
+          rowData={(st) => ({ 'data-lag-situation': st })}
+          testId="funnel-lags"
+        />
+        <p className="max-w-prose text-sm text-muted">{t('funnelPage.lagNote')}</p>
       </section>
 
       <section aria-labelledby="vacancy-title" className="mb-8 flex flex-col gap-3">

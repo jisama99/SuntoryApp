@@ -1,5 +1,5 @@
 import type { Tone } from '@/components/StatusTag';
-import type { DecisionOutcome, FunnelState, PositionStatus, ProposalStatus, Urgency } from '@/domain/types';
+import type { DecisionOutcome, ExecutionStatus, FunnelState, PositionStatus, ProposalStatus, Urgency } from '@/domain/types';
 
 /** Teintes des étiquettes du circuit. Le rose (important) est réservé à ce qui attend une action ; vert, ambre et rouge aux statuts. */
 export const FUNNEL_TONE: Record<FunnelState, Tone> = {
@@ -16,3 +16,5 @@ export const OUTCOME_TONE: Record<DecisionOutcome, Tone> = { approved: 'ok', ref
 /** Ordre de tri : entonnoir dans l'ordre du cycle, urgence du plus pressant au plus calme. */
 export const FUNNEL_ORDER = ['to_recruit', 'recruiting', 'proposed', 'approved', 'hired', 'started'] as const;
 export const URGENCY_ORDER = ['overdue', 'urgent', 'soon', 'normal'] as const;
+
+export const EXECUTION_TONE: Record<ExecutionStatus, Tone> = { not_started: 'neutral', start_planned: 'info', in_post: 'ok', ended: 'neutral' };

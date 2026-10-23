@@ -21,7 +21,7 @@ export interface StepDef {
   /** Étape ouverte à cette personne et dans l'état du besoin. */
   enabled: boolean;
   /** Raison écrite quand l'étape est fermée. */
-  blocked?: 'not_taken' | 'no_accord' | 'not_hired' | 'closed' | 'forbidden' | 'already';
+  blocked?: 'not_taken' | 'no_accord' | 'not_hired' | 'closed' | 'forbidden' | 'already' | 'accord_pending';
   field: 'date' | 'date_future' | 'motive' | 'sector' | 'none' | 'date_motive';
   /** Date plancher (par exemple la date du recrutement). */
   min?: string;

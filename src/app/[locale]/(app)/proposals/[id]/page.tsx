@@ -18,8 +18,8 @@ import { storeText } from '@/lib/labels';
 import { calendarOf } from '@/domain/deadlines';
 import { needSpan } from '@/domain/pipeline';
 import type { Locale } from '@/domain/types';
-import { formatDate, formatWeekdays } from '@/lib/format';
-import { FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE } from '@/lib/pipeline-tones';
+import { formatDate, formatWeekdays, keepTogether } from '@/lib/format';
+import { EXECUTION_TONE, FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE } from '@/lib/pipeline-tones';
 import { getAccessContext } from '@/lib/session';
 
 export default async function NeedThreadPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -73,7 +73,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   };
   const steps: StepDef[] = [
     step('start_search', 'date', rec.search_started_on, rec.search_started_on ? { blocked: 'already' } : {}),
-    step('hired', 'date', rec.hired_on, rec.hired_on ? { blocked: 'already' } : !accord ? { blocked: 'no_accord' } : { min: accord.decided_on }),
+    step('hired', 'date', rec.hired_on, rec.hired_on ? { blocked: accord ? 'already' : 'accord_pending' } : !accord ? { blocked: 'no_accord' } : { min: accord.decided_on }),
     step('training', 'date', rec.training_on, rec.hired_on ? { min: rec.hired_on } : { blocked: 'not_hired' }),
     step('start_work', 'date_future', rec.start_work_date, rec.hired_on ? { min: rec.hired_on } : { blocked: 'not_hired' }),
     step('vehicle_handover', 'date_future', rec.vehicle_handover_date, rec.hired_on ? { min: rec.hired_on } : { blocked: 'not_hired' }),
@@ -117,7 +117,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           ))}
           {dimension(t('dimension.recruitment'), (
             <>
-              {row.funnel ? <StatusTag tone={FUNNEL_TONE[row.funnel]}>{t(`funnel.${row.funnel}`)}</StatusTag> : <span className="text-muted">{t('outside')}</span>}
+              {row.funnel ? <StatusTag tone={FUNNEL_TONE[row.funnel]}>{t(`funnel.${row.funnel}`)}</StatusTag> : <span className="text-muted">{rec.intake === 'taken' ? t('outside') : t(`intake.${rec.intake}`)}</span>}
               {rec.situation !== 'new' ? <StatusTag tone="info">{t(`situation.${rec.situation}`)}</StatusTag> : null}
               {rec.reassigned_from_sector_id && zones.find((z) => z.id === rec.reassigned_from_sector_id) ? (
                 <span className="text-sm text-muted">{t('detail.reassignedFrom')} <ZoneLabel zone={zones.find((z) => z.id === rec.reassigned_from_sector_id)!} /></span>
@@ -127,7 +127,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           ))}
           {dimension(t('dimension.execution'), (
             <>
-              {row.positionStatus ? <StatusTag tone={POSITION_TONE[row.positionStatus]}>{t(`position.${row.positionStatus}`)}</StatusTag> : <span className="text-muted">{t('none')}</span>}
+              {row.execution ? <StatusTag tone={EXECUTION_TONE[row.execution]}>{t(`execution.${row.execution}`)}</StatusTag> : <span className="text-muted">{t('none')}</span>}
               <span className="text-sm">{t('detail.startWork')}{colon} {rec.start_work_date ? formatDate(rec.start_work_date, loc) : t('notRecorded')}</span>
               <span className="text-sm">{t('detail.vehicle')}{colon} {rec.vehicle_handover_date ? formatDate(rec.vehicle_handover_date, loc) : t('notRecorded')}</span>
               {agency && row.billableFrom ? <span className="text-sm text-muted">{t('detail.billableFrom', { date: formatDate(row.billableFrom, loc) })}</span> : null}
@@ -135,6 +135,11 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           ))}
         </div>
       </section>
+
+      <p className="mb-8 flex flex-wrap items-center gap-2" data-testid="position-status">
+        <span className="text-sm font-semibold text-muted">{t('detail.positionLine')}</span>
+        {row.positionStatus ? <StatusTag tone={POSITION_TONE[row.positionStatus]}>{t(`position.${row.positionStatus}`)}</StatusTag> : <span className="text-muted">{t('none')}</span>}
+      </p>
 
       <section aria-labelledby="next-title" data-testid="next-step" className="mb-8 flex flex-col gap-3 rounded-card bg-tint-aqua p-5 text-ink shadow-card">
         <h2 id="next-title" className="text-lg font-semibold">{t('detail.next')}</h2>
@@ -212,7 +217,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
             initial={initial}
             stores={thread.stores.map((s) => {
               const { code: value } = s;
-              return { value, text: storeText(s, loc) };
+              return { value, text: keepTogether(storeText(s, loc)) };
             })}
             allowedDays={allowedDays}
             today={today}

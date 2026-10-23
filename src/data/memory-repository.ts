@@ -12,7 +12,7 @@ import { DEFAULT_RULE_CONFIG } from '@/domain/rules';
 import { CREATABLE_PROFILES, validAssignment, passwordProblem } from '@/domain/accounts';
 import {
   DEFAULT_PIPELINE_PARAMS, activeProposal, addWorkingDays, billableFrom, blankRecruitment, computeDeviations, delaySampleOf, delayStats,
-  funnelState, funnelSummary, needChangedSince, noteVisibleTo, nextStep, positionStatus, proposalIssues, sentProposal, validDecisionOn,
+  executionStatus, funnelState, startLagSample, startLagStats, funnelSummary, needChangedSince, noteVisibleTo, nextStep, positionStatus, proposalIssues, sentProposal, validDecisionOn,
 } from '@/domain/pipeline';
 import type { Facts, FunnelRow, PipelineParams } from '@/domain/pipeline';
 import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
@@ -309,6 +309,7 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
     recruitment,
     funnel: n.need_state === 'submitted' ? funnelState(facts, today) : null,
     positionStatus: n.need_state === 'submitted' ? positionStatus(facts, today) : null,
+    execution: n.need_state === 'submitted' ? executionStatus(facts, today) : null,
     proposal: proposal ? presentProposal(ctx, proposal) : null,
     decision: proposal ? validDecisionOn(proposal.id, facts.decisions) : null,
     proposalCount: facts.proposals.length,
@@ -1086,20 +1087,25 @@ export function createMemoryRepository(): Repository {
       const funnelRows: FunnelRow[] = [];
       const samples: NonNullable<ReturnType<typeof delaySampleOf>>[] = [];
       const vacancies: FunnelReport['vacancies'] = [];
+      const lags: NonNullable<ReturnType<typeof startLagSample>>[] = [];
       for (const n of rows) {
         const f = factsOf(n.id, ctx.side === 'client');
         const r = f.recruitment;
         funnelRows.push({
           state: funnelState(f, clock.date), situation: r.situation, closed: r.stopped ? 'stopped' : r.intake === 'rejected' ? 'rejected' : null,
           toQualify: r.intake === 'to_qualify' || r.intake === 'clarification', hours: n.weekly_hours, refusals: r.refusal_count, withdrawals: r.withdrawal_count,
+          // Stoppé après sa prise de poste : les heures effectuées avant l'arrêt restent comptées (D211).
+          performedBeforeStop: Boolean(r.stopped && r.hired_on && r.start_work_date && r.start_work_date <= r.stopped.on),
         });
+        const lag = startLagSample(f, clock.date);
+        if (lag) lags.push(lag);
         const sample = delaySampleOf({ ...f, submittedOn: submittedOn(n) });
         if (sample) samples.push(sample);
         if (r.situation === 'white_zone' && r.white_zone_since && r.intake === 'taken' && !r.stopped) {
           vacancies.push({ needId: n.id, days: daysBetween(r.white_zone_since, clock.date) });
         }
       }
-      return { summary: funnelSummary(funnelRows), delays: delayStats(samples, st.pipelineParams.min_sample), params: st.pipelineParams, vacancies };
+      return { summary: funnelSummary(funnelRows), delays: delayStats(samples, st.pipelineParams.min_sample), startLags: startLagStats(lags, st.pipelineParams.min_sample), params: st.pipelineParams, vacancies };
     },
 
     async getPipelineAlerts(ctx) {

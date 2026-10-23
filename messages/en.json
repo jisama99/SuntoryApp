@@ -1106,7 +1106,8 @@
       "range": "from {start} to {end}",
       "withdrawnOn": "Withdrawn on {date}",
       "decidedOn": "Decided on {date}",
-      "journal": "Need journal"
+      "journal": "Need journal",
+      "positionLine": "Calculated position status"
     },
     "batch": {
       "title": "Decide on several proposals",
@@ -1296,7 +1297,8 @@
         "not_hired": "The hiring must be completed first.",
         "closed": "The need has left the process.",
         "forbidden": "Step reserved to another profile.",
-        "already": "Step already recorded."
+        "already": "Step already recorded.",
+        "accord_pending": "Recorded. Waiting for a new agreement from the client."
       },
       "refused": {
         "forbidden": "Step reserved to another profile.",
@@ -1341,7 +1343,7 @@
     "funnelPage": {
       "title": "Recruitment funnel",
       "demanded": "Hours requested per week",
-      "demandedNote": "Excluding white zone and stopped needs",
+      "demandedNote": "Excluding white zone. A stopped need keeps the hours performed before the stop.",
       "hiredRate": "Hours hired rate",
       "hiredRateNote": "Hiring completed or in post",
       "startedRate": "Hours in post rate",
@@ -1355,7 +1357,7 @@
       "hours": "Hours per week",
       "share": "Share of needs",
       "outside": "Outside the funnel",
-      "outsideHelp": "These positions are counted apart. The white zone and stopped needs leave the hours rate.",
+      "outsideHelp": "These positions are counted apart. The white zone leaves the hours rate. A stopped need leaves it too, except its hours performed before the stop.",
       "outsideKinds": {
         "toQualify": "To qualify",
         "whiteZone": "White zone",
@@ -1380,7 +1382,25 @@
       "delaysNote": "Starting values to validate: calendar days and a configurable minimum sample.",
       "vacancy": "Vacancy age of white zones",
       "noVacancy": "No white zone.",
-      "vacancyAge": "{n, plural, one {Vacant for # day} other {Vacant for # days}}"
+      "vacancyAge": "{n, plural, one {Vacant for # day} other {Vacant for # days}}",
+      "stoppedValue": "{n}, including {hours} hours performed before the stop, counted in the rates",
+      "lagTitle": "Acceptance and started post",
+      "lagHelp": "Gap between the acceptance of the proposal and the start of assignment reached, by situation. No threshold is set.",
+      "lagCaption": "Gap between acceptance and started post",
+      "lag": {
+        "same_day": "Same day",
+        "later_in_day": "Later in the day",
+        "next_working_day_or_more": "Next working day or more"
+      },
+      "lagCount": "{n, plural, one {# post} other {# posts}}",
+      "noTime": "Data unavailable: the time is not recorded",
+      "lagNote": "Same day: same calendar day, Paris time zone. \"Later in the day\" needs the time of both events. Starts on a non-working day are grouped with \"next working day or more\"."
+    },
+    "execution": {
+      "not_started": "Not started",
+      "start_planned": "Start planned",
+      "in_post": "In post",
+      "ended": "Ended"
     }
   }
 }
