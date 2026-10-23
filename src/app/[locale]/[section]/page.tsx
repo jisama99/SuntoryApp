@@ -41,7 +41,7 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
   if (key === 'admin') {
     return (
       <>
-        <PageHeader title={t('gallery.title')} subtitle={title} />
+        <PageHeader title={t('gallery.title')} subtitle={title} hideOnPrint />
         <Gallery />
       </>
     );

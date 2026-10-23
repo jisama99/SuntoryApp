@@ -2,6 +2,7 @@
 
 import { Link, usePathname } from '@/i18n/navigation';
 import type { MenuKey } from '@/domain/types';
+import { Icon } from './Icon';
 import { MENU_ICONS } from './icons';
 
 export interface NavItem {
@@ -10,6 +11,7 @@ export interface NavItem {
   label: string;
 }
 
+/** Menu latéral : pastille d'icône de taille fixe, entrée active en teinte douce avec pastille pleine. */
 export function NavLinks({ items, label }: { items: NavItem[]; label: string }) {
   const pathname = usePathname();
   return (
@@ -17,18 +19,24 @@ export function NavLinks({ items, label }: { items: NavItem[]; label: string }) 
       <ul className="flex flex-col gap-1">
         {items.map((item) => {
           const active = item.href === '/' ? pathname === '/' : pathname === item.href || pathname.startsWith(`${item.href}/`);
-          const Icon = MENU_ICONS[item.key];
           return (
             <li key={item.key}>
               <Link
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex min-h-11 items-center gap-3 rounded-ctl px-3 text-ink transition-colors hover:bg-alt ${
+                className={`group relative flex min-h-12 items-center gap-3 rounded-ctl px-2 text-ink transition-colors hover:bg-alt ${
                   active ? 'bg-sel font-semibold' : 'font-medium'
                 }`}
               >
-                {active ? <span aria-hidden="true" className="absolute left-0 top-2 bottom-2 w-1 rounded-full bg-pink" /> : null}
-                <Icon aria-hidden="true" className="size-5 shrink-0" strokeWidth={1.7} />
+                {active ? <span aria-hidden="true" className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-pink" /> : null}
+                <span
+                  data-nav-tile
+                  className={`grid size-9 shrink-0 place-items-center rounded-[10px] transition-colors ${
+                    active ? 'bg-primary text-white' : 'bg-alt text-muted group-hover:bg-surface group-hover:text-ink'
+                  }`}
+                >
+                  <Icon icon={MENU_ICONS[item.key]} size="md" />
+                </span>
                 <span>{item.label}</span>
               </Link>
             </li>

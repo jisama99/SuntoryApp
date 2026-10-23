@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Icon } from './Icon';
 import { UI_ICONS } from './icons';
 
 export type Tone = 'neutral' | 'info' | 'ok' | 'attention' | 'risk' | 'important';
@@ -16,10 +17,10 @@ const TONES: Record<Tone, { icon: keyof typeof UI_ICONS; cls: string }> = {
 /** Étiquette de statut : icône de forme distincte + texte, jamais la couleur seule. */
 export function StatusTag({ tone, children }: { tone: Tone; children: ReactNode }) {
   const { icon, cls } = TONES[tone];
-  const Icon = UI_ICONS[icon];
+  const Glyph = UI_ICONS[icon];
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-sm font-semibold ${cls}`}>
-      <Icon aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.8} />
+      <Icon icon={Glyph} size="sm" />
       {children}
     </span>
   );

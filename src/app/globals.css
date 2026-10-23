@@ -124,6 +124,21 @@ body {
   border-radius: 4px;
 }
 
+/* Impression et export papier (D123) : format A4, marges de 14 mm, fond blanc, couleurs conservées. */
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

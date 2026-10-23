@@ -6,6 +6,8 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import type { MenuKey } from '@/domain/types';
 
+export type { LucideIcon };
+
 /**
  * Seul point d'entrée des icônes (D113) : pictogrammes usuels, aucun symbole de style IA.
  * tests/unit/icons.test.ts interdit tout autre import de lucide-react.

@@ -26,6 +26,21 @@ describe('icônes (D113)', () => {
     expect(bad).toEqual([]);
   });
 
+  it('aucun écran ne règle lui-même la taille ou le trait d\'une icône (gabarit Icon, D125)', () => {
+    const offenders = files
+      .filter((f) => f.endsWith('.tsx') && !f.endsWith('Icon.tsx'))
+      .filter((f) => /strokeWidth=/.test(read(f)))
+      .map(rel);
+    expect(offenders).toEqual([]);
+  });
+
+  it('le gabarit Icon impose quatre tailles et un trait décroissant avec la taille', () => {
+    const src = read(path.join(ROOT, 'src/components/Icon.tsx'));
+    const strokes = [...src.matchAll(/stroke: ([\d.]+)/g)].map((m) => Number(m[1]));
+    expect(strokes).toHaveLength(4);
+    expect([...strokes].sort((a, b) => b - a)).toEqual(strokes);
+  });
+
   it('le détecteur reconnaît bien les noms interdits', () => {
     for (const n of ['Sparkles', 'WandSparkles', 'Bot', 'Brain', 'BrainCircuit', 'MessageCircle', 'Wand2']) {
       expect(FORBIDDEN.test(n), n).toBe(true);

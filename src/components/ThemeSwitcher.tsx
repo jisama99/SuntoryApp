@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { Icon } from './Icon';
 import { setTheme } from '@/app/actions';
 import { getTheme, THEMES } from '@/lib/theme';
 import type { Theme } from '@/lib/theme';
@@ -13,7 +14,7 @@ export async function ThemeSwitcher() {
   return (
     <form action={setTheme} role="group" aria-label={t('label')} className="inline-flex rounded-full border border-line bg-surface p-0.5">
       {THEMES.map((theme) => {
-        const Icon = ICONS[theme];
+        const Glyph = ICONS[theme];
         const active = theme === current;
         return (
           <button
@@ -26,7 +27,7 @@ export async function ThemeSwitcher() {
             title={t(theme)}
             className={`inline-flex min-h-10 min-w-10 items-center justify-center rounded-full ${active ? 'bg-marine text-white' : 'text-ink hover:bg-alt'}`}
           >
-            <Icon aria-hidden="true" className="size-4" strokeWidth={1.8} />
+            <Icon icon={Glyph} size="sm" />
           </button>
         );
       })}

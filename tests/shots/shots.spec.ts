@@ -1,4 +1,6 @@
 import { test } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { LOCALES, PROFILES, setProfile, watch } from '../e2e/helpers';
 
@@ -61,5 +63,24 @@ for (const locale of LOCALES) {
     await page.goto(`/${locale}/alerts`);
     await page.waitForLoadState('networkidle');
     await page.screenshot({ path: path.join('docs', 'captures', 'A1', `alerts_agency_${locale}_1440.png`), fullPage: true });
+  });
+}
+
+// Page A4 du modèle de rapport : rendu d'impression réel (PDF A4 puis image), le PDF reste hors dépôt.
+for (const locale of LOCALES) {
+  test(`capture page A4 du modèle de rapport ${locale}`, async ({ page, context }) => {
+    await setProfile(context, 'provider_admin');
+    await page.goto(`/${locale}/admin`);
+    await page.waitForLoadState('networkidle');
+    await page.emulateMedia({ media: 'print' });
+    const tmp = path.join('test-results', 'a4');
+    mkdirSync(tmp, { recursive: true });
+    const pdf = path.join(tmp, `rapport_A4_${locale}.pdf`);
+    await page.pdf({ path: pdf, format: 'A4', printBackground: true, preferCSSPageSize: true });
+    const out = path.join('docs', 'captures', 'A1', `rapport_A4_${locale}`);
+    if (existsSync(pdf)) {
+      execFileSync('pdftoppm', ['-png', '-r', '110', '-f', '1', '-l', '1', '-singlefile', pdf, out]);
+      rmSync(pdf);
+    }
   });
 }

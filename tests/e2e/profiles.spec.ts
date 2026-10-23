@@ -110,3 +110,23 @@ test('mode Système : suit la préférence du navigateur', async ({ browser }) =
   expect(bg).toBe('rgb(14, 19, 22)');
   await ctx.close();
 });
+
+test('icônes du menu harmonisées : même boîte, même trait, pastille de taille fixe', async ({ page, context }) => {
+  await setProfile(context, 'provider_admin');
+  await page.goto('/fr/admin');
+  const icons = await page.locator('aside nav a svg').evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { w: Math.round(r.width), h: Math.round(r.height), stroke: el.getAttribute('stroke-width') };
+    }),
+  );
+  expect(icons.length).toBe(9);
+  for (const i of icons) expect(i).toEqual({ w: 20, h: 20, stroke: '1.75' });
+  const tiles = await page.locator('aside nav [data-nav-tile]').evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return `${Math.round(r.width)}x${Math.round(r.height)}`;
+    }),
+  );
+  expect(new Set(tiles)).toEqual(new Set(['36x36']));
+});

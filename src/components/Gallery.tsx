@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { Icon } from './Icon';
 import { Button } from './Button';
 import { DataTable } from './DataTable';
 import { Field } from './Field';
@@ -26,9 +27,9 @@ export async function Gallery() {
   ];
   return (
     <div className="flex flex-col gap-10">
-      <p className="text-muted">{t('intro')}</p>
+      <p className="text-muted print:hidden">{t('intro')}</p>
 
-      <section aria-labelledby="g-buttons" className="flex flex-col gap-3">
+      <section aria-labelledby="g-buttons" className="print:hidden flex flex-col gap-3">
         <h2 id="g-buttons" className="text-lg font-semibold">{t('buttons')}</h2>
         <div className="flex flex-wrap gap-3">
           <Button>{t('primary')}</Button>
@@ -38,13 +39,13 @@ export async function Gallery() {
         </div>
       </section>
 
-      <section aria-labelledby="g-fields" className="grid max-w-xl gap-4">
+      <section aria-labelledby="g-fields" className="print:hidden grid max-w-xl gap-4">
         <h2 id="g-fields" className="text-lg font-semibold">{t('fields')}</h2>
         <Field id="g-field-1" label={t('fieldLabel')} hint={t('fieldHint')} />
         <Field id="g-field-2" label={t('fieldErrorLabel')} error={t('fieldError')} defaultValue="x" />
       </section>
 
-      <section aria-labelledby="g-tags" className="flex flex-col gap-3">
+      <section aria-labelledby="g-tags" className="print:hidden flex flex-col gap-3">
         <h2 id="g-tags" className="text-lg font-semibold">{t('tags')}</h2>
         <div className="flex flex-wrap gap-3">
           <StatusTag tone="neutral">{t('tagNeutral')}</StatusTag>
@@ -56,7 +57,7 @@ export async function Gallery() {
         </div>
       </section>
 
-      <section aria-labelledby="g-table" className="flex flex-col gap-3">
+      <section aria-labelledby="g-table" className="print:hidden flex flex-col gap-3">
         <h2 id="g-table" className="text-lg font-semibold">{t('table')}</h2>
         <DataTable<Row>
           caption={t('tableCaption')}
@@ -70,7 +71,7 @@ export async function Gallery() {
         />
       </section>
 
-      <section aria-labelledby="g-states" className="grid gap-4 md:grid-cols-2">
+      <section aria-labelledby="g-states" className="print:hidden grid gap-4 md:grid-cols-2">
         <h2 id="g-states" className="text-lg font-semibold md:col-span-2">{t('states')}</h2>
         <EmptyState title={s('empty.title')} body={s('empty.body')} />
         <LoadingState title={s('loading.title')} body={s('loading.body')} />
@@ -79,16 +80,16 @@ export async function Gallery() {
       </section>
 
       <section aria-labelledby="g-report" className="flex flex-col gap-3">
-        <h2 id="g-report" className="text-lg font-semibold">{t('reportTitle')}</h2>
+        <h2 id="g-report" className="text-lg font-semibold print:hidden">{t('reportTitle')}</h2>
         <ReportTemplate />
       </section>
 
-      <section aria-labelledby="g-icons" className="flex flex-col gap-3">
+      <section aria-labelledby="g-icons" className="print:hidden flex flex-col gap-3">
         <h2 id="g-icons" className="text-lg font-semibold">{t('icons')}</h2>
         <ul className="flex flex-wrap gap-4">
-          {Object.entries(MENU_ICONS).map(([key, Icon]) => (
+          {Object.entries(MENU_ICONS).map(([key, Glyph]) => (
             <li key={key} className="flex items-center gap-2 rounded-ctl border border-line bg-surface px-3 py-2">
-              <Icon aria-hidden="true" className="size-5" strokeWidth={1.7} />
+              <Icon icon={Glyph} size="md" />
               <span>{m(key)}</span>
             </li>
           ))}

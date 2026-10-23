@@ -2,19 +2,18 @@ import { getTranslations } from 'next-intl/server';
 import { setSimulatedProfile } from '@/app/actions';
 import type { DemoProfile } from '@/data/schemas';
 import type { ProfileId } from '@/domain/types';
+import { Icon } from './Icon';
 import { UI_ICONS } from './icons';
 
 export async function ProfileSwitcher({ profiles, current }: { profiles: DemoProfile[]; current: ProfileId }) {
   const t = await getTranslations('profile');
-  const Icon = UI_ICONS.profile;
-  const Chevron = UI_ICONS.chevronDown;
   return (
     <details className="relative">
       <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full border border-line bg-surface px-3 text-sm font-semibold marker:hidden">
-        <Icon aria-hidden="true" className="size-4" strokeWidth={1.7} />
+        <Icon icon={UI_ICONS.profile} size="sm" />
         <span className="text-muted">{t('switcher')} :</span>
         <span>{t(current)}</span>
-        <Chevron aria-hidden="true" className="size-4" strokeWidth={1.7} />
+        <Icon icon={UI_ICONS.chevronDown} size="sm" />
       </summary>
       <form
         action={setSimulatedProfile}

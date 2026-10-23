@@ -31,7 +31,7 @@ export async function ReportTemplate() {
   ];
   const max = Math.max(...bars.map((b) => b.value));
   return (
-    <article aria-labelledby="g-report-title" className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 shadow-card lg:p-8">
+    <article aria-labelledby="g-report-title" className="flex flex-col gap-6 rounded-card border border-line bg-surface p-6 shadow-card print:border-0 print:p-0 print:shadow-none lg:p-8">
       <header className="flex flex-col gap-1">
         <p className="text-sm font-semibold text-muted">{t('kicker')}</p>
         <h3 id="g-report-title" className="text-2xl font-semibold tracking-tight text-title">{t('headline')}</h3>
