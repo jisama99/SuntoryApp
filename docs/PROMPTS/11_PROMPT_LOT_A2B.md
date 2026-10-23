@@ -1,6 +1,6 @@
 # SUNTORY REFONTE V3 · Prompt du lot A2b (prêt à coller)
 
-Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`, avec `REFONTE_V3` en lecture seule. Prérequis : A2a validé.
+Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3` (ne pas ajouter `REFONTE_V3` : tous les documents utiles sont dans `docs/`). Prérequis : A2a validé et fusionné dans `main` (fait le 23/10/2026).
 
 ```text
 LOT A2b · SAISIE EN LOT, BROUILLON, RÉSUMÉ, ÉCHÉANCES ET BLOCAGE
@@ -9,7 +9,7 @@ OBJECTIF
 Compléter la saisie : tableau multi-lignes et collage, brouillon automatique, résumé avant soumission, calendrier d'échéances paramétré par l'agence, alertes avant échéance, blocage après échéance et réouverture par l'agence (D78 à D82).
 
 À LIRE AVANT TOUTE ACTION (dans cet ordre)
-1. CLAUDE.md, docs/DECISIONS.md (registre complet, D105 à D126 en particulier), docs/COMPTE_RENDU_A1.md.
+1. CLAUDE.md, docs/DECISIONS.md (registre complet, D105 à D147 en particulier, dont D133, D140 à D147), docs/COMPTE_RENDU_A1.md.
 2. docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md (déjà collé), docs/PROMPTS/03_LOTS_DEV.md (section du lot),
    docs/PLAN_A1_A7.md, docs/GLOSSAIRE.md, docs/FIXTURES.md, docs/DICTIONNAIRE_DONNEES.md, docs/STATUTS_ET_ETATS.md.
 3. docs/COMPLEMENTS_CADRAGE/24_ECHEANCES_DE_SAISIE_ET_ALERTES_V0.1.md (lecture complète), 16, 26 et 28 (§2, paramètres par dispositif).
@@ -36,9 +36,9 @@ HORS PÉRIMÈTRE
 Propositions et décisions, indicateurs de pilotage, courriels réels (aucun envoi), import Excel, base de données, commit, push.
 
 BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse indiquée)
-- Q-N9-1 à Q-N9-5 (doc 28 §7) : semaine « avant-dernière », jours calendaires ou ouvrés, rôle « CS », forfait kilométrique, nom du champ ; hypothèses H1 et H2 appliquées, étiquetées dans l'écran.
+- Q-N9-1 à Q-N9-5 (doc 28 §7) : semaine « avant-dernière », jours calendaires ou ouvrés, rôle « CS », forfait kilométrique, nom du champ ; H1 est validée (D128) ; H2 (exemple chiffré) reste une hypothèse appliquée et étiquetée dans l'écran.
 - D80 : date exacte de novembre à confirmer par T. SOEFOU ; paramètre fictif étiqueté.
-- D82 est « proposée » : Standard, cascade et report sont des valeurs par défaut modifiables.
+- D82 : recommandations suivies le 23/10/2026 ; Standard, cascade et report restent des valeurs par défaut modifiables.
 - Les courriels (rappel jour J, résumé du lundi) sont modélisés dans une file validée, sans envoi.
 
 CRITÈRES D'ACCEPTATION
