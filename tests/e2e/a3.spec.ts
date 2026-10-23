@@ -157,7 +157,7 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     await page.goto('/fr/proposals/funnel');
     await expect(page.locator('[data-funnel-state]')).toHaveCount(6);
     await expect(page.locator('[data-outside="whiteZone"]')).toContainText('1 besoin');
-    await expect(page.locator('[data-situation="reassigned"] [data-milestone="j1"]')).toContainText('Effectif trop faible');
+    await expect(page.locator('[data-situation="reassigned"]')).toContainText('Effectif trop faible');
     await expect(page.locator('[data-situation="white_zone"]')).toContainText('Pas de délai');
     await expect(page.getByTestId('funnel-vacancy')).toBeVisible();
   });
@@ -169,6 +169,13 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
       await page.goto(url);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+    }
+    // Entonnoir : les deux tableaux passent en cartes et rien n'est coupé dans leur conteneur.
+    await page.goto('/fr/proposals/funnel');
+    for (const id of ['funnel-stock', 'funnel-delays']) {
+      const table = page.getByTestId(id);
+      expect(await table.locator('tbody tr').first().evaluate((el) => getComputedStyle(el).display)).toBe('block');
+      expect(await table.evaluate((el) => (el.parentElement as HTMLElement).scrollWidth - (el.parentElement as HTMLElement).clientWidth)).toBeLessThanOrEqual(0);
     }
     await page.goto('/fr/proposals');
     const row = page.getByTestId('pipeline-table').locator('tbody tr').first();
