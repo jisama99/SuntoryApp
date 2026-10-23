@@ -14,6 +14,7 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 | 4 bis | A4b1 | `23_PROMPT_LOT_A4B1.md` | A3 | D07 (montants réels) ; D153 à D157 | Enveloppe cliente, allocation agence, prévisionnel par besoin |
 | 4 | A4a | `13_PROMPT_LOT_A4A.md` | A3 | D05 (consommé : montants fictifs), P3 (graphiques, décidé dans le lot) ; comparaison N / N-1 ajoutée (D127) | Tableau de bord par rôle, audience des alertes |
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | A3 | D14 et D15 (hors ligne simulé), Q19 | Parcours mobile, absences génériques |
+| 5 bis | A4f | `30_PROMPT_LOT_A4F.md` | A5 | D190 | Vue Planning : frise, calendrier, jour, mois, magasins liés, recrutements |
 | 6 | A6 | `15_PROMPT_LOT_A6.md` | A2 | D51, D24, P4 (bibliothèque Excel) ; profils d'import configurables (D134, Q-I1 à Q-I6) | Idempotence et conflits d'import |
 | 7 | A7 | `16_PROMPT_LOT_A7.md` | A1 à A6 | Hébergement local par défaut, accord d'usage de la découpe | Script de démonstration, Q1 à Q23 |
 
