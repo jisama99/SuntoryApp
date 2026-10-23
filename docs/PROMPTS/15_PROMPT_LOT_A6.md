@@ -20,7 +20,8 @@ Démontrer le pont temporaire (position D04 / Q20) : import de fichiers fictifs,
    réseau ; décision justifiée au compte rendu. Les fichiers d'essai sont générés (jamais de classeur réel).
 2. Lecture : contrat commun du fichier (empreinte, version du contrat, provenance fichier, onglet, ligne).
 2 bis. Profils d'import configurables (D134, doc 29) : signature de structure, détection de l'onglet, de la ligne d'en-tête et du bandeau de groupes, colonne désignée par groupe + libellé normalisé + rang, correspondances avec chaîne de transformation, sensibilité S0 à S3 par colonne (S2 exclue par défaut), tables de valeurs, jointures interne, vers référentiel et entre fichiers avec taux de rapprochement, proposition automatique de correspondances avec score expliqué et validation humaine, détection de dérive de structure. Traitement local et déterministe.
-2 ter. Générateur de variantes fictives (colonnes réordonnées, renommées, supprimées, ajoutées, bandeau absent, en-tête décalée, doublons d'en-tête, colonnes vides) et mesure de reconnaissance reportée au compte rendu, sans seuil inventé.
+2 ter. Table opération vers dispositif (D136) : écran d'administration de l'agence, opération inconnue = ligne bloquée et proposée au rattachement, jamais rattachée automatiquement. Profils d'import gérés par l'agence en mode administration seule (D137).
+2 quater. Générateur de variantes fictives (colonnes réordonnées, renommées, supprimées, ajoutées, bandeau absent, en-tête décalée, doublons d'en-tête, colonnes vides) et mesure de reconnaissance reportée au compte rendu, sans seuil inventé.
 3. Aperçu : créations, modifications, inchangés, rejets, conflits ; validation humaine ; rapport téléchargeable.
 4. Idempotence : un lot réimporté ne crée aucun doublon ; fichier renommé au même contenu reconnu ; retour ancien refusé.
 5. Conflit de version : refus d'écraser, présentation des deux versions.

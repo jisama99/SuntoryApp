@@ -67,12 +67,14 @@ Pour chaque jointure : **taux de rapprochement** affiché à l'aperçu (lignes r
 ## 4. Jeux d'essai et mesure de robustesse
 Un générateur produit, à partir du gabarit fictif, des **variantes** : colonnes réordonnées, renommées (synonymes, accents, casse), supprimées, ajoutées, bandeau absent, ligne d'en-tête décalée, doublon d'en-tête, onglet renommé, colonnes vides. Mesures reportées au compte rendu : taux de colonnes reconnues, de jointures rapprochées, nombre de faux positifs. Le seuil d'acceptation est fixé après la première mesure (aucun seuil inventé ici). Test de fiabilité sur extraction réelle : analyse de structure locale par T. SOEFOU, hors dépôt.
 
-## 5. Questions ouvertes
-| N° | Question | Hypothèse utilisée |
-|---|---|---|
-| Q-I1 | Les deux opérations de l'export sont-elles deux campagnes d'un même dispositif horaire, ou l'une relève-t-elle du dispositif second placement ? Le Workshop distingue le merch horaire du second placement (dispositif) | Opération = campagne ; table opération vers dispositif tenue par l'agence |
-| Q-I2 | Quel statut fait foi quand l'extraction et la plateforme divergent ? | La plateforme pour les décisions cliente ; l'extraction pour le statut LOGA (lecture seule) |
-| Q-I3 | Doublons de code mission : erreur, scission de mission ou reprise ? | Alerte et mise en attente, jamais d'écrasement |
-| Q-I4 | Qui crée et valide les profils ? | Agence administration seule |
-| Q-I5 | Référence d'intervenant : exclusion totale ou pseudonyme ? | Exclusion par défaut |
-| Q-I6 | Code magasin textuel (pseudo-codes) : rapprochement par ville et adresse autorisé ? | Non au démonstrateur, mise en attente |
+## 5. Questions : réponses du 23/10/2026
+| N° | Question | Réponse ou hypothèse | Statut |
+|---|---|---|---|
+| Q-I1 | Les deux opérations de l'export sont-elles deux campagnes d'un même dispositif ? | **Le second placement est un dispositif à part** (le Workshop le distingue du merch horaire). Une opération de l'extraction est une **campagne** ; la table `operation_dispositif` rattache chaque opération à un dispositif et est tenue par l'agence administration. Les deux opérations de l'export relèvent donc de deux dispositifs distincts (second placement, merch horaire ponctuel) | Décidée par T. SOEFOU le 23/10/2026 (D136) |
+| Q-I2 | Quel statut fait foi quand l'extraction et la plateforme divergent ? | La plateforme pour les décisions cliente ; l'extraction pour le statut LOGA (lecture seule) | Hypothèse, ouverte |
+| Q-I3 | Doublons de code mission | Alerte et mise en attente, jamais d'écrasement | Validée (D137) |
+| Q-I4 | Qui crée et valide les profils d'import ? | **L'agence en mode administration**, seule | Validée (D137) |
+| Q-I5 | Référence d'intervenant : exclusion ou pseudonyme ? | Exclusion par défaut des données de personnes | Validée (D137) |
+| Q-I6 | Code magasin textuel (pseudo-codes) : rapprochement par ville et adresse ? | Non au démonstrateur, mise en attente | Hypothèse, ouverte |
+
+Table `operation_dispositif` : code d'opération source, libellé, campagne, dispositif, dates de validité, auteur, date. Une opération inconnue bloque la ligne et est présentée à l'agence pour rattachement (jamais rattachée automatiquement). Une campagne n'a qu'un dispositif (H1, D128).
