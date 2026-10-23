@@ -3,8 +3,10 @@
 Date : 23/10/2026. Branche de session `claude/amazing-babbage-khv4fn`, jamais `main`, aucune pull request (D148). Décisions : D188, D189 ; D183, D186 et D187 (validées) ; D118, D151, D159, D161, D182. Supabase et Vercel non utilisés, aucune requête externe, aucun fichier de données réelles lu.
 
 ## 0. Préparation
-- `origin/main` récupéré et fusionné deux fois : `f340fe1` au lancement, puis `ab524d9` en cours de lot (sur demande de vérifier les nouveaux commits). Aucun conflit. Les commits arrivés pendant le lot ont **changé le périmètre** : D183, D186, D187 validées, étape 0 (titres du glossaire 4 quinquies), retour à la page demandée après connexion (D183). Ils sont appliqués ci-dessous. La vue Planning (D190, lot A4f) n'est pas dans ce lot.
+- `origin/main` récupéré et fusionné trois fois : `f340fe1` au lancement, `ab524d9` en cours de lot (sur demande de vérifier les nouveaux commits), puis `eabde9b` en fin de lot (D191, D192, règle 17, documents seulement). Aucun conflit. Les commits arrivés pendant le lot ont **changé le périmètre** : D183, D186, D187 validées, étape 0 (titres du glossaire 4 quinquies), retour à la page demandée après connexion (D183). Ils sont appliqués ci-dessous. La vue Planning (D190, lot A4f) n'est pas dans ce lot.
 - Vérifié : D189 présente au lancement, règles 14, 15 et 16 présentes dans `07_REGLES_COMMUNES_LOTS_APRES_A1.md`.
+
+Règle 17 (D192) : aucun sous-agent n'a été lancé dans ce lot, tout le travail est fait dans la session. D191 : ce compte rendu est destiné à la session de revue distincte (`31_PROMPT_REVUE_ET_FUSION.md`).
 
 ## 1. Réalisé
 | Étape | Réalisation | Vérification |
@@ -68,16 +70,16 @@ Les exécutions répétées du même fichier sur un serveur déjà lancé échou
 Test sur de vrais gestionnaires de mots de passe (seule la structure du formulaire et les événements d'entrée simulés ont été vérifiés dans Chromium) ; navigateurs autres que Chromium ; largeurs autres que 1440 et 390 px ; LCP hors serveur local ; relecture humaine C8.
 
 ## 8. Mise à jour du registre proposée (non inscrite dans `docs/DECISIONS.md`)
-Dernière décision du registre : D190. Numéros proposés à partir de D191.
+Dernière décision du registre à la dernière récupération : D192 (D191 revue par une session distincte, D192 économie de modèles). Numéros proposés à partir de D193.
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
-| D191 | Comptes préconfigurés | Six comptes agence (une administration, cinq opérateurs), un direction, un par DR et CVR, un prestataire, aucun RS ; identifiants `Demo` + rôle + numéro ; empreintes scrypt versionnées, mots de passe dans `.demo-passwords.local.json` non versionné, régénérables par `npm run demo:accounts` | Précise D189 (hypothèse 1) |
-| D192 | Pouvoirs de l'agence sur les comptes | Créer, attribuer, désactiver, réinitialiser tous profils sauf prestataire ; jamais son propre compte ; création d'une administration à confirmer ; EV-40 à EV-43 hors catalogue, à inscrire au doc 26 | À valider (hypothèse 2) |
-| D193 | Mot de passe temporaire et politique | Montré une seule fois, jamais journalisé, à changer à la première connexion ; 12 caractères avec lettre et chiffre | À valider (hypothèses 3 et 4) |
-| D194 | Session et sécurité de démonstrateur | Cookie signé httpOnly 8 h, relu à chaque requête ; limitation 5 échecs en 10 minutes pour 5 minutes par identifiant ; durée de réponse constante ; échec unique ; liste des écarts de la section 6 à traiter à l'étape B | Proposée |
-| D195 | Visualisation « comme » | Réservée au compte du prestataire, sans gestion des comptes en visualisation ; sert à la démonstration et aux tests | Précise D188 |
-| D196 | Titre de l'écran de connexion | « Connexion », titre de l'application en ligne au-dessus | À valider (hypothèse 6) |
-| D197 | Libellés de connexion et de comptes hors glossaire | Section 4 septies du glossaire (Comptes, Profil, Périmètre, Statut, Actif, Désactivé, Créer un compte, Attribuer, Désactiver, Réactiver, Réinitialiser le mot de passe, Nouveau mot de passe, Confirmer le mot de passe, mention de démonstration) | À valider |
+| D193 | Comptes préconfigurés | Six comptes agence (une administration, cinq opérateurs), un direction, un par DR et CVR, un prestataire, aucun RS ; identifiants `Demo` + rôle + numéro ; empreintes scrypt versionnées, mots de passe dans `.demo-passwords.local.json` non versionné, régénérables par `npm run demo:accounts` | Précise D189 (hypothèse 1) |
+| D194 | Pouvoirs de l'agence sur les comptes | Créer, attribuer, désactiver, réinitialiser tous profils sauf prestataire ; jamais son propre compte ; création d'une administration à confirmer ; EV-40 à EV-43 hors catalogue, à inscrire au doc 26 | À valider (hypothèse 2) |
+| D195 | Mot de passe temporaire et politique | Montré une seule fois, jamais journalisé, à changer à la première connexion ; 12 caractères avec lettre et chiffre | À valider (hypothèses 3 et 4) |
+| D196 | Session et sécurité de démonstrateur | Cookie signé httpOnly 8 h, relu à chaque requête ; limitation 5 échecs en 10 minutes pour 5 minutes par identifiant ; durée de réponse constante ; échec unique ; liste des écarts de la section 6 à traiter à l'étape B | Proposée |
+| D197 | Visualisation « comme » | Réservée au compte du prestataire, sans gestion des comptes en visualisation ; sert à la démonstration et aux tests | Précise D188 |
+| D198 | Titre de l'écran de connexion | « Connexion », titre de l'application en ligne au-dessus | À valider (hypothèse 6) |
+| D199 | Libellés de connexion et de comptes hors glossaire | Section 4 septies du glossaire (Comptes, Profil, Périmètre, Statut, Actif, Désactivé, Créer un compte, Attribuer, Désactiver, Réactiver, Réinitialiser le mot de passe, Nouveau mot de passe, Confirmer le mot de passe, mention de démonstration) | À valider |
 
 ## 9. Suite
-Pas de chaînage vers A3. Avant A3 : validation écrite de ce compte rendu, relecture des captures non relues, arbitrage des hypothèses et de D191 à D197.
+Pas de chaînage vers A3. Avant A3 : validation écrite de ce compte rendu, relecture des captures non relues, arbitrage des hypothèses et de D193 à D199.
