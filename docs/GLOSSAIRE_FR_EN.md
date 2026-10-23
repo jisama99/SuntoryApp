@@ -90,6 +90,20 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | Partagée avec | Shared with | Destinataire DR, CVR ou RS |
 | Notes | Notes | |
 
+## 4 ter. Signalement (D164)
+| FR | EN | Remarque |
+|---|---|---|
+| Signaler un problème | Report a problem | |
+| Demandes | Requests | Écran de suivi |
+| Bug / Plantage | Bug / Crash | |
+| Fonctionnalité demandée | Feature request | |
+| Parcours à refaire | Flow to rework | |
+| Texte ou traduction | Text or translation | |
+| Gravité : Bloquant, Gênant, Mineur | Severity: Blocking, Disruptive, Minor | |
+| Reçue, En cours, Corrigée, Livrée | Received, In progress, Fixed, Delivered | Statuts |
+| Étapes pour reproduire | Steps to reproduce | |
+| Résultat attendu | Expected result | |
+
 ## 5. Formats (D119)
 - Dates : FR 23/10/2026, EN 23 Oct 2026 ou format régional défini dans `format.ts`.
 - Nombres : FR 1 234,5 (espace fine insécable, virgule), EN 1,234.5.

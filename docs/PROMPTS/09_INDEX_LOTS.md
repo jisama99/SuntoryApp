@@ -36,3 +36,5 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 ## 4. Décisions à prendre côté T. SOEFOU avant ou pendant le noyau
 - D107, D108, D118 à D122 et Q-J1 : validées le 23/10/2026 (recommandations suivies).
 - Accord d'Impact et de la cliente pour la découpe réelle ; fichier `.denylist.local` pour le contrôle C3 ; référentiels WCAG/RGAA et ASVS (D116) ; choix d'hébergeur (D115, OVHcloud en instruction).
+| Après noyau | A8 | `25_PROMPT_LOT_A8.md` | A7 | D164 | Signalement et écran Demandes |
+| Après démonstration | A9 | `26_PROMPT_LOT_A9.md` | Démonstration validée, abonnement OVHcloud | D165, D166 | Déploiement, retour arrière |

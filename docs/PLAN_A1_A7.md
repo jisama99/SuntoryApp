@@ -22,6 +22,8 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A5b | Photos terrain sur images fictives | A5 | D101 (enseignes), D102 (durée par Impact) | Garde ; images générées |
 | A6 | Import Excel en quarantaine | A2 | D04/Q20, D51, P4 (bibliothèque) | Garde |
 | A7 | Recette, script de démonstration, captures | A1 à A6 | Q1–Q23 à provoquer | Garde |
+| A8 | Signalement d'un problème et écran Demandes (D164) | A7 | Adresse de notification en variable | Après le noyau ; `25_PROMPT_LOT_A8.md` |
+| A9 | Déploiement OVHcloud (D165, D166) | Démonstration validée, abonnement | Abonnement à prendre | Après validation ; `26_PROMPT_LOT_A9.md` |
 
 ## 2. Scissions proposées
 

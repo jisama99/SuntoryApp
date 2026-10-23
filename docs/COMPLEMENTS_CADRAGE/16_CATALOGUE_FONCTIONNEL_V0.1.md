@@ -122,6 +122,14 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-50.9 | **Allocation agence** par dispositif, campagne, DR, CVR ; total borné par l'enveloppe ; prévisionnel par besoin ; dépassement autorisé avec alerte (D156) | Ag-adm | A / A4b1 | D153, D156 |
 | F-50.10 | **Cockpit budget** (lecture cliente épurée) ; mode administration et **mode présentation** agence (D154) | Cl, Ag | A / A4a | D154 |
 
+### M9 · Maintenance et signalement (D164 à D166)
+| ID | Fonction | Rôles | Phase / lot | Source |
+|---|---|---|---|---|
+| F-90.1 | **Signaler un problème** : type, gravité, description détaillée, capture, contexte automatique (D164) | Tous | A / A8 | D164 |
+| F-90.2 | **Écran Demandes** : suivi par l'auteur, tri par le prestataire (D164) | Tous, prestataire | A / A8 | D164 |
+| F-90.3 | Notification e-mail à adresse dédiée, en file de validation en démonstration (D164) | Prestataire | A / A8 | D164 |
+| F-90.4 | Déploiement OVHcloud préproduction et production, retour arrière (D165, D166) | Prestataire | B / A9 | D165 |
+
 ## 4. Indicateurs (catalogue)
 
 Chaque indicateur affiche : période, périmètre, unité, définition, source, date de calcul, statut des données (F-10.10). **Aucune formule n'est figée tant que D05 à D07 sont ouverts.**
