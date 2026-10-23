@@ -27,6 +27,7 @@ Lecture d'un coup d'œil sur données fictives : tableau de bord par rôle, acti
 4 ter. Lecture analytique par dispositif et par campagne (docs/COMPLEMENTS_CADRAGE/28 §2 ter) : filtre hiérarchique Dispositif puis Campagne appliqué à tous les écrans de lecture et aux exports, vue « Par campagne » avec sous-totaux, réconciliation des totaux, groupe « Sans campagne », « Non applicable » et « Budget non renseigné » jamais à 0.
 4 bis. Comparaison semaine N / N-1 (D127, F-10.14, docs/COMPLEMENTS_CADRAGE/28_CADRAGE_AXES_N1_N2_N3_N9_V0.1.md §3) : bascule sur les tuiles et le tableau, variation en valeur et en pourcentage, « Non comparable » si N-1 absente ou non chiffrée, jamais 0, S01 comparée à la dernière semaine ISO de l'année précédente. Étendre la fixture déterministe à deux semaines consécutives sans modifier les valeurs existantes.
 5. Chaque indicateur : période, périmètre, unité, définition, date de calcul, détail selon les droits.
+5 bis. Écran Budget (D153, D154, D157) : cockpit cliente en lecture seule et épuré (jauge consommé, prévisionnel, disponible ; répartition par dispositif et campagne ; alerte) ; espace agence en mode administration (budget retenu, retour à la référence, détail de calcul) et mode présentation (contrôles masqués, chiffres agrandis, périmètre figé, aucune donnée modifiée), réservé à l'agence. Filtres Dispositif, Campagne, territoire ; une page, trois blocs au plus. Vue Explorateur de M1 fondue dans les filtres et exports.
 6. « Non chiffré » et « Budget non renseigné » jamais à 0 ; couverture avec numérateur et dénominateur ; lignes sans
    géolocalisation dans « Non géolocalisé » et dans les totaux. Montants fictifs étiquetés (D05 à D07 ouverts).
 7. Cockpit cliente : alertes et résumés de retard, personnalisé (salutation par prénom, périmètre) ; une alerte
@@ -53,7 +54,8 @@ CRITÈRES D'ACCEPTATION
 3. Test d'audience : aucune alerte agence côté cliente, y compris dans les données chargées par la page.
 4. Contrastes des nouvelles couleurs testés dans les deux modes ; règles de style toujours vertes.
 5. Captures A4a, C1 à C7, docs/COMPTE_RENDU_A4A.md, mise à jour proposée du registre.
-6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
+6. Design et navigation (règles 14 à 16, D151, D159) : chaque écran du lot a son état dans l'URL (retour arrière, rechargement, lien profond testés), ses trois états (squelette, vide, erreur), ses tableaux en cartes sous 640 px, ses transitions sobres, sa confirmation annulable après écriture, ses cibles de 44 px ; aucune valeur de style en dur ; seuils de performance mesurés et reportés (2 s, 100 ms) ; captures 390 px.
+7. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A5. N'enchaîne pas.

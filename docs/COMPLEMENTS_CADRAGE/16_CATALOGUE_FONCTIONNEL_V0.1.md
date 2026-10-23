@@ -43,6 +43,12 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-00.4 | Recherche globale et raccourcis clavier (Ctrl+K) | Tous | A / A4 | V4 |
 | F-00.5 | Mode compact, plein écran, zoom sans perte sur cartes et graphiques | Tous | A / A4 | V4 |
 
+### M0 bis · Identité visuelle (D160, D161)
+| ID | Fonction | Rôles | Phase / lot | Source |
+|---|---|---|---|---|
+| F-00.1 | Visuels d'accueil (nature), de pilotage (produits) et de connexion ; versions mobile ; titres et menus opérationnels (D160) | Tous | A / A1e | D160 |
+| F-00.2 | **Skin d'accueil réglable** : défaut fixé par l'agence dans Paramètres, choix utilisateur par le sélecteur d'affichage (D161) | Tous, Ag-adm | A / A1e | D161 |
+
 ### M1 · Pilotage (lecture analytique)
 | ID | Fonction | Rôles | Phase / lot | Source |
 |---|---|---|---|---|
@@ -74,6 +80,7 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 | F-20.7 | Dates limites, urgence, retard de proposition | Système | A / A3 | WF-B8 |
 | F-20.8 | **Historique et révisions** : comparaison avant / après ; réexamen des validations touchées | Tous concernés | A / A3 | Cadrage |
 | F-20.9 | Fil de commentaires par besoin (remplace les e-mails) | RS, CVR, Ag | C | WF-B7 (V2 dans la présentation) |
+| F-20.10 | **Notes** à visibilité choisie : interne agence, partagée avec la cliente, partagée avec un destinataire ; interne par défaut (D162) | Ag, Cl, DR, CVR, RS | A / A3 | D162 |
 | F-20.10 | Import de besoins par Excel (reprise de l'existant) | CVR, Ag | A fictif, B réel / A6, B5 | WF-B5 |
 | F-20.11 | Saisie « pour le compte » : auteur de la saisie et personne concernée tracés séparément | RS, CVR, Ag | A / A5 | D42 |
 
@@ -106,11 +113,14 @@ Non tranchée dans votre message : la couleur de référence Marvesting (`#E5236
 |---|---|---|---|---|
 | F-50.1 | **Enveloppes** National › DR › CVR, **datées et versionnées** (quota affecté, dépensé, restant, prévisionnel) | Cl, Ag-adm | A fictif, B réel / A4, B6 | Fichiers TBB |
 | F-50.2 | **Réallocation et ajustement** avec propagation de visibilité (§5) | Cl, Ag-adm | A / A4 | D46 |
-| F-50.3 | Rallonges avec historique | Cl, Ag-adm | B / B6 | WF-A1 |
+| F-50.3 | **Rallonges** : ajout par la cliente (nouvelle version d'enveloppe) ; demande par l'agence, décision de la cliente ; historique (D158) | Cl, Ag-adm | A / A4b2 | WF-A1, D158 |
 | F-50.4 | Réalimentation du quota par jours de carence valorisés | Ag-adm | B / B6 | Fichiers TBB |
 | F-50.5 | Chiffrage d'une ligne (heures × semaines × taux + formation), taux datés | Ag-op | B / B6 | WF-C4 (tarifs réels D06 ouvert) |
 | F-50.6 | **Couverture de calcul** (numérateur / dénominateur) ; « Non chiffré », « Budget non renseigné » | Tous | A / A4 | Cadrage |
 | F-50.7 | Rapprochement activité / facturation | Ag, Cl | C | WF-A9 (hors MVP) |
+| F-50.8 | **Enveloppe cliente** saisie dans son espace, versionnée, qui descend à l'agence (D153) | Cl, Ag-adm | A / A4b1 | D153 |
+| F-50.9 | **Allocation agence** par dispositif, campagne, DR, CVR ; total borné par l'enveloppe ; prévisionnel par besoin ; dépassement autorisé avec alerte (D156) | Ag-adm | A / A4b1 | D153, D156 |
+| F-50.10 | **Cockpit budget** (lecture cliente épurée) ; mode administration et **mode présentation** agence (D154) | Cl, Ag | A / A4a | D154 |
 
 ## 4. Indicateurs (catalogue)
 

@@ -61,6 +61,11 @@ CONVENTIONS À RESPECTER
 15. Anglais (D149) : tout texte visible, y compris exports, e-mails et alertes, passe par le dictionnaire FR/EN ; aucune
     chaîne en dur ; formats de dates et nombres selon la langue ; tests i18n étendus à chaque nouvelle surface.
 
+16. Design et micro-interactions (D159) : aucun style en dur (couleur, espacement, taille, durée) hors jetons ; transitions
+    de 150 à 250 ms, désactivées en mouvement réduit ; trois états par route (squelette de chargement, vide, erreur) ;
+    confirmation visible et annulable après toute écriture, focus replacé ; tableaux en cartes sous 640 px ; cibles
+    tactiles de 44 px, police de base 16 px ; police Inter chargée en local (règle 10). Tests de style étendus à chaque lot.
+
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.
   Un écran non vérifié visuellement est déclaré comme tel.

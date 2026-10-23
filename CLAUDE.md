@@ -12,7 +12,7 @@ Plateforme web de pilotage merchandising Suntory (lecture analytique ordinateur)
 - Chaîne : Suntory → Impact → prestataire → hébergeur. Dans le code et la documentation : écrire « prestataire » pour le développement et l'exploitation, « agence » seulement pour Impact ou le rôle utilisateur.
 
 ## Phase en cours
-- **Démonstration du 10/11 (D110)** : noyau A1, A2 (A2a, A2b), A3, A4a, A5, A6. Seconde démonstration : A4b, A4c1, A4c2, A5b. Date indicative, D26 ouvert. A0b avant A2 (D112).
+- **Démonstration du 10/11 (D110)** : noyau A1, A2 (A2a, A2b), A3, A4b1, A4a, A5, A6. Seconde démonstration : A4b2, A4c1, A4c2, A5b. Date indicative, D26 ouvert. A0b avant A2 (D112).
 - **Étape A : démonstrateur cliquable sur données fictives, en français et en anglais.** C'est la seule étape autorisée tant qu'aucun « feu vert B » écrit n'existe dans `docs/DECISIONS.md`.
 - **Étape B : MVP complet** (base réelle, authentification, droits serveur, imports réels). Interdite sans feu vert B.
 - Les décisions arrêtées et ouvertes sont dans `docs/DECISIONS.md` (copie de `01_REGISTRE_DECISIONS.md`). En cas de doute, c'est ce fichier qui fait foi. Une hypothèse n'est pas une décision.

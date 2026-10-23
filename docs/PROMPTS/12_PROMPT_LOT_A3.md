@@ -39,13 +39,16 @@ BLOCAGES CONNUS (ne pas les combler : signaler et travailler sur l'hypothèse in
 - D93 à D97 : valeurs de délai à confirmer ; le modèle les mesure sans seuil figé.
 - Scission optionnelle A3a (propositions, décisions) puis A3b (entonnoir) si la session devient trop longue : la signaler plutôt que de bâcler.
 
+NOTES (D162, F-20.10) : fil de notes sur les propositions et décisions, puis réutilisable sur les autres objets ; visibilité choisie à chaque note (Interne agence, Partagée avec la cliente, Partagée avec un destinataire DR, CVR ou RS), interne par défaut, badge de visibilité, confirmation avant partage, retrait avec trace, audience par défaut refusée, événement au journal, absence des exports cliente ; tests d'audience.
+
 CRITÈRES D'ACCEPTATION
 1. Commandes de contrôle exécutées, sortie reportée.
 2. Scénarios testés : refus, modification après accord, remplacement, deux propositions sur un besoin ; aucun accord obsolète conservé silencieusement.
 3. Jamais un statut unique : besoin, proposition, recrutement et exécution évoluent séparément.
 4. Test d'audience sur tous les événements et alertes émis.
 5. Captures A3, C1 à C7, docs/COMPTE_RENDU_A3.md, mise à jour proposée du registre.
-6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
+6. Design et navigation (règles 14 à 16, D151, D159) : chaque écran du lot a son état dans l'URL (retour arrière, rechargement, lien profond testés), ses trois états (squelette, vide, erreur), ses tableaux en cartes sous 640 px, ses transitions sobres, sa confirmation annulable après écriture, ses cibles de 44 px ; aucune valeur de style en dur ; seuils de performance mesurés et reportés (2 s, 100 ms) ; captures 390 px.
+7. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
 
 FIN DE LOT
 Récapitule en dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi avant A4a. N'enchaîne pas.

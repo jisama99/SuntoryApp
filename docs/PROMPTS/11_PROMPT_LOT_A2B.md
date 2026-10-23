@@ -47,6 +47,7 @@ CRITÈRES D'ACCEPTATION
 2 bis. Test : après échéance, l'écriture est refusée par le Repository ; la réouverture par l'agence la rétablit ; un CVR ne peut pas rouvrir lui-même.
 3. Test d'audience : aucune alerte agence dans un profil cliente, CVR, DR ou RS.
 4. Saisie en lot : un lot partiellement invalide ne crée que les lignes valides et liste les rejets.
+5 bis. Design (D159, règle 16) : échelles de jetons d'espacement, de typographie et de mouvement ajoutées à globals.css avec test qui échoue sur toute valeur en dur ; transitions sobres ; squelettes à la place du spinner ; tableaux en cartes sous 640 px ; confirmation annulable après écriture ; cibles de 44 px ; vérification du chargement local de la police Inter.
 5. Navigation (D151, règle 14) : filtres du lot et du calendrier dans l'URL ; retour arrière, rechargement et lien profond testés ; états chargement, vide, erreur ; lien d'évitement et fil d'Ariane ; seuils H3 reportés.
 5. Captures A2b, C1 à C7, docs/COMPTE_RENDU_A2B.md, mise à jour proposée du registre.
 6. Aucun commit sur main, aucun push de main, aucune pull request. En fin de lot, après le compte rendu, commit et push de la branche de session uniquement (D148).
