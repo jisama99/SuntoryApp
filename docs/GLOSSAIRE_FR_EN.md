@@ -90,6 +90,15 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | Partagée avec | Shared with | Destinataire DR, CVR ou RS |
 | Notes | Notes | |
 
+## 4 quater. Interactions communes (D181, proposées par A2b, validées le 23/10/2026)
+| FR | EN | Remarque |
+|---|---|---|
+| Annuler | Undo | Annulation après écriture |
+| Enregistré | Saved | |
+| Fermer | Close | |
+| Trier le tableau | Sort table | |
+| Raccourcis clavier | Keyboard shortcuts | |
+
 ## 4 ter. Signalement (D164)
 | FR | EN | Remarque |
 |---|---|---|

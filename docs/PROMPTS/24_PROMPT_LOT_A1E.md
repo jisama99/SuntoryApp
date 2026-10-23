@@ -2,7 +2,7 @@
 
 Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt, dans le dépôt `08_PLATEFORME_SUNTORY_V3`. Dépend de A2b. Placé avant A3.
 
-LECTURES : CLAUDE.md, docs/DECISIONS.md (D113, D118, D123 à D126, D149 à D152, D159 à D163), docs/GLOSSAIRE_FR_EN.md (section 4 bis), docs/COMPLEMENTS_CADRAGE/30_DIRECTIVES_UX_UI_V0.1.md, le dossier LOGOS (lecture seule, fichiers fournis par T. SOEFOU).
+LECTURES : CLAUDE.md, docs/DECISIONS.md (D113, D118, D123 à D126, D149 à D152, D159 à D163, D182), docs/GLOSSAIRE_FR_EN.md (section 4 bis), docs/COMPLEMENTS_CADRAGE/30_DIRECTIVES_UX_UI_V0.1.md, le dossier LOGOS (lecture seule, fichiers fournis par T. SOEFOU).
 
 ÉTAPES
 1. Titres : titre de l'application et menus selon D160 et le glossaire ; reformuler les titres d'écran existants en termes d'action ; mêmes clés fr.json et en.json ; test i18n.
@@ -11,7 +11,8 @@ LECTURES : CLAUDE.md, docs/DECISIONS.md (D113, D118, D123 à D126, D149 à D152,
 4. Accueil et pilotage : visuels fondus dans la page (dégradé vers le fond), logo Suntory en en-tête, Marvesting discret en pied ; barre de menu du bas sur mobile, cibles de 44 px.
 5. Skin d'accueil (D161) : Produits, Nature, Sobre ; défaut fixé par l'agence dans Paramètres ; choix utilisateur par le sélecteur d'affichage ; sauvegarde dans le profil simulé ; test d'audience (aucun accès à Paramètres côté cliente, D118).
 6. Crédits : docs/CREDITS_VISUELS.md avec l'origine déclarée (recherche Google, mot-clé Suntory), droits non établis, usage démonstration (D163).
-7. Captures docs/captures/A1e/ (FR et EN, 1440 et 390 px, clair et sombre).
+7. Textes affichés (D182) : retirer des écrans toute référence interne (numéros D…, « Lecture A » ou « B », nom du prestataire, « Hypothèse Hn ») ; aligner la carte « Rouvrir sans demande » sur la largeur de sa voisine dans le calendrier des échéances ; remplacer l'icône provisoire `src/app/icon.svg` par une icône issue du logo.
+8. Captures docs/captures/A1e/ (FR et EN, 1440 et 390 px, clair et sombre).
 
 CRITÈRES
 1. Commandes de contrôle exécutées, sortie reportée.
