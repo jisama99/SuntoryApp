@@ -9,14 +9,20 @@ import { Shortcuts } from '@/components/Shortcuts';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { profileDirectory, repository } from '@/data';
 import type { Locale } from '@/domain/types';
-import { getAccessContext } from '@/lib/session';
+import { redirect } from '@/i18n/navigation';
+import { requireSession } from '@/lib/session';
+import { buildAccessContext } from '@/domain/access';
+import { SignOutButton } from '@/components/SignOutButton';
 import { getSidebarCollapsed } from '@/lib/sidebar';
 
 /** Gabarit de l'application (menu, barre d'outils). La page d'entrée, elle, s'affiche sans menu. */
 export default async function AppLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const ctx = await getAccessContext(locale as Locale);
+  const session = await requireSession(locale as Locale);
+  // Mot de passe temporaire : le changement passe avant tout (D189).
+  if (session.account.must_change_password) redirect({ href: '/change-password', locale: locale as Locale });
+  const ctx = buildAccessContext(session.profile, locale as Locale, { accountId: session.account.id, impersonated: session.impersonated });
   const [menu, profiles] = await Promise.all([repository.getMenu(ctx), profileDirectory.list()]);
   const { skin } = await repository.getHomeSkin(ctx);
   const t = await getTranslations('menu');
@@ -39,7 +45,8 @@ export default async function AppLayout({ children, params }: { children: ReactN
           <ThemeSwitcher />
           <SkinSwitcher current={skin} locale={locale} />
           <LocaleSwitcher />
-          <ProfileSwitcher profiles={profiles} current={ctx.profileId} />
+          {session.account.profile === 'provider_admin' ? <ProfileSwitcher profiles={profiles} current={ctx.profileId} /> : null}
+          <SignOutButton locale={locale} />
         </>
       }
     >

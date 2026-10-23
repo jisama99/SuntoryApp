@@ -1,0 +1,318 @@
+[
+  {
+    "id": "df495ff3-b5f1-496f-ab57-52c66500a50b",
+    "username": "DemoAgence01",
+    "profile": "agency_admin",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Zoé",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "8552ef252f03e38ad826ed0a76b72a8c",
+      "hash": "c13b5471cf72eeecfac25f4a83904c163b60196b11244b33c1da9e8bf411da2b"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "887ba3e0-a35e-4dea-abe7-32662cd702a1",
+    "username": "DemoAgence02",
+    "profile": "agency_operator",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Valentin",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "b1603d6aa1d4707db3e39e1ccef31d09",
+      "hash": "e159ebac106782c44917cce59393f40d07bd3055cd547f23d34711ae9edba959"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "a69e0219-fd0e-4b7d-abf5-9f6d1ac87cf5",
+    "username": "DemoAgence03",
+    "profile": "agency_operator",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Inès",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "759f7c9f3bbd2b6704055e11d032a715",
+      "hash": "893c7f5f1cc75c64bc3fad668b5f90de338adf390abcb8f8c24d693f9fe8c9e5"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "f676ce6d-458b-4c7f-bec7-b6e09268f66f",
+    "username": "DemoAgence04",
+    "profile": "agency_operator",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Mathis",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "2cf414a037eeadc6ee8c67cc28e121c2",
+      "hash": "32c057b13ac00e6029077868ea2b7b7698989d2f1cd5755605d006c7891e2e4e"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "6018c8cf-5217-4c80-8cd5-5ed05acbd14e",
+    "username": "DemoAgence05",
+    "profile": "agency_operator",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Camille",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "cebc5772cb1d781c1ac70e46ebf64241",
+      "hash": "bd03a243b35198047ea80f8601b62596bfe676abb43e281e565095ab47515094"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "d43788eb-5342-44f8-b071-0c031630f2aa",
+    "username": "DemoAgence06",
+    "profile": "agency_operator",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Louna",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "2cbc2c1f290fb64224dbced930fcd765",
+      "hash": "69caa27ca7b1f788df0a480ee5e1c4c97eb0ad80f5fe5d7e7a9c18a9e048985c"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "2afce827-df87-4cce-9237-43c02a911284",
+    "username": "DemoDirection01",
+    "profile": "direction_client",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": "Ulysse",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "13d0411e9b696f92193c45d21e2a1813",
+      "hash": "3200dfc9f39cc3de961071135dfe43602fc629bc242cdcb8a8ceb9aa6a2f2da3"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "47375881-3767-4f3b-a31b-6dafea350504",
+    "username": "DemoDR01",
+    "profile": "dr_client",
+    "scope": {
+      "kind": "dr",
+      "ids": [
+        "1cf08936-8d48-4257-9eba-3ab84fe0ed99"
+      ]
+    },
+    "first_name": "Amel",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "579a8d4d346789e27dd315c8e0ba9e99",
+      "hash": "7335fa14f6d1f9e0bba1ab5b755324d77bc1369bf5718e6ba04946008fefee1c"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "eb892939-de79-4986-b453-56fa440a58c2",
+    "username": "DemoDR02",
+    "profile": "dr_client",
+    "scope": {
+      "kind": "dr",
+      "ids": [
+        "f97cc5b8-dce0-43b1-a21f-e53441a8d52c"
+      ]
+    },
+    "first_name": "Jonas",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "9d23b0c034f4c2e5eee8dacd83b20def",
+      "hash": "da592a3550e6b64a50c62ded42088e3385955e2e2567c603511cf69abaa1f810"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "90d83720-094c-4def-92ce-281bf4d2f941",
+    "username": "DemoDR03",
+    "profile": "dr_client",
+    "scope": {
+      "kind": "dr",
+      "ids": [
+        "5cff9a1e-38ab-4da2-b164-73630191fb39"
+      ]
+    },
+    "first_name": "Rania",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "36b4c5ce4c3f9a53751e5b34b901fccc",
+      "hash": "5e7933ed139bf1d2f03080742cf38154cf60a9f564a2e0c5b7ceeefa0d83eb5e"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "9654a22b-ebaf-48a5-a4c9-21e8826df226",
+    "username": "DemoCVR01",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "63a9516d-798d-410f-a0fe-03496a86b1f7"
+      ]
+    },
+    "first_name": "Bastien",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "d5fad689cc571efe8cb345e7dc2100c0",
+      "hash": "f2b0d33601132c1748fb3cc06739cbf4541c32f9984b274afb676dba872ba02e"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "e7e37ac0-d8b7-4b3b-b9eb-64df68846601",
+    "username": "DemoCVR02",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67"
+      ]
+    },
+    "first_name": "Élise",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "a158d0a5050d3e259cb9c675fd1d7935",
+      "hash": "a0b8746bb43c8f6823c9a8bc219f72321c983721011aef06d29c8bb538760470"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "89fca33a-aacd-4f4f-9c5e-7b91e65c4160",
+    "username": "DemoCVR03",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "96e5d8b5-2179-40d8-abf6-a9b607286406"
+      ]
+    },
+    "first_name": "Hugo",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "c5fca454408bd57e4170832a4d8d9036",
+      "hash": "d9fdf170f4a88f6b2efb9a59b82a8657af87d72054c299a142e42f67f56f9b51"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "a5694f51-349d-428c-add8-a83906c9b28b",
+    "username": "DemoCVR04",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "018e67bf-2f2e-4937-8484-099ab56b9f7b"
+      ]
+    },
+    "first_name": "Kenza",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "2efa5b719242c59ef5426658d59d0925",
+      "hash": "66eeaf07c796d6b18f9326248b15b1895f499526c81aba342388e071e3a071a7"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "94426c58-891d-42b9-ae30-979e989a417e",
+    "username": "DemoCVR05",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "992cf5f3-512d-4a9e-80a5-d687308d3f8e"
+      ]
+    },
+    "first_name": "Olivia",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "74fe9a7d17e3861b9d240d0204e96981",
+      "hash": "1d127823bfc4a9611caaf6bd06faff00493d2da7d231911fa9b794c03125529e"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "6dbcd86b-38f5-45a6-9d49-b9f2ddb6a772",
+    "username": "DemoCVR06",
+    "profile": "cvr_client",
+    "scope": {
+      "kind": "cvr",
+      "ids": [
+        "d87ca0e1-f161-4c58-8794-fbafdd7aacb3"
+      ]
+    },
+    "first_name": "Sacha",
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "518eea48e6c1f59ba35365c3ded21c60",
+      "hash": "f6249e673f7767b9c8e83c811cc0e5ff2beb8a6d1007ce9f55da378ba61c83ea"
+    },
+    "created_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "76133ad5-c20c-457a-a092-f47ef7498747",
+    "username": "DemoPresta01",
+    "profile": "provider_admin",
+    "scope": {
+      "kind": "all"
+    },
+    "first_name": null,
+    "active": true,
+    "must_change_password": false,
+    "password": {
+      "salt": "eff9d1d9cd70135238da02d74cd1895c",
+      "hash": "9473d8f9de1043cec75e13651d692e4c55ec709533db4a333e5b95106f3505f3"
+    },
+    "created_by": null,
+    "is_demo": true
+  }
+]

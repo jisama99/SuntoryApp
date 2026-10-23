@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { setProfile, watch } from './helpers';
+import { demoPassword, setProfile, watch } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -15,16 +15,19 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Pilotage merchandising' })).toBeVisible();
     expect(await page.locator('picture img').first().getAttribute('src')).toContain('/visuels/forest-');
     await expect(page.locator('#app-sidebar')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'RS', exact: true })).toBeVisible();
-    await expect(page.getByText('Simulation pour la démonstration, ce n\'est pas une connexion.')).toBeVisible();
+    await expect(page.getByLabel('Identifiant')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Connexion' })).toBeVisible();
+    await expect(page.getByText('Démonstration : comptes et mots de passe fictifs.')).toBeVisible();
     expect(w.external).toEqual([]);
     expect(w.consoleErrors).toEqual([]);
   });
 
-  test('entrée en anglais, choix d\'un profil : l\'accueil s\'ouvre dans la langue choisie avec les menus du glossaire', async ({ page }) => {
+  test('connexion en anglais : l\'accueil s\'ouvre dans la langue choisie avec les menus du glossaire', async ({ page }) => {
     await page.goto('/en/start');
     await expect(page.getByRole('heading', { level: 1, name: 'Merchandising steering' })).toBeVisible();
-    await page.getByRole('button', { name: 'Agency (administrator)' }).click();
+    await page.getByLabel('Username').fill('DemoAgence01');
+    await page.getByLabel('Password').fill(demoPassword('DemoAgence01'));
+    await page.getByRole('button', { name: 'Sign in' }).click();
     await expect(page).toHaveURL(/\/en$/);
     const nav = page.getByRole('navigation', { name: 'Main navigation' });
     for (const label of ['My cockpit', 'Steering', 'Merch needs', 'Agency responses', 'Field teams', 'Budget', 'To handle', 'Settings']) {
@@ -156,9 +159,9 @@ test.describe('lot A1e : identité visuelle, titres, skin d\'accueil', () => {
   });
 
   test('H3 mesuré : premier affichage utile sous 2 s sur l\'entrée, l\'accueil et le pilotage', async ({ page, context }) => {
-    await setProfile(context, 'direction_client');
     const out: Record<string, { lcp: number | null; dcl: number }> = {};
     for (const url of ['/fr/start', '/fr', '/fr/dashboard']) {
+      if (url !== '/fr/start') await setProfile(context, 'direction_client');
       await page.goto(url, { waitUntil: 'load' });
       out[url] = await page.evaluate(
         () =>

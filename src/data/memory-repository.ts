@@ -9,6 +9,7 @@ import { applyDispositifParams, paramsMapOf } from '@/domain/dispositif-params';
 import { checkNeed, decideSave } from '@/domain/need-check';
 import type { Finding } from '@/domain/rules';
 import { DEFAULT_RULE_CONFIG } from '@/domain/rules';
+import { CREATABLE_PROFILES, validAssignment, passwordProblem } from '@/domain/accounts';
 import { DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, PRESET_IDS } from '@/domain/types';
 import type { Audience, DeadlineType, Dispositif, EventCode, HomeSkin, PresetId, ProfileId, Severity } from '@/domain/types';
 import {
@@ -18,6 +19,7 @@ import { resolvePeriod } from '@/domain/week-rules';
 import type { RuleEnv, RuleInput } from '@/domain/week-rules';
 import { calendarOf } from '@/domain/deadlines';
 import { addMonths, isWorkingDay, monthStart } from '@/domain/working-days';
+import accountsJson from './fixtures/accounts.json';
 import alertsJson from './fixtures/alerts.json';
 import campaignsJson from './fixtures/campaigns.json';
 import clockJson from './fixtures/clock.json';
@@ -36,14 +38,16 @@ import type {
   SaveOptions, SaveRefusal, SaveResult,
 } from './repository';
 import {
-  AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DemoClockSchema,
+  AccountSchema, AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DemoClockSchema,
   DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS, ProfileSchema,
-  ReopeningRequestSchema, ReopeningSchema, StoreSchema, WeekClosureSchema, ZoneSchema,
+  ReopeningRequestSchema, ReopeningSchema, StoreSchema, USERNAME_PATTERN, WeekClosureSchema, ZoneSchema,
 } from './schemas';
 import type {
-  BusinessEvent, DeadlineSettings, DispositifParams, Need, ParamChange, Period, Reopening,
+  Account, BusinessEvent, DeadlineSettings, DispositifParams, Need, ParamChange, Period, PublicAccount, Reopening,
   ReopeningRequest, Zone,
 } from './schemas';
+
+import { dummyHash, generatePassword, hashPassword, verifyPassword } from './password';
 
 const zones = z.array(ZoneSchema).parse(zonesJson);
 const profiles = z.array(ProfileSchema).parse(profilesJson);
@@ -70,7 +74,8 @@ interface DemoState {
   batchDrafts: Partial<Record<ProfileId, BatchDraft>>;
   outbox: Record<string, 'validated' | 'discarded'>;
   homeSkinDefault: HomeSkin;
-  userSkins: Partial<Record<ProfileId, HomeSkin>>;
+  userSkins: Record<string, HomeSkin>;
+  accounts: Account[];
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -90,6 +95,7 @@ function state(): DemoState {
       outbox: {},
       homeSkinDefault: DEFAULT_HOME_SKIN,
       userSkins: {},
+      accounts: structuredClone(z.array(AccountSchema).parse(accountsJson)),
     };
   }
   return globalState.__suntoryDemoState;
@@ -116,6 +122,8 @@ function emit(code: EventCode, actor: ProfileId, zoneId: string, needId: string 
     effect_date: clock.date, recorded_at: clock.date, seq: ++st.seq, audience, data, is_demo: true,
   });
 }
+
+const anyDrZone = () => (zones.find((z) => z.kind === 'dr') as Zone).id;
 
 function nextNeedCode(): string {
   const max = state().needs.reduce((m, n) => Math.max(m, Number(n.need_code.slice(-3))), 0);
@@ -188,6 +196,12 @@ function related(a: string, b: string): boolean {
 }
 
 const isAgencyAdmin = (ctx: AccessContext) => ctx.profileId === 'agency_admin';
+/** Le choix de skin suit la personne (son compte) ; en visualisation d'un profil par le prestataire, il suit ce profil. */
+const skinKey = (ctx: AccessContext) => (ctx.accountId && !ctx.impersonated ? ctx.accountId : `profil:${ctx.profileId}`);
+const publicOf = (a: Account): PublicAccount => ({
+  id: a.id, username: a.username, profile: a.profile, scope: a.scope, first_name: a.first_name, active: a.active,
+  must_change_password: a.must_change_password, created_by: a.created_by, is_demo: a.is_demo,
+});
 const hasSettingsMenu = (ctx: AccessContext) => MENU_BY_PROFILE[ctx.profileId].includes('settings');
 const TODAY_PLUS_DAYS = 90;
 
@@ -572,9 +586,95 @@ export function createMemoryRepository(): Repository {
       return { status: 'ok' };
     },
 
+    async authenticate(username, password) {
+      const found = state().accounts.find((a) => a.username.toLowerCase() === username.toLowerCase());
+      // Un seul calcul de hachage dans tous les cas : un identifiant inconnu ne se distingue pas par le temps de calcul.
+      const ok = verifyPassword(password, found?.password ?? dummyHash());
+      return found && ok && found.active ? publicOf(found) : null;
+    },
+
+    async getAccount(accountId) {
+      const found = state().accounts.find((a) => a.id === accountId);
+      return found ? publicOf(found) : null;
+    },
+
+    async changePassword(accountId, current, next) {
+      const found = state().accounts.find((a) => a.id === accountId);
+      if (!found || !found.active) return { status: 'refused', reason: 'not_found' };
+      if (!verifyPassword(current, found.password)) return { status: 'refused', reason: 'invalid_current' };
+      const problem = passwordProblem(next, current);
+      if (problem) return { status: 'refused', reason: problem };
+      found.password = hashPassword(next);
+      found.must_change_password = false;
+      return { status: 'ok' };
+    },
+
+    canManageAccounts(ctx) {
+      return isAgencyAdmin(ctx) && !ctx.impersonated;
+    },
+
+    async listAccounts(ctx) {
+      if (!this.canManageAccounts(ctx)) return [];
+      return state().accounts.map(publicOf);
+    },
+
+    async createAccount(ctx, input) {
+      if (!this.canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const username = input.username.trim();
+      if (!USERNAME_PATTERN.test(username) || !CREATABLE_PROFILES.includes(input.profile) || !validAssignment(zones, input.profile, input.scope)) {
+        return { status: 'refused', reason: 'invalid' };
+      }
+      if (st.accounts.some((a) => a.username.toLowerCase() === username.toLowerCase())) return { status: 'refused', reason: 'username_taken' };
+      const temporaryPassword = generatePassword();
+      const account: Account = {
+        id: crypto.randomUUID(), username, profile: input.profile, scope: input.scope, first_name: null, active: true,
+        must_change_password: true, password: hashPassword(temporaryPassword), created_by: ctx.accountId ?? null, is_demo: true,
+      };
+      st.accounts.push(account);
+      emit('EV-40', ctx.profileId, anyDrZone(), null, 'agency', { username, profile: input.profile, scope: input.scope.kind });
+      return { status: 'ok', account: publicOf(account), temporaryPassword };
+    },
+
+    async setAccountActive(ctx, accountId, active) {
+      if (!this.canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const target = state().accounts.find((a) => a.id === accountId);
+      if (!target) return { status: 'refused', reason: 'not_found' };
+      if (target.profile === 'provider_admin') return { status: 'refused', reason: 'protected' };
+      if (target.id === ctx.accountId) return { status: 'refused', reason: 'self' };
+      if (target.active === active) return { status: 'ok' };
+      target.active = active;
+      emit('EV-42', ctx.profileId, anyDrZone(), null, 'agency', { username: target.username, active });
+      return { status: 'ok' };
+    },
+
+    async assignAccount(ctx, accountId, input) {
+      if (!this.canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const target = state().accounts.find((a) => a.id === accountId);
+      if (!target) return { status: 'refused', reason: 'not_found' };
+      if (target.profile === 'provider_admin') return { status: 'refused', reason: 'protected' };
+      if (!CREATABLE_PROFILES.includes(input.profile) || !validAssignment(zones, input.profile, input.scope)) return { status: 'refused', reason: 'invalid' };
+      target.profile = input.profile;
+      target.scope = input.scope;
+      emit('EV-41', ctx.profileId, anyDrZone(), null, 'agency', { username: target.username, profile: input.profile, scope: input.scope.kind });
+      return { status: 'ok' };
+    },
+
+    async resetAccountPassword(ctx, accountId) {
+      if (!this.canManageAccounts(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const target = state().accounts.find((a) => a.id === accountId);
+      if (!target) return { status: 'refused', reason: 'not_found' };
+      if (target.profile === 'provider_admin') return { status: 'refused', reason: 'protected' };
+      const temporaryPassword = generatePassword();
+      target.password = hashPassword(temporaryPassword);
+      target.must_change_password = true;
+      emit('EV-43', ctx.profileId, anyDrZone(), null, 'agency', { username: target.username });
+      return { status: 'ok', account: publicOf(target), temporaryPassword };
+    },
+
     async getHomeSkin(ctx) {
       const st = state();
-      const own = st.userSkins[ctx.profileId];
+      const own = st.userSkins[skinKey(ctx)];
       return own ? { skin: own, source: 'user' } : { skin: st.homeSkinDefault, source: 'agency' };
     },
 
@@ -594,7 +694,7 @@ export function createMemoryRepository(): Repository {
 
     async setUserHomeSkin(ctx, skin) {
       if (!(HOME_SKINS as readonly string[]).includes(skin)) return { status: 'refused', reason: 'invalid' };
-      state().userSkins[ctx.profileId] = skin;
+      state().userSkins[skinKey(ctx)] = skin;
       return { status: 'ok' };
     },
 

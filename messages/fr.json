@@ -838,5 +838,68 @@
     "products": "Produits",
     "nature": "Nature",
     "plain": "Sobre"
+  },
+  "login": {
+    "username": "Identifiant",
+    "password": "Mot de passe",
+    "submit": "Connexion",
+    "error": "Identifiant ou mot de passe incorrect",
+    "demoNote": "Démonstration : comptes et mots de passe fictifs."
+  },
+  "auth": {
+    "signOut": "Se déconnecter",
+    "temporaryPassword": "Mot de passe temporaire"
+  },
+  "changePassword": {
+    "title": "Nouveau mot de passe",
+    "new": "Nouveau mot de passe",
+    "confirm": "Confirmer le mot de passe",
+    "submit": "Enregistrer",
+    "weak": "Au moins 12 caractères, avec une lettre et un chiffre.",
+    "same": "Choisissez un mot de passe différent du mot de passe temporaire.",
+    "mismatch": "Les deux mots de passe ne correspondent pas.",
+    "invalid": "Le mot de passe temporaire est incorrect."
+  },
+  "accounts": {
+    "title": "Comptes",
+    "body": "Créer, attribuer, désactiver et réinitialiser les identifiants.",
+    "caption": "Comptes de connexion",
+    "filters": {
+      "label": "Statut des comptes",
+      "all": "Tous",
+      "active": "Actifs",
+      "disabled": "Désactivés"
+    },
+    "cols": {
+      "username": "Identifiant",
+      "profile": "Profil",
+      "scope": "Périmètre",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Actif",
+      "disabled": "Désactivé"
+    },
+    "create": {
+      "title": "Créer un compte",
+      "profile": "Profil",
+      "zone": "Zone",
+      "submit": "Créer"
+    },
+    "assign": "Attribuer",
+    "disable": "Désactiver",
+    "enable": "Réactiver",
+    "reset": "Réinitialiser le mot de passe",
+    "shownOnce": "Notez-le maintenant : il ne sera plus affiché.",
+    "tempFor": "Compte {username}",
+    "errors": {
+      "forbidden": "Action réservée à l'agence (administration).",
+      "invalid": "Vérifiez l'identifiant, le profil et le périmètre.",
+      "username_taken": "Cet identifiant existe déjà.",
+      "not_found": "Ce compte n'existe plus.",
+      "protected": "Les comptes du prestataire ne se gèrent pas ici.",
+      "self": "Vous ne pouvez pas désactiver votre propre compte."
+    }
   }
 }

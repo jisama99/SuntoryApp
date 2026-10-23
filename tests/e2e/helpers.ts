@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 export const PROFILES = [
@@ -11,10 +13,35 @@ export const PROFILES = [
 ] as const;
 export const LOCALES = ['fr', 'en'] as const;
 
+const BASE = 'http://localhost:3100';
+
+/** Mots de passe fictifs : fichier local non versionné, produit par `npm run demo:accounts`. Jamais écrits dans le code. */
+export function demoPassword(username: string): string {
+  const file = path.join(process.cwd(), '.demo-passwords.local.json');
+  if (!existsSync(file)) throw new Error('Fichier .demo-passwords.local.json absent : lancer npm run demo:accounts');
+  const all = JSON.parse(readFileSync(file, 'utf8')) as Record<string, string>;
+  const password = all[username];
+  if (!password) throw new Error(`Aucun mot de passe fictif pour ${username}`);
+  return password;
+}
+
+/** Connexion réelle par l'interface de programmation de connexion (même chemin que le formulaire). */
+export async function loginAs(context: BrowserContext, username: string) {
+  const response = await context.request.post(`${BASE}/api/login`, { data: { username, password: demoPassword(username) } });
+  if (!response.ok()) throw new Error(`Connexion refusée pour ${username}`);
+}
+
+/**
+ * Se place dans un profil : connexion du compte du prestataire puis visualisation « comme » ce profil (D188 : le choix de
+ * profil simulé reste réservé au prestataire). Aucun compte RS n'est préconfiguré, c'est le seul moyen d'en voir la vue.
+ */
 export async function setProfile(context: BrowserContext, id: string) {
-  await context.addCookies([
-    { name: 'demo_profile_simule', value: `sim.${id}`, url: 'http://localhost:3100' },
-  ]);
+  await loginAs(context, 'DemoPresta01');
+  if (id === 'provider_admin') {
+    await context.clearCookies({ name: 'demo_view_as' });
+    return;
+  }
+  await context.addCookies([{ name: 'demo_view_as', value: `sim.${id}`, url: BASE }]);
 }
 
 /** Enregistre les requêtes hors serveur local et les erreurs de console. */

@@ -10,10 +10,15 @@ export interface AccessContext {
   vocabulary: 'client' | 'agency';
   /** Prénom pour la salutation ; null = repli sans nom inventé (D84). */
   firstName: string | null;
+  /** Compte connecté (D188). Absent dans les tests de règles qui construisent un contexte depuis un profil. */
+  accountId?: string;
+  /** Vrai quand le prestataire consulte l'application « comme » un autre profil : lecture seule des droits de ce profil, jamais gestion des comptes. */
+  impersonated?: boolean;
 }
 
-export function buildAccessContext(profile: DemoProfile, locale: Locale): AccessContext {
+export function buildAccessContext(profile: DemoProfile, locale: Locale, extra: { accountId?: string; impersonated?: boolean } = {}): AccessContext {
   return {
+    ...extra,
     profileId: profile.id,
     side: profile.side,
     scope: profile.scope as Scope,

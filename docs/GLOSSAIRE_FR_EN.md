@@ -114,6 +114,25 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | Étapes pour reproduire | Steps to reproduce | |
 | Résultat attendu | Expected result | |
 
+## 4 ter. Connexion et comptes (D188, D189), ajout du lot A1f
+Les cinq premiers termes sont donnés par le prompt du lot A1f. **Les suivants sont proposés par le prestataire et à valider** : le glossaire reste le seul référentiel.
+| FR | EN | Statut |
+|---|---|---|
+| Identifiant | Username | Prompt A1f |
+| Mot de passe | Password | Prompt A1f |
+| Connexion | Sign in | Prompt A1f |
+| Se déconnecter | Sign out | Prompt A1f |
+| Mot de passe temporaire | Temporary password | Prompt A1f |
+| Identifiant ou mot de passe incorrect | Username or password incorrect | Prompt A1f |
+| Comptes | Accounts | Proposé |
+| Profil / Périmètre / Statut | Profile / Scope / Status | Proposé |
+| Actif / Désactivé | Active / Disabled | Proposé |
+| Créer un compte / Créer | Create an account / Create | Proposé |
+| Attribuer / Désactiver / Réactiver | Assign / Disable / Enable | Proposé |
+| Réinitialiser le mot de passe | Reset password | Proposé |
+| Nouveau mot de passe / Confirmer le mot de passe | New password / Confirm the password | Proposé |
+| Démonstration : comptes et mots de passe fictifs | Demonstration: fictitious accounts and passwords | Proposé (mention « démonstration », D188) |
+
 ## 5. Formats (D119)
 - Dates : FR 23/10/2026, EN 23 Oct 2026 ou format régional défini dans `format.ts`.
 - Nombres : FR 1 234,5 (espace fine insécable, virgule), EN 1,234.5.

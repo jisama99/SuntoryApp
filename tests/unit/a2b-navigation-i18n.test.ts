@@ -22,13 +22,13 @@ describe('règle commune 14 (D151) : navigation web, états de route, fil d\'Ari
       expect(existsSync(path.join(APP, seg, 'error.tsx')), `error ${seg}`).toBe(true);
       expect(read(path.join(APP, seg, 'error.tsx')).startsWith("'use client'"), `error ${seg} client`).toBe(true);
     }
-    for (const seg of ['needs/(list)', 'needs/(write)/new', 'needs/(write)/batch', 'needs/(write)/[id]/edit', 'needs/(write)/[id]/duplicate', 'settings', '[section]']) {
+    for (const seg of ['needs/(list)', 'needs/(write)/new', 'needs/(write)/batch', 'needs/(write)/[id]/edit', 'needs/(write)/[id]/duplicate', 'settings/(main)', 'settings/accounts', '[section]']) {
       expect(existsSync(path.join(APP, seg, 'loading.tsx')), `loading ${seg}`).toBe(true);
     }
   });
 
   it('le contrôle d\'accès est dans un layout au-dessus des états de chargement : une entrée interdite répond 404', () => {
-    for (const layout of ['needs/layout.tsx', 'needs/(write)/layout.tsx', 'needs/(write)/[id]/layout.tsx', 'settings/layout.tsx', '[section]/layout.tsx']) {
+    for (const layout of ['needs/layout.tsx', 'needs/(write)/layout.tsx', 'needs/(write)/[id]/layout.tsx', 'settings/layout.tsx', 'settings/accounts/layout.tsx', '[section]/layout.tsx']) {
       expect(read(path.join(APP, layout)), layout).toContain('notFound()');
     }
     // Aucun loading.tsx ne coiffe un segment dont le layout décide de l'accès : ils sont au même niveau ou en dessous.
@@ -37,13 +37,13 @@ describe('règle commune 14 (D151) : navigation web, états de route, fil d\'Ari
   });
 
   it('chaque page du lot affiche le fil d\'Ariane', () => {
-    for (const page of ['needs/(list)/page.tsx', 'needs/(write)/new/page.tsx', 'needs/(write)/batch/page.tsx', 'needs/(write)/[id]/edit/page.tsx', 'needs/(write)/[id]/duplicate/page.tsx', 'settings/page.tsx', 'settings/deadlines/page.tsx', 'settings/dispositifs/page.tsx', '[section]/page.tsx']) {
+    for (const page of ['needs/(list)/page.tsx', 'needs/(write)/new/page.tsx', 'needs/(write)/batch/page.tsx', 'needs/(write)/[id]/edit/page.tsx', 'needs/(write)/[id]/duplicate/page.tsx', 'settings/(main)/page.tsx', 'settings/(main)/deadlines/page.tsx', 'settings/(main)/dispositifs/page.tsx', 'settings/accounts/page.tsx', '[section]/page.tsx']) {
       expect(read(path.join(APP, page)), page).toContain('<Breadcrumb');
     }
   });
 
   it('les filtres du lot et du calendrier sont des liens portés par l\'adresse', () => {
-    for (const page of ['needs/(list)/page.tsx', 'settings/deadlines/page.tsx', 'settings/dispositifs/page.tsx']) {
+    for (const page of ['needs/(list)/page.tsx', 'settings/(main)/deadlines/page.tsx', 'settings/(main)/dispositifs/page.tsx', 'settings/accounts/page.tsx']) {
       const src = read(path.join(APP, page));
       expect(src, page).toContain('searchParams');
       expect(src, page).toContain('FilterTabs');

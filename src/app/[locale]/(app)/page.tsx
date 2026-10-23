@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AlertList } from '@/components/AlertList';
 import { HeroHeader } from '@/components/HeroHeader';
@@ -8,15 +7,13 @@ import { EmptyState } from '@/components/States';
 import { ZoneLabel } from '@/components/ZoneLabel';
 import { repository } from '@/data';
 import { formatDate, formatIsoWeek } from '@/lib/format';
-import { Link, redirect } from '@/i18n/navigation';
-import { getAccessContext, PROFILE_COOKIE } from '@/lib/session';
+import { Link } from '@/i18n/navigation';
+import { getAccessContext } from '@/lib/session';
 import type { Locale } from '@/domain/types';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  // Aucun profil choisi : on passe d'abord par l'écran d'entrée (simulation, pas une connexion).
-  if (!(await cookies()).get(PROFILE_COOKIE)) redirect({ href: '/start', locale });
   const ctx = await getAccessContext(locale as Locale);
   const t = await getTranslations();
   const [zones, alerts, clock, menu, homeSkin] = await Promise.all([

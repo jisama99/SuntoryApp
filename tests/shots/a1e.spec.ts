@@ -26,7 +26,7 @@ for (const locale of LOCALES) {
 
       for (const theme of THEMES) {
         await setTheme(theme);
-        await context.clearCookies({ name: 'demo_profile_simule' });
+        await context.clearCookies({ name: 'demo_session' });
         await page.goto(`/${locale}/start`);
         await page.waitForLoadState('networkidle');
         await shot('start', theme);

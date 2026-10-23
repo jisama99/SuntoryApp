@@ -838,5 +838,68 @@
     "products": "Products",
     "nature": "Nature",
     "plain": "Plain"
+  },
+  "login": {
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Username or password incorrect",
+    "demoNote": "Demonstration: fictitious accounts and passwords."
+  },
+  "auth": {
+    "signOut": "Sign out",
+    "temporaryPassword": "Temporary password"
+  },
+  "changePassword": {
+    "title": "New password",
+    "new": "New password",
+    "confirm": "Confirm the password",
+    "submit": "Save",
+    "weak": "At least 12 characters, with a letter and a digit.",
+    "same": "Choose a password different from the temporary password.",
+    "mismatch": "The two passwords do not match.",
+    "invalid": "The temporary password is incorrect."
+  },
+  "accounts": {
+    "title": "Accounts",
+    "body": "Create, assign, disable and reset usernames.",
+    "caption": "Sign-in accounts",
+    "filters": {
+      "label": "Account status",
+      "all": "All",
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "cols": {
+      "username": "Username",
+      "profile": "Profile",
+      "scope": "Scope",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "create": {
+      "title": "Create an account",
+      "profile": "Profile",
+      "zone": "Zone",
+      "submit": "Create"
+    },
+    "assign": "Assign",
+    "disable": "Disable",
+    "enable": "Enable",
+    "reset": "Reset password",
+    "shownOnce": "Write it down now: it will not be shown again.",
+    "tempFor": "Account {username}",
+    "errors": {
+      "forbidden": "Action reserved to the agency (administration).",
+      "invalid": "Check the username, the profile and the scope.",
+      "username_taken": "This username already exists.",
+      "not_found": "This account no longer exists.",
+      "protected": "Provider accounts are not managed here.",
+      "self": "You cannot disable your own account."
+    }
   }
 }

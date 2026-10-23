@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "prepreview:shots": "npm run build",
     "preview:shots": "playwright test --config=playwright.shots.config.ts",
-    "fixtures": "tsx scripts/generate-fixtures.ts"
+    "fixtures": "tsx scripts/generate-fixtures.ts",
+    "demo:accounts": "tsx scripts/generate-accounts.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",
