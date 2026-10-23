@@ -78,7 +78,7 @@ GARDE-FOUS DE DONNÉES
 - C1 à C7 de docs/FIXTURES.md §5 relancés à chaque lot ; C3 signalé « non exécuté » sans .denylist.local.
 
 GIT ET LIVRAISON
-- Aucun commit ni push sans demande explicite de T. SOEFOU. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu et les contrôles reportés, commit et push de la branche de session uniquement ; jamais sur main, jamais de pull request. La fusion dans main est faite après relecture.
+- Aucun commit ni push sans demande explicite de T. SOEFOU. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu et les contrôles reportés, commit et push de la branche de session uniquement ; jamais sur main, jamais de pull request. La fusion dans main est faite après relecture. Exception (D191) : une session de revue lancée avec `docs/PROMPTS/31_PROMPT_REVUE_ET_FUSION.md` peut fusionner la branche d'un lot dans `main` et pousser `main`, après contrôles verts et validation de T. SOEFOU, jamais en force ni par pull request.
 - Fin de lot : docs/COMPTE_RENDU_<lot>.md (réalisé, non réalisé, écarts, vérifications non exécutées,
   questions pour T. SOEFOU) et « mise à jour proposée » du registre (jamais écrite comme décidée).
 - Récapitulatif de dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi
