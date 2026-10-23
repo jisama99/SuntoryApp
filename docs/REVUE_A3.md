@@ -2,7 +2,7 @@
 
 Relecteur indépendant, branche `revue/A3` depuis `claude/gracious-goldberg-pggi8w` (f2fd6f9), `origin/main` (e05a9cd) fusionné sans conflit. Données fictives uniquement, aucune requête externe, aucun fichier de données réelles lu. `docs/DECISIONS.md` n'est pas modifié à ce stade.
 
-## 1. Verdict provisoire : **fusionnable** sous réserve de la validation de T. SOEFOU et des contrôles finaux (étape 9)
+## 1. Verdict : **fusionnable** (contrôles §4 verts, aucun bloquant, validation de T. SOEFOU reçue dans la session le 23/10/2026)
 Aucun bloquant. Deux défauts importants et deux mineurs corrigés sur `revue/A3` (§3). Écarts restants au §6.
 
 ## 2. Conformité aux critères du prompt A3
@@ -52,3 +52,6 @@ Vu : rendu cohérent, états lisibles en clair et en sombre, FR et EN séparés,
 - **Délais « même jour » et « plus tard dans la journée »** : non codés (le lot mesure J1 à J4 par situation de recrutement). À coder avec A4a ou A4c2 (D210).
 - F-30.1, F-30.2, F-30.3 : A3c.
 - Annulation globale par instantané (D181) : limite connue de l'étape A.
+
+## 7. Registre
+Validées par T. SOEFOU dans la session de revue et inscrites : D197 à D204 (A3), D209 (A3c), D210, D211. D205 à D208 (notifications) restent **proposées** (non inscrites), renumérotées dans `docs/propositions/PROPOSITION_NOTIFICATIONS_V0.1.md`, `docs/PROMPTS/32_PROMPT_LOT_A4G.md` et `docs/PLAN_A1_A7.md`. Les mentions D197 à D199 de `docs/COMPTE_RENDU_A1F.md` sont l'ancienne numérotation d'A1f, déjà fusionnée sous d'autres numéros : laissées telles quelles (document historique).
