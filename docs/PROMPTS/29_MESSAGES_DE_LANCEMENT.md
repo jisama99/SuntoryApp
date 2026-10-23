@@ -9,16 +9,17 @@ Version du 23/10/2026. **Un lot = une session Claude Code**, jamais deux lots da
 | 3 | A4b1 | `23_PROMPT_LOT_A4B1.md` | Après fusion de A3 | A3 fusionné ; montants réels non fournis : jeux fictifs (D07). |
 | 4 | A4a | `13_PROMPT_LOT_A4A.md` | Après fusion de A4b1 | A4b1 fusionné. |
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | Après fusion de A4a | A4a fusionné. |
-| 6 | A6 | `15_PROMPT_LOT_A6.md` | Après fusion de A5 | A5 fusionné. |
-| 7 | A7 | `16_PROMPT_LOT_A7.md` | Après fusion de A6 (fin du noyau) | A6 fusionné. |
-| 8 | A4b2 | `17_PROMPT_LOT_A4B.md` | Seconde démonstration, après retour sur le noyau | Noyau fusionné. |
-| 9 | A4d | `21_PROMPT_LOT_A4D.md` | Seconde démonstration | Noyau fusionné. |
-| 10 | A4e | `22_PROMPT_LOT_A4E.md` | Seconde démonstration | Noyau fusionné ; jeu de contours ouvert choisi, licence et attribution à consigner dans le lot (D150, D152). |
-| 11 | A4c1 | `18_PROMPT_LOT_A4C1.md` | Seconde démonstration | Noyau fusionné. |
-| 12 | A4c2 | `19_PROMPT_LOT_A4C2.md` | Seconde démonstration, après A4c1 | A4c1 fusionné. |
-| 13 | A5b | `20_PROMPT_LOT_A5B.md` | Seconde démonstration | Noyau fusionné. |
-| 14 | A8 | `25_PROMPT_LOT_A8.md` | Après le noyau | A7 fusionné ; adresse de notification en variable d'environnement (D164). |
-| 15 | A9 | `26_PROMPT_LOT_A9.md` | Seulement après validation de la démonstration et abonnement OVHcloud (D165) | Démonstration validée par écrit, abonnement pris. Ce lot est le seul qui autorise un travail d'hébergement. |
+| 6 | A4f | `30_PROMPT_LOT_A4F.md` | Après fusion de A5 | A5 fusionné. |
+| 7 | A6 | `15_PROMPT_LOT_A6.md` | Après fusion de A4f | A4f fusionné. |
+| 8 | A7 | `16_PROMPT_LOT_A7.md` | Après fusion de A6 (fin du noyau) | A6 fusionné. |
+| 9 | A4b2 | `17_PROMPT_LOT_A4B.md` | Seconde démonstration, après retour sur le noyau | Noyau fusionné. |
+| 10 | A4d | `21_PROMPT_LOT_A4D.md` | Seconde démonstration | Noyau fusionné. |
+| 11 | A4e | `22_PROMPT_LOT_A4E.md` | Seconde démonstration | Noyau fusionné ; jeu de contours ouvert choisi, licence et attribution à consigner dans le lot (D150, D152). |
+| 12 | A4c1 | `18_PROMPT_LOT_A4C1.md` | Seconde démonstration | Noyau fusionné. |
+| 13 | A4c2 | `19_PROMPT_LOT_A4C2.md` | Seconde démonstration, après A4c1 | A4c1 fusionné. |
+| 14 | A5b | `20_PROMPT_LOT_A5B.md` | Seconde démonstration | Noyau fusionné. |
+| 15 | A8 | `25_PROMPT_LOT_A8.md` | Après le noyau | A7 fusionné ; adresse de notification en variable d'environnement (D164). |
+| 16 | A9 | `26_PROMPT_LOT_A9.md` | Seulement après validation de la démonstration et abonnement OVHcloud (D165) | Démonstration validée par écrit, abonnement pris. Ce lot est le seul qui autorise un travail d'hébergement. |
 
 ## Lot A1f
 _Maintenant. Prérequis : Aucun, A1e est fusionné._
@@ -115,8 +116,27 @@ Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit e
 Récapitule en dix lignes maximum.
 ```
 
-## Lot A6
+## Lot A4f
 _Après fusion de A5. Prérequis : A5 fusionné._
+
+```text
+LANCEMENT · LOT A4f · SUNTORY REFONTE V3
+
+Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
+
+AVANT TOUT
+1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/DECISIONS.md contient D190 et que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16. Sinon, arrête-toi et dis-le.
+2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/30_PROMPT_LOT_A4F.md, et ce qu'il demande de lire.
+3. Exécute uniquement ce lot. N'enchaîne pas.
+
+RÈGLES
+Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit et push de ta branche de session seulement, en fin de lot, après le compte rendu. Supabase et Vercel interdits. Aucune requête externe (règle 10). Aucun fichier de données réelles lu. Une hypothèse n'est pas une décision : propose les mises à jour du registre sans les inscrire, avec des numéros après le dernier du registre. Les contrôles (typecheck, lint, tests, build, e2e) sont exécutés et leur sortie reportée ; un test non lancé n'est pas déclaré passé. Dis honnêtement ce que tu n'as pas relu.
+
+Récapitule en dix lignes maximum.
+```
+
+## Lot A6
+_Après fusion de A4f. Prérequis : A4f fusionné._
 
 ```text
 LANCEMENT · LOT A6 · SUNTORY REFONTE V3

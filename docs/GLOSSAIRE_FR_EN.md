@@ -119,6 +119,27 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 
 Conservés tels quels (déjà formulés en action ou en objet clair) : Vos besoins en merchandising, Demander une réouverture, Rouvrir sans demande, Coller depuis un tableur, Résumé avant soumission, Historique des modifications, Campagnes et dispositifs, Votre périmètre, Raccourcis clavier, états Rien à afficher, Chargement en cours, Une erreur est survenue.
 
+## 4 sexies. Vue Planning (D190)
+| FR | EN | Remarque |
+|---|---|---|
+| Planning | Planning | Menu et titre |
+| Planning des besoins | Needs planning | Titre d'écran |
+| Frise par semaine | Weekly timeline | Mode |
+| Calendrier par dates | Date calendar | Mode |
+| Jour | Day | Mode |
+| Mois | Month | Mode (heures par mois) |
+| Besoins du jour / Magasins du jour | Needs of the day / Stores of the day | |
+| Magasins liés | Linked stores | |
+| Recrutements par département | Recruitments by department | |
+| Pourvus / En cours / Non couverts | Filled / In progress / Uncovered | |
+| Recruté | Recruited | Statut d'un besoin |
+| Couverture | Coverage | Avec numérateur et dénominateur |
+| Heures planifiées | Planned hours | |
+| Semaine précédente / Semaine suivante | Previous week / Next week | |
+| Afficher les six semaines / Réduire en semaine | Show six weeks / Collapse to week | Mobile |
+| Enregistrer la vue | Save view | |
+| Voir sur la carte / Ouvrir l'entonnoir | View on map / Open the funnel | |
+
 ## 4 ter. Signalement (D164)
 | FR | EN | Remarque |
 |---|---|---|
