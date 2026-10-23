@@ -244,8 +244,8 @@ Voir la section 6 du document 14.
 | D104 | Aperçu visuel à chaque étape | Serveur local, navigateur intégré, captures Playwright par profil, langue et largeur, lecture console et réseau ; démonstrateur **en local**, aucun lien externe avant la décision d'hébergement (D02/D19) | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
 | D105 | Pile de l'étape A | Next 16.4.2, React 19.3.1, TypeScript 6.0.3, Tailwind 4.3.3, Vitest 5.0.5, Playwright 1.64.1, Zod 4.6.7, next-intl 4.14.9 ; compatibilité vérifiée à l'installation de A1 ; essai de TypeScript 7 en branche à part | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
 | D106 | Noms à côté des codes DR, CVR, RS | **Libellé de zone et nom de la personne responsable** affichés à côté du code, par un composant unique `ZoneLabel` (interface, e-mails, exports). Noms fictifs au démonstrateur ; noms réels à l'étape B | Décidée par T. SOEFOU le 23/10/2026 (« pas de souci ») ; réserve proposée : avis des DPO avant noms réels (D17, D18) | DPO |
-| D107 | Personnalisation uniforme | Un contexte d'accès unique (profil, périmètre, vocabulaire, langue) pour tous les écrans, e-mails et exports | Proposée (aucune préférence exprimée, recommandation appliquée) | T. SOEFOU |
-| D108 | Audience des alertes | Champ `audience` obligatoire (agence, cliente, les deux), défaut refus ; filtrage dans la couche de données. Réservées à l'agence (proposition par défaut) : retards de proposition internes, coûts et chiffrage incomplet, qualité des données et imports, alertes techniques | Proposée (aucune préférence exprimée, recommandation appliquée) | T. SOEFOU, Impact |
+| D107 | Personnalisation uniforme | Un contexte d'accès unique (profil, périmètre, vocabulaire, langue) pour tous les écrans, e-mails et exports | Validée par T. SOEFOU le 23/10/2026 (recommandation suivie) | T. SOEFOU |
+| D108 | Audience des alertes | Champ `audience` obligatoire (agence, cliente, les deux), défaut refus ; filtrage dans la couche de données. Réservées à l'agence (proposition par défaut) : retards de proposition internes, coûts et chiffrage incomplet, qualité des données et imports, alertes techniques | Validée par T. SOEFOU le 23/10/2026 (recommandation suivie) | T. SOEFOU, Impact |
 | D109 | Cartographie | **La découpe réelle peut être utilisée** (réponse de T. SOEFOU). Contredit la règle « aucune donnée réelle » de CLAUDE.md : dérogation proposée aux conditions de D112 bis ci-dessous | Décidée par T. SOEFOU le 23/10/2026 ; conditions proposées | T. SOEFOU, Impact et cliente (accord d'usage de la découpe) |
 | D109 bis | Conditions de la dérogation D109 (proposées) | Fichier de découpe **jamais versionné**, chemin local par variable d'environnement ; lu par un importeur générique ; aucune valeur dans les prompts, journaux, captures ni fixtures ; bandeau « DONNÉES RÉELLES LOCALES » distinct du bandeau fictif ; démonstration à la cliente sur le poste du prestataire seulement ; contours cartographiques embarqués localement, licence vérifiée (D25) | Validée par T. SOEFOU le 23/10/2026 (confirmation des conditions) | Impact et cliente : accord d'usage de la découpe |
 | D110 | Périmètre de la démonstration du 10/11 | Noyau A1, A2, A3, A4a, A5, A6 ; A4b, A4c1, A4c2, A5b à la seconde démonstration ; la date reste indicative (D26 ouvert) | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU, cliente |
@@ -262,7 +262,7 @@ Voir la section 6 du document 14.
 | D115 | Hébergement de l'étape B | **Instruire OVHcloud d'abord** (`HEBERGEMENT_CONFORME.md` §3 bis). **Aucun hébergeur retenu** ; choix et contrat après instruction | Validée (instruction) le 23/10/2026 ; choix non fait | T. SOEFOU, Impact, DPO |
 | D116 | Référentiels de livraison | Accessibilité (WCAG/RGAA) et niveau de sécurité (ASVS) à fixer avec Impact avant la fin de l'étape A | Validée (point ouvert enregistré) le 23/10/2026 | Impact |
 | D117 | Signature des livrables externes | Profil **FREELANCE** pour le dossier de stack et de livraison | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
-D107 et D108 restent **proposées**.
+D107 et D108 validées le 23/10/2026 (recommandations suivies).
 
 ### Direction visuelle du 23/10/2026 (A1 bis)
 
@@ -284,3 +284,14 @@ D107 et D108 restent **proposées**.
 | D131 | Lecture analytique par dispositif et par campagne | Filtre hiérarchique Dispositif puis Campagne sur tous les écrans de lecture et exports, vue « Par campagne » avec sous-totaux et réconciliation, **comparatif de campagnes côte à côte** (deux ou trois) | Décidée par T. SOEFOU le 23/10/2026 | Cliente |
 | D132 | Saisie des jours | Cases à cocher LUN à DIM (un ou plusieurs jours, au moins un) pour tous les besoins ; DIM désactivé par défaut, paramètre du dispositif ; écart au dictionnaire LUN à SAM | Décidée par T. SOEFOU le 23/10/2026 ; Q-J1 ouverte sur le dimanche | Cliente, agence |
 | D133 | Dates | Aucune date saisie à la main : calendrier de sélection (DatePicker, DateRangePicker, WeekPicker) pour tous les axes comportant une date ; règle commune 12 et test d'architecture | Décidée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
+
+### Validation du 23/10/2026 des points ouverts de A1 (recommandations suivies)
+
+| N° | Sujet | Décision | Statut | À confirmer par |
+|---|---|---|---|---|
+| D118 | Menu par profil | Table de `src/domain/menu.ts` : pas de Paramètres ni d'Administration côté cliente, pas de Budget pour le CVR, Administration réservée au prestataire | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
+| D119 | Date en anglais | jj/mm/aaaa (en-GB) et semaine « W » ; format FR inchangé | Validée par T. SOEFOU le 23/10/2026 ; hypothèse à faire confirmer par la cliente | Cliente |
+| D120 | Cookie de simulation | `demo_profile_simule`, valeur `sim.<profil>`, réservé à la démonstration, supprimé avant toute authentification réelle | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
+| D121 | Police | Inter locale en attendant l'avis sur Roboto ; pile système Apple en premier (D123) | Validée par T. SOEFOU le 23/10/2026 | Impact |
+| D122 | Noms de fixtures | Prénoms génériques fictifs conservés pour le démonstrateur, toujours étiquetés fictifs ; noms réels à l'étape B (D106) | Validée par T. SOEFOU le 23/10/2026 | DPO (avant noms réels) |
+| Q-J1 | Dimanche dans les jours de saisie | Désactivé par défaut, activable par dispositif (D132) | Validée par T. SOEFOU le 23/10/2026 | Cliente, agence |

@@ -48,7 +48,7 @@ Sorties détaillées : voir `npm test` et `npm run test:e2e` à relancer sur le 
 - Noms de fixtures de type « Prénom Démo » : à comparer avec FIXTURES §3 (« aucun nom propre »). Les prénoms de l'équipe fictive (Ulysse, Amel, Bastien, Clémence, Valentin, Zoé) sont génériques mais restent des prénoms.
 - Horloge de démonstration figée au 23/10/2026 (semaine 2026-S43, calculée à la main).
 
-## 5. Mise à jour proposée du registre (non enregistrée)
+## 5. Mise à jour du registre (D118 à D122 validées le 23/10/2026, voir DECISIONS.md)
 | Réf. | Objet | Proposition | Décideur |
 |---|---|---|---|
 | D118 | Menu par profil | Table de menus de `src/domain/menu.ts` (pas de Paramètres ni Administration côté cliente, pas de Budget pour le CVR, Administration réservée au prestataire) | T. SOEFOU |
@@ -58,11 +58,11 @@ Sorties détaillées : voir `npm test` et `npm run test:e2e` à relancer sur le 
 | D122 | Noms de fixtures | Prénoms génériques acceptés ou remplacés par des libellés neutres (« Responsable 01 ») | T. SOEFOU |
 
 ## 6. Questions pour T. SOEFOU
-1. Valider ou ajuster D118 à D122.
+1. D118 à D122 validées le 23/10/2026.
 2. Créer `.denylist.local` (hachages SHA-256 des termes réels) pour activer C3.
 3. Lancer `npm install`, `npx playwright install chromium`, puis `npm test` et `npm run test:e2e` sur le Mac pour confirmer l'équivalence avec la VM.
 4. Référentiels d'accessibilité (WCAG/RGAA) et niveau ASVS à fixer avec Impact (D116).
-5. Valider D107 et D108, restées « proposées ».
+5. D107 et D108 validées le 23/10/2026.
 
 ## 7. A1 bis : direction visuelle et mode sombre (D123, D124)
 - Jetons ajustés : ombres diffuses, bordures discrètes, pile système Apple avec Inter en repli, jetons `link`, `title`, `focus`, `field` (bordure de champ 3:1).

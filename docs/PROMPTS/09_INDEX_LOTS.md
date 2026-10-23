@@ -31,6 +31,5 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 4. En fin de lot : relire le compte rendu et les captures, trancher les « mises à jour proposées », puis (à votre demande) commiter et pousser avant d'ouvrir le lot suivant.
 
 ## 4. Décisions à prendre côté T. SOEFOU avant ou pendant le noyau
-- D107 et D108 (contexte d'accès, audience des alertes) : toujours « proposées » ; A1 les applique par défaut.
-- D118 à D122 : menu par profil, format de date EN, cookie de simulation, police, noms de fixtures.
+- D107, D108, D118 à D122 et Q-J1 : validées le 23/10/2026 (recommandations suivies).
 - Accord d'Impact et de la cliente pour la découpe réelle ; fichier `.denylist.local` pour le contrôle C3 ; référentiels WCAG/RGAA et ASVS (D116) ; choix d'hébergeur (D115, OVHcloud en instruction).
