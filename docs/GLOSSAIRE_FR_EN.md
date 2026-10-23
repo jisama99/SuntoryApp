@@ -94,6 +94,7 @@ Version du 23/10/2026. **Validé par T. SOEFOU le 23/10/2026** (recommandations 
 | FR | EN | Remarque |
 |---|---|---|
 | Annuler | Undo | Annulation après écriture |
+| Modification annulée | Change undone | Confirmation après annulation |
 | Enregistré | Saved | |
 | Fermer | Close | |
 | Trier le tableau | Sort table | |

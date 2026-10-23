@@ -13,7 +13,7 @@ Demande (prompt 21, partie C, et D68) : matrice fonction, événement métier, r
 
 | N° | Sujet | Décision proposée | Statut | À confirmer par |
 |---|---|---|---|---|
-| D90 | Matrice de référence | Trois catalogues liés : événements EV-01 à EV-37 (§3), rapports R-01 à R-15 (§5), automatisations AUT-01 à AUT-15 (§6). Aucun rapport sans événement source ni boucle | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
+| D90 | Matrice de référence | Trois catalogues liés : événements EV-01 à EV-39 (§3), rapports R-01 à R-15 (§5), automatisations AUT-01 à AUT-15 (§6). Aucun rapport sans événement source ni boucle | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
 | D91 | Journal des événements métier | Chaque changement d'état est un événement daté deux fois (date d'effet, date de saisie), jamais réécrit. Il est la source des rapports, des alertes et de la reconstitution d'un état à une date. Horloge de démonstration et instantané hebdomadaire de contrôle | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
 | D92 | États de l'entonnoir | Six états en données (À recruter, En recrutement, Proposé, Validé, Recruté, En poste) ; le mot « Pourvu » des rapports désigne « En poste » (poste démarré) ; deux taux affichés (recrutées, en poste) | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU, métier cliente |
 | D93 | Mesure des délais | Quatre jalons, par situation (recrutement nouveau, réattribution, zone blanche), médiane, étendue et effectif ; pas de moyenne unique. Précise D87 | Validée par T. SOEFOU le 23/10/2026 | T. SOEFOU |
@@ -86,6 +86,8 @@ Colonnes : fonction source (doc 16), données portées, rapports alimentés. Tou
 | EV-36 | Clôture hebdomadaire, mensuelle ou trimestrielle | F-30.9 | période | R-02, R-03, R-04 |
 | **Reporting** | | | | |
 | EV-37 | Rapport généré, contrôle en échec, relu, validé, publié, partagé | F-70.x | spécification, empreinte, auteur | R-09 |
+| EV-38 | Paramètre ou échéance modifié | D176 | paramètre, ancienne et nouvelle valeur, auteur | R-05 |
+| EV-39 | Modification annulée | D178 | objet, écriture annulée, auteur | R-09 |
 Remarque : EV-21 n'existe dans aucune source lue (ni colonne, ni statut). Sa donnée source est à confirmer (§11, point 3).
 
 ## 4. Matrice fonctions, événements, rapports, boucles
