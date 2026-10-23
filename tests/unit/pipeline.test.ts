@@ -390,7 +390,7 @@ describe('reprise 3 : écart entre l\'acceptation et le poste démarré (D210)',
   });
 });
 
-// ---- D212 (action « renvoyer pour confirmation ») et D214 (heures) ----
+// ---- D212 (action « renvoyer pour confirmation ») et D216 (heures) ----
 describe('D212 : accord perdu après la prise de poste', () => {
   const startedRec = rec({ search_started_on: '2026-10-01', hired_on: '2026-10-05', start_work_date: '2026-10-10' });
   const invalid = decision({ status: 'invalidated', invalidated_reason: 'need_changed', invalidated_on: '2026-10-21' });
@@ -411,7 +411,7 @@ describe('D212 : accord perdu après la prise de poste', () => {
   });
 });
 
-describe('D214 : heures de l\'acceptation et de la prise de poste', () => {
+describe('D216 : heures de l\'acceptation et de la prise de poste', () => {
   it('même jour avec heure de prise de poste postérieure : « plus tard dans la journée »', () => {
     const r = rec({ search_started_on: '2026-10-20', hired_on: '2026-10-21', start_work_date: '2026-10-22', start_work_time: '11:00' });
     const d = decision({ decided_on: '2026-10-22', decided_time: '09:30' });

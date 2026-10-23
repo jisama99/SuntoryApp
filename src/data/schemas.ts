@@ -363,7 +363,7 @@ export const RecruitmentSchema = z.object({
   hired_on: NullableDate,
   training_on: NullableDate,
   start_work_date: NullableDate,
-  /** D214 : heure de prise de poste (HH:MM, Paris), saisie en option. */
+  /** D216 : heure de prise de poste (HH:MM, Paris), saisie en option. */
   start_work_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable().optional(),
   vehicle_handover_date: NullableDate,
   refusal_count: z.number().int().min(0),
@@ -420,7 +420,7 @@ export const DecisionSchema = z.object({
   status: z.enum(DECISION_STATUSES),
   decided_by: z.enum(PROFILE_IDS),
   decided_on: IsoDateStr,
-  /** D214 : heure d'acceptation, horodatée automatiquement (HH:MM, Paris). */
+  /** D216 : heure d'acceptation, horodatée automatiquement (HH:MM, Paris). */
   decided_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable().optional(),
   invalidated_on: NullableDate,
   invalidated_reason: z.enum(INVALIDATION_REASONS).nullable(),
