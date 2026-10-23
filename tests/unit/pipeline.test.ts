@@ -216,7 +216,7 @@ describe('délais par situation, jamais une moyenne unique', () => {
 });
 
 describe('entonnoir : stock, hors entonnoir, taux', () => {
-  const row = (over: Partial<FunnelRow>): FunnelRow => ({ state: 'recruiting', situation: 'new', closed: null, toQualify: false, hours: 10, refusals: 0, withdrawals: 0, ...over });
+  const row = (over: Partial<FunnelRow>): FunnelRow => ({ state: 'recruiting', situation: 'new', closed: null, toQualify: false, hours: 10, refusals: 0, withdrawals: 0, performedBeforeStop: false, ...over });
   it('la zone blanche sort du numérateur et du dénominateur, ligne séparée', () => {
     const s = funnelSummary([row({ state: 'started', hours: 20 }), row({ state: 'recruiting', hours: 20 }), row({ state: 'recruiting', situation: 'white_zone', hours: 40 })]);
     expect(s.demandedHours).toBe(40);
@@ -280,5 +280,143 @@ describe('visibilité des notes (D162), défaut refus', () => {
   });
   it('une visibilité inconnue est refusée', () => {
     expect(noteVisibleTo(note({ visibility: 'nope' as never }), cvr, true, null)).toBe(false);
+  });
+});
+
+// ---- Reprises de la revue A3 (D198, D210, D211) ----
+import { executionStatus, startLagKind, startLagSample, startLagStats } from '@/domain/pipeline';
+
+describe('reprise 1 : un accord invalidé ne laisse pas « Recrutement finalisé »', () => {
+  const invalid = decision({ status: 'invalidated', invalidated_reason: 'need_changed', invalidated_on: '2026-10-23' });
+  const hiredRec = rec({ search_started_on: '2026-10-21', hired_on: '2026-10-22', start_work_date: '2026-11-02' });
+  it('accord valide : recrutement finalisé', () => {
+    expect(funnelState(facts(hiredRec, [proposal()], [decision()]), TODAY)).toBe('hired');
+  });
+  it('accord invalidé : retour à « Proposé », statut de poste cohérent, la décision reste au dossier', () => {
+    const f = facts(hiredRec, [proposal()], [invalid]);
+    expect(funnelState(f, TODAY)).toBe('proposed');
+    expect(positionStatus(f, TODAY)).toBe('proposed');
+    expect(f.decisions).toHaveLength(1);
+  });
+  it('qui doit agir : la cliente redécide, l\'agence ne « finalise » ni ne prend un poste sans accord', () => {
+    const step = nextStep({ ...facts(hiredRec, [proposal()], [invalid]), needState: 'submitted', submittedOn: '2026-10-20', requestedStart: '2026-11-02' }, TODAY, P, CAL);
+    expect(step).toMatchObject({ actor: 'decider', action: 'decide' });
+  });
+  it('proposition retirée avec l\'accord : retour à « En recrutement »', () => {
+    const f = facts(hiredRec, [proposal({ status: 'withdrawn' })], [invalid]);
+    expect(funnelState(f, TODAY)).toBe('recruiting');
+  });
+  it('poste déjà démarré : l\'état « En poste » ne dépend pas de l\'accord, le poste est occupé', () => {
+    const started = rec({ search_started_on: '2026-10-21', hired_on: '2026-10-22', start_work_date: '2026-10-23' });
+    expect(funnelState(facts(started, [proposal()], [invalid]), TODAY)).toBe('started');
+  });
+});
+
+describe('reprise 4 : statut d\'exécution', () => {
+  it('non démarrée, prise de poste planifiée, en poste, terminée', () => {
+    expect(executionStatus(facts(blankRecruitment(NEED_ID)), TODAY)).toBeNull();
+    expect(executionStatus(facts(rec()), TODAY)).toBe('not_started');
+    expect(executionStatus(facts(rec({ hired_on: '2026-10-22', start_work_date: '2026-11-02' })), TODAY)).toBe('start_planned');
+    expect(executionStatus(facts(rec({ hired_on: '2026-10-22', start_work_date: '2026-10-23' })), TODAY)).toBe('in_post');
+    expect(executionStatus(facts(rec({ hired_on: '2026-10-01', start_work_date: '2026-10-05', stopped: { reason: 'x', on: '2026-10-20' } })), TODAY)).toBe('ended');
+    expect(executionStatus(facts(rec({ search_started_on: '2026-10-23', exits: [{ kind: 'termination', on: '2026-10-23', hired_on: '2026-10-01', start_work_date: '2026-10-05' }] })), TODAY)).toBe('ended');
+  });
+  it('indépendant du statut de poste : un recrutement finalisé sans prise de poste n\'est pas démarré', () => {
+    const f = facts(rec({ hired_on: '2026-10-22' }), [proposal()], [decision()]);
+    expect(positionStatus(f, TODAY)).toBe('approved');
+    expect(executionStatus(f, TODAY)).toBe('not_started');
+  });
+});
+
+describe('reprise 2 : besoin stoppé et taux d\'heures (D211)', () => {
+  const row = (over: Partial<FunnelRow>): FunnelRow => ({ state: 'recruiting', situation: 'new', closed: null, toQualify: false, hours: 10, refusals: 0, withdrawals: 0, performedBeforeStop: false, ...over });
+  it('stoppé avant d\'avoir démarré : hors dénominateur et numérateur', () => {
+    const s = funnelSummary([row({ state: 'started', hours: 10 }), row({ state: null, closed: 'stopped', hours: 30 })]);
+    expect(s.demandedHours).toBe(10);
+    expect(s.startedRate).toBe(1);
+    expect(s.stopped).toBe(1);
+    expect(s.stoppedPerformedHours).toBe(0);
+  });
+  it('stoppé en cours d\'exécution : ses heures effectuées restent comptées au dénominateur et au numérateur', () => {
+    const s = funnelSummary([row({ state: 'started', hours: 10 }), row({ state: null, closed: 'stopped', hours: 30, performedBeforeStop: true })]);
+    expect(s.demandedHours).toBe(40);
+    expect(s.hiredRate).toBe(1);
+    expect(s.startedRate).toBe(1);
+    expect(s.stopped).toBe(1);
+    expect(s.stoppedPerformedHours).toBe(30);
+    expect(s.byState.started.needs).toBe(1); // le stock par état ne compte pas un besoin stoppé
+  });
+  it('un besoin rejeté n\'a jamais d\'heures effectuées', () => {
+    const s = funnelSummary([row({ state: null, closed: 'rejected', hours: 30, performedBeforeStop: true })]);
+    expect(s.demandedHours).toBe(0);
+    expect(s.rejected).toBe(1);
+  });
+});
+
+describe('reprise 3 : écart entre l\'acceptation et le poste démarré (D210)', () => {
+  it('même jour calendaire, jour ouvré suivant ou plus', () => {
+    expect(startLagKind('2026-10-20', '2026-10-20')).toBe('same_day');
+    expect(startLagKind('2026-10-20', '2026-10-21')).toBe('next_working_day_or_more');
+    expect(startLagKind('2026-10-23', '2026-10-24')).toBe('next_working_day_or_more'); // samedi : aucune catégorie propre, regroupé
+    expect(startLagKind('2026-10-20', '2026-11-30')).toBe('next_working_day_or_more');
+  });
+  it('« plus tard dans la journée » exige les heures des deux événements, sinon il reste vide', () => {
+    expect(startLagKind('2026-10-20', '2026-10-20', '09:30', '10:30')).toBe('later_in_day');
+    expect(startLagKind('2026-10-20', '2026-10-20', '09:30', '09:30')).toBe('same_day');
+    expect(startLagKind('2026-10-20', '2026-10-20', '09:30', null)).toBe('same_day');
+  });
+  it('un poste démarré dont la date précède l\'acceptation n\'est pas classé', () => {
+    expect(startLagKind('2026-10-21', '2026-10-20')).toBeNull();
+  });
+  it('échantillon : seulement un accord en vigueur et une prise de poste atteinte', () => {
+    const started = rec({ search_started_on: '2026-10-20', hired_on: '2026-10-21', start_work_date: '2026-10-22' });
+    expect(startLagSample(facts(started, [proposal()], [decision({ decided_on: '2026-10-22' })]), TODAY)).toMatchObject({ kind: 'same_day', days: 0, situation: 'new' });
+    expect(startLagSample(facts(started, [proposal()], [decision({ decided_on: '2026-10-20' })]), TODAY)).toMatchObject({ kind: 'next_working_day_or_more', days: 2 });
+    expect(startLagSample(facts({ ...started, start_work_date: '2026-11-02' }, [proposal()], [decision()]), TODAY)).toBeNull(); // pas démarré
+    expect(startLagSample(facts(started, [proposal()], []), TODAY)).toBeNull();
+    expect(startLagSample(facts({ ...started, situation: 'white_zone' }, [proposal()], [decision()]), TODAY)).toBeNull();
+  });
+  it('statistiques par situation, sans seuil figé, effectif minimal paramétrable', () => {
+    const samples = [
+      { situation: 'new' as const, kind: 'same_day' as const, days: 0 }, { situation: 'new' as const, kind: 'next_working_day_or_more' as const, days: 3 },
+      { situation: 'new' as const, kind: 'next_working_day_or_more' as const, days: 9 }, { situation: 'reassigned' as const, kind: 'same_day' as const, days: 0 },
+    ];
+    const s = startLagStats(samples, 2);
+    expect(s.new.same_day).toMatchObject({ n: 1, sufficient: false });
+    expect(s.new.next_working_day_or_more).toEqual({ n: 2, median: 6, min: 3, max: 9, sufficient: true });
+    expect(s.new.later_in_day).toMatchObject({ n: 0, median: null });
+    expect(s.reassigned.same_day.n).toBe(1);
+    expect(s.white_zone.same_day.n).toBe(0);
+  });
+});
+
+// ---- D230 (action « renvoyer pour confirmation ») et D231 (heures) ----
+describe('D230 : accord perdu après la prise de poste', () => {
+  const startedRec = rec({ search_started_on: '2026-10-01', hired_on: '2026-10-05', start_work_date: '2026-10-10' });
+  const invalid = decision({ status: 'invalidated', invalidated_reason: 'need_changed', invalidated_on: '2026-10-21' });
+  const step = (f: Facts, needChanged?: boolean) =>
+    nextStep({ ...f, needState: 'submitted', submittedOn: '2026-10-01', requestedStart: '2026-10-10', ...(needChanged === undefined ? {} : { needChanged }) }, TODAY, P, CAL);
+  it('accord en vigueur : personne n\'a rien à faire', () => {
+    expect(step(facts(startedRec, [proposal()], [decision()])).actor).toBe('none');
+  });
+  it('besoin modifié, accord invalidé : l\'agence renvoie la proposition pour confirmation, avec échéance', () => {
+    const s = step(facts(startedRec, [proposal()], [invalid]), true);
+    expect(s).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal', due: '2026-10-28' });
+  });
+  it('nouvelle version envoyée : la cliente décide', () => {
+    expect(step(facts(startedRec, [proposal({ version: 2, id: ID(11) })], [invalid]), false)).toMatchObject({ actor: 'decider', action: 'decide' });
+  });
+  it('aucune proposition envoyée : l\'agence propose', () => {
+    expect(step(facts(startedRec, [], []), false)).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal' });
+  });
+});
+
+describe('D231 : heures de l\'acceptation et de la prise de poste', () => {
+  it('même jour avec heure de prise de poste postérieure : « plus tard dans la journée »', () => {
+    const r = rec({ search_started_on: '2026-10-20', hired_on: '2026-10-21', start_work_date: '2026-10-22', start_work_time: '11:00' });
+    const d = decision({ decided_on: '2026-10-22', decided_time: '09:30' });
+    expect(startLagSample(facts(r, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'later_in_day', days: 0 });
+    expect(startLagSample(facts({ ...r, start_work_time: '09:30' }, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'same_day' });
+    expect(startLagSample(facts({ ...r, start_work_time: null }, [proposal()], [d]), TODAY)).toMatchObject({ kind: 'same_day' });
   });
 });

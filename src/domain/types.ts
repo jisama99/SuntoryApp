@@ -142,7 +142,7 @@ export type RecruitmentStep = (typeof RECRUITMENT_STEPS)[number];
 
 export const NEXT_ACTIONS = [
   'complete_need', 'qualify', 'clarify', 'prepare_proposal', 'send_proposal', 'decide', 'revise_proposal', 'new_proposal',
-  'finalise_hiring', 'start_work', 'none',
+  'finalise_hiring', 'start_work', 'reconfirm_proposal', 'none',
 ] as const;
 export type NextAction = (typeof NEXT_ACTIONS)[number];
 export const ACTORS = ['rs', 'agency', 'decider', 'none'] as const;
@@ -155,3 +155,14 @@ export const NOTE_VISIBILITIES = ['agency_internal', 'shared_client', 'shared_re
 export type NoteVisibility = (typeof NOTE_VISIBILITIES)[number];
 export const NOTE_OBJECT_KINDS = ['proposal', 'decision'] as const;
 export type NoteObjectKind = (typeof NOTE_OBJECT_KINDS)[number];
+
+/** Statut d'exécution (dimension « exécution », distinct du statut de poste calculé) : où en est la prise de poste. */
+export const EXECUTION_STATUSES = ['not_started', 'start_planned', 'in_post', 'ended'] as const;
+export type ExecutionStatus = (typeof EXECUTION_STATUSES)[number];
+
+/**
+ * Écart entre l'acceptation de la proposition et le poste démarré (D210). « Plus tard dans la journée » exige l'heure des
+ * deux événements ; le démonstrateur n'enregistre que des dates, cette catégorie reste donc vide tant que l'heure n'existe pas.
+ */
+export const START_LAG_KINDS = ['same_day', 'later_in_day', 'next_working_day_or_more'] as const;
+export type StartLagKind = (typeof START_LAG_KINDS)[number];

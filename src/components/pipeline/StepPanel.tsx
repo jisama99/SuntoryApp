@@ -14,6 +14,12 @@ import { addDays } from '@/domain/week';
 import type { CalendarRules } from '@/domain/working-days';
 import { formatDate } from '@/lib/format';
 
+/** Heures de prise de poste proposées, par demi-heure (D231) : saisie par sélecteur, jamais en texte libre. */
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+  const v = `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`;
+  return { value: v, text: v };
+});
+
 export interface StepDef {
   step: RecruitmentStep;
   /** Valeur courante affichée (date déjà enregistrée), le cas échéant. */
@@ -21,7 +27,7 @@ export interface StepDef {
   /** Étape ouverte à cette personne et dans l'état du besoin. */
   enabled: boolean;
   /** Raison écrite quand l'étape est fermée. */
-  blocked?: 'not_taken' | 'no_accord' | 'not_hired' | 'closed' | 'forbidden' | 'already';
+  blocked?: 'not_taken' | 'no_accord' | 'not_hired' | 'closed' | 'forbidden' | 'already' | 'accord_pending';
   field: 'date' | 'date_future' | 'motive' | 'sector' | 'none' | 'date_motive';
   /** Date plancher (par exemple la date du recrutement). */
   min?: string;
@@ -66,6 +72,7 @@ function StepItem({ needId, def, sectors, today, nonWorking }: { needId: string;
   const [date, setDate] = useState<string | null>(def.field === 'date' || def.field === 'date_future' || def.field === 'date_motive' ? today : null);
   const [motive, setMotive] = useState('');
   const [sector, setSector] = useState('');
+  const [time, setTime] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const needsDate = def.field === 'date' || def.field === 'date_future' || def.field === 'date_motive';
@@ -79,7 +86,7 @@ function StepItem({ needId, def, sectors, today, nonWorking }: { needId: string;
         return;
       }
       const r = await recordStepAction({
-        locale, needId, step: def.step, ...(needsDate && date ? { date } : {}), ...(needsMotive ? { motive } : {}), ...(def.field === 'sector' ? { fromSectorId: sector } : {}),
+        locale, needId, step: def.step, ...(needsDate && date ? { date } : {}), ...(needsMotive ? { motive } : {}), ...(def.step === 'start_work' && time ? { time } : {}), ...(def.field === 'sector' ? { fromSectorId: sector } : {}),
       });
       if (r.status === 'ok') {
         announce(tc('saved'), { undoToken: r.undoToken });
@@ -110,6 +117,9 @@ function StepItem({ needId, def, sectors, today, nonWorking }: { needId: string;
               max={max}
               nonWorking={nonWorking}
             />
+          ) : null}
+          {def.step === 'start_work' ? (
+            <SelectField id="step-start_work-time" label={t('time')} placeholder={t('timeNone')} value={time} options={TIME_OPTIONS} onChange={(e) => { setTime(e.target.value); setResult(null); }} />
           ) : null}
           {def.field === 'sector' ? (
             <SelectField id="step-reassign-sector" label={t('fromSector')} placeholder={t('choose')} value={sector} options={sectors.map((s) => ({ value: s.id, text: s.text }))} onChange={(e) => { setSector(e.target.value); setResult(null); }} />

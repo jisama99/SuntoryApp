@@ -136,7 +136,8 @@
       "decisionsPending": "{n, plural, one {# proposition attend une décision de la cliente.} other {# propositions attendent une décision de la cliente.}}",
       "decisionsLate": "{n, plural, one {# décision de la cliente dépasse son échéance.} other {# décisions de la cliente dépassent leur échéance.}}",
       "clarificationPending": "{n, plural, one {# besoin attend une précision du RS.} other {# besoins attendent une précision du RS.}}",
-      "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}"
+      "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}",
+      "accordLost": "L'accord n'est plus en vigueur sur {n, plural, one {# poste en poste} other {# postes en poste}} : le besoin a changé, la proposition est à renvoyer pour confirmation."
     }
   },
   "states": {
@@ -1038,6 +1039,7 @@
       "new_proposal": "Proposer un autre profil",
       "finalise_hiring": "Finaliser le recrutement",
       "start_work": "Enregistrer la prise de poste",
+      "reconfirm_proposal": "Renvoyer la proposition pour confirmation",
       "none": "Aucune action"
     },
     "dimension": {
@@ -1106,7 +1108,8 @@
       "range": "du {start} au {end}",
       "withdrawnOn": "Retirée le {date}",
       "decidedOn": "Décidée le {date}",
-      "journal": "Journal du besoin"
+      "journal": "Journal du besoin",
+      "positionLine": "Statut de poste calculé"
     },
     "batch": {
       "title": "Valider plusieurs propositions",
@@ -1249,6 +1252,9 @@
     "steps": {
       "title": "Recrutement et exécution",
       "help": "Chaque étape est enregistrée avec sa date. La prise de poste et la remise du véhicule sont deux événements distincts.",
+      "dateAt": "{date} à {time}",
+      "time": "Heure (facultative)",
+      "timeNone": "Non précisée",
       "recordedOn": "Enregistrée le {date}",
       "date": "Date",
       "fromSector": "Secteur d'origine",
@@ -1296,7 +1302,8 @@
         "not_hired": "Le recrutement doit d'abord être finalisé.",
         "closed": "Le besoin est sorti du circuit.",
         "forbidden": "Étape réservée à un autre profil.",
-        "already": "Étape déjà enregistrée."
+        "already": "Étape déjà enregistrée.",
+        "accord_pending": "Enregistré. En attente d'un nouvel accord de la cliente."
       },
       "refused": {
         "forbidden": "Étape réservée à un autre profil.",
@@ -1341,7 +1348,7 @@
     "funnelPage": {
       "title": "Entonnoir de recrutement",
       "demanded": "Heures demandées par semaine",
-      "demandedNote": "Hors zone blanche et besoins stoppés",
+      "demandedNote": "Hors zone blanche. Un besoin stoppé garde ses heures effectuées avant l'arrêt.",
       "hiredRate": "Taux d'heures recrutées",
       "hiredRateNote": "Recrutement finalisé ou en poste",
       "startedRate": "Taux d'heures en poste",
@@ -1355,7 +1362,7 @@
       "hours": "Heures par semaine",
       "share": "Part des besoins",
       "outside": "Hors entonnoir",
-      "outsideHelp": "Ces positions sont comptées à part. La zone blanche et les besoins stoppés sortent du taux d'heures.",
+      "outsideHelp": "Ces positions sont comptées à part. La zone blanche sort du taux d'heures. Un besoin stoppé en sort aussi, sauf ses heures effectuées avant l'arrêt.",
       "outsideKinds": {
         "toQualify": "À qualifier",
         "whiteZone": "Zone blanche",
@@ -1380,7 +1387,25 @@
       "delaysNote": "Valeurs de départ à valider : jours calendaires et effectif minimal paramétrable.",
       "vacancy": "Âge de vacance des zones blanches",
       "noVacancy": "Aucune zone blanche.",
-      "vacancyAge": "{n, plural, one {Vacant depuis # jour} other {Vacant depuis # jours}}"
+      "vacancyAge": "{n, plural, one {Vacant depuis # jour} other {Vacant depuis # jours}}",
+      "stoppedValue": "{n}, dont {hours} heures effectuées avant l'arrêt, comptées dans les taux",
+      "lagTitle": "Acceptation et poste démarré",
+      "lagHelp": "Écart entre l'acceptation de la proposition et la prise de poste atteinte, par situation. Aucun seuil n'est fixé.",
+      "lagCaption": "Écart entre l'acceptation et le poste démarré",
+      "lag": {
+        "same_day": "Même jour",
+        "later_in_day": "Plus tard dans la journée",
+        "next_working_day_or_more": "Jour ouvré suivant ou plus"
+      },
+      "lagCount": "{n, plural, one {# poste} other {# postes}}",
+      "noTime": "Donnée indisponible : l'heure n'est pas enregistrée",
+      "lagNote": "Même jour : même jour calendaire, fuseau de Paris. « Plus tard dans la journée » demande l'heure des deux événements. Les prises de poste sur un jour non ouvré sont rangées avec « jour ouvré suivant ou plus »."
+    },
+    "execution": {
+      "not_started": "Non démarrée",
+      "start_planned": "Prise de poste planifiée",
+      "in_post": "En poste",
+      "ended": "Poste terminé"
     }
   }
 }

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import profilesJson from '@/data/fixtures/profiles.json';
 import zonesJson from '@/data/fixtures/zones.json';
-import { createMemoryRepository, resetDemoState } from '@/data/memory-repository';
+import { createMemoryRepository, resetDemoState, setTimeSource } from '@/data/memory-repository';
 import type { Need, Proposal, ProposalInput } from '@/data/schemas';
 import { ProfileSchema, ZoneSchema } from '@/data/schemas';
 import { buildAccessContext } from '@/domain/access';
@@ -21,7 +21,7 @@ const OWN = (ctxOf('rs').scope as { ids: string[] }).ids[0]!;
 const CVR_ZONE = (ctxOf('cvr_client').scope as { ids: string[] }).ids[0]!;
 const TODAY = '2026-10-23';
 
-beforeEach(() => resetDemoState());
+beforeEach(() => { resetDemoState(); setTimeSource(); });
 
 const byCode = async (code: string, ctx = AG()) => (await repo.getPipeline(ctx)).find((r) => r.need.need_code === code)!;
 
@@ -574,5 +574,159 @@ describe('revue A3 : constats corrigés', () => {
     expect(await decide(p.id, 'approved')).toMatchObject({ status: 'refused', reason: 'not_decidable' });
     expect((await repo.decideBatch(CVR(), [p.id], { outcome: 'approved' })).items[0]).toMatchObject({ status: 'refused', reason: 'not_decidable' });
     expect((await rowOf(n)).funnel).toBeNull();
+  });
+});
+
+describe('reprises de la revue A3', () => {
+  const merge = (n: Need) => repo.saveNeed(ctxOf('rs'), {
+    dispositif: 'permanent', campaign_code: 'CMP-DEMO-01', sector_id: OWN, position_label: 'Poste 4', weekly_hours: 14, priority: 2,
+    periods: [period(1, '2026-12-14', '2026-12-20')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: n.store_codes, client_comment: null,
+  }, { mergeInto: n.id, confirm: true });
+
+  it('1. recrutement finalisé puis besoin modifié : l\'état revient à « Proposé », la décision invalidée reste au dossier, le nouvel accord rétablit l\'état', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const p = await send(n);
+    await decide(p.id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    expect((await rowOf(n)).funnel).toBe('hired');
+    await merge(n);
+    const row = await rowOf(n);
+    expect([row.funnel, row.positionStatus, row.decision]).toEqual(['proposed', 'proposed', null]);
+    expect(row.next).toMatchObject({ actor: 'decider', action: 'decide' });
+    const thread = (await repo.getNeedThread(AG(), n.id))!;
+    expect(thread.decisions).toHaveLength(1);
+    expect(thread.decisions[0]).toMatchObject({ status: 'invalidated', invalidated_reason: 'need_changed' });
+    expect(row.recruitment.hired_on).toBe(TODAY); // rien n'est effacé
+    // La cliente redécide : l'accord rétabli rend le recrutement finalisé.
+    const again = await repo.saveProposal(AG(), n.id, input(n, { start_date: '2026-12-07', end_date: '2026-12-20' }), { send: true });
+    if (again.status !== 'saved') throw new Error('renvoi');
+    await decide(again.proposal.id, 'approved');
+    expect((await rowOf(n)).funnel).toBe('hired');
+  });
+  it('1 bis. recrutement finalisé puis nouvelle version : plus d\'état finalisé tant que la cliente n\'a pas décidé', async () => {
+    const n = await submitNeed();
+    await take(n);
+    const v1 = await send(n);
+    await decide(v1.id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await send(n, { candidate_ref: 'INT-902' });
+    expect((await rowOf(n)).funnel).toBe('proposed');
+  });
+  it('2. besoin stoppé en cours d\'exécution : heures effectuées comptées ; stoppé avant démarrage : exclu', async () => {
+    const before = (await repo.getFunnelReport(AG())).summary;
+    const started = await submitNeed();
+    await take(started);
+    await decide((await send(started)).id, 'approved');
+    await repo.recordStep(AG(), started.id, 'hired');
+    await repo.recordStep(AG(), started.id, 'start_work', { date: TODAY });
+    const running = (await repo.getFunnelReport(AG())).summary;
+    expect(running.demandedHours).toBe(before.demandedHours + 14);
+    await repo.recordStep(AG(), started.id, 'stop', { motive: 'Arrêt de la mission sur ce magasin.' });
+    const stopped = (await repo.getFunnelReport(AG())).summary;
+    expect(stopped.demandedHours).toBe(running.demandedHours); // les heures effectuées restent au dénominateur
+    expect(stopped.startedRate).toBeCloseTo(running.startedRate as number);
+    expect(stopped.stopped).toBe(before.stopped + 1);
+    expect(stopped.stoppedPerformedHours).toBe(14);
+    expect(stopped.byState.started.needs).toBe(running.byState.started.needs - 1);
+    const early = await submitNeed({ periods: [period(1, '2026-12-14', '2026-12-20')] });
+    await take(early);
+    await repo.recordStep(AG(), early.id, 'stop', { motive: 'Magasin fermé.' });
+    const last = (await repo.getFunnelReport(AG())).summary;
+    expect(last.demandedHours).toBe(stopped.demandedHours);
+    expect(last.stopped).toBe(stopped.stopped + 1);
+    expect(last.stoppedPerformedHours).toBe(14);
+  });
+  it('3. écart acceptation et poste démarré : classé par situation, jamais en moyenne unique', async () => {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY });
+    const lags = (await repo.getFunnelReport(AG())).startLags;
+    expect(lags.new.same_day.n).toBeGreaterThanOrEqual(1);
+    expect(lags.new.next_working_day_or_more.n).toBeGreaterThan(0); // jeu de démonstration
+    expect(lags.new.later_in_day.n).toBe(0); // l'heure n'est pas enregistrée
+    expect(lags.white_zone.same_day.n).toBe(0);
+  });
+  it('4. la carte d\'exécution suit son propre statut', async () => {
+    const n = await submitNeed();
+    await take(n);
+    expect((await rowOf(n)).execution).toBe('not_started');
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: '2026-11-02' });
+    const row = await rowOf(n);
+    expect([row.positionStatus, row.execution]).toEqual(['approved', 'start_planned']);
+    expect((await rowOf(await submitNeed({ periods: [period(1, '2026-12-14', '2026-12-20')] }))).execution).toBeNull();
+    expect((await byCode('BES-DEMO-001')).execution).toBe('in_post');
+  });
+});
+
+describe('D230 et D231 : codés après validation', () => {
+  const change = (n: Need) => repo.saveNeed(ctxOf('rs'), {
+    dispositif: 'permanent', campaign_code: 'CMP-DEMO-01', sector_id: OWN, position_label: 'Poste 4', weekly_hours: 14, priority: 2,
+    periods: [period(1, '2026-12-14', '2026-12-20')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: n.store_codes, client_comment: null,
+  }, { mergeInto: n.id, confirm: true });
+  async function started(): Promise<Need> {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY });
+    return n;
+  }
+  it('D230 : poste démarré puis besoin modifié : « En poste » maintenu, action et alerte pour l\'agence jusqu\'au rétablissement de l\'accord', async () => {
+    const n = await started();
+    expect((await rowOf(n)).next.action).toBe('none');
+    await change(n);
+    let row = await rowOf(n);
+    expect([row.funnel, row.decision, row.needChanged]).toEqual(['started', null, true]);
+    expect(row.next).toMatchObject({ actor: 'agency', action: 'reconfirm_proposal' });
+    expect((await repo.getPipelineAlerts(AG())).some((a) => a.message_key === 'accordLost' && a.audience === 'agency')).toBe(true);
+    // La cliente ne lit jamais cette alerte ni l'échéance interne.
+    for (const id of ['direction_client', 'dr_client', 'cvr_client', 'rs'] as const) {
+      expect((await repo.getPipelineAlerts(ctxOf(id))).some((a) => a.message_key === 'accordLost'), id).toBe(false);
+    }
+    expect((await rowOf(n, CVR())).next).toMatchObject({ actor: 'agency', due: null, urgency: null });
+    // L'agence renvoie la proposition mise à jour : la cliente décide, puis l'alerte disparaît.
+    const again = await repo.saveProposal(AG(), n.id, input(n, { start_date: '2026-12-07', end_date: '2026-12-20' }), { send: true });
+    if (again.status !== 'saved') throw new Error('renvoi');
+    row = await rowOf(n);
+    expect([row.funnel, row.next.actor, row.next.action]).toEqual(['started', 'decider', 'decide']);
+    expect((await repo.getPipelineAlerts(AG())).some((a) => a.message_key === 'accordLost')).toBe(false);
+    await decide(again.proposal.id, 'approved');
+    expect((await rowOf(n)).next.action).toBe('none');
+  });
+  it('D231 : l\'acceptation est horodatée automatiquement (heure de Paris), jamais saisie', async () => {
+    setTimeSource(() => '09:30');
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    const d = (await repo.getNeedThread(AG(), n.id))!.decisions[0]!;
+    expect(d.decided_time).toBe('09:30');
+    expect(d.decided_on).toBe(TODAY);
+  });
+  it('D231 : l\'heure de prise de poste est facultative, validée, et remise à zéro par un désistement', async () => {
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    expect(await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '25:00' })).toMatchObject({ reason: 'invalid' });
+    expect(await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '9h30' })).toMatchObject({ reason: 'invalid' });
+    expect((await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '11:00' })).status).toBe('ok');
+    expect((await rowOf(n)).recruitment.start_work_time).toBe('11:00');
+    await repo.recordStep(AG(), n.id, 'withdrawal');
+    expect((await rowOf(n)).recruitment.start_work_time).toBeNull();
+  });
+  it('D231 : « plus tard dans la journée » se remplit quand les deux heures existent', async () => {
+    setTimeSource(() => '09:30');
+    const n = await submitNeed();
+    await take(n);
+    await decide((await send(n)).id, 'approved');
+    await repo.recordStep(AG(), n.id, 'hired');
+    await repo.recordStep(AG(), n.id, 'start_work', { date: TODAY, time: '11:00' });
+    const lags = (await repo.getFunnelReport(AG())).startLags;
+    expect(lags.new.later_in_day.n).toBe(1);
   });
 });

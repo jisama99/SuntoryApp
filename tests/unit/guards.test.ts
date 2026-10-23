@@ -7,6 +7,8 @@ import { read, rel, ROOT, walk } from './util';
 
 // Racine du dépôt Git pour les contrôles d'index et d'historique (C5, C7).
 const GUARD_ROOT = process.env.GUARD_ROOT ?? ROOT;
+const GIT_TIMEOUT_MS = 25_000;
+const GIT_TEST_TIMEOUT_MS = 30_000;
 
 const SCAN = ['src', 'messages', 'scripts', 'tests'].flatMap((d) =>
   existsSync(path.join(ROOT, d)) ? walk(path.join(ROOT, d), (f) => /\.(ts|tsx|json|css|mjs)$/.test(f)) : [],
@@ -49,11 +51,18 @@ describe('C4 : aucune donnée personnelle ni réelle dans le code, les messages,
   });
 });
 
+/**
+ * Sortie d'une commande Git, ou null si le dépôt n'est pas joignable (signalé dans le compte rendu). Un dépassement de délai
+ * n'est jamais pris pour une absence de dépôt : il fait échouer le test. Délai du processus : 25 s, dans le délai du test (30 s).
+ * Cause de l'échec observé (5,9 s pour un test qui dure 20 à 80 ms) : non reproduite, même sous trois suites en parallèle ;
+ * hypothèse : tâche de fond de Git (maintenance après récupération). Le délai absorbe ce cas sans masquer un blocage réel.
+ */
 function gitFiles(args: string[]): string[] | null {
   try {
-    return execFileSync('git', ['-C', GUARD_ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+    return execFileSync('git', ['-C', GUARD_ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: GIT_TIMEOUT_MS })
       .split('\n').filter(Boolean);
-  } catch {
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ETIMEDOUT') throw error;
     return null;
   }
 }
@@ -72,7 +81,7 @@ describe('C5 : aucun fichier interdit suivi par Git ou présent dans l\'arboresc
     }
     const bad = tracked.filter((f) => (BANNED_EXT.test(f) && !f.startsWith('docs/')) || BANNED_NAME.test(f));
     expect(bad).toEqual([]);
-  });
+  }, GIT_TEST_TIMEOUT_MS);
 
   it('arborescence de travail : aucun classeur ni export dans src, messages, scripts, tests', () => {
     const hits = ['src', 'messages', 'scripts', 'tests', 'public']
@@ -89,7 +98,7 @@ describe('C7 : aucune trace interdite dans l\'historique Git', () => {
     if (all === null) return; // pas de dépôt joignable : signalé dans le compte rendu
     const bad = [...new Set(all)].filter((f) => (BANNED_EXT.test(f) && !f.startsWith('docs/')) || BANNED_NAME.test(f));
     expect(bad).toEqual([]);
-  });
+  }, GIT_TEST_TIMEOUT_MS);
 });
 
 // C3 : liste de refus locale (hachages SHA-256 de termes réels), jamais versionnée.

@@ -1,7 +1,8 @@
 import type { Decision, Need, Note, Proposal, ProposalInput, Recruitment, Zone } from '@/data/schemas';
 import type {
-  Actor, DeviationKind, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, Urgency,
+  Actor, DeviationKind, ExecutionStatus, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, StartLagKind, Urgency,
 } from './types';
+import { START_LAG_KINDS } from './types';
 import { addDays, daysBetween } from './week';
 import type { IsoDate } from './week';
 import { resolvePeriod } from './week-rules';
@@ -151,11 +152,12 @@ export const isClosed = (r: Recruitment): boolean => r.intake === 'rejected' || 
 export function funnelState(f: Facts, today: IsoDate): FunnelState | null {
   const r = f.recruitment;
   if (r.intake !== 'taken' || isClosed(r)) return null;
+  // Un poste déjà occupé le reste (la date de prise de poste est atteinte). Avant, « Recrutement finalisé » exige l'accord en
+  // vigueur : un accord invalidé (EV-12) ramène à « Proposé » sans effacer la date de recrutement ni la décision.
   if (r.hired_on && r.start_work_date && r.start_work_date <= today) return 'started';
-  if (r.hired_on) return 'hired';
   const sent = sentProposal(f.proposals);
   const decision = sent ? validDecisionOn(sent.id, f.decisions) : null;
-  if (decision?.outcome === 'approved') return 'approved';
+  if (decision?.outcome === 'approved') return r.hired_on ? 'hired' : 'approved';
   // Proposé : décision attendue, ou révision demandée. Un refus ramène à « En recrutement » (D97).
   if (sent && (!decision || decision.outcome === 'revision')) return 'proposed';
   return r.search_started_on || r.refusal_count > 0 ? 'recruiting' : 'to_recruit';
@@ -207,7 +209,7 @@ export function urgencyOf(due: IsoDate, today: IsoDate, params: PipelineParams, 
 }
 
 export function nextStep(
-  i: Facts & { needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null },
+  i: Facts & { needState: Need['need_state']; submittedOn: IsoDate; requestedStart: IsoDate | null; needChanged?: boolean },
   today: IsoDate,
   params: PipelineParams,
   cal: CalendarRules,
@@ -225,16 +227,36 @@ export function nextStep(
   const sent = sentProposal(i.proposals);
   const active = activeProposal(i.proposals);
   const decision = sent ? validDecisionOn(sent.id, i.decisions) : null;
-  if (r.hired_on) {
-    if (r.start_work_date && r.start_work_date <= today) return withDue('none', 'none', null);
-    return withDue('agency', 'start_work', r.start_work_date ?? i.requestedStart);
+  if (r.hired_on && r.start_work_date && r.start_work_date <= today) {
+    // D230 : poste occupé, « En poste » est maintenu. Tant que l'accord n'est pas rétabli (besoin modifié, accord invalidé),
+    // l'agence renvoie la proposition pour confirmation ; une version envoyée sans décision attend la cliente.
+    if (!i.needChanged && sent && !decision) return withDue('decider', 'decide', sent.sent_on ? addWorkingDays(sent.sent_on, params.decision_due_days, cal) : null);
+    if (!i.needChanged && decision?.outcome === 'approved') return withDue('none', 'none', null);
+    const lost = i.decisions.filter((d) => d.status === 'invalidated' && d.invalidated_on).map((d) => d.invalidated_on as IsoDate).sort().pop();
+    return withDue('agency', 'reconfirm_proposal', addWorkingDays(lost ?? i.submittedOn, params.proposal_due_days, cal));
   }
-  if (decision?.outcome === 'approved') return withDue('agency', 'finalise_hiring', null);
+  if (decision?.outcome === 'approved') {
+    return r.hired_on ? withDue('agency', 'start_work', r.start_work_date ?? i.requestedStart) : withDue('agency', 'finalise_hiring', null);
+  }
   if (sent && !decision) return withDue('decider', 'decide', sent.sent_on ? addWorkingDays(sent.sent_on, params.decision_due_days, cal) : null);
   if (sent && decision?.outcome === 'revision') return withDue('agency', 'revise_proposal', proposalDue);
   if (active?.status === 'in_progress') return withDue('agency', 'send_proposal', proposalDue);
   if (decision?.outcome === 'refused') return withDue('agency', 'new_proposal', proposalDue);
   return withDue('agency', 'prepare_proposal', proposalDue);
+}
+
+/**
+ * Statut d'exécution : où en est la prise de poste, indépendamment du statut de poste calculé (qui mêle accord et recrutement).
+ * « Poste terminé » : besoin stoppé après la prise de poste, ou rupture sans nouvelle prise de poste.
+ */
+export function executionStatus(f: Facts, today: IsoDate): ExecutionStatus | null {
+  const r = f.recruitment;
+  if (r.intake !== 'taken') return null;
+  if (r.stopped && r.hired_on && r.start_work_date && r.start_work_date <= r.stopped.on) return 'ended';
+  const last = r.exits[r.exits.length - 1];
+  if (last?.kind === 'termination' && !r.hired_on) return 'ended';
+  if (r.hired_on && r.start_work_date) return r.start_work_date <= today ? 'in_post' : 'start_planned';
+  return 'not_started';
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -295,6 +317,48 @@ export function delayStats(samples: readonly DelaySample[], minSample: number): 
   return out;
 }
 
+export interface StartLagSample {
+  situation: Situation;
+  kind: StartLagKind;
+  /** Jours calendaires entre l'acceptation et la prise de poste. */
+  days: number;
+}
+
+/**
+ * Classe l'écart entre l'acceptation (date de la décision) et le poste démarré. Même jour = même jour calendaire (dates
+ * stockées au fuseau de Paris). Aucun seuil : « plus tard dans la journée » exige l'heure des deux événements (HH:MM) ; sans
+ * elle, un même jour reste « même jour ». Toute date postérieure est « jour ouvré suivant ou plus » (une prise de poste un jour non
+ * ouvré entre deux n'a pas de catégorie propre : hypothèse). Une prise de poste antérieure à l'acceptation n'est pas classée.
+ */
+export function startLagKind(acceptedOn: IsoDate, startedOn: IsoDate, acceptedTime?: string | null, startedTime?: string | null): StartLagKind | null {
+  if (startedOn < acceptedOn) return null;
+  if (startedOn > acceptedOn) return 'next_working_day_or_more';
+  return acceptedTime && startedTime && startedTime > acceptedTime ? 'later_in_day' : 'same_day';
+}
+
+/** Un poste démarré sous accord en vigueur ; la zone blanche, les besoins fermés et les postes pas encore démarrés n'ont pas d'écart. */
+export function startLagSample(f: Facts, today: IsoDate): StartLagSample | null {
+  const r = f.recruitment;
+  if (r.intake !== 'taken' || isClosed(r) || r.situation === 'white_zone' || !r.hired_on || !r.start_work_date || r.start_work_date > today) return null;
+  const sent = sentProposal(f.proposals);
+  const accord = sent ? validDecisionOn(sent.id, f.decisions) : null;
+  if (accord?.outcome !== 'approved') return null;
+  const kind = startLagKind(accord.decided_on, r.start_work_date, accord.decided_time, r.start_work_time);
+  return kind ? { situation: r.situation, kind, days: daysBetween(accord.decided_on, r.start_work_date) } : null;
+}
+
+export function startLagStats(samples: readonly StartLagSample[], minSample: number): Record<Situation, Record<StartLagKind, DelayStat>> {
+  const out = {} as Record<Situation, Record<StartLagKind, DelayStat>>;
+  for (const s of ['new', 'reassigned', 'white_zone'] as const) {
+    out[s] = {} as Record<StartLagKind, DelayStat>;
+    for (const k of START_LAG_KINDS) {
+      const values = samples.filter((x) => x.situation === s && x.kind === k).map((x) => x.days);
+      out[s][k] = { n: values.length, median: median(values), min: values.length ? Math.min(...values) : null, max: values.length ? Math.max(...values) : null, sufficient: values.length >= minSample };
+    }
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------------------------
 // Entonnoir : stock par état, positions hors entonnoir, taux d'heures.
 // ---------------------------------------------------------------------------------------------
@@ -308,6 +372,8 @@ export interface FunnelRow {
   hours: number | null;
   refusals: number;
   withdrawals: number;
+  /** Besoin stoppé après sa prise de poste : ses heures effectuées avant l'arrêt restent comptées (D211). */
+  performedBeforeStop: boolean;
 }
 
 export interface FunnelSummary {
@@ -315,6 +381,8 @@ export interface FunnelSummary {
   /** Positions hors entonnoir, comptées à part (D85). */
   stopped: number;
   rejected: number;
+  /** Heures par semaine des besoins stoppés après leur prise de poste : comptées dans les taux, affichées à part. */
+  stoppedPerformedHours: number;
   whiteZone: { needs: number; hours: number };
   toQualify: number;
   /** Besoin passé en « Réattribué » : compté dans son état, signalé à part. */
@@ -329,13 +397,14 @@ export interface FunnelSummary {
 }
 
 /**
- * Heures demandées : besoins pris en charge, ni stoppés ni en zone blanche (la zone blanche est exclue du numérateur et du
- * dénominateur, D92). Le sort d'un besoin stoppé dans le taux est une question ouverte (doc 26 §11 point 5) : exclu ici.
+ * Heures demandées : besoins pris en charge, hors zone blanche (exclue du numérateur et du dénominateur, D92) et hors besoins
+ * stoppés, sauf leurs heures effectuées avant l'arrêt qui restent comptées (D211).
  */
 export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
   const byState = Object.fromEntries((['to_recruit', 'recruiting', 'proposed', 'approved', 'hired', 'started'] as const).map((s) => [s, { needs: 0, hours: 0 }])) as FunnelSummary['byState'];
   let stopped = 0;
   let rejected = 0;
+  let stoppedPerformed = 0;
   let toQualify = 0;
   let reassigned = 0;
   let demanded = 0;
@@ -347,8 +416,16 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
   const white = { needs: 0, hours: 0 };
   for (const r of rows) {
     if (r.closed) {
-      if (r.closed === 'stopped') stopped += 1;
-      else rejected += 1;
+      if (r.closed === 'stopped') {
+        stopped += 1;
+        if (r.performedBeforeStop) {
+          // D211 : exclu du taux comme la zone blanche, sauf les heures déjà effectuées avant l'arrêt.
+          stoppedPerformed += r.hours ?? 0;
+          demanded += r.hours ?? 0;
+          hired += r.hours ?? 0;
+          started += r.hours ?? 0;
+        }
+      } else rejected += 1;
       continue;
     }
     if (r.toQualify) {
@@ -372,7 +449,7 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
     if (r.state === 'started') started += r.hours ?? 0;
   }
   return {
-    byState, stopped, rejected, whiteZone: white, toQualify, reassigned, demandedHours: demanded,
+    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, reassigned, demandedHours: demanded,
     hiredRate: demanded > 0 ? hired / demanded : null, startedRate: demanded > 0 ? started / demanded : null,
     refusals, withdrawals, returned,
   };

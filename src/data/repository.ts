@@ -2,8 +2,8 @@ import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
 import type { DelayStat, FunnelSummary, Milestone, NextStep, PipelineParams, ProposalIssue } from '@/domain/pipeline';
 import type {
-  DecisionOutcome, DeadlineType, Dispositif, FunnelState, HomeSkin, MenuKey, NoteObjectKind, NoteVisibility, PositionStatus, PresetId,
-  ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation,
+  DecisionOutcome, DeadlineType, Dispositif, ExecutionStatus, FunnelState, HomeSkin, MenuKey, NoteObjectKind, NoteVisibility, PositionStatus, PresetId,
+  ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation, StartLagKind,
 } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
@@ -269,6 +269,8 @@ export interface PipelineRow {
   recruitment: Recruitment;
   funnel: FunnelState | null;
   positionStatus: PositionStatus | null;
+  /** Statut d'exécution (prise de poste), distinct du statut de poste calculé. */
+  execution: ExecutionStatus | null;
   /** Proposition courante : la cliente ne voit que les propositions envoyées, jamais un brouillon. */
   proposal: Proposal | null;
   /** Décision valide sur la proposition courante. */
@@ -295,6 +297,8 @@ export interface NeedThread {
 export interface FunnelReport {
   summary: FunnelSummary;
   delays: Record<Situation, Record<Milestone, DelayStat>>;
+  /** Écart entre l'acceptation et le poste démarré, par situation (D210). */
+  startLags: Record<Situation, Record<StartLagKind, DelayStat>>;
   params: PipelineParams;
   /** Zones blanches : âge de vacance en jours depuis la déclaration, sans délai de recrutement. */
   vacancies: Array<{ needId: string; days: number }>;
@@ -305,7 +309,7 @@ export interface PipelineAlert {
   audience: Alert['audience'];
   severity: Severity;
   /** Clé sous `alerts.pipeline`. */
-  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate';
+  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate' | 'accordLost';
   params: Record<string, string | number>;
   created_at: string;
 }
@@ -335,6 +339,8 @@ export interface StepInput {
   /** Date de l'étape (aaaa-mm-jj). Par défaut : la date du jour de démonstration. */
   date?: string;
   motive?: string;
+  /** Heure de prise de poste (HH:MM, Paris), en option (D231). */
+  time?: string;
   /** Secteur d'origine d'une réattribution. */
   fromSectorId?: string;
 }

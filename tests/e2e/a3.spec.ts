@@ -126,6 +126,12 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     await page.locator('[data-step="vehicle_handover"]').getByRole('button', { name: 'Enregistrer la remise' }).click();
     await expect(page.locator('[data-step="vehicle_handover"]')).toContainText('Enregistrée le');
     await expect(page.getByTestId('dimensions')).not.toContainText('En poste');
+    // D231 : la décision porte son heure ; l'heure de prise de poste se choisit par sélecteur (facultative).
+    await expect(page.locator('[data-proposal-version="2"] [data-decision-status="valid"]')).toContainText(/ à \d{2}:\d{2}/);
+    await page.selectOption('#step-start_work-time', '11:00');
+    await page.locator('[data-step="start_work"]').getByRole('button', { name: 'Enregistrer la prise de poste' }).click();
+    await expect(page.locator('[data-step="start_work"]')).toContainText('Enregistrée le');
+    await expect(page.getByTestId('dimensions')).toContainText('à 11:00');
     expect(w.consoleErrors).toEqual([]);
   });
 
@@ -160,6 +166,24 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     await expect(page.locator('[data-situation="reassigned"]')).toContainText('Effectif trop faible');
     await expect(page.locator('[data-situation="white_zone"]')).toContainText('Pas de délai');
     await expect(page.getByTestId('funnel-vacancy')).toBeVisible();
+    // D210 : écart acceptation / poste démarré par situation, « plus tard dans la journée » vide faute d'heure enregistrée.
+    const lags = page.getByTestId('funnel-lags');
+    await expect(lags).toContainText('Même jour');
+    await expect(lags.locator('[data-lag-situation="new"]')).toContainText("l'heure n'est pas enregistrée");
+    // D211 : le besoin stoppé figure sur sa ligne, avec le rappel des heures effectuées.
+    await expect(page.locator('[data-outside="stopped"]')).toBeVisible();
+  });
+
+  test('carte Exécution : statut d\'exécution, statut de poste calculé affiché à part', async ({ page, context }) => {
+    await setProfile(context, 'agency_operator');
+    await open(page, 'BES-DEMO-001');
+    const dims = page.getByTestId('dimensions');
+    await expect(dims.locator('h3', { hasText: 'Exécution' }).locator('..')).toContainText('En poste');
+    await expect(dims.locator('h3', { hasText: 'Exécution' }).locator('..')).not.toContainText('Refusé');
+    await expect(page.getByTestId('position-status')).toContainText('Statut de poste calculé');
+    await open(page, 'BES-DEMO-009');
+    await expect(dims.locator('h3', { hasText: 'Exécution' }).locator('..')).toContainText('Non démarrée');
+    await expect(page.getByTestId('position-status')).toContainText('Refusé');
   });
 
   test('390 px : tableau en cartes, aucun défilement horizontal, cibles de 44 px', async ({ page, context }) => {
@@ -172,7 +196,7 @@ test.describe('lot A3 : propositions, décisions, qui doit agir, entonnoir', () 
     }
     // Entonnoir : les deux tableaux passent en cartes et rien n'est coupé dans leur conteneur.
     await page.goto('/fr/proposals/funnel');
-    for (const id of ['funnel-stock', 'funnel-delays']) {
+    for (const id of ['funnel-stock', 'funnel-delays', 'funnel-lags']) {
       const table = page.getByTestId(id);
       expect(await table.locator('tbody tr').first().evaluate((el) => getComputedStyle(el).display)).toBe('block');
       expect(await table.evaluate((el) => (el.parentElement as HTMLElement).scrollWidth - (el.parentElement as HTMLElement).clientWidth)).toBeLessThanOrEqual(0);
