@@ -43,7 +43,7 @@ APRÈS
   vérifications non exécutées, questions pour T. SOEFOU.
 - Proposer une mise à jour du registre de décisions (« mise à jour proposée »),
   sans écrire de décision non validée.
-- Ne pas commiter ni pousser sans demande explicite. Exception (D148) : en fin de lot, après le compte rendu, commit et push de la branche de session uniquement, jamais sur main.
+- Ne pas commiter ni pousser sans demande explicite. Exception (D148) : en fin de lot, après le compte rendu, commit et push de la branche de session uniquement, jamais sur main. Exception (D191) : une session de revue lancée avec `docs/PROMPTS/31_PROMPT_REVUE_ET_FUSION.md` peut fusionner la branche d'un lot dans `main` et pousser `main`, après contrôles verts et validation de T. SOEFOU, jamais en force ni par pull request.
 
 RÈGLES NON NÉGOCIABLES
 - Aucune donnée réelle (seule exception : D109 bis, découpe locale), aucun tarif fictif présenté comme réel, aucun coût inconnu à 0 €.
@@ -59,3 +59,5 @@ RÈGLES NON NÉGOCIABLES
 - Il sépare le démonstrateur (montrer les fonctionnalités) du MVP (données réelles), en cohérence avec la position D03.
 - Il impose la lecture du registre avant chaque lot : Claude Code ne transforme pas une hypothèse en décision.
 - Il garde les garde-fous du cadrage (pas de faux zéro, pas de masquage seul, pas de donnée réelle) tout au long du développement.
+
+Économie de modèles (D192, règle commune 17) : délègue aux sous-agents seulement le volumineux ou le mécanique, avec le modèle le plus économique suffisant ; le principal garde les décisions, la sécurité et le verdict.

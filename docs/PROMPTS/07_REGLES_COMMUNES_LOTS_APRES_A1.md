@@ -65,6 +65,7 @@ CONVENTIONS À RESPECTER
     de 150 à 250 ms, désactivées en mouvement réduit ; trois états par route (squelette de chargement, vide, erreur) ;
     confirmation visible et annulable après toute écriture, focus replacé ; tableaux en cartes sous 640 px ; cibles
     tactiles de 44 px, police de base 16 px ; police Inter chargée en local (règle 10). Tests de style étendus à chaque lot.
+17. Économie de modèles et de sous-agents (D192) : ne délègue à un sous-agent que ce qui est volumineux ou mécanique, avec le modèle **le plus économique suffisant** : le plus léger pour chercher, lister, extraire, lancer une commande et résumer sa sortie ; un modèle intermédiaire pour une relecture ordinaire ou la rédaction de tests ; le modèle principal pour l'architecture, la sécurité, les droits, la vie privée, les arbitrages et le verdict. Pas de sous-agent pour une tâche courte. Demande des sorties résumées et vérifiables (fichier, ligne, commande). Un résultat douteux est refait avec un modèle supérieur. La décision, le verdict, l'inscription au registre et la fusion ne sont jamais délégués. Mêmes interdits de données et de réseau pour les sous-agents.
 
 APERÇU ET PREUVES
 - Après chaque étape visuelle : serveur local, navigateur intégré, capture, console et réseau vérifiés.
@@ -78,7 +79,7 @@ GARDE-FOUS DE DONNÉES
 - C1 à C7 de docs/FIXTURES.md §5 relancés à chaque lot ; C3 signalé « non exécuté » sans .denylist.local.
 
 GIT ET LIVRAISON
-- Aucun commit ni push sans demande explicite de T. SOEFOU. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu et les contrôles reportés, commit et push de la branche de session uniquement ; jamais sur main, jamais de pull request. La fusion dans main est faite après relecture.
+- Aucun commit ni push sans demande explicite de T. SOEFOU. Exception (D148, 23/10/2026) : en fin de lot, après le compte rendu et les contrôles reportés, commit et push de la branche de session uniquement ; jamais sur main, jamais de pull request. La fusion dans main est faite après relecture. Exception (D191) : une session de revue lancée avec `docs/PROMPTS/31_PROMPT_REVUE_ET_FUSION.md` peut fusionner la branche d'un lot dans `main` et pousser `main`, après contrôles verts et validation de T. SOEFOU, jamais en force ni par pull request.
 - Fin de lot : docs/COMPTE_RENDU_<lot>.md (réalisé, non réalisé, écarts, vérifications non exécutées,
   questions pour T. SOEFOU) et « mise à jour proposée » du registre (jamais écrite comme décidée).
 - Récapitulatif de dix lignes maximum : ce qui est prêt, ce qui bloque, ce que tu attends de moi
