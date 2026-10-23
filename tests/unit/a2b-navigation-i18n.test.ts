@@ -14,7 +14,7 @@ const both = (key: string) => {
   expect(F[key], `fr ${key}`).toBeTruthy();
   expect(E[key], `en ${key}`).toBeTruthy();
 };
-const APP = path.join(ROOT, 'src/app/[locale]');
+const APP = path.join(ROOT, 'src/app/[locale]/(app)');
 
 describe('règle commune 14 (D151) : navigation web, états de route, fil d\'Ariane, URL', () => {
   it('chaque route du lot porte un état de chargement et un état d\'erreur', () => {
@@ -60,7 +60,7 @@ describe('règle commune 14 (D151) : navigation web, états de route, fil d\'Ari
   });
 
   it('le lien d\'évitement et le mouvement réduit existent déjà (A1) et restent en place', () => {
-    expect(read(path.join(APP, 'layout.tsx'))).toContain('href="#main"');
+    expect(read(path.join(ROOT, 'src/app/[locale]/layout.tsx'))).toContain('href="#main"');
     expect(read(path.join(ROOT, 'src/app/globals.css'))).toContain('prefers-reduced-motion');
   });
 });

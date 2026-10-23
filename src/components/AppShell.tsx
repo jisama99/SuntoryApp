@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { MenuKey } from '@/domain/types';
 import { SIDEBAR_COOKIE } from '@/lib/sidebar-cookie';
+import { BrandLogo, BrandMark } from './BrandLogo';
 import { Icon } from './Icon';
 import { MENU_ICONS, UI_ICONS } from './icons';
 import { NavLinks } from './NavLinks';
@@ -77,7 +78,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
         <span className={`grid h-7 w-12 place-items-center rounded-full ${active ? 'bg-sel' : ''}`}>
           <Icon icon={MENU_ICONS[item.key]} size="md" />
         </span>
-        <span className="max-w-full truncate">{item.label}</span>
+        <span className="line-clamp-2 max-w-full text-center leading-tight">{item.label}</span>
       </Link>
     );
   };
@@ -90,9 +91,14 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       data-collapsed={collapsed}
       className={`min-h-screen lg:grid ${collapsed ? 'lg:grid-cols-[var(--sidebar-width-collapsed)_1fr]' : 'lg:grid-cols-[var(--sidebar-width)_1fr]'} motion-safe:transition-[grid-template-columns]`}
     >
-      <aside id="app-sidebar" className="hidden bg-surface p-4 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
-        <div className={`mb-4 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          {collapsed ? null : <p className="px-3 text-lg font-extrabold tracking-tight text-title">{labels.brand}</p>}
+      <aside id="app-sidebar" className="hidden bg-surface px-4 pb-6 pt-8 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
+        <div className={`mb-10 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+          {collapsed ? null : (
+            <div className="flex flex-col gap-3 px-3">
+              <BrandLogo brand="suntory" className="h-8" />
+              <p className="text-lg font-extrabold tracking-tight text-title">{labels.brand}</p>
+            </div>
+          )}
           <button
             type="button"
             aria-expanded={!collapsed}
@@ -111,11 +117,17 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       </aside>
       <div className="min-w-0">
         <header className="bg-surface print:hidden lg:hidden">
-          <p className="flex min-h-14 items-center px-4 text-base font-extrabold tracking-tight text-title">{labels.brand}</p>
+          <div className="flex min-h-16 items-center gap-3 px-5">
+            <BrandLogo brand="suntory" className="h-6" />
+            <p className="text-base font-extrabold tracking-tight text-title">{labels.brand}</p>
+          </div>
         </header>
-        <div className="flex flex-wrap items-center justify-end gap-3 px-4 pt-4 print:hidden lg:px-8">{toolbar}</div>
-        <main id="main" tabIndex={-1} className="px-4 pb-28 pt-6 print:px-0 print:pt-8 lg:px-8 lg:pb-6">
+        <div className="flex flex-wrap items-center justify-end gap-3 px-5 pt-6 print:hidden lg:px-10">{toolbar}</div>
+        <main id="main" tabIndex={-1} className="px-5 pb-28 pt-8 print:px-0 print:pt-8 lg:px-10 lg:pb-10">
           {children}
+          <footer className="mt-16 flex justify-center print:hidden">
+            <BrandMark />
+          </footer>
         </main>
       </div>
 

@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Suntory steering platform",
+    "name": "Merchandising steering",
     "skip": "Skip to main content"
   },
   "banner": {
@@ -37,15 +37,15 @@
     "provider_admin": "Provider (technical administrator)"
   },
   "menu": {
-    "home": "Home",
-    "dashboard": "Dashboard",
-    "needs": "Needs",
-    "proposals": "Proposals",
-    "field": "Field",
+    "home": "My cockpit",
+    "dashboard": "Steering",
+    "needs": "Merch needs",
+    "proposals": "Agency responses",
+    "field": "Field teams",
     "budget": "Budget",
-    "alerts": "Alerts",
+    "alerts": "To handle",
     "settings": "Settings",
-    "admin": "Administration"
+    "admin": "Mission management"
   },
   "greeting": {
     "named": "Hello {name}",
@@ -315,7 +315,8 @@
       "submitted": "Submitted",
       "deferred": "Deferred"
     },
-    "emptyFilter": "No need matches this filter."
+    "emptyFilter": "No need matches this filter.",
+    "title": "Your merchandising needs"
   },
   "form": {
     "note": "An incomplete need is saved as a draft and stays out of the totals. Dates are chosen in the calendar.",
@@ -682,7 +683,7 @@
       "title": "Deadline calendar",
       "body": "Two deadlines per month, default preset, fixed dates, reopenings and prepared emails.",
       "intro": "Two deadlines per target month: need entry and change requests. After the deadline, entry for the month is blocked in the data layer.",
-      "novemberNote": "For November 2026, the fixed date of 30/10/2026 is a fictitious demonstration date (D80), to be confirmed by T. SOEFOU."
+      "novemberNote": "For November 2026, the fixed date of 30/10/2026 is a fictitious demonstration date, to be confirmed."
     },
     "dispositifs": {
       "title": "Scheme settings",
@@ -740,7 +741,7 @@
       "effect": "Effect",
       "unit": "Unit",
       "roles": "Allowed roles",
-      "csUndefined": "The \"CS\" role is not defined (Q-N9-3): it is not offered.",
+      "csUndefined": "The \"CS\" role is not defined: it is not offered.",
       "useGlobal": "Use the global value"
     },
     "value": {
@@ -749,10 +750,10 @@
       "notApplicable": "Not applicable",
       "unpriced": "Unpriced",
       "amountFictive": "{amount} EUR excl. VAT (fictitious value)",
-      "calendar": "Global calendar (D80, D82)",
+      "calendar": "Global calendar",
       "window": {
-        "last_full_week": "Second-to-last week of the previous month, reading A (last full week of the month)",
-        "week_of_last_day": "Second-to-last week of the previous month, reading B (the last week is the one of the last day)"
+        "last_full_week": "Second-to-last week of the previous month, taking the last full week of the month",
+        "week_of_last_day": "Second-to-last week of the previous month, the last week being the one of the last day"
       },
       "nextMonth": "Following month",
       "days": "{n} days",
@@ -772,10 +773,10 @@
     },
     "h2": {
       "title": "Worked example for December 2026",
-      "label": "Hypothesis H2, to be confirmed",
+      "label": "To be confirmed",
       "lead": "Change deadline of the second placement for December 2026: {date}, computed from the scheme setting.",
-      "readingA": "Reading A of the second-to-last week of November: from {from} to {to}.",
-      "readingB": "Reading B of the second-to-last week of November: from {from} to {to}."
+      "readingA": "Taking the last full week of the month, the second-to-last week of November runs from {from} to {to}.",
+      "readingB": "Taking the week of the last day of the month, the second-to-last week of November runs from {from} to {to}."
     },
     "history": {
       "title": "Change history",
@@ -793,7 +794,7 @@
     },
     "campaigns": {
       "title": "Campaigns and schemes",
-      "help": "A campaign belongs to one scheme only (H1). Attaching it to a second scheme is refused by rule P2."
+      "help": "A campaign belongs to one scheme only. Attaching it to a second scheme is refused."
     }
   },
   "outbox": {
@@ -831,5 +832,11 @@
     "close": "Close this list",
     "closeButton": "Close",
     "hint": "Keyboard shortcuts"
+  },
+  "skin": {
+    "label": "Home theme",
+    "products": "Products",
+    "nature": "Nature",
+    "plain": "Plain"
   }
 }

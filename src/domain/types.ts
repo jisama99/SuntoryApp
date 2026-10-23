@@ -39,6 +39,11 @@ export type MenuKey = (typeof MENU_KEYS)[number];
 
 export type Scope = { kind: 'all' } | { kind: ZoneKind; ids: string[] };
 
+/** Skins de l'écran d'accueil (D161) : Produits, Nature, Sobre (sans visuel). */
+export const HOME_SKINS = ['products', 'nature', 'plain'] as const;
+export type HomeSkin = (typeof HOME_SKINS)[number];
+export const DEFAULT_HOME_SKIN: HomeSkin = 'nature';
+
 /** Dispositifs (H1, D128) : anciennement les valeurs du champ `campaign`. */
 export const DISPOSITIFS = ['permanent', 'seasonal', 'hourly_merch', 'second_placement'] as const;
 export type Dispositif = (typeof DISPOSITIFS)[number];

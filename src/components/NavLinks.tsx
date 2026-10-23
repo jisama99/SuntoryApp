@@ -22,7 +22,7 @@ export function NavLinks({ items, label, collapsed = false, onNavigate }: {
   const pathname = usePathname();
   return (
     <nav aria-label={label}>
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col gap-2">
         {items.map((item) => {
           const active = item.href === '/' ? pathname === '/' : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (

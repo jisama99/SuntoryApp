@@ -7,16 +7,7 @@ import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ConfirmationProvider } from '@/components/Confirmation';
 import { DemoBanner } from '@/components/DemoBanner';
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
-import { AppShell } from '@/components/AppShell';
-import type { NavItem } from '@/components/NavLinks';
-import { ThemeSwitcher } from '@/components/ThemeSwitcher';
-import { Shortcuts } from '@/components/Shortcuts';
-import { ProfileSwitcher } from '@/components/ProfileSwitcher';
-import { profileDirectory, repository } from '@/data';
 import { routing } from '@/i18n/routing';
-import { getAccessContext } from '@/lib/session';
-import { getSidebarCollapsed } from '@/lib/sidebar';
 import { getTheme } from '@/lib/theme';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -30,15 +21,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-
-  const ctx = await getAccessContext(locale);
   const theme = await getTheme();
-  const [menu, profiles] = await Promise.all([repository.getMenu(ctx), profileDirectory.list()]);
-  const t = await getTranslations('menu');
   const tApp = await getTranslations('app');
-  const tNav = await getTranslations('nav');
-  const items: NavItem[] = menu.map((e) => ({ key: e.key, href: e.href, label: t(e.key) }));
-  
+
   return (
     <html lang={locale} data-theme={theme === 'system' ? undefined : theme}>
       <body>
@@ -50,27 +35,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             {tApp('skip')}
           </a>
           <DemoBanner />
-          <ConfirmationProvider>
-          <AppShell
-            items={items}
-            collapsedInitial={await getSidebarCollapsed()}
-            canCreate={repository.canWriteNeeds(ctx)}
-            labels={{
-              brand: tApp('name'), nav: tNav('label'), mobile: tNav('mobile'), more: tNav('more'), moreTitle: tNav('moreTitle'),
-              create: tNav('create'), collapse: tNav('collapse'), expand: tNav('expand'),
-            }}
-            toolbar={
-              <>
-                <Shortcuts items={items} canCreate={repository.canWriteNeeds(ctx)} createHref="/needs/new" />
-                <ThemeSwitcher />
-                <LocaleSwitcher />
-                <ProfileSwitcher profiles={profiles} current={ctx.profileId} />
-              </>
-            }
-          >
-            {children}
-          </AppShell>
-          </ConfirmationProvider>
+          <ConfirmationProvider>{children}</ConfirmationProvider>
         </NextIntlClientProvider>
       </body>
     </html>

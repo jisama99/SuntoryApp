@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import type { FindingDto } from '@/app/[locale]/needs/actions';
+import type { FindingDto } from '@/app/[locale]/(app)/needs/actions';
 import type { Locale } from '@/domain/types';
 import { Link } from '@/i18n/navigation';
 import { formatIsoWeek } from '@/lib/format';

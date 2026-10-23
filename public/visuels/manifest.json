@@ -1,0 +1,134 @@
+{
+  "nature": {
+    "desktop": [
+      {
+        "file": "nature-d-640.webp",
+        "width": 640,
+        "height": 292,
+        "bytes": 14796
+      },
+      {
+        "file": "nature-d-1280.webp",
+        "width": 1280,
+        "height": 583,
+        "bytes": 43950
+      },
+      {
+        "file": "nature-d-1920.webp",
+        "width": 1920,
+        "height": 875,
+        "bytes": 79556
+      }
+    ],
+    "mobile": [
+      {
+        "file": "nature-m-640.webp",
+        "width": 640,
+        "height": 480,
+        "bytes": 15582
+      },
+      {
+        "file": "nature-m-1215.webp",
+        "width": 1215,
+        "height": 911,
+        "bytes": 42234
+      }
+    ]
+  },
+  "products": {
+    "desktop": [
+      {
+        "file": "products-d-640.webp",
+        "width": 640,
+        "height": 243,
+        "bytes": 23452
+      },
+      {
+        "file": "products-d-1280.webp",
+        "width": 1280,
+        "height": 487,
+        "bytes": 62740
+      },
+      {
+        "file": "products-d-1920.webp",
+        "width": 1920,
+        "height": 731,
+        "bytes": 102772
+      }
+    ],
+    "mobile": [
+      {
+        "file": "products-m-640.webp",
+        "width": 640,
+        "height": 480,
+        "bytes": 31472
+      },
+      {
+        "file": "products-m-1015.webp",
+        "width": 1015,
+        "height": 761,
+        "bytes": 56974
+      }
+    ]
+  },
+  "forest": {
+    "desktop": [
+      {
+        "file": "forest-d-640.webp",
+        "width": 640,
+        "height": 206,
+        "bytes": 19062
+      },
+      {
+        "file": "forest-d-1280.webp",
+        "width": 1280,
+        "height": 412,
+        "bytes": 58086
+      },
+      {
+        "file": "forest-d-1900.webp",
+        "width": 1900,
+        "height": 611,
+        "bytes": 123234
+      }
+    ],
+    "mobile": [
+      {
+        "file": "forest-m-640.webp",
+        "width": 640,
+        "height": 480,
+        "bytes": 40624
+      },
+      {
+        "file": "forest-m-815.webp",
+        "width": 815,
+        "height": 611,
+        "bytes": 60868
+      }
+    ]
+  },
+  "logos": {
+    "logo-suntory": [
+      {
+        "file": "logo-suntory-480.webp",
+        "width": 480,
+        "height": 103,
+        "bytes": 25208
+      },
+      {
+        "file": "logo-suntory-960.webp",
+        "width": 960,
+        "height": 205,
+        "bytes": 50512
+      }
+    ],
+    "logo-marvesting": [
+      {
+        "file": "logo-marvesting-440.webp",
+        "width": 440,
+        "height": 100,
+        "bytes": 3412
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
-import type { DeadlineType, Dispositif, MenuKey, PresetId, ProfileId, ReopenScope } from '@/domain/types';
+import type { DeadlineType, Dispositif, HomeSkin, MenuKey, PresetId, ProfileId, ReopenScope } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
@@ -79,6 +79,13 @@ export interface Repository {
    */
   withUndo<T>(ctx: AccessContext, write: () => Promise<T>, changed: (result: T) => boolean): Promise<{ result: T; undoToken: string | null }>;
   undoWrite(ctx: AccessContext, token: string): Promise<MutationResult<'expired' | 'forbidden'>>;
+  /** Skin d'accueil effectif : le choix du profil, sinon le défaut fixé par l'agence (D161). */
+  getHomeSkin(ctx: AccessContext): Promise<{ skin: HomeSkin; source: 'user' | 'agency' }>;
+  /** Défaut de l'agence. Lecture et écriture réservées à l'agence administration (D118, D161). */
+  getHomeSkinDefault(ctx: AccessContext): Promise<HomeSkin | null>;
+  setHomeSkinDefault(ctx: AccessContext, skin: HomeSkin): Promise<MutationResult<'forbidden' | 'invalid'>>;
+  /** Choix du profil simulé : une préférence d'affichage, ouverte à tous les profils, qui ne touche que le sien. */
+  setUserHomeSkin(ctx: AccessContext, skin: HomeSkin): Promise<MutationResult<'invalid'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;

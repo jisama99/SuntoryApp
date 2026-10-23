@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Plateforme de pilotage Suntory",
+    "name": "Pilotage merchandising",
     "skip": "Aller au contenu principal"
   },
   "banner": {
@@ -37,15 +37,15 @@
     "provider_admin": "Prestataire (administrateur technique)"
   },
   "menu": {
-    "home": "Accueil",
-    "dashboard": "Tableau de bord",
-    "needs": "Besoins",
-    "proposals": "Propositions",
-    "field": "Terrain",
+    "home": "Mon cockpit",
+    "dashboard": "Pilotage",
+    "needs": "Besoins merch",
+    "proposals": "Réponses de l'agence",
+    "field": "Équipes terrain",
     "budget": "Budget",
-    "alerts": "Alertes",
-    "settings": "Paramètres",
-    "admin": "Administration"
+    "alerts": "À traiter",
+    "settings": "Réglages",
+    "admin": "Gestion de la mission"
   },
   "greeting": {
     "named": "Bonjour {name}",
@@ -315,7 +315,8 @@
       "submitted": "Soumis",
       "deferred": "Reportés"
     },
-    "emptyFilter": "Aucun besoin ne correspond à ce filtre."
+    "emptyFilter": "Aucun besoin ne correspond à ce filtre.",
+    "title": "Vos besoins en merchandising"
   },
   "form": {
     "note": "Un besoin incomplet est enregistré en brouillon et reste exclu des totaux. Les dates se choisissent dans le calendrier.",
@@ -682,7 +683,7 @@
       "title": "Calendrier des échéances",
       "body": "Deux échéances par mois, preset par défaut, dates fixes, réouvertures et courriels préparés.",
       "intro": "Deux échéances par mois cible : la saisie des besoins et les demandes de changement. Après la date limite, la saisie du mois est bloquée côté données.",
-      "novemberNote": "Pour novembre 2026, la date fixe du 30/10/2026 est une date fictive de démonstration (D80), à confirmer par T. SOEFOU."
+      "novemberNote": "Pour novembre 2026, la date fixe du 30/10/2026 est une date fictive de démonstration, à confirmer."
     },
     "dispositifs": {
       "title": "Paramètres des dispositifs",
@@ -740,7 +741,7 @@
       "effect": "Effet",
       "unit": "Unité",
       "roles": "Rôles autorisés",
-      "csUndefined": "Le rôle « CS » n'est pas défini (Q-N9-3) : il n'est pas proposé.",
+      "csUndefined": "Le rôle « CS » n'est pas défini : il n'est pas proposé.",
       "useGlobal": "Utiliser la valeur globale"
     },
     "value": {
@@ -749,10 +750,10 @@
       "notApplicable": "Non applicable",
       "unpriced": "Non chiffré",
       "amountFictive": "{amount} € HT (valeur fictive)",
-      "calendar": "Calendrier global (D80, D82)",
+      "calendar": "Calendrier global",
       "window": {
-        "last_full_week": "Avant-dernière semaine du mois précédent, lecture A (dernière semaine entière du mois)",
-        "week_of_last_day": "Avant-dernière semaine du mois précédent, lecture B (la dernière semaine est celle du dernier jour)"
+        "last_full_week": "Avant-dernière semaine du mois précédent, la dernière semaine entière du mois étant retenue",
+        "week_of_last_day": "Avant-dernière semaine du mois précédent, la dernière semaine étant celle du dernier jour"
       },
       "nextMonth": "Mois suivant",
       "days": "{n} jours",
@@ -772,10 +773,10 @@
     },
     "h2": {
       "title": "Exemple chiffré pour décembre 2026",
-      "label": "Hypothèse H2, à confirmer",
+      "label": "À confirmer",
       "lead": "Délai de modification du second placement pour décembre 2026 : {date}, calculé avec le paramètre du dispositif.",
-      "readingA": "Lecture A de l'avant-dernière semaine de novembre : du {from} au {to}.",
-      "readingB": "Lecture B de l'avant-dernière semaine de novembre : du {from} au {to}."
+      "readingA": "Si l'on retient la dernière semaine entière du mois, l'avant-dernière semaine de novembre va du {from} au {to}.",
+      "readingB": "Si l'on retient la semaine du dernier jour du mois, l'avant-dernière semaine de novembre va du {from} au {to}."
     },
     "history": {
       "title": "Historique des modifications",
@@ -793,7 +794,7 @@
     },
     "campaigns": {
       "title": "Campagnes et dispositifs",
-      "help": "Une campagne ne relève que d'un dispositif (H1). Le rattachement à un second dispositif est refusé par la règle P2."
+      "help": "Une campagne ne relève que d'un dispositif. Le rattachement à un second dispositif est refusé."
     }
   },
   "outbox": {
@@ -831,5 +832,11 @@
     "close": "Fermer cette liste",
     "closeButton": "Fermer",
     "hint": "Raccourcis clavier"
+  },
+  "skin": {
+    "label": "Skin d'accueil",
+    "products": "Produits",
+    "nature": "Nature",
+    "plain": "Sobre"
   }
 }

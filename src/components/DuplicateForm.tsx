@@ -2,8 +2,8 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
-import { duplicateNeedAction } from '@/app/[locale]/needs/actions';
-import type { SaveState } from '@/app/[locale]/needs/actions';
+import { duplicateNeedAction } from '@/app/[locale]/(app)/needs/actions';
+import type { SaveState } from '@/app/[locale]/(app)/needs/actions';
 import type { DeadlineContext } from '@/data/repository';
 import type { Dispositif, Locale } from '@/domain/types';
 import { lockedMonthsFor } from '@/lib/deadline-view';

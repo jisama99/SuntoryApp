@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useTransition } from 'react';
-import { decideOutboxAction } from '@/app/[locale]/settings/actions';
+import { decideOutboxAction } from '@/app/[locale]/(app)/settings/actions';
 import type { Locale } from '@/domain/types';
 import { Button } from './Button';
 import { useConfirmation } from './Confirmation';

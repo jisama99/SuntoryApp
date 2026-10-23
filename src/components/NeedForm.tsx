@@ -3,8 +3,8 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useConfirmation } from './Confirmation';
 import { useState, useTransition } from 'react';
-import { saveNeedAction } from '@/app/[locale]/needs/actions';
-import type { FindingDto, SaveState } from '@/app/[locale]/needs/actions';
+import { saveNeedAction } from '@/app/[locale]/(app)/needs/actions';
+import type { FindingDto, SaveState } from '@/app/[locale]/(app)/needs/actions';
 import type { DeadlineContext } from '@/data/repository';
 import { DISPOSITIFS } from '@/domain/types';
 import type { Dispositif, Locale } from '@/domain/types';
