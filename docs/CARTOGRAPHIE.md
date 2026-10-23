@@ -36,5 +36,6 @@ Statut : cadrage uniquement. Aucun code de carte, aucun fichier de découpe lu n
 
 ## 6. Mise à jour du 23/10/2026 (D152)
 - Accords agence et cliente déclarés obtenus : usage de la découpe et D25 (cartographie) levés.
-- Source locale : dossier « FICHIERS POUR DEPARTEMENTS », hors dépôt (COG 2025, codes postaux, découpe, listing magasins, table d'appartenance). Il ne contient pas de contours géométriques : un jeu ouvert est à embarquer en A4e.
-- Reste ouvert : nom de la variable d'environnement, jeu de contours retenu, trace écrite de l'accord.
+- Source locale : dossier « FICHIERS POUR DEPARTEMENTS », hors dépôt (COG 2025, codes postaux, découpe, listing magasins, table d'appartenance). Il ne contient pas de contours. Les modules HTML V4 (M1 pilotage, M2 saisie, M3 réponse) embarquent déjà une carte : tracés SVG des départements (code, nom, région) et projection latitude/longitude vers pixels pour les magasins. A4e les reprend comme point de départ une fois leur origine et leur licence tracées ; à défaut, jeu ouvert à embarquer.
+- D25 étendu aux logos (confirmé le 23/10/2026).
+- Reste ouvert : nom de la variable d'environnement, origine et licence des contours V4, trace écrite de l'accord.

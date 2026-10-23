@@ -1,11 +1,11 @@
 # Lot A4e : carte de France interactive (D150)
 
-Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt. Dépend de A4a. Accords obtenus (D152) : D25 levé pour la carte, usage de la découpe autorisé. Reste : choisir le jeu de contours ouvert (licence et attribution consignées).
+Version du 23/10/2026. À coller dans Claude Code dans l'ordre : `02_PROMPT_MAITRE_DEV.md`, `07_REGLES_COMMUNES_LOTS_APRES_A1.md`, puis ce prompt. Dépend de A4a. Accords obtenus (D152) : D25 levé pour la carte, usage de la découpe autorisé. Reste : contours. Les modules V4 embarquent déjà des tracés de départements (`W.FRANCE` dans M1) : T. SOEFOU en fournit l'extraction et l'origine ; à défaut d'origine et de licence consignées, utiliser un jeu ouvert.
 
 LECTURES : CLAUDE.md, docs/DECISIONS.md (D25, D109 bis, D116, D150, D151, D152), docs/CARTOGRAPHIE.md, F-10.6 du catalogue (doc 16), docs/COMPTE_RENDU_A4A.md.
 
 ÉTAPES
-1. Contours embarqués en local (aucune requête externe), sur zones et magasins fictifs ; licence confirmée avant tout contour.
+1. Contours des départements embarqués en local (réutilisation des tracés V4 si origine et licence établies) (aucune requête externe), sur zones et magasins fictifs ; licence confirmée avant tout contour.
 2. Carte : zoom et déplacement fluides (souris, molette, tactile, pincement), survol, clic, sélection de région, département, magasin, enseigne.
 3. Retour « France entière », fil d'Ariane, Échap, groupe « Non géolocalisé » (F-10.6).
 4. Sélection synchronisée avec filtres et URL (règle 14) ; ZoneLabel pour tout code de zone ; audience respectée.
