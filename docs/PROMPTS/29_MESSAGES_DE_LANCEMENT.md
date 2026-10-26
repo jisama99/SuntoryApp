@@ -12,6 +12,7 @@ Version du 23/10/2026. **Un lot = une session Claude Code**, jamais deux lots da
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | Après fusion de A4a | A4a fusionné. |
 | 6 | A4f | `30_PROMPT_LOT_A4F.md` | Après fusion de A5 | A5 fusionné. |
 | 6 bis | A4g | `32_PROMPT_LOT_A4G.md` | Après fusion de A4f (premier candidat au report en seconde démonstration) | A4f fusionné ; push et e-mail simulés. |
+| 6 ter | A4h | `34_PROMPT_LOT_A4H.md` | Après fusion de A4g (candidat au report en seconde démonstration) | A4a et A4b1 fusionnés ; budgets fictifs. |
 | 7 | A6 | `15_PROMPT_LOT_A6.md` | Après fusion de A4f | A4f fusionné. |
 | 8 | A7 | `16_PROMPT_LOT_A7.md` | Après fusion de A6 (fin du noyau) | A6 fusionné. |
 | 9 | A4b2 | `17_PROMPT_LOT_A4B.md` | Seconde démonstration, après retour sur le noyau | Noyau fusionné. |
@@ -196,6 +197,25 @@ Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
 AVANT TOUT
 1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/DECISIONS.md contient D196 et que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16. Sinon, arrête-toi et dis-le.
 2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/32_PROMPT_LOT_A4G.md, et ce qu'il demande de lire.
+3. Exécute uniquement ce lot. N'enchaîne pas.
+
+RÈGLES
+Aucun commit sur main, aucun push de main, aucune pull request (D148) : commit et push de ta branche de session seulement, en fin de lot, après le compte rendu. Supabase et Vercel interdits. Aucune requête externe (règle 10). Aucun fichier de données réelles lu. Une hypothèse n'est pas une décision : propose les mises à jour du registre sans les inscrire, avec des numéros après le dernier du registre. Les contrôles (typecheck, lint, tests, build, e2e) sont exécutés et leur sortie reportée ; un test non lancé n'est pas déclaré passé. Dis honnêtement ce que tu n'as pas relu. Règle 17 (D192) : sous-agents au modèle le plus économique suffisant, jamais pour décider.
+
+Récapitule en dix lignes maximum.
+```
+
+## Lot A4h
+_Après fusion de A4g (ou de A4a et A4b1 si A4g est reporté). Prérequis : A3, A4a et A4b1 fusionnés._
+
+```text
+LANCEMENT · LOT A4h · SUNTORY REFONTE V3
+
+Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
+
+AVANT TOUT
+1. git fetch origin, puis pars de origin/main à jour (ta branche de session doit contenir origin/main). Vérifie que docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md contient les règles 14, 15 et 16 et que docs/propositions/PROPOSITION_KANBAN_RECRUTEMENTS_V0.1.md existe. Sinon, arrête-toi et dis-le.
+2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/34_PROMPT_LOT_A4H.md, et ce qu'il demande de lire.
 3. Exécute uniquement ce lot. N'enchaîne pas.
 
 RÈGLES

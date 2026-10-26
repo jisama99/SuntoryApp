@@ -16,7 +16,7 @@ Aperçu : `docs/propositions/APERCU_VUE_AGENCE_TABLEAU_KANBAN_V0.3.html` (fichie
 | K6 | Seuil d'alerte budget | 90 % consommé. Valeur de départ, à confirmer sur données réelles avant l'étape B. | T. SOEFOU |
 | K7 | Préférence de vue | Mémorisée par compte côté données (pas dans le navigateur). | T. SOEFOU |
 | K8 | Verrouillage du style pour la cliente | Lecture seule, agrégée par zone, sans journal, sans coût, sans délai interne. | T. SOEFOU |
-| K9 | Lot dédié | Vues tableau et Kanban dans un lot séparé, **A4h**. | T. SOEFOU |
+| K9 | Lot dédié | Vues tableau et Kanban dans un lot séparé, **A4h**. Numéro vérifié libre le 26/10/2026 ; intégré au plan, à l'index, aux messages de lancement et au prompt `34_PROMPT_LOT_A4H.md`. | T. SOEFOU |
 
 Décisions non changées : états D92 (À recruter, En recrutement, Proposé, Validé, Recruté, En poste) ; hors flux (Stoppé, Réattribué, Zone blanche, D85) ; audience D108 (journal agence seul) ; zones D106 (`ZoneLabel`) ; textes FR et EN (règle 15).
 
