@@ -299,10 +299,12 @@ var REG={'11':'Île-de-France','24':'Centre-Val de Loire','27':'Bourgogne-Franch
 var DRS={D1:['DR Nord-Est','Camille Durand'],D2:['DR Ouest-Centre','Julien Moreau'],D3:['DR Sud-Est','Sophie Lambert']};
 var CVRS={C1:['CVR Nord','D1','Nicolas Petit'],C2:['CVR Ouest','D2','Léa Bernard'],C3:['CVR Île-de-France','D1','Hugo Richard'],C4:['CVR Est','D1','Emma Robert'],C5:['CVR Sud-Ouest','D2','Lucas Simon'],C6:['CVR Centre','D2','Chloé Michel'],C7:['CVR Rhône-Alpes','D3','Thomas Laurent'],C8:['CVR Sud-Est','D3','Manon Garnier']};
 var R2C={'32':'C1','28':'C1','53':'C2','52':'C2','11':'C3','44':'C4','27':'C4','75':'C5','76':'C5','24':'C6','84':'C7','93':'C8','94':'C8'};
+var RZ=window.REAL_STORES&&window.REAL_STORES.zones;
+if(RZ){DRS={NA:['DR non rattaché','']};CVRS={NA:['CVR non rattaché','NA','']};Object.keys(RZ.drs).forEach(function(k){DRS[k]=['DR '+k,'']});Object.keys(RZ.cvrs).forEach(function(k){CVRS[k]=['CVR '+k,RZ.cvrs[k],'']})}
 var codes=Object.keys(MAP.deps).sort(), info={};
-codes.forEach(function(c){var d=MAP.deps[c],cv=R2C[d.r];info[c]={n:d.n,r:d.r,cvr:cv,dr:CVRS[cv][1]}});
+codes.forEach(function(c){var d=MAP.deps[c],cv=RZ?(RZ.dep[c]||'NA'):R2C[d.r];info[c]={n:d.n,r:d.r,cvr:cv,dr:CVRS[cv][1]}});
 /* ZoneLabel : seul point de formation des libellés de zone (D106) */
-function zoneLabel(kind,key){if(kind==='dr')return DRS[key][0]+' · '+DRS[key][1];if(kind==='cvr')return CVRS[key][0]+' · '+CVRS[key][2];return glabel(kind,key)}
+function zoneLabel(kind,key){if(kind==='dr')return DRS[key][0]+(DRS[key][1]?' · '+DRS[key][1]:'');if(kind==='cvr')return CVRS[key][0]+(CVRS[key][2]?' · '+CVRS[key][2]:'');return glabel(kind,key)}
 function glabel(lv,k){if(lv==='dep')return info[k].n+' ('+k+')';if(lv==='reg')return REG[k];if(lv==='cvr')return CVRS[k][0];return DRS[k][0]}
 function gk(c,lv){return lv==='dep'?c:lv==='reg'?info[c].r:lv==='cvr'?info[c].cvr:info[c].dr}
 var GROUPS={};['dep','reg','cvr','dr'].forEach(function(lv){var g={};codes.forEach(function(c){(g[gk(c,lv)]=g[gk(c,lv)]||[]).push(c)});GROUPS[lv]=g});

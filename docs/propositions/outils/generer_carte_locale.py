@@ -7,7 +7,7 @@ communes-5m.geojson, BASE OFFICIELLE DES CP.csv, LISTING MAGASINS DEPARTEMENTS -
 Pose chaque magasin au centre de sa commune (nom puis code postal), avec un léger décalage si plusieurs
 magasins partagent la commune. Écrit un HTML qui contient des données réelles : bandeau « DONNÉES RÉELLES LOCALES ».
 La sortie ne doit jamais être versionnée, copiée dans le dépôt, envoyée ni capturée. Seuls des effectifs sont affichés ici.
-Les noms de responsables (RS) ne sont pas lus. Dépend de openpyxl. Origine et projection : identiques à
+Les noms de responsables (RS, et noms de DR et de CVR du listing) ne sont pas lus : seuls les codes de zone sont repris. Un département rattaché à plusieurs CVR prend le CVR de plus forte part de magasins. Dépend de openpyxl. Origine et projection : identiques à
 simplifier_contours_departements.py (même grille, même cosinus), donc les points tombent dans les bons contours.
 """
 import csv, json, math, os, sys, unicodedata
@@ -102,12 +102,24 @@ def main(template, dst):
         out.append({'d': d, 'xy': [round(x, 1), round(y, 1)], 'e': ens.index(r[ix['Enseigne']]), 'st': stat.get(r[ix['Statut liaison']], 1),
                     'nm': r[ix['Magasin (nettoyé)']] or '', 'v': r[ix['Ville']] or '', 'fm': r[ix['Format']] or '',
                     'cvr': str(r[ix['Code CVR']] or ''), 'dr': str(r[ix['Code DR']] or '')})
-    payload = 'window.REAL_STORES=' + json.dumps({'ens': ens, 'stores': out}, ensure_ascii=False, separators=(',', ':')) + ';'
+    # Zones réelles : codes seulement (les noms de DR et de CVR du listing sont des noms de personnes : non repris)
+    lh = [unicodedata.normalize('NFC', str(x or '')).strip() for x in list(wb['LIAISON_DEP_CVR'].iter_rows(values_only=True))[0]]
+    best, drs, cvrs = {}, set(), {}
+    for r in list(wb['LIAISON_DEP_CVR'].iter_rows(values_only=True))[1:]:
+        d = str(r[lh.index('Dép.')] or '').strip().upper().zfill(2); cv = str(r[lh.index('Code CVR')] or ''); dr = str(r[lh.index('Code DR')] or '')
+        part = r[lh.index('Part du département')] or 0
+        if d in codes and cv and dr:
+            drs.add(dr); cvrs[cv] = dr
+            if d not in best or part > best[d][0]:
+                best[d] = (part, cv)
+    zones = {'dep': {d: v[1] for d, v in best.items()}, 'drs': sorted(drs), 'cvrs': cvrs}
+    payload = 'window.REAL_STORES=' + json.dumps({'ens': ens, 'stores': out, 'zones': zones}, ensure_ascii=False, separators=(',', ':')) + ';'
     html = open(template, encoding='utf-8').read()
     marker = '<script>\n(function(){'
     if marker not in html:
         sys.exit('Gabarit inattendu : point d\'injection introuvable.')
     open(dst, 'w', encoding='utf-8').write(html.replace(marker, '<script>' + payload + '</script>' + marker, 1))
+    print(f"zones : {len(zones['dep'])} départements rattachés, {len(drs)} DR, {len(cvrs)} CVR")
     print(f"magasins placés : {len(out)} (par nom {cnt['nom']}, par code postal {cnt['cp']}) ; non placés : {cnt['ecart']} ; hors métropole : {cnt['hors_metropole']}")
 
 
