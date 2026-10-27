@@ -7,6 +7,7 @@ Version du 23/10/2026. **Un lot = une session Claude Code**, jamais deux lots da
 | 1 | A1f | `28_PROMPT_LOT_A1F.md` | Maintenant | Aucun, A1e est fusionné. |
 | 2 | A3 | `12_PROMPT_LOT_A3.md` | Après fusion de A1f | A1f fusionné. |
 | 2 bis | A3c | `33_PROMPT_LOT_A3C.md` | Après fusion de A3 | A3 fusionné. |
+| 2 ter | A3d | `36_PROMPT_LOT_A3D.md` | Après fusion de A3c, avant A4a | A3c fusionné. |
 | 3 | A4b1 | `23_PROMPT_LOT_A4B1.md` | Après fusion de A3 | A3 fusionné ; montants réels non fournis : jeux fictifs (D07). |
 | 4 | A4a | `13_PROMPT_LOT_A4A.md` | Après fusion de A4b1 | A4b1 fusionné. |
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | Après fusion de A4a | A4a fusionné. |
@@ -430,6 +431,26 @@ AVANT TOUT
 2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/35_PROMPT_LOT_A9R.md, et ce qu'il demande de lire.
 3. Exécute uniquement ce lot. N'enchaîne pas.
 4. Dernier numéro du registre : à lire dans main. Aucun changement de design ; champs 16 px et theme-color seulement après accord écrit.
+
+RÈGLES
+Mêmes règles que les autres lots : aucun commit sur main, aucune pull request (D148), aucune requête externe, aucune donnée réelle, contrôles exécutés et reportés, C3 selon la règle 18.
+
+Récapitule en dix lignes maximum.
+```
+
+## Lot A3d
+_Après fusion de A3c, avant A4a. Prérequis : A3c fusionné._
+
+```text
+LANCEMENT · LOT A3d · SUNTORY REFONTE V3
+
+Dépôt : 08_PLATEFORME_SUNTORY_V3, étape A, données fictives uniquement.
+
+AVANT TOUT
+1. git fetch origin, puis pars de origin/main à jour. Vérifie que docs/DECISIONS.md contient D234 à D239 et que docs/COMPTE_RENDU_A3C.md existe. Sinon, arrête-toi et dis-le.
+2. Lis dans l'ordre : docs/PROMPTS/02_PROMPT_MAITRE_DEV.md, docs/PROMPTS/07_REGLES_COMMUNES_LOTS_APRES_A1.md, puis docs/PROMPTS/36_PROMPT_LOT_A3D.md, et ce qu'il demande de lire.
+3. Exécute uniquement ce lot. N'enchaîne pas.
+4. Dernier numéro du registre : lis-le dans main (D239 au 27/10/2026). Tes mises à jour proposées suivent ce numéro.
 
 RÈGLES
 Mêmes règles que les autres lots : aucun commit sur main, aucune pull request (D148), aucune requête externe, aucune donnée réelle, contrôles exécutés et reportés, C3 selon la règle 18.

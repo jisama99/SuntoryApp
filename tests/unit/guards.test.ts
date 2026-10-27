@@ -109,7 +109,7 @@ const C3_SAFE_WORDS = new Set([
   'intitule', 'marquer',
   'chain', 'email', 'euros', 'never', 'paste', 'programmation', 'switch', 'teams',
   'merci', 'vacant', 'arret',
-  'remplit',
+  'remplit', 'voisin', 'voyage', 'conserve',
 ]);
 const DENY = path.join(GUARD_ROOT, '.denylist.local');
 describe.skipIf(!existsSync(DENY))('C3 : liste de refus locale (non exécuté si absente)', () => {
