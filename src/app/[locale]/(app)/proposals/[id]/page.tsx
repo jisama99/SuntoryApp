@@ -203,7 +203,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
           </section>
         ) : null}
 
-        {repository.canQualify(ctx) && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} /> : null}
+        {repository.canQualify(ctx) && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} avisRefused={val.state === 'refused'} /> : null}
 
         <section aria-labelledby="versions-title" className="flex flex-col gap-4">
           <h2 id="versions-title" className="text-lg font-semibold">{t('detail.versions')}</h2>

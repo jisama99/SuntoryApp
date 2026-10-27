@@ -117,6 +117,11 @@ describe('scénario 2 : le CVR refuse avec motif, puis nouvelle soumission', () 
     // Le refus du CVR ne bloque pas l'agence : le statut est visible de la cliente, la qualification reste possible.
     expect(refused.next).toMatchObject({ actor: 'agency', action: 'qualify' });
     expect((await row('BES-DEMO-031', RS())).validation.state).toBe('refused');
+    // L'agence peut prendre en charge, mais doit le confirmer, et le journal le dit.
+    expect(await repo.qualifyNeed(AG(), id, { outcome: 'take' })).toMatchObject({ reason: 'confirm_required' });
+    expect((await row('BES-DEMO-031')).recruitment.intake).toBe('to_qualify');
+    expect(await repo.qualifyNeed(AG(), id, { outcome: 'take', confirmRefusedAvis: true })).toEqual({ status: 'ok' });
+    expect((await eventsOf('EV-09')).find((e) => e.need_id === id)?.data).toMatchObject({ outcome: 'take', over_refused_avis: true });
     expect((await row('BES-DEMO-031', CVR1())).validation.canResubmit).toBe(false);
     expect(await repo.resubmitNeed(CVR1(), id)).toMatchObject({ reason: 'forbidden' });
     expect((await row('BES-DEMO-031', RS())).validation.canResubmit).toBe(true);
@@ -504,6 +509,9 @@ describe('visibilité des délégations et de la chaîne', () => {
     const id = await idOf('BES-DEMO-030');
     await repo.validateNeed(CVR1(), id, { outcome: 'validate' });
     expect(await repo.qualifyNeed(AG(), id, { outcome: 'reject' })).toMatchObject({ reason: 'motive_required' });
+    // Demander une précision ou rejeter n'exige aucune confirmation, même sur un avis refusé.
+    const refusedId = await idOf('BES-DEMO-036');
+    expect(await repo.qualifyNeed(AG(), refusedId, { outcome: 'clarify', motive: 'Quels magasins ?' })).toEqual({ status: 'ok' });
     expect(await repo.qualifyNeed(AG(), id, { outcome: 'clarify', motive: 'Quels magasins ?' })).toEqual({ status: 'ok' });
     expect((await row('BES-DEMO-030')).next).toMatchObject({ actor: 'rs', action: 'clarify' });
     expect((await row('BES-DEMO-030')).validation.state).toBe('validated');

@@ -80,6 +80,15 @@ test.describe('lot A3c : chaîne managériale', () => {
     await expect(page.getByTestId('validation-log')).toContainText('Refusé par le CVR');
     await expect(page.getByTestId('validation-log')).toContainText('Heures supérieures au besoin du secteur.');
 
+    // L'avis refusé ne bloque pas l'agence : elle doit confirmer sa prise en charge.
+    await as(context, ADMIN);
+    await open(page, 'BES-DEMO-031');
+    const qualify = page.getByTestId('qualify-form');
+    await expect(qualify.getByTestId('avis-confirm')).toBeVisible();
+    await qualify.getByRole('button', { name: 'Enregistrer' }).click();
+    await expect(qualify).toContainText('Confirmez la prise en charge malgré l\'avis refusé.');
+    await expect(page.getByTestId('dimensions')).toContainText('À qualifier');
+
     await setProfile(context, 'rs');
     await open(page, 'BES-DEMO-031');
     await expect(page.getByTestId('next-step')).toContainText("L'agence");

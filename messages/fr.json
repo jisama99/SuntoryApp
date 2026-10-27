@@ -1175,8 +1175,10 @@
         "invalid": "Saisie invalide.",
         "not_submitted": "Le besoin n'est pas soumis.",
         "already": "Le besoin est déjà qualifié.",
-        "not_validated": "La chaîne managériale n'a pas encore validé ce besoin."
-      }
+        "not_validated": "La chaîne managériale n'a pas encore validé ce besoin.",
+        "confirm_required": "Confirmez la prise en charge malgré l'avis refusé."
+      },
+      "confirmRefusedAvis": "L'avis du CVR ou du DR est refusé. Je confirme la prise en charge malgré cet avis."
     },
     "decide": {
       "title": "Votre décision sur la version {n}",

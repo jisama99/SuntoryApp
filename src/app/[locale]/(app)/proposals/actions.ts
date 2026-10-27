@@ -23,11 +23,11 @@ const done = <T extends { status: string }>(r: T & { undoToken?: string }): void
   if (r.status === 'ok' || r.status === 'saved') revalidatePath('/', 'layout');
 };
 
-export async function qualifyNeedAction(payload: { locale: string; needId: string; outcome: string; motive?: string }): Promise<WriteState> {
+export async function qualifyNeedAction(payload: { locale: string; needId: string; outcome: string; motive?: string; confirmRefusedAvis?: boolean }): Promise<WriteState> {
   const locale = asLocale(payload.locale);
   if (!locale || !Id.safeParse(payload.needId).success || !['take', 'clarify', 'reject'].includes(payload.outcome)) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
-  const r = await undoable(ctx, () => repository.qualifyNeed(ctx, payload.needId, { outcome: payload.outcome as 'take', motive: String(payload.motive ?? '') }));
+  const r = await undoable(ctx, () => repository.qualifyNeed(ctx, payload.needId, { outcome: payload.outcome as 'take', motive: String(payload.motive ?? ''), confirmRefusedAvis: payload.confirmRefusedAvis === true }));
   done(r);
   return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
 }

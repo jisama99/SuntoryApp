@@ -1175,8 +1175,10 @@
         "invalid": "Invalid entry.",
         "not_submitted": "The need is not submitted.",
         "already": "The need is already qualified.",
-        "not_validated": "The management chain has not approved this need yet."
-      }
+        "not_validated": "The management chain has not approved this need yet.",
+        "confirm_required": "Confirm taking the need on despite the refused opinion."
+      },
+      "confirmRefusedAvis": "The CVR or DR opinion is refused. I confirm taking the need on anyway."
     },
     "decide": {
       "title": "Your decision on version {n}",

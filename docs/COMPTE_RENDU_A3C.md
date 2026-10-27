@@ -4,6 +4,11 @@
 
 Date : 23/10/2026 (horloge de démonstration). Données exclusivement fictives. `docs/DECISIONS.md` non modifié (mise à jour proposée au §7). Aucune pull request, aucun commit sur `main` (D148). Aucun appel réseau, aucune donnée réelle lue.
 
+**Décisions de T. SOEFOU du 23/10/2026 (recommandations validées, « go ») :**
+1. Un avis refusé reste une information visible qui ne ferme pas le besoin ; l'agence doit **confirmer** sa prise en charge (case à cocher, refus `confirm_required` sinon, trace `over_refused_avis` dans EV-09). Codé dans ce lot ; précision et rejet n'exigent aucune confirmation. Reste ouverte avec la cliente : l'agence peut-elle recruter sur un besoin refusé par le CVR ?
+2. Rôles de saisie : défaut validé (RS sur son secteur, CVR sur ses secteurs, DR et direction sur leur périmètre, agence pour le compte d'un RS, option conservée et tracée ; un besoin saisi par un CVR est marqué « avis donné à la saisie », sans passage par un supérieur).
+3. Lot dédié aux rôles de saisie **avant A4a** : non codé ici, il demande son prompt.
+
 ## 0. Départ et constat avant codage
 Branche de session = `origin/main` (vérifié), D191 et D197 à D211 présents, `COMPTE_RENDU_A3.md` présent, règles 14 à 16 présentes. Avant modification : typecheck propre, 691 tests unitaires, 110 e2e passés.
 Constat du code A3 : F-30.4 (qualification : prise en charge, précision, rejet motivé) **existait** (`qualifyNeed`, EV-09). F-30.1, F-30.2, F-30.3 et EV-06 à EV-08 **n'existaient pas**.
@@ -30,7 +35,7 @@ Jeu de démonstration : 8 besoins ajoutés (BES-DEMO-030 à 037, fin du jeu, ids
 | `npx eslint .` | 0 erreur, 0 avertissement (après correction d'un import inutilisé) |
 | `npx vitest run` | **33 fichiers, 770 tests passés**, 1 ignoré (C3) |
 | `npm run build` | réussi, route `/[locale]/settings/delegations` ajoutée |
-| `npx playwright test` | **122 passés sur 122** (110 existants + 12 nouveaux ; relancés après la révision : 12 sur 12 pour le lot, suite complète 111 sur 112 avant correction d'un test, corrigé puis relancé en entier sur le lot seulement) |
+| `npx playwright test` | **122 passés sur 122** (suite complète relancée après la révision et la confirmation d'avis refusé) |
 | Captures `tests/shots/a3c-isolated.spec.ts` | 1 test passé, 96 images, console et requêtes externes vides |
 | Performance H3 (`a3c-isolated`) | liste 490 ms, délégations 164 ms (seuil 2 s) ; interaction 0,9 ms (seuil 100 ms). Serveur local de production, non représentatif d'un hébergement. |
 | C1, C2, C4 à C7 | tests d'architecture unitaires verts |
@@ -50,7 +55,7 @@ Ordre à respecter pour les e2e : `npm run demo:accounts`, puis `npm run build`,
 
 ## 4. Hypothèses (non des décisions)
 - H-A3c-1 (levée) : la validation n'est pas un passage obligé ; la saisie par l'agence pour un RS est conservée.
-- H-A3c-8 : un refus du CVR est une information visible, il ne ferme pas le besoin ni ne bloque l'agence (à confirmer).
+- H-A3c-8 (validée) : un refus du CVR est une information visible, il ne ferme pas le besoin ; l'agence confirme sa prise en charge.
 - H-A3c-2 : « nouvelle proposition » du prompt lu comme nouvelle soumission du besoin par le RS après refus (la proposition de profil relève de l'agence, inchangée).
 - H-A3c-3 : le DR ne valide pas directement ; il agit sur un besoin escaladé. La direction cliente arbitre au niveau DR.
 - H-A3c-4 : le délégant garde ses droits pendant sa délégation (la première décision gagne, la seconde reçoit « n'attend plus de validation »).
@@ -64,7 +69,7 @@ Ordre à respecter pour les e2e : `npm run demo:accounts`, puis `npm run build`,
 - Les e2e partagés (port 3100) mutent un serveur commun (déjà signalé en A3).
 
 ## 6. Questions pour T. SOEFOU
-1. Confirmer H-A3c-8 : un refus de l'avis par le CVR ne bloque rien ? Le DR n'agit que sur escalade : confirmé.
+1. (Réglée) refus d'avis et DR : voir les décisions en tête.
 2. Le délégant garde-t-il ses droits pendant sa délégation (H-A3c-4) ?
 3. Valeurs des délais de validation et d'arbitrage (D09 ouverte).
 4. Les notes D162 doivent-elles s'ouvrir sur le dossier de validation ?

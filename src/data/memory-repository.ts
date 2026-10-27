@@ -1269,7 +1269,9 @@ export function createMemoryRepository(): Repository {
       if (!['take', 'clarify', 'reject'].includes(input.outcome)) return { status: 'refused', reason: 'invalid' };
       const rec = recruitmentOf(need.id);
       if (rec.intake !== 'to_qualify' && rec.intake !== 'clarification') return { status: 'refused', reason: 'already' };
-      // A3c : l'avis managérial est facultatif, il ne conditionne jamais la qualification de l'agence.
+      // A3c : l'avis managérial est facultatif. Un avis refusé ne bloque pas : la prise en charge se confirme, et la trace le dit.
+      const overRefused = input.outcome === 'take' && rec.validation === 'refused';
+      if (overRefused && input.confirmRefusedAvis !== true) return { status: 'refused', reason: 'confirm_required' };
       const motive = (input.motive ?? '').trim();
       if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
       if (input.outcome !== 'take' && !motive) return { status: 'refused', reason: 'motive_required' };
@@ -1277,7 +1279,7 @@ export function createMemoryRepository(): Repository {
       target.intake = input.outcome === 'take' ? 'taken' : input.outcome === 'clarify' ? 'clarification' : 'rejected';
       target.intake_motive = input.outcome === 'take' ? null : motive;
       if (input.outcome === 'take') target.qualified_on = clock.date;
-      emit('EV-09', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, outcome: input.outcome });
+      emit('EV-09', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, outcome: input.outcome, ...(overRefused ? { over_refused_avis: true } : {}) });
       return { status: 'ok' };
     },
 
