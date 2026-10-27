@@ -91,7 +91,9 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
       data-collapsed={collapsed}
       className={`min-h-screen lg:grid ${collapsed ? 'lg:grid-cols-[var(--sidebar-width-collapsed)_1fr]' : 'lg:grid-cols-[var(--sidebar-width)_1fr]'} motion-safe:transition-[grid-template-columns]`}
     >
-      <aside id="app-sidebar" className="hidden bg-surface px-4 pb-6 pt-8 print:hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start lg:overflow-y-auto">
+      {/* La colonne porte le fond sur toute la hauteur de la page ; le contenu du menu reste collé à l'écran (sticky) pendant le défilement. */}
+      <aside className="hidden bg-surface print:hidden lg:block">
+      <div id="app-sidebar" className="px-4 pb-6 pt-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
         <div className={`mb-10 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
           {collapsed ? null : (
             <div className="flex flex-col gap-3 px-3">
@@ -114,6 +116,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
         <div id="app-sidebar-nav">
           <NavLinks items={items} label={labels.nav} collapsed={collapsed} />
         </div>
+      </div>
       </aside>
       <div className="min-w-0">
         <header className="bg-surface print:hidden lg:hidden">

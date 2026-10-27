@@ -24,6 +24,20 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
     await expect(page.getByRole('button', { name: 'Réduire le menu' })).toBeVisible();
   });
 
+  test('bureau : le fond du volet de gauche couvre toute la hauteur de la page, même longue (captures pleine page)', async ({ page, context }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await setProfile(context, 'agency_operator');
+    await page.goto('/fr/needs');
+    await expect(page.getByRole('table', { name: 'Besoins de votre périmètre' })).toBeVisible();
+    const { column, page: total } = await page.evaluate(() => ({
+      column: (document.querySelector('aside')?.getBoundingClientRect().bottom ?? 0) + window.scrollY,
+      page: document.documentElement.scrollHeight,
+    }));
+    expect(total).toBeGreaterThan(1800);
+    // Le bas de la colonne rejoint le bas de la page : le fond ne s'arrête plus à la hauteur de l'écran.
+    expect(Math.abs(column - total)).toBeLessThanOrEqual(1);
+  });
+
   test('bureau : le menu reste en place pendant le défilement d\'une page longue, sans vide dessous', async ({ page, context }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await setProfile(context, 'agency_operator');
