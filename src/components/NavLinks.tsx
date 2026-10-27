@@ -12,18 +12,22 @@ export interface NavItem {
 }
 
 /** Menu latéral : pastille d'icône de taille fixe, entrée active en teinte douce avec pastille pleine. */
-export function NavLinks({ items, label, collapsed = false, onNavigate }: {
+export function NavLinks({ items, label, collapsed = false, onNavigate, pinned = [] }: {
   items: NavItem[];
   label: string;
+  /** Entrées rangées en bas du volet (réglages, administration) : même navigation, seconde liste poussée vers le bas. */
+  pinned?: readonly MenuKey[];
   /** Rail d'icônes : les libellés restent lus par les lecteurs d'écran et en info-bulle. */
   collapsed?: boolean;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const lists = [items.filter((i) => !pinned.includes(i.key)), items.filter((i) => pinned.includes(i.key))];
   return (
-    <nav aria-label={label}>
-      <ul className="flex flex-col gap-2">
-        {items.map((item) => {
+    <nav aria-label={label} className="flex h-full flex-col">
+      {lists.map((list, n) => (n === 1 && list.length === 0 ? null : (
+      <ul key={n} className={`flex flex-col gap-2 ${n === 1 ? 'mt-auto pt-6' : ''}`}>
+        {list.map((item) => {
           const active = item.href === '/' ? pathname === '/' : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <li key={item.key}>
@@ -50,6 +54,7 @@ export function NavLinks({ items, label, collapsed = false, onNavigate }: {
           );
         })}
       </ul>
+      )))}
     </nav>
   );
 }

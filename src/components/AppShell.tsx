@@ -93,7 +93,7 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
     >
       {/* La colonne porte le fond sur toute la hauteur de la page ; le contenu du menu reste collé à l'écran (sticky) pendant le défilement. */}
       <aside className="hidden bg-surface print:hidden lg:block">
-      <div id="app-sidebar" className="px-4 pb-6 pt-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+      <div id="app-sidebar" className="flex flex-col px-4 pb-6 pt-8 lg:sticky lg:top-0 lg:h-[calc(100dvh-var(--banner-height))] lg:overflow-y-auto">
         <div className={`mb-10 flex items-center gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
           {collapsed ? null : (
             <div className="flex flex-col gap-3 px-3">
@@ -113,8 +113,9 @@ export function AppShell({ items, labels, collapsedInitial, canCreate, toolbar, 
             <Icon icon={collapsed ? UI_ICONS.panelOpen : UI_ICONS.panelClose} size="md" />
           </button>
         </div>
-        <div id="app-sidebar-nav">
-          <NavLinks items={items} label={labels.nav} collapsed={collapsed} />
+        <div id="app-sidebar-nav" className="min-h-0 flex-1">
+          {/* Réglages et administration en bas du volet ; les entrées de travail restent en haut. */}
+          <NavLinks items={items} label={labels.nav} collapsed={collapsed} pinned={['settings', 'admin']} />
         </div>
       </div>
       </aside>

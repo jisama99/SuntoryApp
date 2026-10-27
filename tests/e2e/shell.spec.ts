@@ -38,6 +38,24 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
     expect(Math.abs(column - total)).toBeLessThanOrEqual(1);
   });
 
+  test('bureau : réglages et administration sont rangés en bas du volet, les entrées de travail en haut', async ({ page, context }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await setProfile(context, 'provider_admin');
+    await page.goto('/fr/needs');
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' });
+    const y = async (name: string) => (await nav.getByRole('link', { name, exact: true }).boundingBox())!.y;
+    const work = await y('Mon cockpit');
+    const settings = await y('Réglages');
+    const lastWork = await y('À traiter');
+    expect(work).toBeLessThan(300);
+    expect(settings).toBeGreaterThan(lastWork + 200);
+    expect(settings).toBeGreaterThan(700);
+    expect(settings).toBeLessThan(860);
+    // Même navigation : les liens restent atteignables au clavier, dans l'ordre (travail, puis réglages).
+    const hrefs = await nav.getByRole('link').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+    expect(hrefs.slice(-2).every((h) => /\/(settings|admin)$/.test(h ?? ''))).toBe(true);
+  });
+
   test('bureau : le menu reste en place pendant le défilement d\'une page longue, sans vide dessous', async ({ page, context }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await setProfile(context, 'agency_operator');
@@ -51,7 +69,8 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
       return { top: Math.round(r.top), bottom: Math.round(r.bottom) };
     });
     expect(Math.abs(box.top)).toBe(0);
-    expect(box.bottom).toBeGreaterThanOrEqual(899);
+    // Le volet laisse la place de la bannière ; son fond, porté par la colonne, couvre le reste.
+    expect(box.bottom).toBeGreaterThanOrEqual(850);
   });
 
   test('mobile 390 px : barre d\'onglets fixe en bas, colonnes égales, bouton + au centre, volet « Plus »', async ({ page, context }) => {
