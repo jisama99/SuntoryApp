@@ -17,6 +17,7 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | A3 | D14 et D15 (hors ligne simulé), Q19 | Parcours mobile, absences génériques |
 | 5 bis | A4f | `30_PROMPT_LOT_A4F.md` | A5 | D190 | Vue Planning : frise, calendrier, jour, mois, magasins liés, recrutements |
 | 5 ter | A4g | `32_PROMPT_LOT_A4G.md` | A3, A4a, A4f | Alertes obligatoires, heures calmes (hypothèses) ; push et e-mail simulés | Préférences par type et canal, audience, file push à valider |
+| 5 quater | A4h | `34_PROMPT_LOT_A4H.md` | A3, A4a, A4b1 | Seuil budget 90 % (hypothèse) ; navigateurs mobiles réels non testés | Tableau et Kanban des recrutements, filtres, pastilles budget, journal agence |
 | 6 | A6 | `15_PROMPT_LOT_A6.md` | A2 | D51, D24, P4 (bibliothèque Excel) ; profils d'import configurables (D134, Q-I1 à Q-I6) | Idempotence et conflits d'import |
 | 7 | A7 | `16_PROMPT_LOT_A7.md` | A1 à A6 | Hébergement local par défaut, accord d'usage de la découpe | Script de démonstration, Q1 à Q23 |
 
