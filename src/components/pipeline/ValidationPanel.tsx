@@ -78,6 +78,7 @@ export function ValidationPanel({ needId, level, actingFor, canResubmit, sibling
   return (
     <section aria-labelledby="validation-title" data-testid="validation-panel" className="flex flex-col gap-4 rounded-card bg-surface p-5 shadow-card">
       <h2 id="validation-title" className="text-lg font-semibold">{t(level ? `title.${level}` : 'title.resubmit')}</h2>
+      <p className="max-w-prose text-muted">{t('optional')}</p>
       {actingFor ? <StatusTag tone="info">{t('actingFor', { zone: actingFor })}</StatusTag> : null}
       {level ? (
         <>

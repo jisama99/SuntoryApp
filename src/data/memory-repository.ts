@@ -651,11 +651,13 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   push('accordLost', 'agency', 'attention', rows.filter((r) => r.next.action === 'reconfirm_proposal').length);
   push('startLate', 'both', 'attention', rows.filter((r) => r.next.action === 'start_work' && r.next.urgency === 'overdue').length);
   // A3c : chaîne managériale et délégations. Aucune notification réelle (A4g consommera ces alertes).
-  const validating = rows.filter((r) => r.next.action === 'validate_need');
-  push('validationPending', 'both', 'attention', validating.length);
-  push('validationLate', 'both', 'risk', validating.filter((r) => r.next.urgency === 'overdue').length);
-  push('escalationPending', 'both', 'attention', rows.filter((r) => r.next.action === 'arbitrate_need').length);
-  push('resubmitPending', 'both', 'attention', rows.filter((r) => r.next.action === 'resubmit_need').length);
+  // Avis managérial en attente : information pour la cliente et l'agence, jamais un blocage.
+  const opinion = (state: string) => needs.map((n) => recruitmentOf(n.id)).filter((r) => r.validation === state && r.intake !== 'rejected' && !r.stopped);
+  const pendingAvis = opinion('to_validate');
+  push('validationPending', 'both', 'info', pendingAvis.length);
+  push('validationLate', 'both', 'attention', pendingAvis.filter((r) => addWorkingDays(r.validation_on ?? today, st.pipelineParams.validate_due_days, calOf()) < today).length);
+  push('escalationPending', 'both', 'attention', opinion('escalated').length);
+  push('resubmitPending', 'both', 'info', opinion('refused').length);
   // Une délégation qui se termine bientôt ne concerne que l'agence, qui la paramètre (audience agence, défaut refus).
   const ending = st.delegations.filter((d) => delegationStatus(d, today) === 'active' && workingDaysBetween(today, d.end_date, calOf()) <= st.pipelineParams.urgent_within_days);
   if (ctx.scope.kind === 'all') push('delegationEnding', 'agency', 'info', ending.length);
@@ -1234,7 +1236,7 @@ export function createMemoryRepository(): Repository {
         const r = f.recruitment;
         funnelRows.push({
           state: funnelState(f, clock.date), situation: r.situation, closed: r.stopped ? 'stopped' : r.intake === 'rejected' ? 'rejected' : null,
-          toQualify: r.intake === 'to_qualify' || r.intake === 'clarification', validation: r.validation, hours: n.weekly_hours, refusals: r.refusal_count, withdrawals: r.withdrawal_count,
+          toQualify: r.intake === 'to_qualify' || r.intake === 'clarification', hours: n.weekly_hours, refusals: r.refusal_count, withdrawals: r.withdrawal_count,
           // Stoppé après sa prise de poste : les heures effectuées avant l'arrêt restent comptées (D211).
           performedBeforeStop: Boolean(r.stopped && r.hired_on && r.start_work_date && r.start_work_date <= r.stopped.on),
         });
@@ -1267,8 +1269,7 @@ export function createMemoryRepository(): Repository {
       if (!['take', 'clarify', 'reject'].includes(input.outcome)) return { status: 'refused', reason: 'invalid' };
       const rec = recruitmentOf(need.id);
       if (rec.intake !== 'to_qualify' && rec.intake !== 'clarification') return { status: 'refused', reason: 'already' };
-      // A3c : l'agence qualifie après la chaîne managériale cliente (D45), jamais avant.
-      if (rec.validation !== 'validated') return { status: 'refused', reason: 'not_validated' };
+      // A3c : l'avis managérial est facultatif, il ne conditionne jamais la qualification de l'agence.
       const motive = (input.motive ?? '').trim();
       if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
       if (input.outcome !== 'take' && !motive) return { status: 'refused', reason: 'motive_required' };

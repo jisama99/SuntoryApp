@@ -21,8 +21,8 @@ import { getAccessContext } from '@/lib/session';
 
 /** Rôle d'action du profil : « Qui doit agir » se lit de son point de vue. Le prestataire consulte tout, sans rôle propre. */
 const ACTOR_OF: Partial<Record<ProfileId, readonly Actor[]>> = {
-  rs: ['rs'], agency_operator: ['agency'], agency_admin: ['agency'], direction_client: ['decider', 'arbiter'], dr_client: ['decider', 'arbiter'],
-  cvr_client: ['decider', 'validator'],
+  rs: ['rs'], agency_operator: ['agency'], agency_admin: ['agency'], direction_client: ['decider'], dr_client: ['decider'],
+  cvr_client: ['decider'],
 };
 
 export default async function ProposalsPage({ params, searchParams }: {
@@ -44,14 +44,14 @@ export default async function ProposalsPage({ params, searchParams }: {
   const [rows, zones] = await Promise.all([repository.getPipeline(ctx), repository.getScopeZones(ctx)]);
   const sectors = new Map(zones.map((z) => [z.id, z]));
   const mine = ACTOR_OF[ctx.profileId] ?? null;
-  const isMine = (r: PipelineRow) => (mine ? mine.includes(r.next.actor) : r.next.actor !== 'none');
+  const isMine = (r: PipelineRow) => (mine ? mine.includes(r.next.actor) || r.validation.canAct !== null : r.next.actor !== 'none');
   const FILTERS = ['mine', 'all', 'overdue', 'decision', 'validation'] as const;
-  const VALIDATION_ACTIONS = ['validate_need', 'arbitrate_need', 'resubmit_need'];
+  const awaitingAvis = (r: PipelineRow) => r.need.need_state === 'submitted' && r.validation.state !== 'validated';
   const raw = one('filter') ?? 'mine';
   const filter = (FILTERS as readonly string[]).includes(raw) ? raw : 'mine';
   const shown = rows.filter((r) =>
     filter === 'all' ? true : filter === 'overdue' ? r.next.urgency === 'overdue' : filter === 'decision' ? r.next.action === 'decide'
-      : filter === 'validation' ? VALIDATION_ACTIONS.includes(r.next.action) : isMine(r),
+      : filter === 'validation' ? awaitingAvis(r) : isMine(r),
   );
 
   const decidable = repository.canDecide(ctx) ? rows.filter((r) => r.next.action === 'decide' && r.proposal?.status === 'proposed') : [];

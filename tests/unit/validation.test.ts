@@ -172,27 +172,17 @@ describe('point d\'entrée « hors enveloppe » (D43 ouverte)', () => {
   });
 });
 
-describe('qui doit agir : chaîne managériale avant la qualification', () => {
+describe('qui doit agir : l\'avis managérial ne bloque jamais l\'agence', () => {
   const cal = calendarOf(DeadlineSettingsSchema.parse(settingsJson));
-  const step = (validation: 'to_validate' | 'validated' | 'refused' | 'escalated', over: Partial<ReturnType<typeof blankRecruitment>> = {}, today = '2026-10-23') =>
+  const step = (validation: 'to_validate' | 'validated' | 'refused' | 'escalated', over: Partial<ReturnType<typeof blankRecruitment>> = {}) =>
     nextStep(
       { recruitment: { ...blankRecruitment('n'), validation, validation_on: '2026-10-21', ...over }, proposals: [], decisions: [], needState: 'submitted', submittedOn: '2026-10-21', requestedStart: null },
-      today, DEFAULT_PIPELINE_PARAMS, cal,
+      '2026-10-23', DEFAULT_PIPELINE_PARAMS, cal,
     );
-  it('à valider : le CVR, échéance en jours ouvrés depuis l\'entrée dans l\'état, urgence et retard', () => {
-    expect(step('to_validate', {}, '2026-10-22')).toMatchObject({ actor: 'validator', action: 'validate_need', due: '2026-10-23', urgency: 'urgent', lateDays: 0 });
-    expect(step('to_validate', {}, '2026-10-27')).toMatchObject({ actor: 'validator', action: 'validate_need', urgency: 'overdue', lateDays: 2 });
+  it.each(['to_validate', 'validated', 'refused', 'escalated'] as const)('avis « %s » : l\'agence qualifie', (v) => {
+    expect(step(v)).toMatchObject({ actor: 'agency', action: 'qualify' });
   });
-  it('escaladé : le DR, avec son propre délai', () => {
-    expect(step('escalated', { validation_on: '2026-10-22' })).toMatchObject({ actor: 'arbiter', action: 'arbitrate_need', due: '2026-10-27' });
-  });
-  it('refusé : le RS soumet de nouveau, sans échéance', () => {
-    expect(step('refused')).toMatchObject({ actor: 'rs', action: 'resubmit_need', due: null, urgency: null });
-  });
-  it('validé : la qualification de l\'agence reprend', () => {
-    expect(step('validated')).toMatchObject({ actor: 'agency', action: 'qualify' });
-  });
-  it('un besoin rejeté ou stoppé sort du circuit, quel que soit l\'état de validation', () => {
+  it('un besoin rejeté ou stoppé sort du circuit, quel que soit l\'avis', () => {
     expect(step('to_validate', { intake: 'rejected' })).toMatchObject({ actor: 'none', action: 'none' });
   });
 });

@@ -117,7 +117,7 @@ export interface Repository {
   canPropose(ctx: AccessContext): boolean;
   canDecide(ctx: AccessContext): boolean;
   canRecord(ctx: AccessContext, step: RecruitmentStep): boolean;
-  qualifyNeed(ctx: AccessContext, needId: string, input: QualifyInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'not_submitted' | 'already' | 'motive_required' | 'not_validated'>>;
+  qualifyNeed(ctx: AccessContext, needId: string, input: QualifyInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'not_submitted' | 'already' | 'motive_required'>>;
   saveProposal(ctx: AccessContext, needId: string, input: ProposalInput, options?: { send?: boolean }): Promise<ProposalResult>;
   /** Retire une proposition envoyée (motif obligatoire) ou jette un brouillon. Une décision qui s'y rattache est invalidée. */
   withdrawProposal(ctx: AccessContext, proposalId: string, motive: string): Promise<MutationResult<'forbidden' | 'not_found' | 'motive_required' | 'not_withdrawable'>>;

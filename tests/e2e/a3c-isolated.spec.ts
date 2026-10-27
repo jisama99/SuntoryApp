@@ -41,13 +41,14 @@ const selectZone = async (page: Page, id: string, code: string) => {
 };
 
 test.describe('lot A3c : chaîne managériale', () => {
-  test('le CVR valide dans son périmètre, l\'agence qualifie ensuite et pas avant', async ({ page, context }) => {
+  test('le CVR valide dans son périmètre, l\'agence qualifie sans attendre cet avis', async ({ page, context }) => {
     const w = watch(page);
     await as(context, ADMIN);
     await open(page, 'BES-DEMO-032');
     await expect(validationCard(page)).toContainText('À valider');
-    await expect(page.getByTestId('next-step')).toContainText('Le CVR');
-    await expect(page.getByTestId('qualify-form')).toHaveCount(0);
+    // L'avis du CVR est facultatif : l'agence voit le statut et peut qualifier sans l'attendre.
+    await expect(page.getByTestId('next-step')).toContainText("L'agence");
+    await expect(page.getByTestId('qualify-form')).toBeVisible();
     await expect(page.getByTestId('validation-panel')).toHaveCount(0);
 
     await as(context, CVR1);
@@ -81,7 +82,7 @@ test.describe('lot A3c : chaîne managériale', () => {
 
     await setProfile(context, 'rs');
     await open(page, 'BES-DEMO-031');
-    await expect(page.getByTestId('next-step')).toContainText('Le RS');
+    await expect(page.getByTestId('next-step')).toContainText("L'agence");
     await expect(page.getByTestId('validation-panel')).toContainText('Soumettre de nouveau le besoin');
     await page.getByTestId('validation-panel').getByRole('button', { name: 'Soumettre de nouveau' }).click();
     await expect(validationCard(page)).toContainText('Tour 2');
@@ -113,7 +114,7 @@ test.describe('lot A3c : chaîne managériale', () => {
 
     await as(context, DR1);
     await open(page, 'BES-DEMO-033');
-    await expect(page.getByTestId('next-step')).toContainText('Le DR');
+    await expect(page.getByTestId('next-step')).toContainText("L'agence");
     await expect(page.getByTestId('validation-panel')).toContainText('Arbitrer le besoin escaladé');
     await expect(page.getByTestId('validation-panel').locator('#validation-outcome option[value="escalate"]')).toHaveCount(0);
     await decide(page, 'validate');

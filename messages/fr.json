@@ -1502,7 +1502,8 @@
         "not_pending": "Ce besoin n'attend plus de validation.",
         "invalid": "Saisie invalide.",
         "not_refused": "Ce besoin n'est pas refusé."
-      }
+      },
+      "optional": "L'avis managérial est facultatif : l'agence traite le besoin sans l'attendre, et la cliente en suit le statut."
     },
     "validationBatch": {
       "title": "Valider plusieurs besoins",

@@ -1502,7 +1502,8 @@
         "not_pending": "This need no longer awaits approval.",
         "invalid": "Invalid input.",
         "not_refused": "This need is not refused."
-      }
+      },
+      "optional": "The management opinion is optional: the agency handles the need without waiting for it, and the client follows its status."
     },
     "validationBatch": {
       "title": "Approve several needs",

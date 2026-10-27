@@ -70,10 +70,9 @@ describe('jeu de démonstration A3c', () => {
 });
 
 describe('scénario 1 : le CVR valide dans son périmètre', () => {
-  it('le besoin passe à « validé », l\'agence peut alors le qualifier, pas avant', async () => {
+  it('le besoin passe à « validé » ; l\'agence n\'attend jamais cet avis pour le qualifier', async () => {
     const id = await idOf('BES-DEMO-030');
-    expect(await repo.qualifyNeed(AG(), id, { outcome: 'take' })).toMatchObject({ status: 'refused', reason: 'not_validated' });
-    expect((await row('BES-DEMO-030')).next).toMatchObject({ actor: 'validator', action: 'validate_need' });
+    expect((await row('BES-DEMO-030')).next).toMatchObject({ actor: 'agency', action: 'qualify' });
     expect((await row('BES-DEMO-030', CVR1())).validation.canAct).toMatchObject({ level: 'cvr', zoneId: ZV, byZoneId: null });
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'validate' })).toEqual({ status: 'ok' });
     const after = await row('BES-DEMO-030');
@@ -87,11 +86,13 @@ describe('scénario 1 : le CVR valide dans son périmètre', () => {
     expect(ev[0]).toMatchObject({ audience: 'both', need_id: id, actor_profile: 'cvr_client' });
   });
 
-  it('un nouveau besoin soumis par le RS entre « à valider » avec son échéance, un brouillon n\'y entre pas', async () => {
+  it('un besoin saisi remonte à l\'agence aussitôt, avec un avis managérial « à valider » facultatif', async () => {
     const n = await submitNeed();
     const r = await row(n.need_code);
     expect(r.validation).toMatchObject({ state: 'to_validate', round: 1, since: TODAY });
-    expect(r.next).toMatchObject({ actor: 'validator', action: 'validate_need', due: '2026-10-27' });
+    expect(r.next).toMatchObject({ actor: 'agency', action: 'qualify' });
+    expect(await repo.qualifyNeed(AG(), n.id, { outcome: 'take' })).toEqual({ status: 'ok' });
+    expect((await row(n.need_code, CVR1())).validation.state).toBe('to_validate');
     expect(await repo.validateNeed(CVR1(), n.id, { outcome: 'validate' })).toEqual({ status: 'ok' });
   });
 
@@ -113,9 +114,9 @@ describe('scénario 2 : le CVR refuse avec motif, puis nouvelle soumission', () 
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'refuse', motive: 'Heures supérieures au besoin du secteur.' })).toEqual({ status: 'ok' });
     const refused = await row('BES-DEMO-031');
     expect(refused.validation.state).toBe('refused');
-    expect(refused.next).toMatchObject({ actor: 'rs', action: 'resubmit_need', due: null });
-    // L'agence ne peut pas qualifier un besoin refusé ; seul le RS ou l'agence le soumet de nouveau.
-    expect(await repo.qualifyNeed(AG(), id, { outcome: 'take' })).toMatchObject({ reason: 'not_validated' });
+    // Le refus du CVR ne bloque pas l'agence : le statut est visible de la cliente, la qualification reste possible.
+    expect(refused.next).toMatchObject({ actor: 'agency', action: 'qualify' });
+    expect((await row('BES-DEMO-031', RS())).validation.state).toBe('refused');
     expect((await row('BES-DEMO-031', CVR1())).validation.canResubmit).toBe(false);
     expect(await repo.resubmitNeed(CVR1(), id)).toMatchObject({ reason: 'forbidden' });
     expect((await row('BES-DEMO-031', RS())).validation.canResubmit).toBe(true);
@@ -147,7 +148,7 @@ describe('scénario 3 : escalade au DR hors périmètre', () => {
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'escalate', reason: 'out_of_perimeter', motive: 'Secteur hors de mon périmètre.' })).toEqual({ status: 'ok' });
     const r = await row('BES-DEMO-032');
     expect(r.validation).toMatchObject({ state: 'escalated', escalation: { reason: 'out_of_perimeter', trigger: 'manual', other_zone_id: null } });
-    expect(r.next).toMatchObject({ actor: 'arbiter', action: 'arbitrate_need' });
+    expect(r.next).toMatchObject({ actor: 'agency', action: 'qualify' });
     expect((await row('BES-DEMO-032', CVR1())).validation.canAct).toBeNull();
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'validate' })).toMatchObject({ reason: 'forbidden' });
     expect((await row('BES-DEMO-032', DR1())).validation.canAct).toMatchObject({ level: 'dr', zoneId: ALPHA });
@@ -175,7 +176,7 @@ describe('scénario 3 : escalade au DR hors périmètre', () => {
     const r = await row('BES-DEMO-035');
     expect(r.validation.state).toBe('refused');
     expect(r.validation.log.at(-1)).toMatchObject({ action: 'refuse', level: 'dr' });
-    expect(r.next.actor).toBe('rs');
+    expect(r.next.actor).toBe('agency');
   });
 
   it('la direction cliente arbitre aussi un besoin escaladé', async () => {
@@ -533,10 +534,10 @@ describe('annulation (D159) et besoins stoppés', () => {
   });
 });
 
-describe('l\'entonnoir compte la chaîne managériale à part', () => {
+describe('l\'entonnoir ne dépend pas de l\'avis managérial', () => {
   it('à valider, escaladés et refusés sortent des taux et des états', async () => {
     const f = await repo.getFunnelReport(AG());
-    expect(f.summary.toValidate).toBe(7); // 030 à 034 et 037 à valider, 035 escaladé ; 036 est refusé, compté à part
-    expect(f.summary.validationRefused).toBe(1);
+    // L'avis managérial ne détourne aucun besoin de l'entonnoir : tous sont à qualifier par l'agence.
+    expect(f.summary.toQualify).toBeGreaterThanOrEqual(8);
   });
 });

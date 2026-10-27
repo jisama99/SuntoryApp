@@ -1,6 +1,6 @@
 import type { Decision, Need, Note, Proposal, ProposalInput, Recruitment, Zone } from '@/data/schemas';
 import type {
-  Actor, DeviationKind, ExecutionStatus, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, StartLagKind, Urgency, ValidationState,
+  Actor, DeviationKind, ExecutionStatus, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, StartLagKind, Urgency,
 } from './types';
 import { START_LAG_KINDS } from './types';
 import { addDays, daysBetween } from './week';
@@ -228,13 +228,7 @@ export function nextStep(
   const r = i.recruitment;
   if (i.needState === 'draft') return withDue('rs', 'complete_need', null);
   if (r.intake === 'rejected' || r.stopped) return withDue('none', 'none', null);
-  // A3c : la chaîne managériale cliente passe avant la qualification de l'agence (D45). Le refus rend la main au RS, sans échéance.
-  if (r.validation !== 'validated') {
-    const since = r.validation_on ?? i.submittedOn;
-    if (r.validation === 'to_validate') return withDue('validator', 'validate_need', addWorkingDays(since, params.validate_due_days, cal));
-    if (r.validation === 'escalated') return withDue('arbiter', 'arbitrate_need', addWorkingDays(since, params.arbitrate_due_days, cal));
-    return withDue('rs', 'resubmit_need', null);
-  }
+  // A3c : l'avis managérial (CVR, DR) ne bloque jamais l'agence : les besoins remontent à l'agence dès leur saisie.
   if (r.intake === 'to_qualify') return withDue('agency', 'qualify', addWorkingDays(i.submittedOn, params.qualify_due_days, cal));
   if (r.intake === 'clarification') return withDue('rs', 'clarify', null);
 
@@ -384,8 +378,6 @@ export interface FunnelRow {
   closed: 'stopped' | 'rejected' | null;
   /** Besoin pas encore pris en charge par l'agence. */
   toQualify: boolean;
-  /** Validation managériale (A3c) : absente = validé. Un besoin non validé n'entre dans aucun autre compte. */
-  validation?: ValidationState;
   hours: number | null;
   refusals: number;
   withdrawals: number;
@@ -402,9 +394,6 @@ export interface FunnelSummary {
   stoppedPerformedHours: number;
   whiteZone: { needs: number; hours: number };
   toQualify: number;
-  /** Besoins en attente de la chaîne managériale (à valider ou escaladés) et besoins refusés par elle (A3c), comptés à part. */
-  toValidate: number;
-  validationRefused: number;
   /** Besoin passé en « Réattribué » : compté dans son état, signalé à part. */
   reassigned: number;
   demandedHours: number;
@@ -426,8 +415,6 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
   let rejected = 0;
   let stoppedPerformed = 0;
   let toQualify = 0;
-  let toValidate = 0;
-  let validationRefused = 0;
   let reassigned = 0;
   let demanded = 0;
   let hired = 0;
@@ -448,14 +435,6 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
           started += r.hours ?? 0;
         }
       } else rejected += 1;
-      continue;
-    }
-    if (r.validation === 'refused') {
-      validationRefused += 1;
-      continue;
-    }
-    if (r.validation === 'to_validate' || r.validation === 'escalated') {
-      toValidate += 1;
       continue;
     }
     if (r.toQualify) {
@@ -479,7 +458,7 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
     if (r.state === 'started') started += r.hours ?? 0;
   }
   return {
-    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, toValidate, validationRefused, reassigned, demandedHours: demanded,
+    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, reassigned, demandedHours: demanded,
     hiredRate: demanded > 0 ? hired / demanded : null, startedRate: demanded > 0 ? started / demanded : null,
     refusals, withdrawals, returned,
   };

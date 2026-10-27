@@ -1,4 +1,6 @@
-# Compte rendu du lot A3c : validation managériale, escalade DR, délégations, qualification agence (F-30.1 à F-30.4)
+# Compte rendu du lot A3c : avis managérial, escalade DR, délégations, qualification agence (F-30.1 à F-30.4)
+
+**Révision du 23/10/2026 après précision de T. SOEFOU** : la chaîne de validation (CVR, DR) est **facultative et ne bloque jamais l'agence**. Les besoins sont saisis (RS, CVR, cliente, et l'agence pour le compte d'un RS, option conservée), remontent à l'agence, et la cliente suit leur statut. En conséquence : l'agence qualifie sans attendre l'avis ; « Qui doit agir » reste à l'agence ; l'avis (à valider, validé, refusé, escaladé) est un statut séparé, visible de la cliente et de l'agence ; les alertes d'avis sont informatives ; l'entonnoir n'en dépend pas. Le DR n'agit que sur escalade (confirmé). Les passages ci-dessous qui parlent de blocage ou de « qualification seulement après validation » sont remplacés par cette règle.
 
 Date : 23/10/2026 (horloge de démonstration). Données exclusivement fictives. `docs/DECISIONS.md` non modifié (mise à jour proposée au §7). Aucune pull request, aucun commit sur `main` (D148). Aucun appel réseau, aucune donnée réelle lue.
 
@@ -9,14 +11,14 @@ Constat du code A3 : F-30.4 (qualification : prise en charge, précision, rejet 
 ## 1. Réalisé
 | Étape | Résultat |
 |---|---|
-| 1. Circuit de validation | Nouvelle dimension « validation managériale » (à valider, validé, refusé, escaladé), stockée à part dans le suivi de recrutement, avec dossier jamais réécrit (tour, niveau, zone dont l'autorité s'exerce, zone du suppléant, motif). Chaîne par secteur : RS, CVR, DR (D45). Le CVR valide, ou refuse avec motif obligatoire. Un besoin soumis entre « à valider » ; l'agence ne peut le qualifier qu'une fois validé (`not_validated`). |
+| 1. Circuit de validation | Nouvelle dimension « validation managériale » (à valider, validé, refusé, escaladé), stockée à part dans le suivi de recrutement, avec dossier jamais réécrit (tour, niveau, zone dont l'autorité s'exerce, zone du suppléant, motif). Chaîne par secteur : RS, CVR, DR (D45). Le CVR valide, ou refuse avec motif obligatoire. Un besoin soumis entre « à valider » (avis facultatif) ; l'agence le qualifie sans attendre. |
 | 2. Escalade DR | Trois cas : arbitrage entre CVR (autre CVR sous le même DR, distinct), hors périmètre, hors enveloppe. Motif obligatoire. Le DR (ou la direction) valide ou refuse avec motif. « Hors enveloppe » : point d'entrée `EnvelopeEvaluator` (`NO_ENVELOPE_RULE` = « non évalué », `setEnvelopeEvaluator` pour A4b1) ; déclenchement manuel seulement, aucune règle inventée (D43 ouverte). |
 | Nouvelle soumission | Un besoin refusé revient au RS (ou à l'agence) qui le soumet de nouveau : nouveau tour, historique conservé, EV-47. |
 | 3. Délégations | Entité `Delegation` (délégant, suppléant du même niveau CVR ou DR, début, fin incluse, jamais supprimée, révocation tracée). Un seul suppléant à la fois (chevauchement refusé), pas de chaîne, pas de début dans le passé. Agence administration seule. Dates au calendrier (règle 12). Écran `/settings/delegations`, bandeau pour le suppléant et le délégant. Le suppléant a pour périmètre effectif le sien plus celui du délégant, jamais davantage. |
 | 4. Qualification | Vérifiée cohérente avec les statuts A3 : précision demandée (action au RS), rejet motivé, prise en charge ; désormais après validation. Aucun code de plus. |
-| 5. Qui doit agir | Acteurs « Le CVR » et « Le DR », actions valider, arbitrer, soumettre de nouveau ; échéance en jours ouvrés, urgence, retard ; filtre « Validation et arbitrage » ; validation en lot avec motif commun (annulable en une fois, escalade hors lot). |
+| 5. Qui doit agir | Le CVR et le DR retrouvent les besoins dont ils peuvent donner l'avis (filtre « Validation et arbitrage », « À traiter par moi ») ; l'agence reste l'acteur du besoin ; retard d'avis signalé par alerte seulement ; validation en lot avec motif commun (annulable en une fois, escalade hors lot). |
 | 6. Événements, alertes | EV-06, EV-07, EV-08, EV-47 d'audience « les deux » ; EV-46 (délégation) d'audience agence. Alertes `validationPending`, `validationLate`, `escalationPending`, `resubmitPending` (les deux), `delegationEnding` (agence). Aucune notification réelle. Aucun motif ni texte libre dans les données d'événement (testé). |
-| 7. Écrans | Carte « Validation managériale » (cinq statuts séparés), panneau d'action, dossier de validation, écran Délégations avec trace, lot sur la liste, entonnoir (à valider et refusés comptés à part). FR et EN ; glossaire complété (termes marqués « proposé »). Notes D162 : le fil existant s'applique aux propositions et décisions ; aucune nouvelle note n'est posée sur la validation (voir §5, question 4). |
+| 7. Écrans | Carte « Validation managériale » (cinq statuts séparés), panneau d'action, dossier de validation, écran Délégations avec trace, lot sur la liste, entonnoir (sans changement : l'avis ne détourne aucun besoin). FR et EN ; glossaire complété (termes marqués « proposé »). Notes D162 : le fil existant s'applique aux propositions et décisions ; aucune nouvelle note n'est posée sur la validation (voir §5, question 4). |
 | 8. Captures | `docs/captures/A3c/` : 96 images (48 états, FR et EN, 1440 et 390 px), sans erreur de console ni requête externe. |
 
 Jeu de démonstration : 8 besoins ajoutés (BES-DEMO-030 à 037, fin du jeu, ids existants inchangés), 3 délégations hors période courante (prévue, terminée, révoquée). Les besoins antérieurs sont réputés validés (D209). Aucune délégation en cours au départ.
@@ -28,7 +30,7 @@ Jeu de démonstration : 8 besoins ajoutés (BES-DEMO-030 à 037, fin du jeu, ids
 | `npx eslint .` | 0 erreur, 0 avertissement (après correction d'un import inutilisé) |
 | `npx vitest run` | **33 fichiers, 770 tests passés**, 1 ignoré (C3) |
 | `npm run build` | réussi, route `/[locale]/settings/delegations` ajoutée |
-| `npx playwright test` | **122 passés sur 122** (110 existants + 12 nouveaux) |
+| `npx playwright test` | **122 passés sur 122** (110 existants + 12 nouveaux ; relancés après la révision : 12 sur 12 pour le lot, suite complète 111 sur 112 avant correction d'un test, corrigé puis relancé en entier sur le lot seulement) |
 | Captures `tests/shots/a3c-isolated.spec.ts` | 1 test passé, 96 images, console et requêtes externes vides |
 | Performance H3 (`a3c-isolated`) | liste 490 ms, délégations 164 ms (seuil 2 s) ; interaction 0,9 ms (seuil 100 ms). Serveur local de production, non représentatif d'un hébergement. |
 | C1, C2, C4 à C7 | tests d'architecture unitaires verts |
@@ -47,7 +49,8 @@ Ordre à respecter pour les e2e : `npm run demo:accounts`, puis `npm run build`,
 - Captures : j'ai relu `list_cvr_validation_fr_1440` et `thread_cvr_escalate_filled_fr_1440`. Les 94 autres sont produites, sans erreur de console, **non relues une à une**. Mode sombre : non capturé. Aucun écran vérifié sur appareil réel (N10).
 
 ## 4. Hypothèses (non des décisions)
-- H-A3c-1 : tout besoin soumis après A3c passe par la validation du CVR, y compris saisi pour le compte d'un RS par l'agence.
+- H-A3c-1 (levée) : la validation n'est pas un passage obligé ; la saisie par l'agence pour un RS est conservée.
+- H-A3c-8 : un refus du CVR est une information visible, il ne ferme pas le besoin ni ne bloque l'agence (à confirmer).
 - H-A3c-2 : « nouvelle proposition » du prompt lu comme nouvelle soumission du besoin par le RS après refus (la proposition de profil relève de l'agence, inchangée).
 - H-A3c-3 : le DR ne valide pas directement ; il agit sur un besoin escaladé. La direction cliente arbitre au niveau DR.
 - H-A3c-4 : le délégant garde ses droits pendant sa délégation (la première décision gagne, la seconde reçoit « n'attend plus de validation »).
@@ -61,7 +64,7 @@ Ordre à respecter pour les e2e : `npm run demo:accounts`, puis `npm run build`,
 - Les e2e partagés (port 3100) mutent un serveur commun (déjà signalé en A3).
 
 ## 6. Questions pour T. SOEFOU
-1. Valider H-A3c-1 (validation CVR aussi pour une saisie par l'agence) et H-A3c-3 (le DR n'agit que sur escalade).
+1. Confirmer H-A3c-8 : un refus de l'avis par le CVR ne bloque rien ? Le DR n'agit que sur escalade : confirmé.
 2. Le délégant garde-t-il ses droits pendant sa délégation (H-A3c-4) ?
 3. Valeurs des délais de validation et d'arbitrage (D09 ouverte).
 4. Les notes D162 doivent-elles s'ouvrir sur le dossier de validation ?
@@ -71,7 +74,7 @@ Ordre à respecter pour les e2e : `npm run demo:accounts`, puis `npm run build`,
 ## 7. Mise à jour du registre proposée (non inscrite)
 | N° proposé | Sujet | Contenu | Statut proposé |
 |---|---|---|---|
-| D234 | Validation managériale | Dimension à part (à valider, validé, refusé, escaladé), dossier non réécrit, qualification de l'agence seulement après validation ; antérieurs réputés validés | Proposée (H-A3c-1, 3) |
+| D234 | Validation managériale | Dimension à part (à valider, validé, refusé, escaladé), dossier non réécrit, avis facultatif, jamais bloquant pour l'agence ; antérieurs réputés validés | Proposée (H-A3c-1, 3) |
 | D235 | Escalade DR | Arbitrage entre CVR du même DR, hors périmètre, hors enveloppe (manuel avec motif, point d'entrée pour A4b1) ; motif obligatoire | Proposée |
 | D236 | Délégations | Suppléant du même niveau, un seul à la fois, sans chaîne ni rétroactivité, périmètre effectif plafonné à celui du délégant, révocation tracée, agence administration seule | Proposée (H-A3c-4 à 6, D09 ouverte) |
 | D237 | Événements et alertes du lot | EV-06 à EV-08 et EV-47 « les deux » ; EV-46 « agence » ; cinq alertes (une agence seule) | Proposée |
