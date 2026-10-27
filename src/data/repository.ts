@@ -1,15 +1,17 @@
 import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
 import type { DelayStat, FunnelSummary, Milestone, NextStep, PipelineParams, ProposalIssue } from '@/domain/pipeline';
+import type { DelegationRefusal, EnvelopeStatus, ValidationRefusal } from '@/domain/validation';
 import type {
-  DecisionOutcome, DeadlineType, Dispositif, ExecutionStatus, FunnelState, HomeSkin, MenuKey, NoteObjectKind, NoteVisibility, PositionStatus, PresetId,
-  ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation, StartLagKind,
+  DecisionOutcome, DeadlineType, DelegationStatus, Dispositif, EscalationReason, ExecutionStatus, FunnelState, HomeSkin, MenuKey, NoteObjectKind,
+  NoteVisibility, PositionStatus, PresetId, ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation, StartLagKind, ValidationLevel,
+  ValidationOutcome, ValidationState,
 } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
-  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, Decision, DemoClock, DemoProfile, DispositifParams, Need, Note,
-  ParamChange, ParamKey, Proposal, ProposalInput, PublicAccount, Recruitment, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
+  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note,
+  ParamChange, ParamKey, Proposal, ProposalInput, PublicAccount, Recruitment, Reopening, ReopeningRequest, Store, ValidationEntry, WeekClosure, Zone,
 } from './schemas';
 
 export interface MenuEntry {
@@ -115,7 +117,7 @@ export interface Repository {
   canPropose(ctx: AccessContext): boolean;
   canDecide(ctx: AccessContext): boolean;
   canRecord(ctx: AccessContext, step: RecruitmentStep): boolean;
-  qualifyNeed(ctx: AccessContext, needId: string, input: QualifyInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'not_submitted' | 'already' | 'motive_required'>>;
+  qualifyNeed(ctx: AccessContext, needId: string, input: QualifyInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'not_submitted' | 'already' | 'motive_required' | 'confirm_required'>>;
   saveProposal(ctx: AccessContext, needId: string, input: ProposalInput, options?: { send?: boolean }): Promise<ProposalResult>;
   /** Retire une proposition envoyée (motif obligatoire) ou jette un brouillon. Une décision qui s'y rattache est invalidée. */
   withdrawProposal(ctx: AccessContext, proposalId: string, motive: string): Promise<MutationResult<'forbidden' | 'not_found' | 'motive_required' | 'not_withdrawable'>>;
@@ -129,6 +131,19 @@ export interface Repository {
   addNote(ctx: AccessContext, input: NoteInput): Promise<MutationResult<'forbidden' | 'not_found' | 'invalid' | 'confirm_required' | 'invalid_recipient'>>;
   /** Le retrait garde la trace, la note ne redevient jamais interne. */
   withdrawNote(ctx: AccessContext, noteId: string): Promise<MutationResult<'forbidden' | 'not_found' | 'already'>>;
+  // ---- Lot A3c : validation managériale, escalade, délégations (F-30.1 à F-30.3) ----
+  /** Le CVR valide dans son périmètre ou refuse avec motif ; il escalade au DR (arbitrage, hors périmètre, hors enveloppe). Le DR arbitre un besoin escaladé. */
+  validateNeed(ctx: AccessContext, needId: string, input: ValidationInput): Promise<MutationResult<ValidationFailure>>;
+  /** Validation en lot avec motif commun (F-30.6) : chaque besoin est contrôlé seul, un refus n'arrête pas les autres. L'escalade se fait besoin par besoin. */
+  validateBatch(ctx: AccessContext, needIds: string[], input: ValidationInput): Promise<BatchValidationResult>;
+  /** Le RS ou l'agence soumet de nouveau un besoin refusé : un nouveau tour de validation s'ouvre, l'historique reste. */
+  resubmitNeed(ctx: AccessContext, needId: string): Promise<MutationResult<'forbidden' | 'not_found' | 'not_refused'>>;
+  /** Délégations lisibles : toutes pour l'agence, celles du profil (délégant ou suppléant) pour la cliente. */
+  getDelegations(ctx: AccessContext): Promise<DelegationView[]>;
+  /** Paramétrage des suppléants : agence administration seule (F-30.3). */
+  canManageDelegations(ctx: AccessContext): boolean;
+  createDelegation(ctx: AccessContext, input: DelegationInput): Promise<MutationResult<DelegationRefusal | 'forbidden'>>;
+  revokeDelegation(ctx: AccessContext, delegationId: string): Promise<MutationResult<'forbidden' | 'not_found' | 'not_revocable'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;
@@ -282,7 +297,51 @@ export interface PipelineRow {
   billableFrom: string | null;
   /** Le besoin a changé depuis la proposition envoyée : la décision éventuelle est invalidée. */
   needChanged: boolean;
+  /** Validation managériale (A3c) : dimension distincte de la qualification par l'agence. */
+  validation: ValidationView;
 }
+
+/** Zones citées par le dossier de validation, résolues par la couche de données (jamais déduites de l'écran). */
+export interface ValidationView {
+  state: ValidationState;
+  round: number;
+  since: string | null;
+  escalation: Recruitment['escalation'];
+  log: ValidationEntry[];
+  /** Action ouverte à ce profil sur ce besoin, avec l'autorité qui s'exerce (zone du CVR ou du DR, et zone du suppléant le cas échéant). */
+  canAct: { level: Extract<ValidationLevel, 'cvr' | 'dr'>; zoneId: string; byZoneId: string | null } | null;
+  canResubmit: boolean;
+  /** CVR du besoin, DR du besoin et autres zones citées (suppléant, autre CVR d'un arbitrage). */
+  zones: Record<string, Zone>;
+  /** CVR sous le même DR, proposables pour un arbitrage : seulement pour qui peut escalader. */
+  siblingCvrs: Zone[];
+  /** Point d'entrée « hors enveloppe » (D43 ouverte) : non évalué tant que la règle d'A4b1 n'est pas branchée. */
+  envelope: EnvelopeStatus;
+}
+
+export interface ValidationInput {
+  outcome: ValidationOutcome;
+  motive?: string;
+  reason?: EscalationReason;
+  /** Autre CVR en cause dans un arbitrage entre CVR. */
+  otherZoneId?: string;
+}
+export type ValidationFailure = 'forbidden' | 'not_found' | 'not_pending' | ValidationRefusal;
+
+export interface BatchValidationResult {
+  items: Array<{ needId: string; status: 'ok' | 'refused'; reason?: ValidationFailure }>;
+  decided: number;
+  refused: number;
+}
+
+export interface DelegationInput {
+  delegatorZoneId: string;
+  substituteZoneId: string;
+  startDate: string;
+  endDate: string;
+}
+/** Délégation avec son état à la date de démonstration et les deux zones résolues. */
+export type DelegationView = Delegation & { status: DelegationStatus; delegator: Zone; substitute: Zone };
 
 export interface NeedThread {
   row: PipelineRow;
@@ -309,7 +368,8 @@ export interface PipelineAlert {
   audience: Alert['audience'];
   severity: Severity;
   /** Clé sous `alerts.pipeline`. */
-  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate' | 'accordLost';
+  message_key: 'proposalLate' | 'qualifyLate' | 'costingIncomplete' | 'decisionsPending' | 'decisionsLate' | 'clarificationPending' | 'startLate' | 'accordLost'
+    | 'validationPending' | 'validationLate' | 'escalationPending' | 'resubmitPending' | 'delegationEnding';
   params: Record<string, string | number>;
   created_at: string;
 }
@@ -317,6 +377,8 @@ export interface PipelineAlert {
 export interface QualifyInput {
   outcome: 'take' | 'clarify' | 'reject';
   motive?: string;
+  /** Confirmation exigée pour prendre en charge un besoin dont l'avis managérial est refusé (l'avis ne bloque pas, il se confirme). */
+  confirmRefusedAvis?: boolean;
 }
 
 export type ProposalResult =

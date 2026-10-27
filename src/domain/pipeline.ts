@@ -32,6 +32,10 @@ export interface PipelineParams {
   soon_within_days: number;
   /** Effectif minimal pour conclure sur un délai (D93 : valeur proposée 5). */
   min_sample: number;
+  /** Délai de validation d'un besoin soumis par le CVR (A3c). Valeur de départ À VALIDER : D09 reste ouverte, rien n'est figé. */
+  validate_due_days: number;
+  /** Délai d'arbitrage d'un besoin escaladé par le DR (A3c). Valeur de départ À VALIDER (D09). */
+  arbitrate_due_days: number;
 }
 
 export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
@@ -41,6 +45,8 @@ export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
   urgent_within_days: 2,
   soon_within_days: 5,
   min_sample: 5,
+  validate_due_days: 2,
+  arbitrate_due_days: 3,
 };
 
 /** Le n-ième jour ouvré après `date` (n supérieur ou égal à 1). */
@@ -57,7 +63,9 @@ export function addWorkingDays(date: IsoDate, n: number, cal: CalendarRules): Is
 export const blankRecruitment = (needId: string): Recruitment => ({
   need_id: needId, intake: 'to_qualify', intake_motive: null, qualified_on: null, situation: 'new', reassigned_from_sector_id: null,
   white_zone_since: null, stopped: null, search_started_on: null, hired_on: null, training_on: null, start_work_date: null,
-  vehicle_handover_date: null, refusal_count: 0, withdrawal_count: 0, exits: [], is_demo: true,
+  vehicle_handover_date: null, refusal_count: 0, withdrawal_count: 0, exits: [],
+  // Un enregistrement sans suivi de validation est réputé validé (D209, avant A3c) ; une soumission après A3c le crée « à valider ».
+  validation: 'validated', validation_round: 1, validation_on: null, escalation: null, validation_log: [], is_demo: true,
 });
 
 // ---------------------------------------------------------------------------------------------
@@ -220,6 +228,7 @@ export function nextStep(
   const r = i.recruitment;
   if (i.needState === 'draft') return withDue('rs', 'complete_need', null);
   if (r.intake === 'rejected' || r.stopped) return withDue('none', 'none', null);
+  // A3c : l'avis managérial (CVR, DR) ne bloque jamais l'agence : les besoins remontent à l'agence dès leur saisie.
   if (r.intake === 'to_qualify') return withDue('agency', 'qualify', addWorkingDays(i.submittedOn, params.qualify_due_days, cal));
   if (r.intake === 'clarification') return withDue('rs', 'clarify', null);
 

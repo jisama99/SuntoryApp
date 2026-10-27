@@ -12,8 +12,9 @@ Version du 23/10/2026. État : A0, A0b et A1 (avec A1 bis, ter et quater : direc
 | 2 ter | A1f | `28_PROMPT_LOT_A1F.md` | A1e | D188, D189 | Connexion identifiant et mot de passe, trousseau, comptes gérés par l'agence |
 | 3 | A3 | `12_PROMPT_LOT_A3.md` | A2b | Table de correspondance des anciens statuts (D11), D93 à D97 | Scénarios refus, remplacement, deux propositions |
 | 3 bis | A3c | `33_PROMPT_LOT_A3C.md` | A3 | D09 ouverte ; enveloppe branchée en A4b1 | Circuit CVR, DR, délégations, audience |
+| 3 ter | A3d | `36_PROMPT_LOT_A3D.md` | A3c | Aucun (décision du 23/10/2026, confirmée le 27/10/2026 : D234) | Matrice des droits de saisie, saisie CVR « avis donné à la saisie », saisie pour le compte d'un RS tracée |
 | 4 bis | A4b1 | `23_PROMPT_LOT_A4B1.md` | A3 | D07 (montants réels) ; D153 à D157 | Enveloppe cliente, allocation agence, prévisionnel par besoin |
-| 4 | A4a | `13_PROMPT_LOT_A4A.md` | A3 | D05 (consommé : montants fictifs), P3 (graphiques, décidé dans le lot) ; comparaison N / N-1 ajoutée (D127) | Tableau de bord par rôle, audience des alertes |
+| 4 | A4a | `13_PROMPT_LOT_A4A.md` | A3, A3d | D05 (consommé : montants fictifs), P3 (graphiques, décidé dans le lot) ; comparaison N / N-1 ajoutée (D127) | Tableau de bord par rôle, audience des alertes |
 | 5 | A5 | `14_PROMPT_LOT_A5.md` | A3 | D14 et D15 (hors ligne simulé), Q19 | Parcours mobile, absences génériques |
 | 5 bis | A4f | `30_PROMPT_LOT_A4F.md` | A5 | D190 | Vue Planning : frise, calendrier, jour, mois, magasins liés, recrutements |
 | 5 ter | A4g | `32_PROMPT_LOT_A4G.md` | A3, A4a, A4f | Alertes obligatoires, heures calmes (hypothèses) ; push et e-mail simulés | Préférences par type et canal, audience, file push à valider |

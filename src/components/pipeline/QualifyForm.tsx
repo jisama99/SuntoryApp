@@ -11,13 +11,14 @@ import { TextareaField } from '@/components/TextareaField';
 import type { Locale } from '@/domain/types';
 
 /** Qualification du besoin par l'agence (F-30.4) : prise en charge, demande de précision, rejet motivé. */
-export function QualifyForm({ needId }: { needId: string }) {
+export function QualifyForm({ needId, avisRefused = false }: { needId: string; avisRefused?: boolean }) {
   const t = useTranslations('pipeline.qualify');
   const tc = useTranslations('confirmation');
   const locale = useLocale() as Locale;
   const announce = useConfirmation();
   const [outcome, setOutcome] = useState('take');
   const [motive, setMotive] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -27,7 +28,11 @@ export function QualifyForm({ needId }: { needId: string }) {
         setResult('motive_required');
         return;
       }
-      const r = await qualifyNeedAction({ locale, needId, outcome, motive });
+      if (avisRefused && outcome === 'take' && !confirmed) {
+        setResult('confirm_required');
+        return;
+      }
+      const r = await qualifyNeedAction({ locale, needId, outcome, motive, confirmRefusedAvis: confirmed });
       if (r.status === 'ok') {
         announce(tc('saved'), { undoToken: r.undoToken });
         setMotive('');
@@ -52,6 +57,12 @@ export function QualifyForm({ needId }: { needId: string }) {
         />
         {outcome !== 'take' ? (
           <TextareaField id="qualify-motive" label={t('motive')} hint={t('motiveHint')} value={motive} maxLength={280} onChange={(e) => { setMotive(e.target.value); setResult(null); }} />
+        ) : null}
+        {avisRefused && outcome === 'take' ? (
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-ctl bg-alt px-4 py-2" data-testid="avis-confirm">
+            <input type="checkbox" className="size-5" checked={confirmed} onChange={(e) => { setConfirmed(e.target.checked); setResult(null); }} />
+            {t('confirmRefusedAvis')}
+          </label>
         ) : null}
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" disabled={pending || outcome === ''}>{t('submit')}</Button>

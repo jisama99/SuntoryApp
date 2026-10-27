@@ -137,7 +137,12 @@
       "decisionsLate": "{n, plural, one {# décision de la cliente dépasse son échéance.} other {# décisions de la cliente dépassent leur échéance.}}",
       "clarificationPending": "{n, plural, one {# besoin attend une précision du RS.} other {# besoins attendent une précision du RS.}}",
       "startLate": "{n, plural, one {# prise de poste dépasse la date prévue.} other {# prises de poste dépassent la date prévue.}}",
-      "accordLost": "L'accord n'est plus en vigueur sur {n, plural, one {# poste en poste} other {# postes en poste}} : le besoin a changé, la proposition est à renvoyer pour confirmation."
+      "accordLost": "L'accord n'est plus en vigueur sur {n, plural, one {# poste en poste} other {# postes en poste}} : le besoin a changé, la proposition est à renvoyer pour confirmation.",
+      "validationPending": "{n, plural, one {# besoin attend la validation du CVR.} other {# besoins attendent la validation du CVR.}}",
+      "validationLate": "{n, plural, one {# validation du CVR dépasse son échéance.} other {# validations du CVR dépassent leur échéance.}}",
+      "escalationPending": "{n, plural, one {# besoin escaladé attend l'arbitrage du DR.} other {# besoins escaladés attendent l'arbitrage du DR.}}",
+      "resubmitPending": "{n, plural, one {# besoin refusé attend une nouvelle soumission.} other {# besoins refusés attendent une nouvelle soumission.}}",
+      "delegationEnding": "{n, plural, one {# délégation se termine bientôt.} other {# délégations se terminent bientôt.}}"
     }
   },
   "states": {
@@ -924,7 +929,8 @@
     "emailsToApprove": "Courriels à valider",
     "attention": "Ce qui demande votre attention",
     "signIn": "Connexion",
-    "manageAccess": "Gérer les accès"
+    "manageAccess": "Gérer les accès",
+    "delegations": "Désigner les suppléants"
   },
   "pipeline": {
     "title": "Propositions et décisions",
@@ -934,7 +940,8 @@
       "mine": "À traiter par moi",
       "all": "Tous",
       "overdue": "En retard",
-      "decision": "En attente de décision"
+      "decision": "En attente de décision",
+      "validation": "Validation et arbitrage"
     },
     "tiles": {
       "toAct": "À traiter par vous",
@@ -1026,7 +1033,9 @@
       "rs": "Le RS",
       "agency": "L'agence",
       "decider": "La cliente",
-      "none": "Personne"
+      "none": "Personne",
+      "validator": "Le CVR",
+      "arbiter": "Le DR"
     },
     "action": {
       "complete_need": "Compléter le besoin",
@@ -1040,13 +1049,17 @@
       "finalise_hiring": "Finaliser le recrutement",
       "start_work": "Enregistrer la prise de poste",
       "reconfirm_proposal": "Renvoyer la proposition pour confirmation",
-      "none": "Aucune action"
+      "none": "Aucune action",
+      "validate_need": "Valider le besoin",
+      "arbitrate_need": "Arbitrer le besoin escaladé",
+      "resubmit_need": "Soumettre de nouveau le besoin"
     },
     "dimension": {
       "need": "Besoin",
       "proposal": "Proposition",
       "recruitment": "Recrutement",
-      "execution": "Exécution"
+      "execution": "Exécution",
+      "validation": "Validation managériale"
     },
     "audience": {
       "agency": "Agence uniquement",
@@ -1082,11 +1095,16 @@
       "EV-20": "Zone blanche",
       "EV-21": "Désistement ou départ du poste",
       "EV-44": "Note ajoutée ou retirée",
-      "EV-45": "Proposition retirée"
+      "EV-45": "Proposition retirée",
+      "EV-06": "Besoin validé par le CVR",
+      "EV-07": "Besoin escaladé ou arbitré par le DR",
+      "EV-08": "Besoin refusé avec motif",
+      "EV-46": "Délégation créée ou révoquée",
+      "EV-47": "Besoin soumis de nouveau"
     },
     "detail": {
       "title": "Besoin {code}",
-      "statuses": "Quatre statuts séparés",
+      "statuses": "Cinq statuts séparés",
       "hours": "{n} heures par semaine",
       "reassignedFrom": "Secteur d'origine :",
       "counters": "Refus : {refusals}. Désistements : {withdrawals}.",
@@ -1156,8 +1174,11 @@
         "not_found": "Besoin introuvable.",
         "invalid": "Saisie invalide.",
         "not_submitted": "Le besoin n'est pas soumis.",
-        "already": "Le besoin est déjà qualifié."
-      }
+        "already": "Le besoin est déjà qualifié.",
+        "not_validated": "La chaîne managériale n'a pas encore validé ce besoin.",
+        "confirm_required": "Confirmez la prise en charge malgré l'avis refusé."
+      },
+      "confirmRefusedAvis": "L'avis du CVR ou du DR est refusé. Je confirme la prise en charge malgré cet avis."
     },
     "decide": {
       "title": "Votre décision sur la version {n}",
@@ -1368,7 +1389,9 @@
         "whiteZone": "Zone blanche",
         "stopped": "Stoppés",
         "rejected": "Rejetés",
-        "reassigned": "Réattribués (comptés dans leur état)"
+        "reassigned": "Réattribués (comptés dans leur état)",
+        "toValidate": "À valider ou escaladés",
+        "validationRefused": "Refusés par la chaîne managériale"
       },
       "needsAndHours": "{needs, plural, one {# besoin} other {# besoins}}, {hours} heures",
       "delays": "Délais par situation",
@@ -1406,6 +1429,183 @@
       "start_planned": "Prise de poste planifiée",
       "in_post": "En poste",
       "ended": "Poste terminé"
+    },
+    "validation": {
+      "state": {
+        "to_validate": "À valider",
+        "validated": "Validé",
+        "refused": "Refusé",
+        "escalated": "Escaladé au DR"
+      },
+      "round": "Tour {n}",
+      "reasons": {
+        "arbitration": "Arbitrage entre CVR",
+        "out_of_perimeter": "Hors périmètre",
+        "out_of_envelope": "Hors enveloppe"
+      },
+      "trigger": {
+        "manual": "déclenchée à la main",
+        "rule": "déclenchée par la règle"
+      },
+      "logTitle": "Dossier de validation",
+      "log": {
+        "validate": {
+          "cvr": "Validé par le CVR",
+          "dr": "Arbitré par le DR et validé"
+        },
+        "refuse": {
+          "cvr": "Refusé par le CVR",
+          "dr": "Refusé par le DR"
+        },
+        "escalate": {
+          "cvr": "Escaladé au DR"
+        },
+        "resubmit": {
+          "author": "Soumis de nouveau"
+        }
+      },
+      "actedBy": "Décision prise par le suppléant",
+      "otherCvr": "Autre CVR concerné",
+      "title": {
+        "cvr": "Valider le besoin",
+        "dr": "Arbitrer le besoin escaladé",
+        "resubmit": "Soumettre de nouveau le besoin"
+      },
+      "actingFor": "Vous agissez comme suppléant de {zone}",
+      "help": {
+        "cvr": "Validez le besoin dans votre périmètre, refusez-le avec un motif, ou escaladez-le au DR : arbitrage entre CVR, hors périmètre ou hors enveloppe.",
+        "dr": "Ce besoin a été escaladé. Validez-le ou refusez-le avec un motif.",
+        "resubmit": "Le besoin a été refusé. Corrigez-le si besoin, puis soumettez-le de nouveau : un nouveau tour de validation s'ouvre et l'historique est conservé."
+      },
+      "outcome": "Décision",
+      "choose": "Choisir",
+      "outcomes": {
+        "validate": "Valider",
+        "refuse": "Refuser",
+        "escalate": "Escalader au DR"
+      },
+      "reason": "Cas d'escalade",
+      "envelope": {
+        "not_evaluated": "Enveloppe non évaluée : la règle de calcul n'est pas encore arrêtée. L'escalade repose sur votre jugement et sur le motif saisi.",
+        "within": "L'enveloppe n'est pas dépassée.",
+        "exceeded": "L'enveloppe est dépassée."
+      },
+      "motive": "Motif",
+      "motiveHint": "Obligatoire pour un refus ou une escalade.",
+      "submit": "Enregistrer",
+      "resubmit": "Soumettre de nouveau",
+      "refused": {
+        "outcome_required": "Choisissez une décision.",
+        "motive_required": "Un motif est obligatoire.",
+        "invalid_reason": "Choisissez le cas d'escalade.",
+        "invalid_other_zone": "Choisissez l'autre CVR, sous le même DR.",
+        "forbidden": "Votre profil n'agit pas sur ce besoin à cette étape.",
+        "not_found": "Besoin introuvable dans votre périmètre.",
+        "not_pending": "Ce besoin n'attend plus de validation.",
+        "invalid": "Saisie invalide.",
+        "not_refused": "Ce besoin n'est pas refusé."
+      },
+      "optional": "L'avis managérial est facultatif : l'agence traite le besoin sans l'attendre, et la cliente en suit le statut."
+    },
+    "validationBatch": {
+      "title": "Valider plusieurs besoins",
+      "help": "Cochez les besoins, choisissez la décision et rédigez un motif commun. Chaque besoin est contrôlé seul. Une escalade se fait besoin par besoin.",
+      "legend": "Besoins en attente de validation ou d'arbitrage",
+      "all": "Tout cocher",
+      "none": "Tout décocher",
+      "due": "Avant le {date}",
+      "overdue": "En retard",
+      "motive": "Motif commun",
+      "motiveHint": "Obligatoire pour un refus.",
+      "approve": "Valider la sélection",
+      "refuse": "Refuser la sélection",
+      "nothingPicked": "Cochez au moins un besoin.",
+      "motiveRequired": "Un motif commun est obligatoire pour un refus.",
+      "summary": "{decided} traité(s), {refused} écarté(s) par le contrôle.",
+      "reason": {
+        "forbidden": "Votre profil n'agit pas sur ce besoin.",
+        "not_found": "Besoin introuvable dans votre périmètre.",
+        "not_pending": "Le besoin n'attend plus de validation.",
+        "invalid": "Décision invalide.",
+        "motive_required": "Motif obligatoire.",
+        "invalid_reason": "Cas d'escalade invalide.",
+        "invalid_other_zone": "Autre CVR invalide."
+      }
+    }
+  },
+  "delegations": {
+    "body": "Un suppléant par délégant, avec une date d'effet et une date de fin choisies au calendrier, et une trace complète.",
+    "intro": "Pendant l'absence d'un CVR ou d'un DR, un suppléant du même niveau agit dans le périmètre du délégant, jamais au delà. Un seul suppléant à la fois. Les règles de délai de réponse restent à arrêter.",
+    "banner": {
+      "label": "Délégations",
+      "tag": {
+        "acting": "Suppléance en cours",
+        "planned": "Suppléance prévue",
+        "covered": "Votre suppléant"
+      },
+      "acting": "Vous agissez pour {zone}, du {start} au {end}.",
+      "planned": "Vous serez suppléant de {zone}, du {start} au {end}.",
+      "covered": "{zone} vous supplée du {start} au {end}."
+    },
+    "form": {
+      "title": "Désigner un suppléant",
+      "help": "Choisissez le CVR ou le DR absent, son suppléant du même niveau et la période. La date d'effet ne peut pas être passée.",
+      "delegator": "Délégant (absent)",
+      "substitute": "Suppléant",
+      "substituteHint": "Même niveau que le délégant (CVR ou DR).",
+      "period": "Période de suppléance",
+      "periodHint": "Premier jour, puis dernier jour. Le suppléant agit jusqu'au dernier jour inclus.",
+      "choose": "Choisir",
+      "submit": "Désigner le suppléant"
+    },
+    "filters": {
+      "label": "Filtrer les délégations",
+      "all": "Toutes",
+      "planned": "Prévues",
+      "active": "En cours",
+      "ended": "Terminées",
+      "revoked": "Révoquées"
+    },
+    "cols": {
+      "delegator": "Délégant",
+      "substitute": "Suppléant",
+      "period": "Période",
+      "status": "État",
+      "trace": "Trace",
+      "actions": "Action"
+    },
+    "range": "du {start} au {end}",
+    "status": {
+      "planned": "Prévue",
+      "active": "En cours",
+      "ended": "Terminée",
+      "revoked": "Révoquée"
+    },
+    "revokedOn": "Révoquée le {date}",
+    "createdOn": "Créée le {date} par {who}",
+    "none": "Aucune",
+    "caption": "Délégations et suppléants",
+    "emptyTitle": "Rien à afficher",
+    "empty": "Aucune délégation n'est enregistrée.",
+    "emptyFilter": "Aucune délégation ne correspond à ce filtre.",
+    "traceTitle": "Trace des délégations",
+    "traceEmpty": "Aucun changement n'est enregistré.",
+    "trace": {
+      "created": "Délégation créée",
+      "revoked": "Délégation révoquée"
+    },
+    "revoke": "Révoquer",
+    "refused": {
+      "incomplete": "Renseignez le délégant, le suppléant et la période.",
+      "invalid": "Saisie invalide.",
+      "same_zone": "Le suppléant doit être une autre zone.",
+      "kind_mismatch": "Le suppléant doit être du même niveau que le délégant.",
+      "period": "La période est invalide : la date d'effet ne peut pas être passée.",
+      "overlap": "Ce délégant a déjà un suppléant sur une partie de cette période.",
+      "chain": "Une zone ne peut pas être à la fois délégante et suppléante sur la même période.",
+      "forbidden": "Seule l'agence administration paramètre les suppléants.",
+      "not_found": "Délégation introuvable.",
+      "not_revocable": "Cette délégation est déjà terminée ou révoquée."
     }
   }
 }

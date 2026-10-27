@@ -15,6 +15,10 @@ import {
   executionStatus, funnelState, startLagSample, startLagStats, funnelSummary, needChangedSince, noteVisibleTo, nextStep, positionStatus, proposalIssues, sentProposal, validDecisionOn,
 } from '@/domain/pipeline';
 import type { Facts, FunnelRow, PipelineParams } from '@/domain/pipeline';
+import {
+  authorityFor, canResubmit, cvrZoneOf, delegationIssue, delegationStatus, drZoneOf, effectiveScope, NO_ENVELOPE_RULE, validationIssue,
+} from '@/domain/validation';
+import type { EnvelopeEvaluator } from '@/domain/validation';
 import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
 import type {
   Audience, DeadlineType, Dispositif, EventCode, HomeSkin, InvalidationReason, NoteObjectKind, NoteVisibility, PresetId, ProfileId,
@@ -26,13 +30,14 @@ import {
 import { resolvePeriod } from '@/domain/week-rules';
 import type { RuleEnv, RuleInput } from '@/domain/week-rules';
 import { calendarOf } from '@/domain/deadlines';
-import { addMonths, isWorkingDay, monthStart } from '@/domain/working-days';
+import { addMonths, isWorkingDay, monthStart, workingDaysBetween } from '@/domain/working-days';
 import accountsJson from './fixtures/accounts.json';
 import alertsJson from './fixtures/alerts.json';
 import campaignsJson from './fixtures/campaigns.json';
 import clockJson from './fixtures/clock.json';
 import deadlineSettingsJson from './fixtures/deadline-settings.json';
 import decisionsJson from './fixtures/decisions.json';
+import delegationsJson from './fixtures/delegations.json';
 import notesJson from './fixtures/notes.json';
 import proposalsJson from './fixtures/proposals.json';
 import recruitmentsJson from './fixtures/recruitments.json';
@@ -46,18 +51,18 @@ import storesJson from './fixtures/stores.json';
 import weekClosuresJson from './fixtures/week-closures.json';
 import zonesJson from './fixtures/zones.json';
 import type {
-  BatchDecisionResult, BatchDraft, BatchLineResult, DecisionInput, DecisionRefusal, DemoProfileDirectory, FunnelReport, MutationResult,
-  NeedThread, OutboxEntry, PipelineAlert, PipelineRow, ProposalResult, Repository, ReturnedFinding, SaveOptions,
-  SaveRefusal, SaveResult, StepInput, StepRefusal,
+  BatchDecisionResult, BatchDraft, BatchLineResult, BatchValidationResult, DecisionInput, DecisionRefusal, DelegationView, DemoProfileDirectory,
+  FunnelReport, MutationResult, NeedThread, OutboxEntry, PipelineAlert, PipelineRow, ProposalResult, Repository, ReturnedFinding, SaveOptions,
+  SaveRefusal, SaveResult, StepInput, StepRefusal, ValidationFailure, ValidationInput, ValidationView,
 } from './repository';
 import {
   AccountSchema, AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DecisionSchema,
-  DemoClockSchema, DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, NoteSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS,
+  DelegationSchema, DemoClockSchema, DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, NoteSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS,
   ProfileSchema, ProposalInputSchema, ProposalSchema, RecruitmentSchema, ReopeningRequestSchema, ReopeningSchema, StoreSchema,
   USERNAME_PATTERN, WeekClosureSchema, ZoneSchema,
 } from './schemas';
 import type {
-  Account, BusinessEvent, DeadlineSettings, Decision, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
+  Account, BusinessEvent, DeadlineSettings, Decision, Delegation, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
   PublicAccount, Recruitment, Reopening, ReopeningRequest, Zone,
 } from './schemas';
 
@@ -108,6 +113,8 @@ interface DemoState {
   decisions: Decision[];
   notes: Note[];
   pipelineParams: PipelineParams;
+  // Lot A3c
+  delegations: Delegation[];
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -133,6 +140,7 @@ function state(): DemoState {
       decisions: structuredClone(z.array(DecisionSchema).parse(decisionsJson)),
       notes: structuredClone(z.array(NoteSchema).parse(notesJson)),
       pipelineParams: { ...DEFAULT_PIPELINE_PARAMS },
+      delegations: structuredClone(z.array(DelegationSchema).parse(delegationsJson)),
     };
   }
   return globalState.__suntoryDemoState;
@@ -267,6 +275,22 @@ const DECIDERS: readonly ProfileId[] = ['direction_client', 'dr_client', 'cvr_cl
 const FIELD_STEPS: readonly RecruitmentStep[] = ['start_work', 'vehicle_handover'];
 const calOf = () => calendarOf(state().settings);
 
+/**
+ * Contexte avec le périmètre effectif d'un suppléant (F-30.3) : son périmètre, plus celui de chaque délégant en cours, jamais davantage.
+ * Les lectures et les écritures de la chaîne managériale s'appuient dessus ; l'autorité (qui agit, pour qui) se juge sur le contexte
+ * d'origine, afin de tracer qu'une personne agit comme suppléante.
+ */
+const eff = (ctx: AccessContext): AccessContext => {
+  const scope = effectiveScope(ctx.scope, state().delegations, clock.date);
+  return scope === ctx.scope ? ctx : { ...ctx, scope };
+};
+
+let envelopeEvaluator: EnvelopeEvaluator = NO_ENVELOPE_RULE;
+/** Point d'entrée « hors enveloppe » (D43 ouverte) : A4b1 y branche la règle de calcul. Sans argument, retour à « non évalué ». */
+export function setEnvelopeEvaluator(fn?: EnvelopeEvaluator): void {
+  envelopeEvaluator = fn ?? NO_ENVELOPE_RULE;
+}
+
 const recruitmentOf = (needId: string): Recruitment => state().recruitments.find((r) => r.need_id === needId) ?? blankRecruitment(needId);
 function ensureRecruitment(needId: string): Recruitment {
   const st = state();
@@ -317,7 +341,7 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
   const sent = sentProposal(facts.proposals);
   const rec = facts.recruitment;
   const from = rec.reassigned_from_sector_id;
-  const recruitment: Recruitment = from && !zoneInScope(zones, from, ctx.scope) ? { ...rec, reassigned_from_sector_id: null } : rec;
+  const recruitment: Recruitment = from && !zoneInScope(zones, from, eff(ctx).scope) ? { ...rec, reassigned_from_sector_id: null } : rec;
   return {
     need: withPositionStatus(ctx, n),
     recruitment,
@@ -331,6 +355,37 @@ function rowFor(ctx: AccessContext, n: Need): PipelineRow {
     submittedOn: sub,
     billableFrom: client ? null : billableFrom(rec),
     needChanged: sent ? needChangedSince(n, sent) : false,
+    validation: validationViewOf(ctx, n, rec),
+  };
+}
+
+/** Autorité exercée par ce profil sur ce besoin, délégations comprises : calculée ici, jamais par l'écran. */
+const authorityOf = (ctx: AccessContext, need: Need, rec: Recruitment) =>
+  need.need_state === 'submitted' && !isClosedRecruitment(rec)
+    ? authorityFor(ctx.profileId, ctx.scope, need.sector_id, rec.validation, zones, state().delegations, clock.date)
+    : null;
+
+function validationViewOf(ctx: AccessContext, need: Need, rec: Recruitment): ValidationView {
+  const auth = authorityOf(ctx, need, rec);
+  const cvr = cvrZoneOf(zones, need.sector_id);
+  const refs = new Set<string>();
+  if (cvr) refs.add(cvr.id);
+  const dr = drZoneOf(zones, need.sector_id);
+  if (dr) refs.add(dr.id);
+  for (const e of rec.validation_log) for (const id of [e.zone_id, e.by_zone_id, e.other_zone_id]) if (id) refs.add(id);
+  if (rec.escalation?.other_zone_id) refs.add(rec.escalation.other_zone_id);
+  const siblingCvrs = auth?.level === 'cvr' && dr ? zones.filter((z) => z.kind === 'cvr' && z.parent_id === dr.id && z.id !== cvr?.id) : [];
+  return {
+    state: rec.validation,
+    round: rec.validation_round,
+    since: rec.validation_on,
+    escalation: rec.escalation,
+    log: rec.validation_log,
+    canAct: auth ? { level: auth.level, zoneId: auth.zoneId, byZoneId: auth.byZoneId } : null,
+    canResubmit: need.need_state === 'submitted' && canResubmit(rec) && !isClosedRecruitment(rec) && (WRITE_PROFILES.includes(ctx.profileId)) && zoneInScope(zones, need.sector_id, eff(ctx).scope),
+    zones: Object.fromEntries(zones.filter((z) => refs.has(z.id)).map((z) => [z.id, z])),
+    siblingCvrs,
+    envelope: envelopeEvaluator(need),
   };
 }
 
@@ -439,7 +494,7 @@ function decideOne(ctx: AccessContext, proposalId: string, input: DecisionInput)
   const p = st.proposals.find((x) => x.id === proposalId);
   const need = p && st.needs.find((n) => n.id === p.need_id);
   // Un brouillon n'existe pas pour la cliente : même réponse qu'une proposition inconnue.
-  if (!p || !need || p.status === 'in_progress' || !zoneInScope(zones, need.sector_id, ctx.scope)) return { status: 'refused', reason: 'not_found' };
+  if (!p || !need || p.status === 'in_progress' || !zoneInScope(zones, need.sector_id, eff(ctx).scope)) return { status: 'refused', reason: 'not_found' };
   if (!(DECISION_OUTCOMES as readonly string[]).includes(input.outcome)) return { status: 'refused', reason: 'invalid' };
   const motive = (input.motive ?? '').trim();
   if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
@@ -595,10 +650,72 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   push('clarificationPending', 'both', 'attention', rows.filter((r) => r.next.action === 'clarify').length);
   push('accordLost', 'agency', 'attention', rows.filter((r) => r.next.action === 'reconfirm_proposal').length);
   push('startLate', 'both', 'attention', rows.filter((r) => r.next.action === 'start_work' && r.next.urgency === 'overdue').length);
+  // A3c : chaîne managériale et délégations. Aucune notification réelle (A4g consommera ces alertes).
+  // Avis managérial en attente : information pour la cliente et l'agence, jamais un blocage.
+  const opinion = (state: string) => needs.map((n) => recruitmentOf(n.id)).filter((r) => r.validation === state && r.intake !== 'rejected' && !r.stopped);
+  const pendingAvis = opinion('to_validate');
+  push('validationPending', 'both', 'info', pendingAvis.length);
+  push('validationLate', 'both', 'attention', pendingAvis.filter((r) => addWorkingDays(r.validation_on ?? today, st.pipelineParams.validate_due_days, calOf()) < today).length);
+  push('escalationPending', 'both', 'attention', opinion('escalated').length);
+  push('resubmitPending', 'both', 'info', opinion('refused').length);
+  // Une délégation qui se termine bientôt ne concerne que l'agence, qui la paramètre (audience agence, défaut refus).
+  const ending = st.delegations.filter((d) => delegationStatus(d, today) === 'active' && workingDaysBetween(today, d.end_date, calOf()) <= st.pipelineParams.urgent_within_days);
+  if (ctx.scope.kind === 'all') push('delegationEnding', 'agency', 'info', ending.length);
   return out;
 }
 
 const DEADLINE_BLOCK_RULES: readonly string[] = ['E1', 'E2', 'P3', 'P4'];
+
+/** Profils de la chaîne managériale cliente qui peuvent valider, refuser ou escalader (D45). */
+const VALIDATORS: readonly ProfileId[] = ['direction_client', 'dr_client', 'cvr_client'];
+
+/**
+ * Validation, refus ou escalade d'un besoin (F-30.1, F-30.2). L'autorité se juge sur le contexte d'origine (qui agit, pour quelle zone,
+ * par quelle délégation), la visibilité sur le périmètre effectif : un besoin hors périmètre est inconnu, jamais « interdit ».
+ */
+function validateOne(ctx: AccessContext, needId: string, input: ValidationInput): MutationResult<ValidationFailure> {
+  if (!VALIDATORS.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
+  const st = state();
+  const need = st.needs.find((n) => n.id === needId);
+  if (!need || need.need_state !== 'submitted' || !zoneInScope(zones, need.sector_id, eff(ctx).scope)) return { status: 'refused', reason: 'not_found' };
+  const rec = recruitmentOf(need.id);
+  if (isClosedRecruitment(rec) || (rec.validation !== 'to_validate' && rec.validation !== 'escalated')) return { status: 'refused', reason: 'not_pending' };
+  const auth = authorityOf(ctx, need, rec);
+  if (!auth) return { status: 'refused', reason: 'forbidden' };
+  const issue = validationIssue(input, auth.level, need, zones);
+  if (issue) return { status: 'refused', reason: issue };
+
+  const target = ensureRecruitment(need.id);
+  const motive = (input.motive ?? '').trim() || null;
+  const entry = {
+    id: crypto.randomUUID(), round: target.validation_round, level: auth.level, by_profile: ctx.profileId, zone_id: auth.zoneId, by_zone_id: auth.byZoneId,
+    delegation_id: auth.delegationId, reason: null, other_zone_id: null, trigger: null, motive, on: clock.date, time: timeSource(),
+  };
+  const common = { need_code: need.need_code, level: auth.level, round: target.validation_round, ...(auth.delegationId ? { delegated: true } : {}) };
+  if (input.outcome === 'validate') {
+    target.validation = 'validated';
+    target.escalation = null;
+    target.validation_log.push({ ...entry, action: 'validate' });
+    // Le CVR valide (EV-06) ; le DR arbitre un besoin escaladé (EV-07).
+    emit(auth.level === 'cvr' ? 'EV-06' : 'EV-07', ctx.profileId, need.sector_id, need.id, 'both', auth.level === 'cvr' ? common : { ...common, action: 'arbitrated' });
+  } else if (input.outcome === 'refuse') {
+    target.validation = 'refused';
+    target.escalation = null;
+    target.validation_log.push({ ...entry, action: 'refuse' });
+    emit('EV-08', ctx.profileId, need.sector_id, need.id, 'both', common);
+  } else {
+    const reason = input.reason as NonNullable<ValidationInput['reason']>;
+    const other = reason === 'arbitration' ? (input.otherZoneId as string) : null;
+    target.validation = 'escalated';
+    // Déclenchement manuel : la règle d'enveloppe n'est pas branchée (D43 ouverte, A4b1).
+    target.escalation = { reason, other_zone_id: other, trigger: 'manual', motive: motive as string, on: clock.date };
+    target.validation_log.push({ ...entry, action: 'escalate', reason, other_zone_id: other, trigger: 'manual' });
+    emit('EV-07', ctx.profileId, need.sector_id, need.id, 'both', { ...common, action: 'escalated', reason });
+  }
+  target.validation_on = clock.date;
+  return { status: 'ok' };
+}
+
 const SEVERITY_RANK: Record<Severity, number> = { risk: 0, attention: 1, info: 2 };
 
 export function createMemoryRepository(): Repository {
@@ -608,8 +725,9 @@ export function createMemoryRepository(): Repository {
     },
 
     async getScopeZones(ctx) {
-      if (ctx.scope.kind === 'all') return zones;
-      const scope = ctx.scope;
+      // Le suppléant lit les zones de son délégant pendant la délégation (F-30.3), pas davantage.
+      const scope = eff(ctx).scope;
+      if (scope.kind === 'all') return zones;
       const inside = zones.filter((z) => zoneInScope(zones, z.id, scope));
       const ids = new Set(inside.map((z) => z.id));
       for (const z of inside) for (const a of lineage(zones, z.id)) ids.add(a.id);
@@ -1082,13 +1200,16 @@ export function createMemoryRepository(): Repository {
     // Lot A3
     // ---------------------------------------------------------------------------------------------
     async getPipeline(ctx) {
-      return state().needs.filter((n) => zoneInScope(zones, n.sector_id, ctx.scope)).map((n) => rowFor(ctx, n));
+      const scope = eff(ctx).scope;
+      return state().needs.filter((n) => zoneInScope(zones, n.sector_id, scope)).map((n) => rowFor(ctx, n));
     },
 
     async getNeedThread(ctx, needId) {
+      const own = ctx;
+      ctx = eff(ctx);
       const n = state().needs.find((x) => x.id === needId);
       if (!n || !zoneInScope(zones, n.sector_id, ctx.scope)) return null;
-      const row = rowFor(ctx, n);
+      const row = rowFor(own, n);
       const proposals = visibleProposals(ctx, n.id).map((p) => presentProposal(ctx, p)).sort((a, b) => b.version - a.version);
       const ids = new Set(proposals.map((p) => p.id));
       return {
@@ -1103,6 +1224,7 @@ export function createMemoryRepository(): Repository {
     },
 
     async getFunnelReport(ctx) {
+      ctx = eff(ctx);
       const st = state();
       const rows = st.needs.filter((n) => n.need_state === 'submitted' && zoneInScope(zones, n.sector_id, ctx.scope));
       const funnelRows: FunnelRow[] = [];
@@ -1130,7 +1252,7 @@ export function createMemoryRepository(): Repository {
     },
 
     async getPipelineAlerts(ctx) {
-      return pipelineAlerts(ctx).filter((a) => audienceAllows(ctx.side, a.audience));
+      return pipelineAlerts(eff(ctx)).filter((a) => audienceAllows(ctx.side, a.audience));
     },
 
     canQualify: (ctx) => AGENCY_WRITERS.includes(ctx.profileId),
@@ -1147,6 +1269,9 @@ export function createMemoryRepository(): Repository {
       if (!['take', 'clarify', 'reject'].includes(input.outcome)) return { status: 'refused', reason: 'invalid' };
       const rec = recruitmentOf(need.id);
       if (rec.intake !== 'to_qualify' && rec.intake !== 'clarification') return { status: 'refused', reason: 'already' };
+      // A3c : l'avis managérial est facultatif. Un avis refusé ne bloque pas : la prise en charge se confirme, et la trace le dit.
+      const overRefused = input.outcome === 'take' && rec.validation === 'refused';
+      if (overRefused && input.confirmRefusedAvis !== true) return { status: 'refused', reason: 'confirm_required' };
       const motive = (input.motive ?? '').trim();
       if (motive.length > 280) return { status: 'refused', reason: 'invalid' };
       if (input.outcome !== 'take' && !motive) return { status: 'refused', reason: 'motive_required' };
@@ -1154,7 +1279,7 @@ export function createMemoryRepository(): Repository {
       target.intake = input.outcome === 'take' ? 'taken' : input.outcome === 'clarify' ? 'clarification' : 'rejected';
       target.intake_motive = input.outcome === 'take' ? null : motive;
       if (input.outcome === 'take') target.qualified_on = clock.date;
-      emit('EV-09', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, outcome: input.outcome });
+      emit('EV-09', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, outcome: input.outcome, ...(overRefused ? { over_refused_avis: true } : {}) });
       return { status: 'ok' };
     },
 
@@ -1239,6 +1364,93 @@ export function createMemoryRepository(): Repository {
       note.withdrawn_on = clock.date;
       note.withdrawn_by = ctx.profileId;
       emit('EV-44', ctx.profileId, note.sector_id, note.need_id, noteEventAudience(note.visibility), { action: 'withdrawn', visibility: note.visibility, object: note.object_kind });
+      return { status: 'ok' };
+    },
+
+    // ---------------------------------------------------------------------------------------------
+    // Lot A3c : validation managériale, escalade, délégations
+    // ---------------------------------------------------------------------------------------------
+    async validateNeed(ctx, needId, input) {
+      return validateOne(ctx, needId, input);
+    },
+
+    async validateBatch(ctx, needIds, input): Promise<BatchValidationResult> {
+      const items: BatchValidationResult['items'] = [];
+      for (const id of [...new Set(needIds)]) {
+        // L'escalade demande un cas et un motif par besoin : elle ne se fait pas en lot.
+        const r = input.outcome === 'escalate' ? ({ status: 'refused', reason: 'invalid' } as const) : validateOne(ctx, id, input);
+        items.push(r.status === 'ok' ? { needId: id, status: 'ok' } : { needId: id, status: 'refused', reason: r.reason });
+      }
+      const decided = items.filter((i) => i.status === 'ok').length;
+      return { items, decided, refused: items.length - decided };
+    },
+
+    async resubmitNeed(ctx, needId) {
+      if (!WRITE_PROFILES.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
+      const need = state().needs.find((n) => n.id === needId);
+      if (!need || need.need_state !== 'submitted' || !zoneInScope(zones, need.sector_id, eff(ctx).scope)) return { status: 'refused', reason: 'not_found' };
+      const rec = recruitmentOf(need.id);
+      if (!canResubmit(rec) || isClosedRecruitment(rec)) return { status: 'refused', reason: 'not_refused' };
+      const target = ensureRecruitment(need.id);
+      target.validation = 'to_validate';
+      target.validation_round += 1;
+      target.validation_on = clock.date;
+      target.escalation = null;
+      target.validation_log.push({
+        id: crypto.randomUUID(), round: target.validation_round, action: 'resubmit', level: 'author', by_profile: ctx.profileId, zone_id: null, by_zone_id: null,
+        delegation_id: null, reason: null, other_zone_id: null, trigger: null, motive: null, on: clock.date, time: timeSource(),
+      });
+      emit('EV-47', ctx.profileId, need.sector_id, need.id, 'both', { need_code: need.need_code, round: target.validation_round });
+      return { status: 'ok' };
+    },
+
+    async getDelegations(ctx): Promise<DelegationView[]> {
+      const today = clock.date;
+      const mine = ctx.scope.kind === 'cvr' || ctx.scope.kind === 'dr' ? ctx.scope.ids : null;
+      const visible = state().delegations.filter((d) => {
+        if (ctx.side !== 'client') return true;
+        // La cliente lit les délégations où son périmètre est délégant ou suppléant : pas celles des autres.
+        return Boolean(mine) && (mine?.includes(d.delegator_zone_id) || mine?.includes(d.substitute_zone_id));
+      });
+      return visible
+        .map((d) => ({ ...d, status: delegationStatus(d, today), delegator: zones.find((z) => z.id === d.delegator_zone_id) as Zone, substitute: zones.find((z) => z.id === d.substitute_zone_id) as Zone }))
+        .sort((a, b) => b.start_date.localeCompare(a.start_date) || a.id.localeCompare(b.id));
+    },
+
+    canManageDelegations: (ctx) => isAgencyAdmin(ctx),
+
+    async createDelegation(ctx, input) {
+      if (!isAgencyAdmin(ctx)) return { status: 'refused', reason: 'forbidden' };
+      if (!isValidIsoDate(input.startDate) || !isValidIsoDate(input.endDate)) return { status: 'refused', reason: 'invalid' };
+      const issue = delegationIssue(
+        { delegator_zone_id: input.delegatorZoneId, substitute_zone_id: input.substituteZoneId, start_date: input.startDate, end_date: input.endDate },
+        zones, state().delegations, clock.date,
+      );
+      if (issue) return { status: 'refused', reason: issue };
+      const st = state();
+      const created: Delegation = {
+        id: crypto.randomUUID(), delegator_zone_id: input.delegatorZoneId, substitute_zone_id: input.substituteZoneId, start_date: input.startDate, end_date: input.endDate,
+        created_by: ctx.profileId, created_on: clock.date, revoked_on: null, revoked_by: null, is_demo: true,
+      };
+      st.delegations.push(created);
+      emit('EV-46', ctx.profileId, created.delegator_zone_id, null, 'agency', {
+        action: 'created', delegation: created.id, delegator_zone: created.delegator_zone_id, substitute_zone: created.substitute_zone_id,
+        start: created.start_date, end: created.end_date,
+      });
+      return { status: 'ok' };
+    },
+
+    async revokeDelegation(ctx, delegationId) {
+      if (!isAgencyAdmin(ctx)) return { status: 'refused', reason: 'forbidden' };
+      const d = state().delegations.find((x) => x.id === delegationId);
+      if (!d) return { status: 'refused', reason: 'not_found' };
+      const status = delegationStatus(d, clock.date);
+      if (status !== 'planned' && status !== 'active') return { status: 'refused', reason: 'not_revocable' };
+      d.revoked_on = clock.date;
+      d.revoked_by = ctx.profileId;
+      emit('EV-46', ctx.profileId, d.delegator_zone_id, null, 'agency', {
+        action: 'revoked', delegation: d.id, delegator_zone: d.delegator_zone_id, substitute_zone: d.substitute_zone_id, start: d.start_date, end: d.end_date,
+      });
       return { status: 'ok' };
     },
 
@@ -1378,6 +1590,11 @@ export function createMemoryRepository(): Repository {
     }
     if (state_ === 'submitted') {
       emit('EV-02', ctx.profileId, sector.id, saved.id, 'both', { need_code: saved.need_code, on_behalf: saved.on_behalf });
+      // A3c : un besoin soumis entre dans la chaîne managériale cliente (CVR, puis DR sur escalade) avant la qualification de l'agence.
+      const entering = ensureRecruitment(saved.id);
+      entering.validation = 'to_validate';
+      entering.validation_round = 1;
+      entering.validation_on = today;
     }
     emitAnomalies(ctx, sector.id, saved.id, check.findings);
     return { status: 'saved', need: saved, decision: state_ === 'submitted' ? 'submit' : 'draft', findings, missing: check.missing };

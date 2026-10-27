@@ -7,6 +7,7 @@ import { NotesThread } from '@/components/pipeline/NotesThread';
 import { ProposalForm } from '@/components/pipeline/ProposalForm';
 import { QualifyForm } from '@/components/pipeline/QualifyForm';
 import { StepPanel } from '@/components/pipeline/StepPanel';
+import { ValidationPanel } from '@/components/pipeline/ValidationPanel';
 import type { StepDef } from '@/components/pipeline/StepPanel';
 import { WithdrawProposalForm } from '@/components/pipeline/WithdrawProposalForm';
 import { StatusTag } from '@/components/StatusTag';
@@ -19,7 +20,7 @@ import { calendarOf } from '@/domain/deadlines';
 import { needSpan } from '@/domain/pipeline';
 import type { Locale } from '@/domain/types';
 import { formatDate, formatWeekdays, keepTogether } from '@/lib/format';
-import { EXECUTION_TONE, FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE } from '@/lib/pipeline-tones';
+import { EXECUTION_TONE, FUNNEL_TONE, OUTCOME_TONE, POSITION_TONE, PROPOSAL_TONE, URGENCY_TONE, VALIDATION_TONE } from '@/lib/pipeline-tones';
 import { getAccessContext } from '@/lib/session';
 
 export default async function NeedThreadPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -40,6 +41,8 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   const sector = zones.find((z) => z.id === row.need.sector_id);
   const need = row.need;
   const rec = row.recruitment;
+  const val = row.validation;
+  const refZone = (id: string | null) => (id ? val.zones[id] ?? null : null);
   const agency = ctx.side !== 'client';
   const taken = rec.intake === 'taken';
   const closed = rec.intake === 'rejected' || rec.stopped !== null;
@@ -99,7 +102,14 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
 
       <section aria-labelledby="dims-title" data-testid="dimensions" className="mb-8 flex flex-col gap-4">
         <h2 id="dims-title" className="text-lg font-semibold">{t('detail.statuses')}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          {need.need_state === 'submitted' ? dimension(t('dimension.validation'), (
+            <>
+              <StatusTag tone={VALIDATION_TONE[val.state]}>{t(`validation.state.${val.state}`)}</StatusTag>
+              <span className="text-sm text-muted">{t('validation.round', { n: val.round })}</span>
+              {val.escalation ? <span className="text-sm text-muted">{t(`validation.reasons.${val.escalation.reason}`)}</span> : null}
+            </>
+          )) : null}
           {dimension(t('dimension.need'), (
             <>
               <StatusTag tone={need.need_state === 'draft' ? 'attention' : 'info'}>{tn(`state.${need.need_state}`)}</StatusTag>
@@ -155,7 +165,45 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
       </section>
 
       <div className="flex flex-col gap-8">
-        {repository.canQualify(ctx) && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} /> : null}
+        {need.need_state === 'submitted' && !closed ? (
+          <ValidationPanel
+            needId={need.id}
+            level={val.canAct?.level ?? null}
+            actingFor={val.canAct?.byZoneId && refZone(val.canAct.zoneId) ? zoneText(refZone(val.canAct.zoneId)!, loc) : null}
+            canResubmit={val.canResubmit}
+            siblings={val.siblingCvrs.map((z) => ({ id: z.id, text: zoneText(z, loc) }))}
+            envelope={val.envelope}
+          />
+        ) : null}
+
+        {need.need_state === 'submitted' && val.log.length > 0 ? (
+          <section aria-labelledby="validation-log-title" data-testid="validation-log" className="flex flex-col gap-3">
+            <h2 id="validation-log-title" className="text-lg font-semibold">{t('validation.logTitle')}</h2>
+            <ul className="flex flex-col gap-2">
+              {val.log.map((e) => (
+                <li key={e.id} data-validation-action={e.action} data-validation-level={e.level} className="flex flex-col gap-1 rounded-ctl bg-alt px-4 py-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-sm text-muted">{e.time ? t('steps.dateAt', { date: formatDate(e.on, loc), time: e.time }) : formatDate(e.on, loc)}</span>
+                    <span className="font-semibold">{t(`validation.log.${e.action}.${e.level}`)}</span>
+                    <StatusTag tone="neutral">{t('validation.round', { n: e.round })}</StatusTag>
+                    <span className="text-sm text-muted">{t(`actorProfile.${e.by_profile}`)}</span>
+                  </div>
+                  {refZone(e.zone_id) ? <span className="text-sm"><ZoneLabel zone={refZone(e.zone_id)!} /></span> : null}
+                  {e.by_zone_id && refZone(e.by_zone_id) ? (
+                    <span className="flex flex-wrap items-center gap-2 text-sm"><span className="text-muted">{t('validation.actedBy')}</span><ZoneLabel zone={refZone(e.by_zone_id)!} /></span>
+                  ) : null}
+                  {e.reason ? <span className="text-sm">{t(`validation.reasons.${e.reason}`)}{e.trigger ? ` (${t(`validation.trigger.${e.trigger}`)})` : ''}</span> : null}
+                  {e.other_zone_id && refZone(e.other_zone_id) ? (
+                    <span className="flex flex-wrap items-center gap-2 text-sm"><span className="text-muted">{t('validation.otherCvr')}{colon}</span><ZoneLabel zone={refZone(e.other_zone_id)!} /></span>
+                  ) : null}
+                  {e.motive ? <p>{e.motive}</p> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {repository.canQualify(ctx) && need.need_state === 'submitted' && (rec.intake === 'to_qualify' || rec.intake === 'clarification') ? <QualifyForm needId={need.id} avisRefused={val.state === 'refused'} /> : null}
 
         <section aria-labelledby="versions-title" className="flex flex-col gap-4">
           <h2 id="versions-title" className="text-lg font-semibold">{t('detail.versions')}</h2>

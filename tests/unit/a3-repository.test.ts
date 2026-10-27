@@ -33,6 +33,9 @@ async function submitNeed(over: { periods?: ReturnType<typeof period>[] } = {}):
     periods: over.periods ?? [period(1, '2026-12-07', '2026-12-13')], days: [1, 2, 3], hours_slot: '08:00-12:00', store_codes: stores, client_comment: null,
   });
   if (r.status !== 'saved' || r.decision !== 'submit') throw new Error(`besoin non soumis : ${JSON.stringify(r)}`);
+  // A3c : la chaîne managériale cliente valide avant la qualification de l'agence ; les scénarios d'A3 partent d'un besoin validé.
+  const v = await repo.validateNeed(CVR(), r.need.id, { outcome: 'validate' });
+  if (v.status !== 'ok') throw new Error(`besoin non validé : ${JSON.stringify(v)}`);
   return r.need;
 }
 const take = (n: Need) => repo.qualifyNeed(AG(), n.id, { outcome: 'take' });

@@ -74,11 +74,14 @@ export type PositionStatus = (typeof POSITION_STATUSES)[number];
  * mot de passe réinitialisé. Jamais de mot de passe dans les données.
  * EV-39 : écriture annulée par son auteur juste après coup, code proposé hors catalogue ; l'événement annulé reste au journal.
  * Lot A3 : EV-09 à EV-21 du catalogue (doc 26 §3). EV-44 (note ajoutée, partagée ou retirée, D162) et EV-45 (proposition
- * retirée) sont des codes proposés hors catalogue, à inscrire au doc 26. EV-06 à EV-08 (validation CVR, escalade DR) ne sont pas émis en A3.
+ * retirée) sont des codes proposés hors catalogue, à inscrire au doc 26.
+ * Lot A3c : EV-06 (besoin validé par le CVR), EV-07 (besoin escaladé ou arbitré par le DR), EV-08 (besoin refusé avec motif), du catalogue.
+ * EV-46 (délégation créée ou révoquée, audience agence) et EV-47 (besoin soumis de nouveau après un refus) sont des codes proposés
+ * hors catalogue, à inscrire au doc 26.
  */
 export const EVENT_CODES = [
-  'EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-09', 'EV-10', 'EV-11', 'EV-12', 'EV-13', 'EV-14', 'EV-15', 'EV-16', 'EV-17',
-  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45',
+  'EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-06', 'EV-07', 'EV-08', 'EV-09', 'EV-10', 'EV-11', 'EV-12', 'EV-13', 'EV-14', 'EV-15', 'EV-16', 'EV-17',
+  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45', 'EV-46', 'EV-47',
 ] as const;
 export type EventCode = (typeof EVENT_CODES)[number];
 
@@ -142,10 +145,10 @@ export type RecruitmentStep = (typeof RECRUITMENT_STEPS)[number];
 
 export const NEXT_ACTIONS = [
   'complete_need', 'qualify', 'clarify', 'prepare_proposal', 'send_proposal', 'decide', 'revise_proposal', 'new_proposal',
-  'finalise_hiring', 'start_work', 'reconfirm_proposal', 'none',
+  'finalise_hiring', 'start_work', 'reconfirm_proposal', 'validate_need', 'arbitrate_need', 'resubmit_need', 'none',
 ] as const;
 export type NextAction = (typeof NEXT_ACTIONS)[number];
-export const ACTORS = ['rs', 'agency', 'decider', 'none'] as const;
+export const ACTORS = ['rs', 'agency', 'decider', 'validator', 'arbiter', 'none'] as const;
 export type Actor = (typeof ACTORS)[number];
 export const URGENCIES = ['overdue', 'urgent', 'soon', 'normal'] as const;
 export type Urgency = (typeof URGENCIES)[number];
@@ -166,3 +169,31 @@ export type ExecutionStatus = (typeof EXECUTION_STATUSES)[number];
  */
 export const START_LAG_KINDS = ['same_day', 'later_in_day', 'next_working_day_or_more'] as const;
 export type StartLagKind = (typeof START_LAG_KINDS)[number];
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3c : validation managériale (F-30.1, F-30.2), délégations (F-30.3). Dimension distincte de la qualification par l'agence.
+// ---------------------------------------------------------------------------------------------
+/**
+ * Validation du besoin par la chaîne managériale cliente (D45) : le CVR valide dans son périmètre, ou refuse avec motif, ou escalade
+ * au DR. Un besoin « escaladé » attend l'arbitrage du DR. Un besoin refusé revient au RS, qui le soumet de nouveau (nouveau tour).
+ */
+export const VALIDATION_STATES = ['to_validate', 'validated', 'refused', 'escalated'] as const;
+export type ValidationState = (typeof VALIDATION_STATES)[number];
+
+/** Cas d'escalade au DR (F-30.2). « Hors enveloppe » est déclenché à la main par le CVR en A3c : sa règle de calcul est branchée en A4b1 (D43 ouverte). */
+export const ESCALATION_REASONS = ['arbitration', 'out_of_perimeter', 'out_of_envelope'] as const;
+export type EscalationReason = (typeof ESCALATION_REASONS)[number];
+
+export const VALIDATION_ACTIONS = ['validate', 'refuse', 'escalate', 'resubmit'] as const;
+export type ValidationAction = (typeof VALIDATION_ACTIONS)[number];
+/** Niveau de la chaîne qui agit : CVR, DR, ou l'auteur du besoin (nouvelle soumission). */
+export const VALIDATION_LEVELS = ['cvr', 'dr', 'author'] as const;
+export type ValidationLevel = (typeof VALIDATION_LEVELS)[number];
+
+/** Résultat possible d'une action de validation. L'escalade n'existe qu'au niveau du CVR. */
+export const VALIDATION_OUTCOMES = ['validate', 'refuse', 'escalate'] as const;
+export type ValidationOutcome = (typeof VALIDATION_OUTCOMES)[number];
+
+/** Une délégation est planifiée, en cours, terminée (date de fin passée) ou révoquée : jamais supprimée. */
+export const DELEGATION_STATUSES = ['planned', 'active', 'ended', 'revoked'] as const;
+export type DelegationStatus = (typeof DELEGATION_STATUSES)[number];
