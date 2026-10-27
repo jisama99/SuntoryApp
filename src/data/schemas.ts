@@ -366,6 +366,8 @@ export const ValidationEntrySchema = z.object({
   /** Escalade déclenchée à la main par le CVR (A3c) ou par une règle d'enveloppe (A4b1). */
   trigger: z.enum(['manual', 'rule']).nullable(),
   motive: z.string().max(280).nullable(),
+  /** Avis réputé donné à la saisie par un CVR, un DR ou la direction (A3d) : aucune décision séparée. */
+  at_entry: z.boolean().optional(),
   on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(),
 });

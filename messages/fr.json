@@ -308,7 +308,12 @@
       "period": "P{n} : du {start} au {end} ({from} à {to})",
       "periodOneWeek": "P{n} : du {start} au {end} ({week})",
       "onBehalf": "Saisi par l'agence pour le RS",
-      "deferred": "Reportée de {from} vers {to}"
+      "deferred": "Reportée de {from} vers {to}",
+      "enteredBy": {
+        "cvr_client": "Saisi par le CVR",
+        "dr_client": "Saisi par le DR",
+        "direction_client": "Saisi par la direction cliente"
+      }
     },
     "state": {
       "draft": "Brouillon",
@@ -786,7 +791,10 @@
     "roles": {
       "rs": "RS",
       "agency_operator": "Agence (opérateur)",
-      "agency_admin": "Agence (administrateur)"
+      "agency_admin": "Agence (administrateur)",
+      "cvr_client": "CVR",
+      "dr_client": "DR",
+      "direction_client": "Direction cliente"
     },
     "h2": {
       "title": "Exemple chiffré pour décembre 2026",
@@ -1100,7 +1108,9 @@
       "EV-07": "Besoin escaladé ou arbitré par le DR",
       "EV-08": "Besoin refusé avec motif",
       "EV-46": "Délégation créée ou révoquée",
-      "EV-47": "Besoin soumis de nouveau"
+      "EV-47": "Besoin soumis de nouveau",
+      "EV-48": "Besoin saisi par l'agence pour le compte d'un RS",
+      "EV-49": "Avis managérial donné à la saisie"
     },
     "detail": {
       "title": "Besoin {code}",
@@ -1127,7 +1137,14 @@
       "withdrawnOn": "Retirée le {date}",
       "decidedOn": "Décidée le {date}",
       "journal": "Journal du besoin",
-      "positionLine": "Statut de poste calculé"
+      "positionLine": "Statut de poste calculé",
+      "enteredBy": {
+        "onBehalf": "Saisi par l'agence pour le compte du RS de ce secteur",
+        "cvr_client": "Saisi par le CVR",
+        "dr_client": "Saisi par le DR",
+        "direction_client": "Saisi par la direction cliente",
+        "rs": "Saisi par le RS"
+      }
     },
     "batch": {
       "title": "Valider plusieurs propositions",
@@ -1451,7 +1468,9 @@
       "log": {
         "validate": {
           "cvr": "Validé par le CVR",
-          "dr": "Arbitré par le DR et validé"
+          "dr": "Arbitré par le DR et validé",
+          "cvr_entry": "Avis du CVR donné à la saisie",
+          "dr_entry": "Avis du DR donné à la saisie"
         },
         "refuse": {
           "cvr": "Refusé par le CVR",
@@ -1505,7 +1524,8 @@
         "invalid": "Saisie invalide.",
         "not_refused": "Ce besoin n'est pas refusé."
       },
-      "optional": "L'avis managérial est facultatif : l'agence traite le besoin sans l'attendre, et la cliente en suit le statut."
+      "optional": "L'avis managérial est facultatif : l'agence traite le besoin sans l'attendre, et la cliente en suit le statut.",
+      "atEntry": "Avis donné à la saisie"
     },
     "validationBatch": {
       "title": "Valider plusieurs besoins",

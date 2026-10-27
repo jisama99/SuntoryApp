@@ -357,7 +357,7 @@ describe('saisie en lot (F-20.2)', () => {
     const other = zones.filter((z) => z.kind === 'rs').find((z) => z.id !== OWN)!.id;
     const r = await repo.saveNeedsBatch(ctxOf('rs'), [await row({ sector_id: other, store_codes: [] })]);
     expect(r.lines[0]).toMatchObject({ status: 'rejected', reason: 'out_of_scope' });
-    const ro = await repo.saveNeedsBatch(ctxOf('cvr_client'), [await row()]);
+    const ro = await repo.saveNeedsBatch(ctxOf('provider_admin'), [await row()]);
     expect(ro.lines[0]).toMatchObject({ status: 'rejected', reason: 'forbidden' });
   });
 
@@ -366,7 +366,7 @@ describe('saisie en lot (F-20.2)', () => {
     expect(await repo.saveBatchDraft(ctxOf('rs'), [await row()])).toEqual({ status: 'ok' });
     expect((await repo.getBatchDraft(ctxOf('rs')))?.rows).toHaveLength(1);
     expect(await repo.getBatchDraft(ctxOf('agency_operator'))).toBeNull();
-    expect(await repo.saveBatchDraft(ctxOf('cvr_client'), [await row()])).toEqual({ status: 'refused', reason: 'forbidden' });
+    expect(await repo.saveBatchDraft(ctxOf('provider_admin'), [await row()])).toEqual({ status: 'refused', reason: 'forbidden' });
     await repo.clearBatchDraft(ctxOf('rs'));
     expect(await repo.getBatchDraft(ctxOf('rs'))).toBeNull();
   });

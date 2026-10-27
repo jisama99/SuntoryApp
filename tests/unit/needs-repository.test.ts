@@ -87,7 +87,7 @@ describe('écriture : périmètre et rôle', () => {
     expect((await repo.getNeeds(ctxOf('agency_operator'))).length).toBe(before);
   });
 
-  it.each(['direction_client', 'dr_client', 'cvr_client', 'provider_admin'] as const)('%s ne saisit pas', async (id) => {
+  it.each(['provider_admin'] as const)('%s ne saisit pas (lecture seule)', async (id) => {
     expect(repo.canWriteNeeds(ctxOf(id))).toBe(false);
     const r = await repo.saveNeed(ctxOf(id), await complete(OWN));
     expect(r.status === 'refused' && r.reason).toBe('forbidden');

@@ -19,7 +19,8 @@ import {
   authorityFor, canResubmit, cvrZoneOf, delegationIssue, delegationStatus, drZoneOf, effectiveScope, NO_ENVELOPE_RULE, validationIssue,
 } from '@/domain/validation';
 import type { EnvelopeEvaluator } from '@/domain/validation';
-import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
+import { canEnterNeeds, isOnBehalf, opinionAtEntry } from '@/domain/entry-rights';
+import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, ENTRY_PROFILES, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
 import type {
   Audience, DeadlineType, Dispositif, EventCode, HomeSkin, InvalidationReason, NoteObjectKind, NoteVisibility, PresetId, ProfileId,
   RecruitmentStep, Severity,
@@ -158,7 +159,10 @@ const undoGlobal = globalThis as typeof globalThis & { __suntoryUndo?: Map<strin
 const undoStore = (undoGlobal.__suntoryUndo ??= new Map<string, UndoEntry>());
 const UNDO_KEEP = 20;
 
-const WRITE_PROFILES: readonly ProfileId[] = ['rs', 'agency_operator', 'agency_admin'];
+/** Profils qui saisissent des besoins (A3d) : la matrice est dans `domain/entry-rights.ts`. */
+const WRITE_PROFILES: readonly ProfileId[] = ENTRY_PROFILES.filter((p) => canEnterNeeds(p));
+/** Nouvelle soumission d'un besoin refusé : l'auteur côté terrain ou l'agence. */
+const RESUBMITTERS: readonly ProfileId[] = ['rs', 'agency_operator', 'agency_admin'];
 
 function emit(code: EventCode, actor: ProfileId, zoneId: string, needId: string | null, audience: Audience, data: BusinessEvent['data'], effectDate: string = clock.date) {
   const st = state();
@@ -382,7 +386,7 @@ function validationViewOf(ctx: AccessContext, need: Need, rec: Recruitment): Val
     escalation: rec.escalation,
     log: rec.validation_log,
     canAct: auth ? { level: auth.level, zoneId: auth.zoneId, byZoneId: auth.byZoneId } : null,
-    canResubmit: need.need_state === 'submitted' && canResubmit(rec) && !isClosedRecruitment(rec) && (WRITE_PROFILES.includes(ctx.profileId)) && zoneInScope(zones, need.sector_id, eff(ctx).scope),
+    canResubmit: need.need_state === 'submitted' && canResubmit(rec) && !isClosedRecruitment(rec) && (RESUBMITTERS.includes(ctx.profileId)) && zoneInScope(zones, need.sector_id, eff(ctx).scope),
     zones: Object.fromEntries(zones.filter((z) => refs.has(z.id)).map((z) => [z.id, z])),
     siblingCvrs,
     envelope: envelopeEvaluator(need),
@@ -1386,7 +1390,7 @@ export function createMemoryRepository(): Repository {
     },
 
     async resubmitNeed(ctx, needId) {
-      if (!WRITE_PROFILES.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
+      if (!RESUBMITTERS.includes(ctx.profileId)) return { status: 'refused', reason: 'forbidden' };
       const need = state().needs.find((n) => n.id === needId);
       if (!need || need.need_state !== 'submitted' || !zoneInScope(zones, need.sector_id, eff(ctx).scope)) return { status: 'refused', reason: 'not_found' };
       const rec = recruitmentOf(need.id);
@@ -1581,12 +1585,14 @@ export function createMemoryRepository(): Repository {
     } else {
       saved = {
         id: crypto.randomUUID(), need_code: nextNeedCode(), ...fields, need_state: state_, position_status: null,
-        entered_by_profile: ctx.profileId, on_behalf: ctx.profileId !== 'rs',
+        entered_by_profile: ctx.profileId, on_behalf: isOnBehalf(ctx.profileId),
         created_at: today, modified_at: today, record_version: 1, source_record_id: null, is_demo: true,
       };
       st.needs.push(saved);
       if (deferredFrom) markDeferred(ctx, sector.id, saved, deferredFrom);
       emit('EV-01', ctx.profileId, sector.id, saved.id, 'both', { need_code: saved.need_code, on_behalf: saved.on_behalf });
+      // A3d : la saisie pour le compte d'un RS par l'agence a son événement distinct (qui, pour quel secteur, quand).
+      if (saved.on_behalf) emit('EV-48', ctx.profileId, sector.id, saved.id, 'both', { need_code: saved.need_code });
     }
     if (state_ === 'submitted') {
       emit('EV-02', ctx.profileId, sector.id, saved.id, 'both', { need_code: saved.need_code, on_behalf: saved.on_behalf });
@@ -1595,6 +1601,17 @@ export function createMemoryRepository(): Repository {
       entering.validation = 'to_validate';
       entering.validation_round = 1;
       entering.validation_on = today;
+      // A3d : un CVR, un DR ou la direction qui saisit donne son avis à la saisie, sans passage par un supérieur.
+      const level = opinionAtEntry(ctx.profileId);
+      if (level) {
+        const authority = level === 'cvr' ? cvrZoneOf(zones, sector.id) : drZoneOf(zones, sector.id);
+        entering.validation = 'validated';
+        entering.validation_log.push({
+          id: crypto.randomUUID(), round: 1, action: 'validate', level, by_profile: ctx.profileId, zone_id: authority?.id ?? null, by_zone_id: null,
+          delegation_id: null, reason: null, other_zone_id: null, trigger: null, motive: null, at_entry: true, on: today, time: timeSource(),
+        });
+        emit('EV-49', ctx.profileId, sector.id, saved.id, 'both', { need_code: saved.need_code, level, round: 1 });
+      }
     }
     emitAnomalies(ctx, sector.id, saved.id, check.findings);
     return { status: 'saved', need: saved, decision: state_ === 'submitted' ? 'submit' : 'draft', findings, missing: check.missing };

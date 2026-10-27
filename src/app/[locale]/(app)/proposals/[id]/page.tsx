@@ -42,6 +42,9 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
   const need = row.need;
   const rec = row.recruitment;
   const val = row.validation;
+  // Saisie pour le compte d'un RS (agence) ou saisie par le profil lui-même ; tout autre cas est une saisie de RS.
+  const SELF_ENTRY = ['cvr_client', 'dr_client', 'direction_client'] as const;
+  const enteredKey = need.on_behalf ? 'onBehalf' : (SELF_ENTRY as readonly string[]).includes(need.entered_by_profile) ? need.entered_by_profile : 'rs';
   const refZone = (id: string | null) => (id ? val.zones[id] ?? null : null);
   const agency = ctx.side !== 'client';
   const taken = rec.intake === 'taken';
@@ -116,6 +119,7 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
               {need.need_state === 'submitted' ? <StatusTag tone={rec.intake === 'taken' ? 'ok' : rec.intake === 'rejected' ? 'neutral' : 'attention'}>{t(`intake.${rec.intake}`)}</StatusTag> : null}
               {rec.stopped ? <StatusTag tone="neutral">{t('stopped')}</StatusTag> : null}
               <span className="text-sm text-muted">{t('detail.hours', { n: need.weekly_hours ?? 0 })}</span>
+              <span data-testid="entered-by" data-on-behalf={need.on_behalf ? 'true' : 'false'} className="text-sm text-muted">{t(`detail.enteredBy.${enteredKey}`)}</span>
             </>
           ))}
           {dimension(t('dimension.proposal'), (
@@ -184,7 +188,8 @@ export default async function NeedThreadPage({ params }: { params: Promise<{ loc
                 <li key={e.id} data-validation-action={e.action} data-validation-level={e.level} className="flex flex-col gap-1 rounded-ctl bg-alt px-4 py-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="text-sm text-muted">{e.time ? t('steps.dateAt', { date: formatDate(e.on, loc), time: e.time }) : formatDate(e.on, loc)}</span>
-                    <span className="font-semibold">{t(`validation.log.${e.action}.${e.level}`)}</span>
+                    <span className="font-semibold">{t(e.at_entry ? `validation.log.validate.${e.level}_entry` : `validation.log.${e.action}.${e.level}`)}</span>
+                    {e.at_entry ? <StatusTag tone="info">{t('validation.atEntry')}</StatusTag> : null}
                     <StatusTag tone="neutral">{t('validation.round', { n: e.round })}</StatusTag>
                     <span className="text-sm text-muted">{t(`actorProfile.${e.by_profile}`)}</span>
                   </div>

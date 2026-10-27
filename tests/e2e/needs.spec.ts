@@ -122,7 +122,7 @@ test.describe('saisie des besoins (A2a)', () => {
   });
 
   test('profils en lecture : liste sans bouton de saisie, écran de saisie introuvable', async ({ page, context }) => {
-    for (const profile of ['direction_client', 'dr_client', 'cvr_client', 'provider_admin']) {
+    for (const profile of ['provider_admin']) {
       await setProfile(context, profile);
       await page.goto('/fr/needs');
       await expect(page.getByRole('link', { name: 'Nouveau besoin' })).toHaveCount(0);

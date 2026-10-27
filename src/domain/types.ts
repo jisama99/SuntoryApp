@@ -78,10 +78,11 @@ export type PositionStatus = (typeof POSITION_STATUSES)[number];
  * Lot A3c : EV-06 (besoin validé par le CVR), EV-07 (besoin escaladé ou arbitré par le DR), EV-08 (besoin refusé avec motif), du catalogue.
  * EV-46 (délégation créée ou révoquée, audience agence) et EV-47 (besoin soumis de nouveau après un refus) sont des codes proposés
  * hors catalogue, à inscrire au doc 26.
+ * Lot A3d : EV-48 (besoin saisi par l'agence pour le compte d'un RS) et EV-49 (avis managérial donné à la saisie), codes proposés hors catalogue.
  */
 export const EVENT_CODES = [
   'EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-06', 'EV-07', 'EV-08', 'EV-09', 'EV-10', 'EV-11', 'EV-12', 'EV-13', 'EV-14', 'EV-15', 'EV-16', 'EV-17',
-  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45', 'EV-46', 'EV-47',
+  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45', 'EV-46', 'EV-47', 'EV-48', 'EV-49',
 ] as const;
 export type EventCode = (typeof EVENT_CODES)[number];
 
@@ -97,7 +98,7 @@ export const PRESET_IDS = ['large', 'standard', 'short'] as const;
 export type PresetId = (typeof PRESET_IDS)[number];
 
 /** Profils pouvant saisir des besoins (rôles de saisie, paramètre `entry_roles`). */
-export const ENTRY_PROFILES = ['rs', 'agency_operator', 'agency_admin'] as const;
+export const ENTRY_PROFILES = ['rs', 'cvr_client', 'dr_client', 'direction_client', 'agency_operator', 'agency_admin'] as const;
 export type EntryProfile = (typeof ENTRY_PROFILES)[number];
 
 export const REOPEN_SCOPES = ['month', 'week'] as const;

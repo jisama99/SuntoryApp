@@ -82,7 +82,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
 
   test('mobile : le bouton + ouvre la saisie complète d\'un besoin, réservé aux profils qui peuvent saisir', async ({ page, context }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    for (const profile of ['rs', 'agency_operator', 'agency_admin']) {
+    for (const profile of ['rs', 'cvr_client', 'dr_client', 'direction_client', 'agency_operator', 'agency_admin']) {
       await setProfile(context, profile);
       await page.goto('/fr/alerts');
       await page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: 'Nouveau besoin' }).click();
@@ -91,7 +91,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
       await expect(page.getByTestId('deadline-banner')).toBeVisible();
       await expect(page.getByRole('button', { name: 'Enregistrer le besoin' })).toBeVisible();
     }
-    for (const profile of ['direction_client', 'dr_client', 'cvr_client', 'provider_admin']) {
+    for (const profile of ['provider_admin']) {
       await setProfile(context, profile);
       await page.goto('/fr/needs');
       await expect(page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: 'Nouveau besoin' }), profile).toHaveCount(0);

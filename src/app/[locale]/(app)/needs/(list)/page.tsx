@@ -108,6 +108,7 @@ export default async function NeedsPage({ params, searchParams }: {
         <div className="flex flex-col items-start gap-1">
           <StatusTag tone={n.need_state === 'draft' ? 'attention' : 'info'}>{t(`needs.state.${n.need_state}`)}</StatusTag>
           {n.on_behalf ? <span className="text-sm text-muted">{t('needs.list.onBehalf')}</span> : null}
+          {n.entered_by_profile === 'cvr_client' || n.entered_by_profile === 'dr_client' || n.entered_by_profile === 'direction_client' ? <span className="text-sm text-muted">{t(`needs.list.enteredBy.${n.entered_by_profile}`)}</span> : null}
           {n.deferred_from_month ? (
             <StatusTag tone="important">{t('needs.list.deferred', { from: formatMonth(n.deferred_from_month, loc), to: formatMonth(addMonths(n.deferred_from_month, 1), loc) })}</StatusTag>
           ) : null}
