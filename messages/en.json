@@ -308,7 +308,12 @@
       "period": "P{n}: from {start} to {end} ({from} to {to})",
       "periodOneWeek": "P{n}: from {start} to {end} ({week})",
       "onBehalf": "Entered by the agency for the sector manager",
-      "deferred": "Deferred from {from} to {to}"
+      "deferred": "Deferred from {from} to {to}",
+      "enteredBy": {
+        "cvr_client": "Entered by the CVR",
+        "dr_client": "Entered by the DR",
+        "direction_client": "Entered by client management"
+      }
     },
     "state": {
       "draft": "Draft",
@@ -786,7 +791,10 @@
     "roles": {
       "rs": "RS",
       "agency_operator": "Agency (operator)",
-      "agency_admin": "Agency (administrator)"
+      "agency_admin": "Agency (administrator)",
+      "cvr_client": "CVR",
+      "dr_client": "DR",
+      "direction_client": "Client management"
     },
     "h2": {
       "title": "Worked example for December 2026",
@@ -1100,7 +1108,9 @@
       "EV-07": "Need escalated or ruled on by the DR",
       "EV-08": "Need refused with a motive",
       "EV-46": "Delegation created or revoked",
-      "EV-47": "Need submitted again"
+      "EV-47": "Need submitted again",
+      "EV-48": "Need entered by the agency on behalf of an RS",
+      "EV-49": "Management opinion given at entry"
     },
     "detail": {
       "title": "Need {code}",
@@ -1127,7 +1137,14 @@
       "withdrawnOn": "Withdrawn on {date}",
       "decidedOn": "Decided on {date}",
       "journal": "Need journal",
-      "positionLine": "Calculated position status"
+      "positionLine": "Calculated position status",
+      "enteredBy": {
+        "onBehalf": "Entered by the agency on behalf of the RS of this sector",
+        "cvr_client": "Entered by the CVR",
+        "dr_client": "Entered by the DR",
+        "direction_client": "Entered by client management",
+        "rs": "Entered by the RS"
+      }
     },
     "batch": {
       "title": "Decide on several proposals",
@@ -1451,7 +1468,9 @@
       "log": {
         "validate": {
           "cvr": "Approved by the CVR",
-          "dr": "Ruled on by the DR and approved"
+          "dr": "Ruled on by the DR and approved",
+          "cvr_entry": "CVR opinion given at entry",
+          "dr_entry": "DR opinion given at entry"
         },
         "refuse": {
           "cvr": "Refused by the CVR",
@@ -1505,7 +1524,8 @@
         "invalid": "Invalid input.",
         "not_refused": "This need is not refused."
       },
-      "optional": "The management opinion is optional: the agency handles the need without waiting for it, and the client follows its status."
+      "optional": "The management opinion is optional: the agency handles the need without waiting for it, and the client follows its status.",
+      "atEntry": "Opinion given at entry"
     },
     "validationBatch": {
       "title": "Approve several needs",

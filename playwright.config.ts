@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 const PORT = 3100;
 const ISOLATED_PORT = 3101;
 const A3C_PORT = 3102;
+const A3D_PORT = 3103;
 // Chromium : par défaut celui installé par `npx playwright install chromium` (poste de T. SOEFOU). Dans un bac à sable où il est
 // préinstallé ailleurs, définir PW_CHROMIUM_PATH (ex. /opt/pw-browsers/chromium).
 const launchOptions = process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {};
@@ -30,9 +31,16 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 60_000,
     },
+    // Lot A3d : même principe, serveur neuf à chaque lancement (les saisies créent des besoins et des événements).
+    {
+      command: `NEXT_TELEMETRY_DISABLED=1 DEMO_LOGIN_MIN_MS=50 npx next start -p ${A3D_PORT}`,
+      url: `http://localhost:${A3D_PORT}/fr`,
+      reuseExistingServer: false,
+      timeout: 60_000,
+    },
   ],
   projects: [
-    { name: 'chromium', testIgnore: /(undo-isolated|a3c-isolated)/, use: { browserName: 'chromium', launchOptions } },
+    { name: 'chromium', testIgnore: /(undo-isolated|a3c-isolated|a3d-isolated)/, use: { browserName: 'chromium', launchOptions } },
     {
       name: 'isolated', testMatch: /undo-isolated/,
       use: { browserName: 'chromium', baseURL: `http://localhost:${ISOLATED_PORT}`, launchOptions },
@@ -40,6 +48,10 @@ export default defineConfig({
     {
       name: 'a3c', testMatch: /a3c-isolated/,
       use: { browserName: 'chromium', baseURL: `http://localhost:${A3C_PORT}`, launchOptions },
+    },
+    {
+      name: 'a3d', testMatch: /a3d-isolated/,
+      use: { browserName: 'chromium', baseURL: `http://localhost:${A3D_PORT}`, launchOptions },
     },
   ],
 });

@@ -1,6 +1,7 @@
 import { zoneText } from '@/components/ZoneLabel';
 import type { NeedFormProps } from '@/components/NeedForm';
 import { repository } from '@/data';
+import { zoneInScope } from '@/domain/access';
 import type { AccessContext } from '@/domain/access';
 import { applyDispositifParams, paramsMapOf } from '@/domain/dispositif-params';
 import { DEFAULT_RULE_CONFIG } from '@/domain/rules';
@@ -25,7 +26,8 @@ export async function loadFormData(ctx: AccessContext): Promise<Omit<NeedFormPro
   // Semaines clôturées que l'agence a rouvertes pour ce périmètre : plus désactivées dans le calendrier.
   const reopenedWeeks = new Set(deadline.reopenings.filter((r) => r.scope === 'week' && r.expires_on >= clock.date).map((r) => r.target));
   return {
-    sectors: zones.filter((z) => z.kind === 'rs').map((z) => ({ id: z.id, text: zoneText(z, ctx.locale) })),
+    // Secteurs de saisie : le périmètre propre du profil, jamais celui d'un délégant (la saisie n'est pas déléguée).
+    sectors: zones.filter((z) => z.kind === 'rs' && zoneInScope(zones, z.id, ctx.scope)).map((z) => ({ id: z.id, text: zoneText(z, ctx.locale) })),
     stores: stores.map((s) => ({ value: s.code, text: storeText(s, ctx.locale), sectorId: s.sector_id })),
     campaigns: campaigns.map((c) => ({ value: c.code, dispositif: c.dispositif, text: campaignText(c, ctx.locale) })),
     today: clock.date,

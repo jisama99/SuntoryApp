@@ -24,6 +24,38 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
     await expect(page.getByRole('button', { name: 'Réduire le menu' })).toBeVisible();
   });
 
+  test('bureau : le fond du volet de gauche couvre toute la hauteur de la page, même longue (captures pleine page)', async ({ page, context }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await setProfile(context, 'agency_operator');
+    await page.goto('/fr/needs');
+    await expect(page.getByRole('table', { name: 'Besoins de votre périmètre' })).toBeVisible();
+    const { column, page: total } = await page.evaluate(() => ({
+      column: (document.querySelector('aside')?.getBoundingClientRect().bottom ?? 0) + window.scrollY,
+      page: document.documentElement.scrollHeight,
+    }));
+    expect(total).toBeGreaterThan(1800);
+    // Le bas de la colonne rejoint le bas de la page : le fond ne s'arrête plus à la hauteur de l'écran.
+    expect(Math.abs(column - total)).toBeLessThanOrEqual(1);
+  });
+
+  test('bureau : réglages et administration sont rangés en bas du volet, les entrées de travail en haut', async ({ page, context }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await setProfile(context, 'provider_admin');
+    await page.goto('/fr/needs');
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' });
+    const y = async (name: string) => (await nav.getByRole('link', { name, exact: true }).boundingBox())!.y;
+    const work = await y('Mon cockpit');
+    const settings = await y('Réglages');
+    const lastWork = await y('À traiter');
+    expect(work).toBeLessThan(300);
+    expect(settings).toBeGreaterThan(lastWork + 200);
+    expect(settings).toBeGreaterThan(700);
+    expect(settings).toBeLessThan(860);
+    // Même navigation : les liens restent atteignables au clavier, dans l'ordre (travail, puis réglages).
+    const hrefs = await nav.getByRole('link').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+    expect(hrefs.slice(-2).every((h) => /\/(settings|admin)$/.test(h ?? ''))).toBe(true);
+  });
+
   test('bureau : le menu reste en place pendant le défilement d\'une page longue, sans vide dessous', async ({ page, context }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await setProfile(context, 'agency_operator');
@@ -37,7 +69,8 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
       return { top: Math.round(r.top), bottom: Math.round(r.bottom) };
     });
     expect(Math.abs(box.top)).toBe(0);
-    expect(box.bottom).toBeGreaterThanOrEqual(899);
+    // Le volet laisse la place de la bannière ; son fond, porté par la colonne, couvre le reste.
+    expect(box.bottom).toBeGreaterThanOrEqual(850);
   });
 
   test('mobile 390 px : barre d\'onglets fixe en bas, colonnes égales, bouton + au centre, volet « Plus »', async ({ page, context }) => {
@@ -82,7 +115,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
 
   test('mobile : le bouton + ouvre la saisie complète d\'un besoin, réservé aux profils qui peuvent saisir', async ({ page, context }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    for (const profile of ['rs', 'agency_operator', 'agency_admin']) {
+    for (const profile of ['rs', 'cvr_client', 'dr_client', 'direction_client', 'agency_operator', 'agency_admin']) {
       await setProfile(context, profile);
       await page.goto('/fr/alerts');
       await page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: 'Nouveau besoin' }).click();
@@ -91,7 +124,7 @@ test.describe('gabarit : menu latéral repliable et collant, tiroir mobile', () 
       await expect(page.getByTestId('deadline-banner')).toBeVisible();
       await expect(page.getByRole('button', { name: 'Enregistrer le besoin' })).toBeVisible();
     }
-    for (const profile of ['direction_client', 'dr_client', 'cvr_client', 'provider_admin']) {
+    for (const profile of ['provider_admin']) {
       await setProfile(context, profile);
       await page.goto('/fr/needs');
       await expect(page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: 'Nouveau besoin' }), profile).toHaveCount(0);
