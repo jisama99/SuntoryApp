@@ -37,7 +37,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A2 → A2a | Règles pures (semaine ISO, W1–W22, D1–D7), événements, saisie unitaire et duplication | Cœur testable table par table ; peu de dépendance visuelle |
 | A2 → A2b | Saisie en lot, brouillon automatique, résumé, échéances et blocage (D78–D82), alertes J-5/J-2 | Dépend du calendrier paramétré par l'agence et de l'écran de lot |
 | A3 → A3a / A3b (optionnel) | A3a propositions versionnées, décisions, qui doit agir ; A3b entonnoir D92, retours D97, délais D93 | Éviter une session trop longue ; A3b alimente A4c2 |
-| A4c1 | Première session = moteur et un gabarit **sans** logos ni photo de couverture réels ; seconde = intégration des visuels quand D25/D75 sont levés | Droits non résolus |
+| A4c1 | Première session = moteur et un gabarit **sans** logos ni photo de couverture réels ; seconde = intégration des visuels quand D25/D75 sont levés | Droits non résolus (D113, 23/10/2026 : tous les logos fournis sont utilisables au démonstrateur, droits non levés, risque porté par le prestataire) |
 
 ## 3. Chemin critique et date
 
@@ -54,7 +54,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 | A2a/A2b | Saisie unitaire, alerte doublon, correction de semaine, saisie en lot, blocage après échéance |
 | A3 | Besoin → proposition → décision, refus puis nouvelle proposition |
 | A4a/A4b | Tableau de bord par rôle, barre d'alerte, classement, réallocation à double validation |
-| A4c1/A4c2 | Aperçu des pages du COPIL, R-01, pages de détail (sans logos tant que D25 est ouvert) |
+| A4c1/A4c2 | Aperçu des pages du COPIL, R-01, pages de détail (logos utilisables au démonstrateur selon D113, droits D25 non levés) |
 | A5/A5b | Parcours mobile 390 px, absence, galerie photos fictives |
 | A6 | Aperçu d'import, conflit, rapport d'idempotence |
 | A7 | Jeu complet de captures du script de démonstration |
@@ -63,7 +63,7 @@ Date : 23/10/2026 · Base : `03_LOTS_DEV.md` (validé le 23/10 avec A4c1, A4c2, 
 
 | Blocage | Lot | Décideur | Action |
 |---|---|---|---|
-| Droits logos / fonds de carte (D25, Q22) | A1, A4c1 | Cliente, agence | Placeholders et fond neutre en attendant |
+| Droits logos / fonds de carte (D25, Q22) | A1, A4c1 | Cliente, agence | Logos utilisables au démonstrateur (D113) ; fond de carte neutre en attendant |
 | Gabarit COPIL (D61, D69) | A4c1 | T. SOEFOU, Impact | Produire le gabarit ou travailler sur une trame minimale |
 | Définition du consommé (D05) | A4a | Finances cliente, agence | Montants fictifs étiquetés, aucun moteur réel |
 | Libellés DR/CVR/RS (G1) | A1 | Cliente | Sigles affichés |
