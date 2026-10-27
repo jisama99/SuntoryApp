@@ -66,5 +66,6 @@ Aucun appareil réel (N10) : Chromium seul testé ; Firefox, Safari et Android n
 - Compte rendu A3D d'origine non mis à jour des deux commits du volet : couvert par le §1.
 - Copie miroir `07_DEV_CLAUDE_CODE` à synchroniser par T. SOEFOU.
 
-## 7. Verdict
-**Fusionnable**, sous réserve : tous les contrôles sont verts (seul C3 hors session), aucun bloquant, et validation de T. SOEFOU reçue dans cette session sur D240 à D243 et sur l'écart du §1.
+## 7. Décisions et verdict
+Validation de T. SOEFOU reçue dans cette session (27/10/2026) : **D240, D241 (DR et direction inclus), D242 (audience les deux) et D243 validées et inscrites** ; écart du menu (§1) **accepté**.
+**Verdict : fusionnable.** Tous les contrôles sont verts (seul C3 est hors session), aucun bloquant.
