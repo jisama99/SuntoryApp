@@ -6,7 +6,7 @@ import { repository } from '@/data';
 import type { StepInput } from '@/data/repository';
 import { ProposalInputSchema } from '@/data/schemas';
 import type { ProposalIssue } from '@/domain/pipeline';
-import { DECISION_OUTCOMES, LOCALES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, RECRUITMENT_STEPS } from '@/domain/types';
+import { DECISION_OUTCOMES, ESCALATION_REASONS, LOCALES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, RECRUITMENT_STEPS, VALIDATION_OUTCOMES } from '@/domain/types';
 import type { Locale } from '@/domain/types';
 import { getAccessContext } from '@/lib/session';
 import { undoable } from '@/lib/undoable';
@@ -117,6 +117,51 @@ export async function withdrawNoteAction(payload: { locale: string; noteId: stri
   if (!locale || !Id.safeParse(payload.noteId).success) return { status: 'invalid' };
   const ctx = await getAccessContext(locale);
   const r = await undoable(ctx, () => repository.withdrawNote(ctx, payload.noteId));
+  done(r);
+  return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3c : validation managériale, escalade
+// ---------------------------------------------------------------------------------------------
+const Validation = z.object({
+  outcome: z.enum(VALIDATION_OUTCOMES), motive: z.string().max(280).optional(), reason: z.enum(ESCALATION_REASONS).optional(), otherZoneId: Id.optional(),
+});
+
+export async function validateNeedAction(payload: { locale: string; needId: string; outcome: string; motive?: string; reason?: string; otherZoneId?: string }): Promise<WriteState> {
+  const locale = asLocale(payload.locale);
+  const parsed = Validation.safeParse({ outcome: payload.outcome, motive: payload.motive, reason: payload.reason || undefined, otherZoneId: payload.otherZoneId || undefined });
+  if (!locale || !Id.safeParse(payload.needId).success || !parsed.success) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.validateNeed(ctx, payload.needId, parsed.data));
+  done(r);
+  return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
+}
+
+/** Validation en lot (F-30.6) : une seule annulation défait tout le lot. L'escalade n'existe pas en lot. */
+export async function validateBatchAction(payload: { locale: string; needIds: string[]; outcome: string; motive?: string }): Promise<
+  | { status: 'ok'; undoToken?: string; decided: number; refused: number; reasons: string[] }
+  | { status: 'invalid' }
+> {
+  const locale = asLocale(payload.locale);
+  const parsed = Validation.safeParse({ outcome: payload.outcome, motive: payload.motive });
+  if (!locale || !parsed.success || parsed.data.outcome === 'escalate' || !Array.isArray(payload.needIds) || payload.needIds.length === 0 || payload.needIds.length > 60 || !payload.needIds.every((i) => Id.safeParse(i).success)) {
+    return { status: 'invalid' };
+  }
+  const ctx = await getAccessContext(locale);
+  const { result, undoToken } = await repository.withUndo(ctx, () => repository.validateBatch(ctx, payload.needIds, parsed.data), (r) => r.decided > 0);
+  if (result.decided > 0) revalidatePath('/', 'layout');
+  return {
+    status: 'ok', ...(undoToken ? { undoToken } : {}), decided: result.decided, refused: result.refused,
+    reasons: [...new Set(result.items.flatMap((i) => (i.reason ? [i.reason] : [])))],
+  };
+}
+
+export async function resubmitNeedAction(payload: { locale: string; needId: string }): Promise<WriteState> {
+  const locale = asLocale(payload.locale);
+  if (!locale || !Id.safeParse(payload.needId).success) return { status: 'invalid' };
+  const ctx = await getAccessContext(locale);
+  const r = await undoable(ctx, () => repository.resubmitNeed(ctx, payload.needId));
   done(r);
   return r.status === 'ok' ? { status: 'ok', undoToken: r.undoToken } : { status: 'refused', reason: r.reason };
 }

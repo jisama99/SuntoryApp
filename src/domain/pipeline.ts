@@ -1,6 +1,6 @@
 import type { Decision, Need, Note, Proposal, ProposalInput, Recruitment, Zone } from '@/data/schemas';
 import type {
-  Actor, DeviationKind, ExecutionStatus, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, StartLagKind, Urgency,
+  Actor, DeviationKind, ExecutionStatus, FunnelState, NextAction, PositionStatus, Situation, Scope, Side, StartLagKind, Urgency, ValidationState,
 } from './types';
 import { START_LAG_KINDS } from './types';
 import { addDays, daysBetween } from './week';
@@ -32,6 +32,10 @@ export interface PipelineParams {
   soon_within_days: number;
   /** Effectif minimal pour conclure sur un délai (D93 : valeur proposée 5). */
   min_sample: number;
+  /** Délai de validation d'un besoin soumis par le CVR (A3c). Valeur de départ À VALIDER : D09 reste ouverte, rien n'est figé. */
+  validate_due_days: number;
+  /** Délai d'arbitrage d'un besoin escaladé par le DR (A3c). Valeur de départ À VALIDER (D09). */
+  arbitrate_due_days: number;
 }
 
 export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
@@ -41,6 +45,8 @@ export const DEFAULT_PIPELINE_PARAMS: PipelineParams = {
   urgent_within_days: 2,
   soon_within_days: 5,
   min_sample: 5,
+  validate_due_days: 2,
+  arbitrate_due_days: 3,
 };
 
 /** Le n-ième jour ouvré après `date` (n supérieur ou égal à 1). */
@@ -57,7 +63,9 @@ export function addWorkingDays(date: IsoDate, n: number, cal: CalendarRules): Is
 export const blankRecruitment = (needId: string): Recruitment => ({
   need_id: needId, intake: 'to_qualify', intake_motive: null, qualified_on: null, situation: 'new', reassigned_from_sector_id: null,
   white_zone_since: null, stopped: null, search_started_on: null, hired_on: null, training_on: null, start_work_date: null,
-  vehicle_handover_date: null, refusal_count: 0, withdrawal_count: 0, exits: [], is_demo: true,
+  vehicle_handover_date: null, refusal_count: 0, withdrawal_count: 0, exits: [],
+  // Un enregistrement sans suivi de validation est réputé validé (D209, avant A3c) ; une soumission après A3c le crée « à valider ».
+  validation: 'validated', validation_round: 1, validation_on: null, escalation: null, validation_log: [], is_demo: true,
 });
 
 // ---------------------------------------------------------------------------------------------
@@ -220,6 +228,13 @@ export function nextStep(
   const r = i.recruitment;
   if (i.needState === 'draft') return withDue('rs', 'complete_need', null);
   if (r.intake === 'rejected' || r.stopped) return withDue('none', 'none', null);
+  // A3c : la chaîne managériale cliente passe avant la qualification de l'agence (D45). Le refus rend la main au RS, sans échéance.
+  if (r.validation !== 'validated') {
+    const since = r.validation_on ?? i.submittedOn;
+    if (r.validation === 'to_validate') return withDue('validator', 'validate_need', addWorkingDays(since, params.validate_due_days, cal));
+    if (r.validation === 'escalated') return withDue('arbiter', 'arbitrate_need', addWorkingDays(since, params.arbitrate_due_days, cal));
+    return withDue('rs', 'resubmit_need', null);
+  }
   if (r.intake === 'to_qualify') return withDue('agency', 'qualify', addWorkingDays(i.submittedOn, params.qualify_due_days, cal));
   if (r.intake === 'clarification') return withDue('rs', 'clarify', null);
 
@@ -369,6 +384,8 @@ export interface FunnelRow {
   closed: 'stopped' | 'rejected' | null;
   /** Besoin pas encore pris en charge par l'agence. */
   toQualify: boolean;
+  /** Validation managériale (A3c) : absente = validé. Un besoin non validé n'entre dans aucun autre compte. */
+  validation?: ValidationState;
   hours: number | null;
   refusals: number;
   withdrawals: number;
@@ -385,6 +402,9 @@ export interface FunnelSummary {
   stoppedPerformedHours: number;
   whiteZone: { needs: number; hours: number };
   toQualify: number;
+  /** Besoins en attente de la chaîne managériale (à valider ou escaladés) et besoins refusés par elle (A3c), comptés à part. */
+  toValidate: number;
+  validationRefused: number;
   /** Besoin passé en « Réattribué » : compté dans son état, signalé à part. */
   reassigned: number;
   demandedHours: number;
@@ -406,6 +426,8 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
   let rejected = 0;
   let stoppedPerformed = 0;
   let toQualify = 0;
+  let toValidate = 0;
+  let validationRefused = 0;
   let reassigned = 0;
   let demanded = 0;
   let hired = 0;
@@ -426,6 +448,14 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
           started += r.hours ?? 0;
         }
       } else rejected += 1;
+      continue;
+    }
+    if (r.validation === 'refused') {
+      validationRefused += 1;
+      continue;
+    }
+    if (r.validation === 'to_validate' || r.validation === 'escalated') {
+      toValidate += 1;
       continue;
     }
     if (r.toQualify) {
@@ -449,7 +479,7 @@ export function funnelSummary(rows: readonly FunnelRow[]): FunnelSummary {
     if (r.state === 'started') started += r.hours ?? 0;
   }
   return {
-    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, reassigned, demandedHours: demanded,
+    byState, stopped, rejected, stoppedPerformedHours: stoppedPerformed, whiteZone: white, toQualify, toValidate, validationRefused, reassigned, demandedHours: demanded,
     hiredRate: demanded > 0 ? hired / demanded : null, startedRate: demanded > 0 ? started / demanded : null,
     refusals, withdrawals, returned,
   };

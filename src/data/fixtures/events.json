@@ -2672,5 +2672,377 @@
       "deviations": 0
     },
     "is_demo": true
+  },
+  {
+    "id": "4721f5f9-a71d-4e8b-9c57-af28500eb392",
+    "code": "EV-01",
+    "seq": 167,
+    "actor_profile": "rs",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "63f72ff7-51f2-4ac1-874d-99c9018f86a4",
+    "effect_date": "2026-10-05",
+    "recorded_at": "2026-10-05",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-037",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "082b26ff-ac8f-4c96-8e0d-e7588e73f507",
+    "code": "EV-02",
+    "seq": 168,
+    "actor_profile": "rs",
+    "zone_id": "119bf1b7-baca-4a2e-a1b6-f4cb42eda38f",
+    "need_id": "63f72ff7-51f2-4ac1-874d-99c9018f86a4",
+    "effect_date": "2026-10-05",
+    "recorded_at": "2026-10-05",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-037",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "e9d37304-ecdc-40c8-97ce-aada3f662103",
+    "code": "EV-46",
+    "seq": 169,
+    "actor_profile": "agency_admin",
+    "zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "need_id": null,
+    "effect_date": "2026-10-05",
+    "recorded_at": "2026-10-05",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "delegation": "c867a055-fc56-4a6b-a21f-c6e530c1ca02",
+      "delegator_zone": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+      "substitute_zone": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+      "start": "2026-10-07",
+      "end": "2026-10-16"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "78704042-9b85-473e-a209-5d05c888241e",
+    "code": "EV-01",
+    "seq": 170,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "38c582cd-2649-4149-9fd5-a499a381e8a5",
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-030",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "16a20cab-c33f-4191-ba5b-3d0afd79c9d5",
+    "code": "EV-02",
+    "seq": 171,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "38c582cd-2649-4149-9fd5-a499a381e8a5",
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-030",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "e960f415-fd4b-41ac-b937-084bea272dda",
+    "code": "EV-46",
+    "seq": 172,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "delegation": "c21102b3-57f9-4269-8e56-8d17cb9aa7e8",
+      "delegator_zone": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+      "substitute_zone": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+      "start": "2026-10-19",
+      "end": "2026-11-20"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "6a417a52-dbcb-4941-89c3-7dad58a4e06e",
+    "code": "EV-01",
+    "seq": 173,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "7347d5a0-d3bb-4a87-8177-d5d503462f14",
+    "effect_date": "2026-10-17",
+    "recorded_at": "2026-10-17",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-031",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "13eeb3a3-2ef3-4b81-a92d-60855c25944e",
+    "code": "EV-02",
+    "seq": 174,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "7347d5a0-d3bb-4a87-8177-d5d503462f14",
+    "effect_date": "2026-10-17",
+    "recorded_at": "2026-10-17",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-031",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "43313cad-6839-4469-bdda-84d24afbb571",
+    "code": "EV-01",
+    "seq": 175,
+    "actor_profile": "agency_operator",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "d2ee2720-3ce1-4d7e-a104-8d173813555e",
+    "effect_date": "2026-10-18",
+    "recorded_at": "2026-10-18",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-032",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "7f869634-1946-4898-b417-295cd3954b6b",
+    "code": "EV-02",
+    "seq": 176,
+    "actor_profile": "agency_operator",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "d2ee2720-3ce1-4d7e-a104-8d173813555e",
+    "effect_date": "2026-10-18",
+    "recorded_at": "2026-10-18",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-032",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "1db8c9e8-7e50-445c-bfc2-bd632a6158ac",
+    "code": "EV-01",
+    "seq": 177,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "0c5617e4-2ad6-4435-b6cc-a9539fdee4ce",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-033",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "dc2f068a-25e8-4b0e-bbbd-4459ca052726",
+    "code": "EV-02",
+    "seq": 178,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "0c5617e4-2ad6-4435-b6cc-a9539fdee4ce",
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-033",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "f83e3473-d915-4353-8667-dd1ef4793303",
+    "code": "EV-01",
+    "seq": 179,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "64247ec4-a88a-4ca1-9ce7-2d03d43bf442",
+    "code": "EV-02",
+    "seq": 180,
+    "actor_profile": "rs",
+    "zone_id": "afaefda3-e321-4e2e-b63a-a7e5009bed0c",
+    "need_id": "c772332d-aa1a-4544-8459-942cb2c5fa2d",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-034",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "eb8e1541-c179-4f6a-8d81-84b8a2c4e23a",
+    "code": "EV-01",
+    "seq": 181,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "9c01029d-5f37-4b83-94f5-003acd80fc2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-035",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "9632a715-87fa-4405-a8d7-73847a72ec71",
+    "code": "EV-02",
+    "seq": 182,
+    "actor_profile": "rs",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "9c01029d-5f37-4b83-94f5-003acd80fc2d",
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-035",
+      "on_behalf": false
+    },
+    "is_demo": true
+  },
+  {
+    "id": "d4f49346-6c88-420b-ae2f-46b156ac8eed",
+    "code": "EV-46",
+    "seq": 183,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-21",
+    "recorded_at": "2026-10-21",
+    "audience": "agency",
+    "data": {
+      "action": "revoked",
+      "delegation": "c21102b3-57f9-4269-8e56-8d17cb9aa7e8",
+      "delegator_zone": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+      "substitute_zone": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+      "start": "2026-10-19",
+      "end": "2026-11-20"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "bf0a3833-83d0-4d34-8958-df3d4f0b5f37",
+    "code": "EV-07",
+    "seq": 184,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "9c01029d-5f37-4b83-94f5-003acd80fc2d",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-035",
+      "level": "cvr",
+      "round": 1,
+      "action": "escalated",
+      "reason": "arbitration"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "31dd12f8-3fae-44a7-90ae-996d613c6129",
+    "code": "EV-01",
+    "seq": 185,
+    "actor_profile": "agency_operator",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "dbaf9f90-ff9f-4f46-818c-f4f01382d763",
+    "code": "EV-02",
+    "seq": 186,
+    "actor_profile": "agency_operator",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "on_behalf": true
+    },
+    "is_demo": true
+  },
+  {
+    "id": "a6299f29-b8d8-42a2-8a9d-51177ecb04bf",
+    "code": "EV-46",
+    "seq": 187,
+    "actor_profile": "agency_admin",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "need_id": null,
+    "effect_date": "2026-10-22",
+    "recorded_at": "2026-10-22",
+    "audience": "agency",
+    "data": {
+      "action": "created",
+      "delegation": "28e875bc-b599-4928-b9c4-0897f69f3b0d",
+      "delegator_zone": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+      "substitute_zone": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+      "start": "2026-11-02",
+      "end": "2026-11-13"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "cc3683cb-18e3-4717-a9b4-1e5e223bc4e4",
+    "code": "EV-08",
+    "seq": 188,
+    "actor_profile": "cvr_client",
+    "zone_id": "f225f950-c5f7-4156-89ae-a92334ac9263",
+    "need_id": "6de62e12-0875-4e94-980b-b72efb964948",
+    "effect_date": "2026-10-23",
+    "recorded_at": "2026-10-23",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-036",
+      "level": "cvr",
+      "round": 1
+    },
+    "is_demo": true
   }
 ]

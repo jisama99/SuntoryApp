@@ -99,6 +99,8 @@ export default async function FunnelPage({ params }: { params: Promise<{ locale:
         <p className="max-w-prose text-muted">{t('funnelPage.outsideHelp')}</p>
         <ul data-testid="funnel-outside" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {[
+            ['toValidate', String(summary.toValidate)],
+            ['validationRefused', String(summary.validationRefused)],
             ['toQualify', String(summary.toQualify)],
             ['whiteZone', t('funnelPage.needsAndHours', { needs: summary.whiteZone.needs, hours: summary.whiteZone.hours })],
             ['stopped', summary.stoppedPerformedHours > 0 ? t('funnelPage.stoppedValue', { n: summary.stopped, hours: summary.stoppedPerformedHours }) : String(summary.stopped)],

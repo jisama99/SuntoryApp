@@ -4,7 +4,7 @@
  * Codes selon docs/FIXTURES.md §3 ; chaque entité porte is_demo: true.
  */
 import type {
-  Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
+  Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
   Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from '../src/data/schemas';
 import { blankRecruitment, computeDeviations, needSpan } from '../src/domain/pipeline';
@@ -444,9 +444,66 @@ export function buildFixtures() {
   a3Events.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
   for (const e of a3Events) events.push({ ...e, seq: ++seq });
 
+  // ---- Lot A3c : généré après tout le reste (les numéros et valeurs précédents ne changent pas). ----
+  // Huit besoins soumis après la chaîne managériale (codes BES-DEMO-030 à 037), tous dans la zone DR-ALPHA (secteur du RS de démonstration pour trois d'entre eux) sauf un, et trois délégations
+  // hors période courante (planifiée, terminée, révoquée) : aucune délégation en cours au départ, pour que les périmètres de démonstration
+  // restent ceux des lots précédents. Les cas se jouent dans l'interface.
+  const a3cFirst = needs.length;
+  const a3cStart = (k: number) => addDays('2026-11-02', k * 14);
+  const a3cSpecs: Array<{ sector: number; state: 'to_validate' | 'escalated' | 'refused' }> = [
+    { sector: 1, state: 'to_validate' }, { sector: 0, state: 'to_validate' }, { sector: 1, state: 'to_validate' }, { sector: 1, state: 'to_validate' },
+    { sector: 1, state: 'to_validate' }, { sector: 0, state: 'escalated' }, { sector: 0, state: 'refused' }, { sector: 2, state: 'to_validate' },
+  ];
+  a3cSpecs.forEach((spec, k) => addNeed(spec.sector, { periods: [period(1, a3cStart(k), addDays(a3cStart(k), 5))] }));
+  const cvrOfSector = (sectorId: string): Zone => zones.find((z) => z.id === (zones.find((x) => x.id === sectorId) as Zone).parent_id) as Zone;
+  const a3cEvents: BusinessEvent[] = [];
+  const a3cEv = (code: EventCode, n: Need, date: string, data: BusinessEvent['data'], audience: BusinessEvent['audience'], actor: BusinessEvent['actor_profile']) => {
+    if (date > TODAY) throw new Error(`Date d'événement après la date de démonstration : ${n.need_code} ${code} ${date}`);
+    a3cEvents.push({ id: uuid(), code, seq: 0, actor_profile: actor, zone_id: n.sector_id, need_id: n.id, effect_date: date, recorded_at: date, audience, data: { need_code: n.need_code, ...data }, is_demo: true });
+  };
+  needs.slice(a3cFirst).forEach((n, k) => {
+    const base = { actor_profile: n.entered_by_profile, zone_id: n.sector_id, need_id: n.id, effect_date: n.created_at, recorded_at: n.created_at, audience: 'both' as const, data: { need_code: n.need_code, on_behalf: n.on_behalf }, is_demo: true as const };
+    a3cEvents.push({ id: uuid(), code: 'EV-01', seq: 0, ...base }, { id: uuid(), code: 'EV-02', seq: 0, ...base });
+    const spec = a3cSpecs[k] as (typeof a3cSpecs)[number];
+    const rec: Recruitment = { ...blankRecruitment(n.id), validation: 'to_validate', validation_on: n.created_at };
+    const cvr = cvrOfSector(n.sector_id);
+    const entry = (over: Partial<Recruitment['validation_log'][number]> & Pick<Recruitment['validation_log'][number], 'action' | 'level' | 'on'>): Recruitment['validation_log'][number] => ({
+      id: uuid(), round: 1, by_profile: 'cvr_client', zone_id: cvr.id, by_zone_id: null, delegation_id: null, reason: null, other_zone_id: null, trigger: null, motive: null, time: null, ...over,
+    });
+    if (spec.state === 'escalated') {
+      const wy02 = zones.find((z) => z.kind === 'cvr' && z.code === 'CVR-WY02') as Zone;
+      const on = addDays(n.created_at, 1);
+      rec.validation = 'escalated'; rec.validation_on = on;
+      rec.escalation = { reason: 'arbitration', other_zone_id: wy02.id, trigger: 'manual', motive: 'Un secteur voisin revendique ce poste (donnée fictive).', on };
+      rec.validation_log.push(entry({ action: 'escalate', level: 'cvr', on, reason: 'arbitration', other_zone_id: wy02.id, trigger: 'manual', motive: rec.escalation.motive }));
+      a3cEv('EV-07', n, on, { level: 'cvr', round: 1, action: 'escalated', reason: 'arbitration' }, 'both', 'cvr_client');
+    }
+    if (spec.state === 'refused') {
+      const on = addDays(n.created_at, 1);
+      rec.validation = 'refused'; rec.validation_on = on;
+      rec.validation_log.push(entry({ action: 'refuse', level: 'cvr', on, motive: 'Heures demandées supérieures au besoin du secteur (donnée fictive).' }));
+      a3cEv('EV-08', n, on, { level: 'cvr', round: 1 }, 'both', 'cvr_client');
+    }
+    recruitments.push(rec);
+  });
+  const cvrByCode = (code: string): Zone => zones.find((z) => z.kind === 'cvr' && z.code === code) as Zone;
+  const delegations: Delegation[] = [
+    { id: uuid(), delegator_zone_id: cvrByCode('CVR-ZV01').id, substitute_zone_id: cvrByCode('CVR-WY02').id, start_date: '2026-11-02', end_date: '2026-11-13', created_by: 'agency_admin', created_on: '2026-10-22', revoked_on: null, revoked_by: null, is_demo: true },
+    { id: uuid(), delegator_zone_id: cvrByCode('CVR-GP03').id, substitute_zone_id: cvrByCode('CVR-WY02').id, start_date: '2026-10-07', end_date: '2026-10-16', created_by: 'agency_admin', created_on: '2026-10-05', revoked_on: null, revoked_by: null, is_demo: true },
+    { id: uuid(), delegator_zone_id: cvrByCode('CVR-NM04').id, substitute_zone_id: cvrByCode('CVR-MS05').id, start_date: '2026-10-19', end_date: '2026-11-20', created_by: 'agency_admin', created_on: '2026-10-16', revoked_on: '2026-10-21', revoked_by: 'agency_admin', is_demo: true },
+  ];
+  for (const d of delegations) {
+    const data = (action: 'created' | 'revoked') => ({ action, delegation: d.id, delegator_zone: d.delegator_zone_id, substitute_zone: d.substitute_zone_id, start: d.start_date, end: d.end_date });
+    a3cEvents.push({ id: uuid(), code: 'EV-46', seq: 0, actor_profile: 'agency_admin', zone_id: d.delegator_zone_id, need_id: null, effect_date: d.created_on, recorded_at: d.created_on, audience: 'agency', data: data('created'), is_demo: true });
+    if (d.revoked_on) a3cEvents.push({ id: uuid(), code: 'EV-46', seq: 0, actor_profile: 'agency_admin', zone_id: d.delegator_zone_id, need_id: null, effect_date: d.revoked_on, recorded_at: d.revoked_on, audience: 'agency', data: data('revoked'), is_demo: true });
+  }
+  a3cEvents.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
+  let seq3c = events.reduce((m, e) => Math.max(m, e.seq), 0);
+  for (const e of a3cEvents) events.push({ ...e, seq: ++seq3c });
+
   return {
     zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events,
     deadlineSettings, dispositifParams, reopeningRequests, reopenings,
-    recruitments, proposals, decisions, notes,
+    recruitments, proposals, decisions, notes, delegations,
   };
 }

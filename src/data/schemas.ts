@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import {
   AUDIENCES, COST_STATUSES, DEADLINE_TYPES, DECISION_OUTCOMES, DECISION_STATUSES, DEVIATION_KINDS, DISPOSITIFS, ENTRY_PROFILES,
-  EVENT_CODES, INTAKE_STATES, INVALIDATION_REASONS, NEED_STATES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, POSITION_STATUSES, PRESET_IDS,
-  PROFILE_IDS, PROPOSAL_STATUSES, REOPEN_SCOPES, SEVERITIES, SIDES, SITUATIONS, ZONE_KINDS,
+  ESCALATION_REASONS, EVENT_CODES, INTAKE_STATES, INVALIDATION_REASONS, NEED_STATES, NOTE_OBJECT_KINDS, NOTE_VISIBILITIES, POSITION_STATUSES, PRESET_IDS,
+  PROFILE_IDS, PROPOSAL_STATUSES, REOPEN_SCOPES, SEVERITIES, SIDES, SITUATIONS, VALIDATION_ACTIONS, VALIDATION_LEVELS, VALIDATION_STATES,
+  ZONE_KINDS,
 } from '@/domain/types';
 
 export const ZoneSchema = z.object({
@@ -347,6 +348,30 @@ export const RecruitmentExitSchema = z.object({
 export type RecruitmentExit = z.infer<typeof RecruitmentExitSchema>;
 
 /**
+ * Une ligne du dossier de validation managériale (lot A3c) : jamais réécrite. `zone_id` est la zone dont l'autorité s'exerce (le CVR
+ * ou le DR du besoin) ; `by_zone_id` est la zone de la personne qui a agi quand c'est un suppléant (délégation), sinon nul.
+ */
+export const ValidationEntrySchema = z.object({
+  id: z.string().uuid(),
+  round: z.number().int().min(1),
+  action: z.enum(VALIDATION_ACTIONS),
+  level: z.enum(VALIDATION_LEVELS),
+  by_profile: z.enum(PROFILE_IDS),
+  zone_id: z.string().uuid().nullable(),
+  by_zone_id: z.string().uuid().nullable(),
+  delegation_id: z.string().uuid().nullable(),
+  reason: z.enum(ESCALATION_REASONS).nullable(),
+  /** Autre CVR en cause dans un arbitrage entre CVR. */
+  other_zone_id: z.string().uuid().nullable(),
+  /** Escalade déclenchée à la main par le CVR (A3c) ou par une règle d'enveloppe (A4b1). */
+  trigger: z.enum(['manual', 'rule']).nullable(),
+  motive: z.string().max(280).nullable(),
+  on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(),
+});
+export type ValidationEntry = z.infer<typeof ValidationEntrySchema>;
+
+/**
  * Suivi de recrutement d'un besoin. Un besoin soumis sans enregistrement est « à qualifier ». Les jalons sont des dates :
  * l'état de l'entonnoir s'en déduit (domain/pipeline.ts), il n'est jamais stocké en un champ unique.
  */
@@ -369,6 +394,20 @@ export const RecruitmentSchema = z.object({
   refusal_count: z.number().int().min(0),
   withdrawal_count: z.number().int().min(0),
   exits: z.array(RecruitmentExitSchema),
+  /**
+   * Validation managériale (A3c, dimension distincte de `intake`). Un enregistrement sans ces champs est réputé validé par la chaîne
+   * cliente (D209, hypothèse H-A3-1 d'avant A3c) ; un besoin soumis après A3c démarre « à valider ».
+   */
+  validation: z.enum(VALIDATION_STATES).default('validated'),
+  /** Tour de validation : s'incrémente à chaque nouvelle soumission après un refus. */
+  validation_round: z.number().int().min(1).default(1),
+  /** Date d'entrée dans l'état de validation courant (base de l'échéance). */
+  validation_on: NullableDate.default(null),
+  /** Escalade en cours (état « escaladé »). */
+  escalation: z.object({
+    reason: z.enum(ESCALATION_REASONS), other_zone_id: z.string().uuid().nullable(), trigger: z.enum(['manual', 'rule']), motive: z.string().max(280), on: IsoDateStr,
+  }).nullable().default(null),
+  validation_log: z.array(ValidationEntrySchema).default([]),
   is_demo: z.literal(true),
 });
 export type Recruitment = z.infer<typeof RecruitmentSchema>;
@@ -449,3 +488,25 @@ export const NoteSchema = z.object({
   is_demo: z.literal(true),
 });
 export type Note = z.infer<typeof NoteSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// Lot A3c : délégations et suppléants (F-30.3). D09 (RACI, suppléants, délais) reste ouverte : aucun délai de réponse n'est figé.
+// ---------------------------------------------------------------------------------------------
+/**
+ * Un suppléant désigné pour l'absence d'un CVR ou d'un DR. Un seul suppléant à la fois par délégant (hypothèse). Les deux zones sont du
+ * même niveau : le suppléant agit dans le périmètre du délégant, jamais au-delà. Une délégation n'est jamais supprimée : elle est
+ * révoquée avec sa trace.
+ */
+export const DelegationSchema = z.object({
+  id: z.string().uuid(),
+  delegator_zone_id: z.string().uuid(),
+  substitute_zone_id: z.string().uuid(),
+  start_date: IsoDateStr,
+  end_date: IsoDateStr,
+  created_by: z.enum(PROFILE_IDS),
+  created_on: IsoDateStr,
+  revoked_on: NullableDate,
+  revoked_by: z.enum(PROFILE_IDS).nullable(),
+  is_demo: z.literal(true),
+});
+export type Delegation = z.infer<typeof DelegationSchema>;

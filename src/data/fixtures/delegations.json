@@ -1,0 +1,38 @@
+[
+  {
+    "id": "28e875bc-b599-4928-b9c4-0897f69f3b0d",
+    "delegator_zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "substitute_zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "start_date": "2026-11-02",
+    "end_date": "2026-11-13",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-22",
+    "revoked_on": null,
+    "revoked_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "c867a055-fc56-4a6b-a21f-c6e530c1ca02",
+    "delegator_zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "substitute_zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "start_date": "2026-10-07",
+    "end_date": "2026-10-16",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-05",
+    "revoked_on": null,
+    "revoked_by": null,
+    "is_demo": true
+  },
+  {
+    "id": "c21102b3-57f9-4269-8e56-8d17cb9aa7e8",
+    "delegator_zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "substitute_zone_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "start_date": "2026-10-19",
+    "end_date": "2026-11-20",
+    "created_by": "agency_admin",
+    "created_on": "2026-10-16",
+    "revoked_on": "2026-10-21",
+    "revoked_by": "agency_admin",
+    "is_demo": true
+  }
+]

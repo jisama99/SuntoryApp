@@ -184,3 +184,12 @@ Les cinq premiers termes sont donnés par le prompt du lot A1f. **Les suivants s
 2. Atterrissage : Projected total.
 3. Sigles : DR Directeur Régional, CVR Chef des Ventes Régional, RS Responsable Secteur.
 4. Reste du tableau : validé.
+
+## Lot A3c : termes proposés par le prestataire, à valider
+| Français | English | Statut |
+|---|---|---|
+| Validation managériale | Management approval | Proposé |
+| Valider / Refuser / Escalader au DR | Approve / Refuse / Escalate to the DR | Proposé |
+| Arbitrage entre CVR, hors périmètre, hors enveloppe | Arbitration between CVRs, outside the perimeter, outside the envelope | Proposé |
+| Soumettre de nouveau (tour de validation) | Submit again (approval round) | Proposé |
+| Délégation, délégant, suppléant | Delegation, delegator, substitute | Proposé |

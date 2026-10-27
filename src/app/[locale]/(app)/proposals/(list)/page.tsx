@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { BatchDecisionForm } from '@/components/BatchDecisionForm';
+import { BatchValidationForm } from '@/components/BatchValidationForm';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { DelegationBanner } from '@/components/DelegationBanner';
 import { DataTable, parseSort, sortRows } from '@/components/DataTable';
 import type { Column } from '@/components/DataTable';
 import { FilterTabs } from '@/components/FilterTabs';
@@ -14,12 +16,13 @@ import type { PipelineRow } from '@/data/repository';
 import { Link } from '@/i18n/navigation';
 import type { Actor, Locale, ProfileId } from '@/domain/types';
 import { formatDate } from '@/lib/format';
-import { FUNNEL_ORDER, FUNNEL_TONE, POSITION_TONE, URGENCY_ORDER, URGENCY_TONE } from '@/lib/pipeline-tones';
+import { FUNNEL_ORDER, FUNNEL_TONE, POSITION_TONE, URGENCY_ORDER, URGENCY_TONE, VALIDATION_TONE } from '@/lib/pipeline-tones';
 import { getAccessContext } from '@/lib/session';
 
 /** Rôle d'action du profil : « Qui doit agir » se lit de son point de vue. Le prestataire consulte tout, sans rôle propre. */
-const ACTOR_OF: Partial<Record<ProfileId, Actor>> = {
-  rs: 'rs', agency_operator: 'agency', agency_admin: 'agency', direction_client: 'decider', dr_client: 'decider', cvr_client: 'decider',
+const ACTOR_OF: Partial<Record<ProfileId, readonly Actor[]>> = {
+  rs: ['rs'], agency_operator: ['agency'], agency_admin: ['agency'], direction_client: ['decider', 'arbiter'], dr_client: ['decider', 'arbiter'],
+  cvr_client: ['decider', 'validator'],
 };
 
 export default async function ProposalsPage({ params, searchParams }: {
@@ -41,16 +44,21 @@ export default async function ProposalsPage({ params, searchParams }: {
   const [rows, zones] = await Promise.all([repository.getPipeline(ctx), repository.getScopeZones(ctx)]);
   const sectors = new Map(zones.map((z) => [z.id, z]));
   const mine = ACTOR_OF[ctx.profileId] ?? null;
-  const isMine = (r: PipelineRow) => (mine ? r.next.actor === mine : r.next.actor !== 'none');
-  const FILTERS = ['mine', 'all', 'overdue', 'decision'] as const;
+  const isMine = (r: PipelineRow) => (mine ? mine.includes(r.next.actor) : r.next.actor !== 'none');
+  const FILTERS = ['mine', 'all', 'overdue', 'decision', 'validation'] as const;
+  const VALIDATION_ACTIONS = ['validate_need', 'arbitrate_need', 'resubmit_need'];
   const raw = one('filter') ?? 'mine';
   const filter = (FILTERS as readonly string[]).includes(raw) ? raw : 'mine';
   const shown = rows.filter((r) =>
-    filter === 'all' ? true : filter === 'overdue' ? r.next.urgency === 'overdue' : filter === 'decision' ? r.next.action === 'decide' : isMine(r),
+    filter === 'all' ? true : filter === 'overdue' ? r.next.urgency === 'overdue' : filter === 'decision' ? r.next.action === 'decide'
+      : filter === 'validation' ? VALIDATION_ACTIONS.includes(r.next.action) : isMine(r),
   );
 
   const decidable = repository.canDecide(ctx) ? rows.filter((r) => r.next.action === 'decide' && r.proposal?.status === 'proposed') : [];
   const awaiting = rows.filter((r) => r.next.action === 'decide').length;
+  // A3c : besoins que ce profil valide ou arbitre, délégation comprise (l'autorité vient de la couche de données).
+  const validatable = rows.filter((r) => r.validation.canAct);
+  const delegations = await repository.getDelegations(ctx);
 
   const dueText = (r: PipelineRow) =>
     r.next.due ? (
@@ -71,7 +79,7 @@ export default async function ProposalsPage({ params, searchParams }: {
     { key: 'sector', header: t('cols.sector'), render: (r) => (sectors.get(r.need.sector_id) ? <ZoneLabel zone={sectors.get(r.need.sector_id)!} /> : null) },
     {
       key: 'funnel', header: t('cols.funnel'), sortValue: (r) => (r.funnel ? FUNNEL_ORDER.indexOf(r.funnel) : 99),
-      render: (r) => (r.funnel ? <StatusTag tone={FUNNEL_TONE[r.funnel]}>{t(`funnel.${r.funnel}`)}</StatusTag> : <span className="text-muted">{r.recruitment.intake === 'taken' ? t('outside') : (r.need.need_state === 'draft' ? tn('state.draft') : t(`intake.${r.recruitment.intake}`))}</span>),
+      render: (r) => (r.funnel ? <StatusTag tone={FUNNEL_TONE[r.funnel]}>{t(`funnel.${r.funnel}`)}</StatusTag> : r.need.need_state === 'submitted' && r.validation.state !== 'validated' ? <StatusTag tone={VALIDATION_TONE[r.validation.state]}>{t(`validation.state.${r.validation.state}`)}</StatusTag> : <span className="text-muted">{r.recruitment.intake === 'taken' ? t('outside') : (r.need.need_state === 'draft' ? tn('state.draft') : t(`intake.${r.recruitment.intake}`))}</span>),
     },
     {
       key: 'position', header: t('cols.position'),
@@ -119,11 +127,21 @@ export default async function ProposalsPage({ params, searchParams }: {
         <Tile tone="sand" label={t('tiles.overdue')} value={String(rows.filter((r) => r.next.urgency === 'overdue').length)} />
         <Tile tone="lav" label={t('tiles.awaiting')} value={String(awaiting)}>{t('tiles.awaitingNote')}</Tile>
       </div>
+      <DelegationBanner delegations={delegations.filter((d) => d.status === 'active' || d.status === 'planned')} ctxScope={ctx.scope} locale={loc} />
       <div className="mb-6 flex flex-wrap gap-3">
         <Link href="/proposals/funnel" className="inline-flex min-h-11 items-center rounded-full border-2 border-primary bg-surface px-5 text-sm font-semibold text-link hover:bg-sel">
           {t('funnelLink')}
         </Link>
       </div>
+      {validatable.length > 0 ? (
+        <BatchValidationForm
+          items={validatable.map((r) => ({
+            needId: r.need.id, needCode: r.need.need_code, level: r.validation.canAct!.level,
+            sector: sectors.get(r.need.sector_id) ? zoneText(sectors.get(r.need.sector_id)!, loc) : '',
+            due: r.next.due ?? null, overdue: r.next.urgency === 'overdue',
+          }))}
+        />
+      ) : null}
       {decidable.length > 0 ? (
         <BatchDecisionForm
           items={decidable.map((r) => ({
