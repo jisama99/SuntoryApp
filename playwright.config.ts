@@ -2,6 +2,9 @@ import { defineConfig } from '@playwright/test';
 
 const PORT = 3100;
 const ISOLATED_PORT = 3101;
+// Chromium : par défaut celui installé par `npx playwright install chromium` (poste de T. SOEFOU). Dans un bac à sable où il est
+// préinstallé ailleurs, définir PW_CHROMIUM_PATH (ex. /opt/pw-browsers/chromium).
+const launchOptions = process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {};
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -18,10 +21,10 @@ export default defineConfig({
     timeout: 60_000,
   })),
   projects: [
-    { name: 'chromium', testIgnore: /undo-isolated/, use: { browserName: 'chromium', launchOptions: { executablePath: '/opt/pw-browsers/chromium' } } },
+    { name: 'chromium', testIgnore: /undo-isolated/, use: { browserName: 'chromium', launchOptions } },
     {
       name: 'isolated', testMatch: /undo-isolated/,
-      use: { browserName: 'chromium', baseURL: `http://localhost:${ISOLATED_PORT}`, launchOptions: { executablePath: '/opt/pw-browsers/chromium' } },
+      use: { browserName: 'chromium', baseURL: `http://localhost:${ISOLATED_PORT}`, launchOptions },
     },
   ],
 });
