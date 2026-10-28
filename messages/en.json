@@ -1516,7 +1516,7 @@
       },
       "reason": "Escalation case",
       "envelope": {
-        "not_evaluated": "Envelope not evaluated: the calculation rule is not settled yet. The escalation rests on your judgment and the motive you enter.",
+        "not_evaluated": "Envelope not assessed: the cost of the need or the budget of its cell is not provided. Escalation relies on your judgement and on the reason you enter.",
         "within": "The envelope is not exceeded.",
         "exceeded": "The envelope is exceeded."
       },

@@ -1516,7 +1516,7 @@
       },
       "reason": "Cas d'escalade",
       "envelope": {
-        "not_evaluated": "Enveloppe non évaluée : la règle de calcul n'est pas encore arrêtée. L'escalade repose sur votre jugement et sur le motif saisi.",
+        "not_evaluated": "Enveloppe non évaluée : le coût du besoin ou le budget de sa maille n'est pas renseigné. L'escalade repose sur votre jugement et sur le motif saisi.",
         "within": "L'enveloppe n'est pas dépassée.",
         "exceeded": "L'enveloppe est dépassée."
       },
