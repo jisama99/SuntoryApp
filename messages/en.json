@@ -143,6 +143,13 @@
       "escalationPending": "{n, plural, one {# escalated need awaits the ruling of the DR.} other {# escalated needs await the ruling of the DR.}}",
       "resubmitPending": "{n, plural, one {# refused need awaits a new submission.} other {# refused needs await a new submission.}}",
       "delegationEnding": "{n, plural, one {# delegation ends soon.} other {# delegations end soon.}}"
+    },
+    "budget": {
+      "needsBeyond": "{n, plural, one {# need goes beyond what is available in its budget. It stays recorded and awaits an arbitration.} other {# needs go beyond what is available in their budget. They stay recorded and await an arbitration.}}",
+      "noBudget": "{n, plural, one {# need has no budget line. Budget not provided.} other {# needs have no budget line. Budget not provided.}}",
+      "unpriced": "{n, plural, one {# need cannot be priced.} other {# needs cannot be priced.}}",
+      "envelopeMissing": "No envelope has been provided. Budget not provided.",
+      "open": "Open the budget"
     }
   },
   "states": {
@@ -1110,7 +1117,11 @@
       "EV-46": "Delegation created or revoked",
       "EV-47": "Need submitted again",
       "EV-48": "Need entered by the agency on behalf of an RS",
-      "EV-49": "Management opinion given at entry"
+      "EV-49": "Management opinion given at entry",
+      "EV-28": "Need beyond what is available",
+      "EV-50": "Client envelope entered",
+      "EV-51": "Agency allocation changed",
+      "EV-52": "Budget cell of a need moved"
     },
     "detail": {
       "title": "Need {code}",
@@ -1626,6 +1637,222 @@
       "forbidden": "Only agency administration manages substitutes.",
       "not_found": "Delegation not found.",
       "not_revocable": "This delegation has already ended or been revoked."
+    }
+  },
+  "budget": {
+    "title": "Budget",
+    "note": "Demonstration figures, fictional, in euros excluding tax.",
+    "tabs": {
+      "label": "Budget sections",
+      "situation": "Overview",
+      "envelope": "Envelope",
+      "allocation": "Allocation",
+      "needs": "Forecast by need",
+      "journal": "Log"
+    },
+    "notFilled": "Budget not provided",
+    "notPriced": "Not priced",
+    "tiles": {
+      "envelope": "Client envelope",
+      "envelopeSub": "Version {version}, entered on {date}",
+      "allocated": "Allocated by the agency",
+      "allocatedZone": "Allocated in your scope",
+      "allocatedSub": "{pct}% of the envelope",
+      "unallocated": "Not yet allocated",
+      "unallocatedSub": "Rest of the envelope to allocate",
+      "consumed": "Consumed",
+      "consumedSub": "Started positions",
+      "forecast": "Forecast",
+      "forecastSub": "Needs not started yet",
+      "landing": "Landing",
+      "landingSub": "Consumed plus forecast",
+      "available": "Available",
+      "availableSub": "Allocated minus landing",
+      "over": "Overrun",
+      "coverage": "{priced, plural, one {# need priced} other {# needs priced}} out of {total}",
+      "coverageLabel": "Pricing coverage"
+    },
+    "measuresTitle": "The four measures for this scope",
+    "alertsTitle": "Budget alerts",
+    "alertsEmpty": "No budget alert for now.",
+    "situationTitle": "Overview by cell",
+    "by": {
+      "label": "Group by",
+      "dispositif": "Scheme",
+      "dr": "DR",
+      "campaign": "Campaign",
+      "cvr": "CVR"
+    },
+    "groups": {
+      "title": "Allocation",
+      "caption": "Budget allocated according to the chosen grouping",
+      "allocated": "{amount} allocated",
+      "share": "{pct}% of the total allocated",
+      "legend": "Reading the bars: the full bar is the allocated budget, the consumed part and then the forecast part are drawn inside it.",
+      "bar": "{label}: {consumed} consumed, {forecast} forecast out of {allocated} allocated",
+      "barShare": "{label}: {share} of the total allocated",
+      "consumed": "Consumed",
+      "forecast": "Forecast",
+      "availableLine": "Available: {amount}",
+      "overLine": "Overrun: {amount}",
+      "empty": "No allocation line matches."
+    },
+    "lines": {
+      "title": "Allocation lines",
+      "caption": "Allocation by campaign and by CVR",
+      "emptyTitle": "No allocation",
+      "empty": "The agency has not allocated the budget in this scope yet."
+    },
+    "cols": {
+      "campaign": "Campaign",
+      "dispositif": "Scheme",
+      "dr": "DR",
+      "cvr": "CVR",
+      "allocated": "Allocated",
+      "consumed": "Consumed",
+      "forecast": "Forecast",
+      "landing": "Landing",
+      "available": "Available",
+      "status": "Status",
+      "updated": "Updated",
+      "revision": "Revision",
+      "actions": "Actions",
+      "need": "Need",
+      "sector": "Sector",
+      "hours": "Hours per week",
+      "weeks": "Weeks",
+      "rate": "Fictional hourly rate",
+      "cost": "Estimated cost",
+      "nature": "Type",
+      "version": "Version",
+      "amount": "Amount",
+      "period": "Period",
+      "enteredBy": "Entered by",
+      "motive": "Reason",
+      "event": "Event",
+      "date": "Date",
+      "actor": "Actor",
+      "detail": "Detail",
+      "audience": "Audience"
+    },
+    "status": {
+      "within": "Within budget",
+      "beyond": "Beyond what is available",
+      "no_budget": "Budget not provided",
+      "unpriced": "Not priced"
+    },
+    "nature": {
+      "consumed": "Consumed",
+      "forecast": "Forecast"
+    },
+    "missing": {
+      "dispositif": "Scheme not provided",
+      "hours": "Hours not provided",
+      "period": "Period not provided",
+      "rate": "No fictional rate in force"
+    },
+    "envelope": {
+      "title": "Client envelope",
+      "intro": "The client enters the envelope it allocates, dated and versioned. It goes down to the agency, which sees it and cannot change it.",
+      "readOnly": "The envelope is entered by the client direction. The agency reads it and allocates it without changing it.",
+      "noEnvelope": "No envelope has been provided.",
+      "formTitle": "Enter a new version",
+      "firstVersion": "First version of the envelope.",
+      "amount": "Amount (euros excluding tax)",
+      "amountHint": "Two decimals at most. Example: 120,000.50",
+      "period": "Period covered",
+      "periodHint": "First and last day of the envelope period.",
+      "motive": "Reason for the new version",
+      "motiveHint": "Required from the second version.",
+      "submit": "Save the version",
+      "historyTitle": "Envelope versions",
+      "historyCaption": "Envelope versions, newest first",
+      "current": "Current version",
+      "previous": "Replaced version",
+      "enteredOn": "Entered on {date}",
+      "range": "From {start} to {end}",
+      "allocatedOf": "{allocated} already allocated out of {amount}",
+      "refused": {
+        "forbidden": "Only the client direction enters the envelope.",
+        "invalid": "The amount must be above zero, with two decimals at most.",
+        "invalid_period": "The period is invalid: the last day cannot come before the first.",
+        "motive_required": "A reason is required for a new version.",
+        "below_allocated": "The amount is below the total the agency has already allocated. The agency must first reduce its allocations.",
+        "incomplete": "Provide the amount and the period."
+      }
+    },
+    "allocation": {
+      "title": "Allocation by the agency",
+      "intro": "The agency allocates the envelope by campaign and by CVR, and never goes above the envelope. A missing line means the budget is not provided.",
+      "readOnly": "Allocation is reserved to the agency in administration mode.",
+      "noEnvelope": "No envelope has been provided: nothing can be allocated.",
+      "remaining": "Left to allocate: {amount}",
+      "formTitle": "Allocate or change a line",
+      "campaign": "Campaign",
+      "cvr": "CVR",
+      "choose": "Choose",
+      "amount": "Allocated amount (euros excluding tax)",
+      "amountHint": "Two decimals at most. Zero is allowed: it is an intended nil allocation.",
+      "motive": "Reason",
+      "motiveHint": "Required to change an existing line.",
+      "existing": "Existing line: {amount}, revision {revision}. A reason is required.",
+      "submit": "Save the line",
+      "remove": "Remove",
+      "removeMotive": "Reason for removal",
+      "removeConfirm": "Confirm removal",
+      "removeCancel": "Cancel",
+      "refused": {
+        "forbidden": "Allocation is reserved to the agency in administration mode.",
+        "invalid": "The amount must be zero or above, with two decimals at most.",
+        "no_envelope": "No envelope has been provided: nothing can be allocated.",
+        "exceeds_envelope": "The total allocated would go above the client envelope.",
+        "motive_required": "A reason is required.",
+        "unknown_campaign": "This campaign is unknown.",
+        "unknown_cvr": "This CVR is unknown.",
+        "unchanged": "The amount is already the one of the line.",
+        "not_found": "This line no longer exists.",
+        "incomplete": "Choose a campaign and a CVR, then enter an amount."
+      }
+    },
+    "needs": {
+      "title": "Forecast by need",
+      "intro": "Each need carries an estimated cost: hours per week, times weeks, times a dated fictional hourly rate. It counts as forecast until the position starts, then as consumed. A need beyond what is available stays recorded: it triggers an alert, then an arbitration.",
+      "restricted": "Costs by need are reserved to the agency.",
+      "caption": "Estimated cost of each need counted in the budget",
+      "filters": {
+        "label": "Filter the needs",
+        "all": "All",
+        "within": "Within budget",
+        "beyond": "Beyond what is available",
+        "no_budget": "Budget not provided",
+        "unpriced": "Not priced",
+        "consumed": "Consumed",
+        "forecast": "Forecast"
+      },
+      "emptyTitle": "No need",
+      "empty": "No need matches this filter.",
+      "weeksValue": "{n, plural, one {# week} other {# weeks}}",
+      "ratesTitle": "Fictional hourly rates",
+      "ratesNote": "Fictional demonstration rates, dated. They are not the contractual rates.",
+      "ratesFrom": "In force since {date}"
+    },
+    "journal": {
+      "title": "Budget log",
+      "intro": "Every change to the envelope, to the allocation and to the budget cell of a need is recorded with its date, its author and its reason.",
+      "caption": "Budget events, newest first",
+      "emptyTitle": "No event",
+      "empty": "The budget log is empty for this scope.",
+      "detail": {
+        "EV-28": "Need {need} goes beyond what is available in its cell.",
+        "EV-50": "Envelope version {version}: {amount}.",
+        "EV-50Previous": "Envelope version {version}: {amount}, instead of {previous}.",
+        "EV-51created": "Line created for {campaign}: {amount}.",
+        "EV-51updated": "Line changed for {campaign}: from {previous} to {amount}.",
+        "EV-51removed": "Line removed for {campaign}: {previous}.",
+        "EV-52moved": "Need {need} moves to another budget cell.",
+        "EV-52recosted": "The estimated cost of need {need} is recalculated.",
+        "motive": "Reason: {motive}"
+      }
     }
   }
 }

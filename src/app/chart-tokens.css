@@ -1,0 +1,49 @@
+/*
+ * Jetons des graphiques et indicateurs (D213 et D214, validées le 24/10/2026, lot A4b1).
+ * Jeu de couleurs B (Mixte Suntory et Marvesting) et style de tracé Doux : les défauts de l'interface. Les jeux A et C, les styles
+ * Exécutif et Directionnel et les réglages (Paramètres, sélecteur d'affichage) viennent avec A4a, qui complète cette couche.
+ * Aucun composant ne porte de couleur ni de forme de graphique en dur : jauges, barres et répartitions lisent ces jetons.
+ * Les couleurs de statut (ok, alerte, danger) restent hors du jeu ; le rose ne signifie jamais une erreur.
+ * Les séries 5 et 6 sont une hypothèse (valeurs empruntées au jeu C), à confirmer après essai à l'écran, comme les valeurs de B.
+ * Les contrastes sont vérifiés par tests/unit/chart-tokens.test.ts.
+ */
+@theme {
+  --color-chart-1: #00829b;
+  --color-chart-2: #1a1950;
+  --color-chart-3: #5bc2dc;
+  --color-chart-4: #8f8fd0;
+  --color-chart-5: #2e86ab;
+  --color-chart-6: #2f4f9c;
+  --color-chart-key: #e52365;
+  --color-chart-neutral: #e1e8ec;
+
+  /* Forme (style Doux) : bouts arrondis, piste et barre de même rayon. */
+  --radius-chart-bar: 9999px;
+  --radius-chart-track: 9999px;
+}
+
+/* MODE SOMBRE : choix explicite */
+:root[data-theme='dark'] {
+  --color-chart-1: #2fb4cf;
+  --color-chart-2: #8f8fd0;
+  --color-chart-3: #5bc2dc;
+  --color-chart-4: #b4b4ec;
+  --color-chart-5: #6fb6d6;
+  --color-chart-6: #8ea6e6;
+  --color-chart-key: #ff5c93;
+  --color-chart-neutral: #2b3a42;
+}
+
+/* MODE SOMBRE : choix Système (aucun attribut data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-chart-1: #2fb4cf;
+    --color-chart-2: #8f8fd0;
+    --color-chart-3: #5bc2dc;
+    --color-chart-4: #b4b4ec;
+    --color-chart-5: #6fb6d6;
+    --color-chart-6: #8ea6e6;
+    --color-chart-key: #ff5c93;
+    --color-chart-neutral: #2b3a42;
+  }
+}

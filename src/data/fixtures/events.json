@@ -3044,5 +3044,364 @@
       "round": 1
     },
     "is_demo": true
+  },
+  {
+    "id": "750edaf3-9a85-4626-963c-a5e30cc8b804",
+    "code": "EV-50",
+    "seq": 189,
+    "actor_profile": "direction_client",
+    "zone_id": "1cf08936-8d48-4257-9eba-3ab84fe0ed99",
+    "need_id": null,
+    "effect_date": "2026-10-14",
+    "recorded_at": "2026-10-14",
+    "audience": "agency",
+    "data": {
+      "version": 1,
+      "amount_eur": 100000,
+      "period_start": "2026-10-01",
+      "period_end": "2027-06-30"
+    },
+    "is_demo": true
+  },
+  {
+    "id": "2db8358f-999f-4465-a2e2-6c109cc3a9a8",
+    "code": "EV-51",
+    "seq": 190,
+    "actor_profile": "agency_admin",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 4000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "53b67c50-3b20-41c1-8150-c78d53ba7dba",
+    "code": "EV-51",
+    "seq": 191,
+    "actor_profile": "agency_admin",
+    "zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "dc9da666-ab79-44fa-a2c5-6a9a5ea4c0e6",
+    "code": "EV-51",
+    "seq": 192,
+    "actor_profile": "agency_admin",
+    "zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "35c3ee0e-e566-49ba-9871-8618ada03a62",
+    "code": "EV-51",
+    "seq": 193,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "480f00fd-a4ed-4584-9505-4bf218f15360",
+    "code": "EV-51",
+    "seq": 194,
+    "actor_profile": "agency_admin",
+    "zone_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "9cf20e04-014e-43c4-8bf0-df5f655a64b5",
+    "code": "EV-51",
+    "seq": 195,
+    "actor_profile": "agency_admin",
+    "zone_id": "d87ca0e1-f161-4c58-8794-fbafdd7aacb3",
+    "need_id": null,
+    "effect_date": "2026-10-16",
+    "recorded_at": "2026-10-16",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-01",
+      "amount_eur": 2500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "88e868e5-f94f-4b28-b4d2-9879f8f7245f",
+    "code": "EV-51",
+    "seq": 196,
+    "actor_profile": "agency_admin",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "need_id": null,
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-02",
+      "amount_eur": 3000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "3d01e266-9076-49dc-9646-da97f216bf50",
+    "code": "EV-51",
+    "seq": 197,
+    "actor_profile": "agency_admin",
+    "zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "need_id": null,
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-02",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "439a3fa8-07bf-42ea-a618-3b7ff9ac09c7",
+    "code": "EV-51",
+    "seq": 198,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-02",
+      "amount_eur": 1500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "0cce4a0b-0d3b-4d4a-93f6-ed0bde0abc88",
+    "code": "EV-51",
+    "seq": 199,
+    "actor_profile": "agency_admin",
+    "zone_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "need_id": null,
+    "effect_date": "2026-10-19",
+    "recorded_at": "2026-10-19",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-02",
+      "amount_eur": 800,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "94d792f1-01ed-4d47-8ce2-614b36abd7e0",
+    "code": "EV-51",
+    "seq": 200,
+    "actor_profile": "agency_admin",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-03",
+      "amount_eur": 2500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "fa5dbc31-8c7c-4cc7-a0d6-45d24b70a717",
+    "code": "EV-51",
+    "seq": 201,
+    "actor_profile": "agency_admin",
+    "zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-03",
+      "amount_eur": 3000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "483a66c4-6246-4a37-ad59-64bbf467156f",
+    "code": "EV-51",
+    "seq": 202,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-03",
+      "amount_eur": 3000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "119defc8-e317-44c9-999d-2709d44b5720",
+    "code": "EV-51",
+    "seq": 203,
+    "actor_profile": "agency_admin",
+    "zone_id": "992cf5f3-512d-4a9e-80a5-d687308d3f8e",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-03",
+      "amount_eur": 800,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "b0153481-7d2e-4ea2-89e9-0688976566c0",
+    "code": "EV-51",
+    "seq": 204,
+    "actor_profile": "agency_admin",
+    "zone_id": "63a9516d-798d-410f-a0fe-03496a86b1f7",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-04",
+      "amount_eur": 2000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "684c698b-13a4-4bd1-bc25-c91b24fb8a9d",
+    "code": "EV-51",
+    "seq": 205,
+    "actor_profile": "agency_admin",
+    "zone_id": "9cb2ccfe-51c1-4ada-99f6-ec25ad212c67",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-04",
+      "amount_eur": 2500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "c014f339-5cbb-473e-bef2-72f56dc503b3",
+    "code": "EV-51",
+    "seq": 206,
+    "actor_profile": "agency_admin",
+    "zone_id": "018e67bf-2f2e-4937-8484-099ab56b9f7b",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-04",
+      "amount_eur": 4500,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "1eda2ab3-14ff-4def-a802-b5bf4238602e",
+    "code": "EV-51",
+    "seq": 207,
+    "actor_profile": "agency_admin",
+    "zone_id": "96e5d8b5-2179-40d8-abf6-a9b607286406",
+    "need_id": null,
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "action": "created",
+      "campaign": "CMP-DEMO-04",
+      "amount_eur": 1000,
+      "revision": 1
+    },
+    "is_demo": true
+  },
+  {
+    "id": "1022c675-5e90-49b2-aab5-e0187b76bc16",
+    "code": "EV-28",
+    "seq": 208,
+    "actor_profile": "agency_admin",
+    "zone_id": "92884643-3558-4d8c-b8c5-6c27daa29eb0",
+    "need_id": "f6a96563-120c-4d65-9e7a-3210ffef9a2c",
+    "effect_date": "2026-10-20",
+    "recorded_at": "2026-10-20",
+    "audience": "both",
+    "data": {
+      "need_code": "BES-DEMO-011",
+      "campaign": "CMP-DEMO-03",
+      "trigger": "allocation"
+    },
+    "is_demo": true
   }
 ]

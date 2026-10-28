@@ -4,9 +4,10 @@
  * Codes selon docs/FIXTURES.md §3 ; chaque entité porte is_demo: true.
  */
 import type {
-  Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
-  Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
+  AllocationLine, Alert, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note, Period, Proposal,
+  EnvelopeVersion, Rate, Recruitment, RecruitmentExit, Reopening, ReopeningRequest, Store, WeekClosure, Zone,
 } from '../src/data/schemas';
+import { budgetNeedsOf, classifyNeeds, linesOf } from '../src/domain/budget';
 import { blankRecruitment, computeDeviations, needSpan } from '../src/domain/pipeline';
 import type { CostStatus, DecisionOutcome, EventCode, InvalidationReason, Situation } from '../src/domain/types';
 import { addDays, storedWeekOf } from '../src/domain/week';
@@ -501,9 +502,67 @@ export function buildFixtures() {
   let seq3c = events.reduce((m, e) => Math.max(m, e.seq), 0);
   for (const e of a3cEvents) events.push({ ...e, seq: ++seq3c });
 
+  // ---- Lot A4b1 : généré en dernier (les numéros et valeurs précédents ne changent pas). Montants FICTIFS, hors taxes. ----
+  // Tarifs horaires fictifs par dispositif (jamais un tarif réel : D06 ouvert). Une enveloppe nationale versionnée, saisie par la direction
+  // cliente, puis des lignes d'allocation de l'agence par campagne et CVR. Cas repères : une maille sans ligne (« Budget non renseigné »),
+  // une maille allouée au plus juste dont un besoin dépasse (D156), une ligne sans besoin (vrai zéro).
+  const rates: Rate[] = ([['permanent', 23.4], ['seasonal', 25.1], ['hourly_merch', 27.8], ['second_placement', 24.7]] as const).map(([dispositif, rate]) => ({
+    id: uuid(), dispositif, hourly_rate_eur_ht: rate, currency: 'EUR' as const, basis: 'HT' as const, valid_from: '2026-01-01', is_fictional: true as const, is_demo: true as const,
+  }));
+  const envelopes: EnvelopeVersion[] = [{
+    id: uuid(), version: 1, period_start: '2026-10-01', period_end: '2027-06-30', amount_eur_ht: 100000, currency: 'EUR', basis: 'HT',
+    entered_by_profile: 'direction_client', entered_on: '2026-10-14', motive: null, is_demo: true,
+  }];
+  const allocationDefs: Array<[string, string, number, string]> = [
+    ['CMP-DEMO-01', 'CVR-ZV01', 4000, '2026-10-16'], ['CMP-DEMO-01', 'CVR-WY02', 1500, '2026-10-16'], ['CMP-DEMO-01', 'CVR-GP03', 1500, '2026-10-16'],
+    ['CMP-DEMO-01', 'CVR-NM04', 1500, '2026-10-16'], ['CMP-DEMO-01', 'CVR-MS05', 1500, '2026-10-16'], ['CMP-DEMO-01', 'CVR-UH06', 2500, '2026-10-16'],
+    ['CMP-DEMO-02', 'CVR-ZV01', 3000, '2026-10-19'], ['CMP-DEMO-02', 'CVR-WY02', 1500, '2026-10-19'], ['CMP-DEMO-02', 'CVR-NM04', 1500, '2026-10-19'],
+    ['CMP-DEMO-02', 'CVR-MS05', 800, '2026-10-19'],
+    ['CMP-DEMO-03', 'CVR-ZV01', 2500, '2026-10-20'], ['CMP-DEMO-03', 'CVR-WY02', 3000, '2026-10-20'], ['CMP-DEMO-03', 'CVR-NM04', 3000, '2026-10-20'],
+    ['CMP-DEMO-03', 'CVR-MS05', 800, '2026-10-20'],
+    ['CMP-DEMO-04', 'CVR-ZV01', 2000, '2026-10-20'], ['CMP-DEMO-04', 'CVR-WY02', 2500, '2026-10-20'], ['CMP-DEMO-04', 'CVR-NM04', 4500, '2026-10-20'],
+    ['CMP-DEMO-04', 'CVR-GP03', 1000, '2026-10-20'],
+  ];
+  const allocations: AllocationLine[] = allocationDefs.map(([campaign, cvrCode, amount, on]) => ({
+    id: uuid(), campaign_code: campaign, cvr_id: cvrByCode(cvrCode).id, amount_eur_ht: amount, currency: 'EUR' as const, basis: 'HT' as const,
+    revision: 1, updated_on: on, updated_by_profile: 'agency_admin' as const, is_demo: true as const,
+  }));
+  const submittedOnA4b1 = (n: Need) => events.find((e) => e.code === 'EV-02' && e.need_id === n.id)?.effect_date ?? n.created_at;
+  const budgetNeeds = budgetNeedsOf({
+    needs, zones, rates, today: TODAY, submittedOn: submittedOnA4b1,
+    factsOf: (id) => ({
+      recruitment: recruitments.find((r) => r.need_id === id) ?? blankRecruitment(id),
+      proposals: proposals.filter((p) => p.need_id === id), decisions: decisions.filter((d) => d.need_id === id),
+    }),
+  });
+  const budgetStatuses = classifyNeeds(budgetNeeds, linesOf(allocations));
+  const a4b1Events: BusinessEvent[] = [];
+  const envelope = envelopes[0] as EnvelopeVersion;
+  a4b1Events.push({
+    id: uuid(), code: 'EV-50', seq: 0, actor_profile: 'direction_client', zone_id: alpha.id, need_id: null, effect_date: envelope.entered_on, recorded_at: envelope.entered_on,
+    audience: 'agency', data: { version: envelope.version, amount_eur: envelope.amount_eur_ht, period_start: envelope.period_start, period_end: envelope.period_end }, is_demo: true,
+  });
+  for (const a of allocations) {
+    a4b1Events.push({
+      id: uuid(), code: 'EV-51', seq: 0, actor_profile: 'agency_admin', zone_id: a.cvr_id, need_id: null, effect_date: a.updated_on, recorded_at: a.updated_on,
+      audience: 'both', data: { action: 'created', campaign: a.campaign_code, amount_eur: a.amount_eur_ht, revision: a.revision }, is_demo: true,
+    });
+  }
+  for (const n of budgetNeeds.filter((b) => budgetStatuses.get(b.id) === 'beyond')) {
+    const line = allocations.find((a) => a.campaign_code === n.campaign && a.cvr_id === n.cvrId) as AllocationLine;
+    const on = n.submittedOn > line.updated_on ? n.submittedOn : line.updated_on;
+    a4b1Events.push({
+      id: uuid(), code: 'EV-28', seq: 0, actor_profile: 'agency_admin', zone_id: n.sectorId, need_id: n.id, effect_date: on, recorded_at: on,
+      audience: 'both', data: { need_code: n.code, campaign: n.campaign as string, trigger: 'allocation' }, is_demo: true,
+    });
+  }
+  a4b1Events.sort((a, b) => a.recorded_at.localeCompare(b.recorded_at));
+  let seq4b1 = events.reduce((m, e) => Math.max(m, e.seq), 0);
+  for (const e of a4b1Events) events.push({ ...e, seq: ++seq4b1 });
+
   return {
     zones, profiles, alerts, clock, campaigns, stores, weekClosures, needs, events,
     deadlineSettings, dispositifParams, reopeningRequests, reopenings,
-    recruitments, proposals, decisions, notes, delegations,
+    recruitments, proposals, decisions, notes, delegations, rates, envelopes, allocations,
   };
 }

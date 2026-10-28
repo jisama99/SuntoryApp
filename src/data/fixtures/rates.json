@@ -1,0 +1,42 @@
+[
+  {
+    "id": "b7ebcc2d-0ab3-438f-94a9-d4dfb267fe42",
+    "dispositif": "permanent",
+    "hourly_rate_eur_ht": 23.4,
+    "currency": "EUR",
+    "basis": "HT",
+    "valid_from": "2026-01-01",
+    "is_fictional": true,
+    "is_demo": true
+  },
+  {
+    "id": "72503055-4be8-4a2c-bd88-f3fad5de7989",
+    "dispositif": "seasonal",
+    "hourly_rate_eur_ht": 25.1,
+    "currency": "EUR",
+    "basis": "HT",
+    "valid_from": "2026-01-01",
+    "is_fictional": true,
+    "is_demo": true
+  },
+  {
+    "id": "b73640b5-13cc-4513-acce-768bc90ac786",
+    "dispositif": "hourly_merch",
+    "hourly_rate_eur_ht": 27.8,
+    "currency": "EUR",
+    "basis": "HT",
+    "valid_from": "2026-01-01",
+    "is_fictional": true,
+    "is_demo": true
+  },
+  {
+    "id": "4acc2b29-8c37-4a56-99fe-a84ec808d0de",
+    "dispositif": "second_placement",
+    "hourly_rate_eur_ht": 24.7,
+    "currency": "EUR",
+    "basis": "HT",
+    "valid_from": "2026-01-01",
+    "is_fictional": true,
+    "is_demo": true
+  }
+]

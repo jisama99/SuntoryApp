@@ -79,10 +79,13 @@ export type PositionStatus = (typeof POSITION_STATUSES)[number];
  * EV-46 (délégation créée ou révoquée, audience agence) et EV-47 (besoin soumis de nouveau après un refus) sont des codes proposés
  * hors catalogue, à inscrire au doc 26.
  * Lot A3d : EV-48 (besoin saisi par l'agence pour le compte d'un RS) et EV-49 (avis managérial donné à la saisie), codes proposés hors catalogue.
+ * Lot A4b1 : EV-28 du catalogue (dépassement prévisionnel détecté : un besoin dépasse le disponible de sa maille, D156). EV-50 (enveloppe
+ * cliente saisie, nouvelle version), EV-51 (allocation de l'agence modifiée) et EV-52 (imputation d'un besoin déplacée ou recalculée)
+ * sont des codes proposés hors catalogue, à inscrire au doc 26.
  */
 export const EVENT_CODES = [
   'EV-01', 'EV-02', 'EV-03', 'EV-04', 'EV-05', 'EV-06', 'EV-07', 'EV-08', 'EV-09', 'EV-10', 'EV-11', 'EV-12', 'EV-13', 'EV-14', 'EV-15', 'EV-16', 'EV-17',
-  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45', 'EV-46', 'EV-47', 'EV-48', 'EV-49',
+  'EV-18', 'EV-19', 'EV-20', 'EV-21', 'EV-28', 'EV-32', 'EV-33', 'EV-38', 'EV-39', 'EV-40', 'EV-41', 'EV-42', 'EV-43', 'EV-44', 'EV-45', 'EV-46', 'EV-47', 'EV-48', 'EV-49', 'EV-50', 'EV-51', 'EV-52',
 ] as const;
 export type EventCode = (typeof EVENT_CODES)[number];
 
@@ -198,3 +201,18 @@ export type ValidationOutcome = (typeof VALIDATION_OUTCOMES)[number];
 /** Une délégation est planifiée, en cours, terminée (date de fin passée) ou révoquée : jamais supprimée. */
 export const DELEGATION_STATUSES = ['planned', 'active', 'ended', 'revoked'] as const;
 export type DelegationStatus = (typeof DELEGATION_STATUSES)[number];
+
+// ---------------------------------------------------------------------------------------------
+// Lot A4b1 : chaîne budgétaire (D153) sur montants fictifs. L'enveloppe est saisie par la cliente, l'agence l'alloue, chaque besoin porte un
+// coût estimé. Montants en euros hors taxes, jamais de coût inconnu transformé en zéro.
+// ---------------------------------------------------------------------------------------------
+/** Événements de la chaîne budgétaire : réservés aux profils qui ont l'entrée de menu Budget. */
+export const BUDGET_EVENT_CODES = ['EV-28', 'EV-50', 'EV-51', 'EV-52'] as const;
+
+/** Pourquoi le coût estimé d'un besoin est inconnu (« Non chiffré ») : jamais 0. */
+export const COST_MISSING_REASONS = ['dispositif', 'hours', 'period', 'rate'] as const;
+export type CostMissingReason = (typeof COST_MISSING_REASONS)[number];
+
+/** Situation d'un besoin face au budget de sa maille (campagne, CVR). « Budget non renseigné » n'est jamais « dans le budget ». */
+export const BUDGET_STATUSES = ['within', 'beyond', 'no_budget', 'unpriced'] as const;
+export type BudgetStatus = (typeof BUDGET_STATUSES)[number];

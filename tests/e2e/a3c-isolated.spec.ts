@@ -131,13 +131,13 @@ test.describe('lot A3c : chaîne managériale', () => {
     await expect(page.getByTestId('validation-log')).toContainText('Arbitré par le DR et validé');
   });
 
-  test('« hors enveloppe » : la règle n\'est pas branchée, le motif reste exigé', async ({ page, context }) => {
+  test('« hors enveloppe » : branché sur le budget de la maille (A4b1), le motif reste exigé', async ({ page, context }) => {
     await as(context, CVR1);
     await open(page, 'BES-DEMO-034');
     const panel = page.getByTestId('validation-panel');
     await panel.locator('#validation-outcome').selectOption('escalate');
     await panel.locator('#validation-reason').selectOption('out_of_envelope');
-    await expect(page.getByTestId('envelope-note')).toContainText('Enveloppe non évaluée');
+    await expect(page.getByTestId('envelope-note')).toContainText("L'enveloppe n'est pas dépassée.");
     // Le besoin reste « à valider » : ce scénario ne l'escalade pas (voir le suivant).
     await expect(validationCard(page)).toContainText('À valider');
   });

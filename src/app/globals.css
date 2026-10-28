@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './chart-tokens.css';
 
 /*
  * Jetons de la charte mixte (D30) : Suntory Beverage dominant, rose Marvesting sur les éléments importants.

@@ -512,3 +512,53 @@ export const DelegationSchema = z.object({
   is_demo: z.literal(true),
 });
 export type Delegation = z.infer<typeof DelegationSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// Lot A4b1 : enveloppe cliente, allocation de l'agence, tarif fictif. Montants fictifs en euros hors taxes (devise et base explicites).
+// ---------------------------------------------------------------------------------------------
+/** Montant en euros avec au plus deux décimales : le calcul se fait en centimes entiers. */
+const MoneyEur = z.number().min(0).max(1_000_000_000).refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'au plus deux décimales');
+
+/** Une version de l'enveloppe nationale, saisie par la cliente. Les versions ne s'effacent pas : la dernière est la version courante. */
+export const EnvelopeVersionSchema = z.object({
+  id: z.string().uuid(),
+  version: z.number().int().min(1),
+  period_start: IsoDateStr,
+  period_end: IsoDateStr,
+  amount_eur_ht: MoneyEur,
+  currency: z.literal('EUR'),
+  basis: z.literal('HT'),
+  entered_by_profile: z.enum(PROFILE_IDS),
+  entered_on: IsoDateStr,
+  motive: z.string().max(280).nullable(),
+  is_demo: z.literal(true),
+});
+export type EnvelopeVersion = z.infer<typeof EnvelopeVersionSchema>;
+
+/** Une ligne d'allocation de l'agence : une campagne (donc un dispositif) et un CVR (donc un DR). L'absence de ligne vaut « Budget non renseigné ». */
+export const AllocationLineSchema = z.object({
+  id: z.string().uuid(),
+  campaign_code: z.string().regex(/^CMP-DEMO-\d{2}$/),
+  cvr_id: z.string().uuid(),
+  amount_eur_ht: MoneyEur,
+  currency: z.literal('EUR'),
+  basis: z.literal('HT'),
+  revision: z.number().int().min(1),
+  updated_on: IsoDateStr,
+  updated_by_profile: z.enum(PROFILE_IDS),
+  is_demo: z.literal(true),
+});
+export type AllocationLine = z.infer<typeof AllocationLineSchema>;
+
+/** Tarif horaire FICTIF par dispositif, daté. Jamais présenté comme un tarif réel (D06 ouvert). */
+export const RateSchema = z.object({
+  id: z.string().uuid(),
+  dispositif: z.enum(DISPOSITIFS),
+  hourly_rate_eur_ht: z.number().positive().max(1000).refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'au plus deux décimales'),
+  currency: z.literal('EUR'),
+  basis: z.literal('HT'),
+  valid_from: IsoDateStr,
+  is_fictional: z.literal(true),
+  is_demo: z.literal(true),
+});
+export type Rate = z.infer<typeof RateSchema>;
