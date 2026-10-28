@@ -16,13 +16,17 @@ import {
 } from '@/domain/pipeline';
 import type { Facts, FunnelRow, PipelineParams } from '@/domain/pipeline';
 import {
-  authorityFor, canResubmit, cvrZoneOf, delegationIssue, delegationStatus, drZoneOf, effectiveScope, NO_ENVELOPE_RULE, validationIssue,
+  authorityFor, canResubmit, cvrZoneOf, delegationIssue, delegationStatus, drZoneOf, effectiveScope, validationIssue,
 } from '@/domain/validation';
 import type { EnvelopeEvaluator } from '@/domain/validation';
+import {
+  allocatedSum, allocationIssue, budgetNeedsOf, classifyNeeds, envelopeIssue, envelopeStatusOf, figuresOf, fromCents, imputationMoves, linesOf, snapshotOfNeeds, toCents,
+} from '@/domain/budget';
+import type { BudgetNeed, ImputationSnapshot } from '@/domain/budget';
 import { canEnterNeeds, isOnBehalf, opinionAtEntry } from '@/domain/entry-rights';
-import { DECISION_OUTCOMES, DEFAULT_HOME_SKIN, ENTRY_PROFILES, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
+import { BUDGET_EVENT_CODES, DECISION_OUTCOMES, DEFAULT_HOME_SKIN, ENTRY_PROFILES, DISPOSITIFS, HOME_SKINS, NOTE_VISIBILITIES, PRESET_IDS } from '@/domain/types';
 import type {
-  Audience, DeadlineType, Dispositif, EventCode, HomeSkin, InvalidationReason, NoteObjectKind, NoteVisibility, PresetId, ProfileId,
+  Audience, BudgetStatus, DeadlineType, Dispositif, EventCode, HomeSkin, InvalidationReason, NoteObjectKind, NoteVisibility, PresetId, ProfileId,
   RecruitmentStep, Severity,
 } from '@/domain/types';
 import {
@@ -33,6 +37,9 @@ import type { RuleEnv, RuleInput } from '@/domain/week-rules';
 import { calendarOf } from '@/domain/deadlines';
 import { addMonths, isWorkingDay, monthStart, workingDaysBetween } from '@/domain/working-days';
 import accountsJson from './fixtures/accounts.json';
+import allocationsJson from './fixtures/allocations.json';
+import envelopesJson from './fixtures/envelopes.json';
+import ratesJson from './fixtures/rates.json';
 import alertsJson from './fixtures/alerts.json';
 import campaignsJson from './fixtures/campaigns.json';
 import clockJson from './fixtures/clock.json';
@@ -52,18 +59,18 @@ import storesJson from './fixtures/stores.json';
 import weekClosuresJson from './fixtures/week-closures.json';
 import zonesJson from './fixtures/zones.json';
 import type {
-  BatchDecisionResult, BatchDraft, BatchLineResult, BatchValidationResult, DecisionInput, DecisionRefusal, DelegationView, DemoProfileDirectory,
+  BatchDecisionResult, BatchDraft, BudgetAlert, BudgetGroup, BudgetLineView, BudgetNeedRow, BudgetView, BatchLineResult, BatchValidationResult, DecisionInput, DecisionRefusal, DelegationView, DemoProfileDirectory,
   FunnelReport, MutationResult, NeedThread, OutboxEntry, PipelineAlert, PipelineRow, ProposalResult, Repository, ReturnedFinding, SaveOptions,
   SaveRefusal, SaveResult, StepInput, StepRefusal, ValidationFailure, ValidationInput, ValidationView,
 } from './repository';
 import {
-  AccountSchema, AlertSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DecisionSchema,
+  AccountSchema, AllocationLineSchema, AlertSchema, EnvelopeVersionSchema, RateSchema, BatchRowsSchema, BusinessEventSchema, CampaignSchema, DeadlineSettingsSchema, DecisionSchema,
   DelegationSchema, DemoClockSchema, DispositifParamsSchema, MonthStr, NeedInputSchema, NeedSchema, NoteSchema, PARAM_KEYS, PARAM_VALUE_SCHEMAS,
   ProfileSchema, ProposalInputSchema, ProposalSchema, RecruitmentSchema, ReopeningRequestSchema, ReopeningSchema, StoreSchema,
   USERNAME_PATTERN, WeekClosureSchema, ZoneSchema,
 } from './schemas';
 import type {
-  Account, BusinessEvent, DeadlineSettings, Decision, Delegation, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
+  Account, AllocationLine, BusinessEvent, DeadlineSettings, EnvelopeVersion, Decision, Delegation, DispositifParams, Need, Note, ParamChange, Period, Proposal, ProposalInput,
   PublicAccount, Recruitment, Reopening, ReopeningRequest, Zone,
 } from './schemas';
 
@@ -88,6 +95,8 @@ const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const stores = z.array(StoreSchema).parse(storesJson);
 const campaigns = z.array(CampaignSchema).parse(campaignsJson);
 const weekClosures = z.array(WeekClosureSchema).parse(weekClosuresJson);
+/** Tarifs horaires FICTIFS datés (D06 ouvert) : jamais modifiés en démonstration. */
+const rates = z.array(RateSchema).parse(ratesJson);
 
 /**
  * Données modifiables de la démonstration. Conservées sur globalThis : Next peut charger ce module dans plusieurs
@@ -116,6 +125,12 @@ interface DemoState {
   pipelineParams: PipelineParams;
   // Lot A3c
   delegations: Delegation[];
+  // Lot A4b1 : enveloppe cliente versionnée, allocations de l'agence, repères pour tracer les dépassements et les déplacements d'imputation.
+  envelopes: EnvelopeVersion[];
+  allocations: AllocationLine[];
+  budgetBaseline: boolean;
+  budgetFlags: Record<string, true>;
+  imputations: Record<string, ImputationSnapshot>;
 }
 const globalState = globalThis as typeof globalThis & { __suntoryDemoState?: DemoState };
 function state(): DemoState {
@@ -142,6 +157,11 @@ function state(): DemoState {
       notes: structuredClone(z.array(NoteSchema).parse(notesJson)),
       pipelineParams: { ...DEFAULT_PIPELINE_PARAMS },
       delegations: structuredClone(z.array(DelegationSchema).parse(delegationsJson)),
+      envelopes: structuredClone(z.array(EnvelopeVersionSchema).parse(envelopesJson)),
+      allocations: structuredClone(z.array(AllocationLineSchema).parse(allocationsJson)),
+      budgetBaseline: false,
+      budgetFlags: {},
+      imputations: {},
     };
   }
   return globalState.__suntoryDemoState;
@@ -289,11 +309,16 @@ const eff = (ctx: AccessContext): AccessContext => {
   return scope === ctx.scope ? ctx : { ...ctx, scope };
 };
 
-let envelopeEvaluator: EnvelopeEvaluator = NO_ENVELOPE_RULE;
-/** Point d'entrée « hors enveloppe » (D43 ouverte) : A4b1 y branche la règle de calcul. Sans argument, retour à « non évalué ». */
+/**
+ * Point d'entrée « hors enveloppe » (D43 ouverte). Par défaut, la règle de A4b1 (hypothèse, à valider) : un besoin est « hors enveloppe » quand
+ * il fait dépasser le montant alloué à sa maille (campagne, CVR). Coût inconnu ou maille sans allocation : « non évalué », jamais « dans ».
+ * Une fonction posée par un test remplace la règle ; sans argument, retour à la règle par défaut.
+ */
+let envelopeOverride: EnvelopeEvaluator | null = null;
 export function setEnvelopeEvaluator(fn?: EnvelopeEvaluator): void {
-  envelopeEvaluator = fn ?? NO_ENVELOPE_RULE;
+  envelopeOverride = fn ?? null;
 }
+const envelopeEvaluator: EnvelopeEvaluator = (need) => (envelopeOverride ?? ((n) => envelopeStatusOf(budgetStatuses().get(n.id))))(need);
 
 const recruitmentOf = (needId: string): Recruitment => state().recruitments.find((r) => r.need_id === needId) ?? blankRecruitment(needId);
 function ensureRecruitment(needId: string): Recruitment {
@@ -668,6 +693,86 @@ function pipelineAlerts(ctx: AccessContext): PipelineAlert[] {
   return out;
 }
 
+// ---------------------------------------------------------------------------------------------
+// Lot A4b1 : chaîne budgétaire (D153, D156). Les calculs sont dans domain/budget.ts ; ici, droits, périmètre, audience, écritures et journal.
+// ---------------------------------------------------------------------------------------------
+/** Lecture du budget : les profils qui ont l'entrée de menu Budget. Le RS et le CVR n'en lisent ni le détail, ni les alertes, ni le journal. */
+const canReadBudgetCtx = (ctx: AccessContext): boolean => MENU_BY_PROFILE[ctx.profileId].includes('budget');
+/** Les coûts (consommé, prévisionnel, atterrissage, disponible, coût par besoin) sont réservés à l'agence et au prestataire (D108, défaut refus). */
+const canSeeCosts = (ctx: AccessContext): boolean => canReadBudgetCtx(ctx) && ctx.side !== 'client';
+const eventReadable = (ctx: AccessContext, e: BusinessEvent): boolean => !(BUDGET_EVENT_CODES as readonly string[]).includes(e.code) || canReadBudgetCtx(ctx);
+
+/** Besoins comptés au budget, avec leur coût estimé : vue interne complète, filtrée ensuite par périmètre et audience. */
+function budgetNeeds(): BudgetNeed[] {
+  return budgetNeedsOf({ needs: state().needs, zones, rates, today: clock.date, submittedOn, factsOf: (id) => factsOf(id, false) });
+}
+const budgetLines = () => linesOf(state().allocations);
+function budgetStatuses(needs: BudgetNeed[] = budgetNeeds()): Map<string, BudgetStatus> {
+  return classifyNeeds(needs, budgetLines());
+}
+
+/**
+ * Repère de départ des événements budgétaires : l'imputation connue et les besoins déjà au-delà du disponible. Posé avant la première
+ * écriture, sans événement (les fixtures portent déjà ceux de l'état initial).
+ */
+function ensureBudgetBaseline(): void {
+  const st = state();
+  if (st.budgetBaseline) return;
+  const needs = budgetNeeds();
+  const statuses = budgetStatuses(needs);
+  st.imputations = snapshotOfNeeds(needs);
+  st.budgetFlags = Object.fromEntries(needs.filter((n) => statuses.get(n.id) === 'beyond').map((n) => [n.id, true as const]));
+  st.budgetBaseline = true;
+}
+
+/**
+ * Après une écriture qui peut changer le budget : trace les déplacements d'imputation (EV-52, datés, agence) et les besoins qui passent
+ * au-delà du disponible (EV-28, cliente et agence, sans montant, D156). Aucun blocage : l'écriture est déjà faite.
+ */
+function settleBudget(ctx: AccessContext, trigger: 'need' | 'allocation'): void {
+  const st = state();
+  const needs = budgetNeeds();
+  const byId = new Map(needs.map((n) => [n.id, n]));
+  for (const m of imputationMoves(st.imputations, needs)) {
+    const n = byId.get(m.needId) as BudgetNeed;
+    emit('EV-52', ctx.profileId, n.sectorId, n.id, 'agency', {
+      need_code: n.code, kind: m.kind,
+      from_campaign: m.from.campaign ?? 'none', to_campaign: m.to.campaign ?? 'none',
+      from_cvr: m.from.cvrId ?? 'none', to_cvr: m.to.cvrId ?? 'none',
+      ...(m.from.cents !== null ? { from_eur: fromCents(m.from.cents) } : {}), ...(m.to.cents !== null ? { to_eur: fromCents(m.to.cents) } : {}),
+    });
+  }
+  st.imputations = snapshotOfNeeds(needs);
+  const statuses = budgetStatuses(needs);
+  const beyond = needs.filter((n) => statuses.get(n.id) === 'beyond');
+  for (const n of beyond) {
+    if (!st.budgetFlags[n.id]) emit('EV-28', ctx.profileId, n.sectorId, n.id, 'both', { need_code: n.code, campaign: n.campaign ?? 'none', trigger });
+  }
+  st.budgetFlags = Object.fromEntries(beyond.map((n) => [n.id, true as const]));
+}
+
+const campaignDispositifOf = (code: string): Dispositif => (campaigns.find((c) => c.code === code) as (typeof campaigns)[number]).dispositif;
+const currentEnvelope = (): EnvelopeVersion | null => state().envelopes.reduce<EnvelopeVersion | null>((m, e) => (!m || e.version > m.version ? e : m), null);
+const sumLines = (rows: readonly AllocationLine[]) => rows.reduce((s, l) => s + toCents(l.amount_eur_ht), 0);
+
+/** Alertes budgétaires dérivées à la lecture. Les montants n'y figurent jamais : la cliente apprend qu'un besoin dépasse, pas ce que coûte l'agence. */
+function budgetAlerts(ctx: AccessContext): BudgetAlert[] {
+  const today = clock.date;
+  const scoped = budgetNeeds().filter((n) => zoneInScope(zones, n.sectorId, ctx.scope));
+  const statuses = budgetStatuses();
+  const count = (status: BudgetStatus) => scoped.filter((n) => statuses.get(n.id) === status).length;
+  const out: BudgetAlert[] = [];
+  const push = (key: BudgetAlert['message_key'], audience: Audience, severity: Severity, n: number) => {
+    if (n > 0) out.push({ id: `budget:${key}`, audience, severity, message_key: key, params: { n }, created_at: today });
+  };
+  push('needsBeyond', 'both', 'risk', count('beyond'));
+  push('noBudget', 'agency', 'attention', count('no_budget'));
+  push('unpriced', 'agency', 'attention', count('unpriced'));
+  if (ctx.scope.kind === 'all' && !currentEnvelope()) push('envelopeMissing', 'both', 'info', 1);
+  return out;
+}
+
+
 const DEADLINE_BLOCK_RULES: readonly string[] = ['E1', 'E2', 'P3', 'P4'];
 
 /** Profils de la chaîne managériale cliente qui peuvent valider, refuser ou escalader (D45). */
@@ -723,7 +828,7 @@ function validateOne(ctx: AccessContext, needId: string, input: ValidationInput)
 const SEVERITY_RANK: Record<Severity, number> = { risk: 0, attention: 1, info: 2 };
 
 export function createMemoryRepository(): Repository {
-  return {
+  const repo: Repository = {
     async getMenu(ctx) {
       return MENU_BY_PROFILE[ctx.profileId].map((key) => ({ key, href: MENU_HREF[key] }));
     },
@@ -792,7 +897,7 @@ export function createMemoryRepository(): Repository {
 
     async getEvents(ctx) {
       return state().events
-        .filter((e) => audienceAllows(ctx.side, e.audience) && zoneInScope(zones, e.zone_id, ctx.scope))
+        .filter((e) => audienceAllows(ctx.side, e.audience) && zoneInScope(zones, e.zone_id, ctx.scope) && eventReadable(ctx, e))
         .sort((a, b) => b.seq - a.seq);
     },
 
@@ -1458,6 +1563,174 @@ export function createMemoryRepository(): Repository {
       return { status: 'ok' };
     },
 
+    // ---------------------------------------------------------------------------------------------
+    // Lot A4b1 : enveloppe cliente, allocation de l'agence, prévisionnel par besoin
+    // ---------------------------------------------------------------------------------------------
+    canReadBudget: (ctx) => canReadBudgetCtx(ctx),
+    canSetEnvelope: (ctx) => ctx.profileId === 'direction_client',
+    canAllocate: (ctx) => ctx.profileId === 'agency_admin',
+
+    async getBudget(ctx) {
+      ctx = eff(ctx);
+      const empty: BudgetView = {
+        envelopeVisible: false, envelope: null, allocated_cents: null, unallocated_cents: null, costsVisible: false, figures: null, lines: [],
+        groups: { dispositif: [], dr: [], campaign: [], cvr: [] }, beyondCount: 0, noBudgetCount: null, unpricedCount: null,
+      };
+      if (!canReadBudgetCtx(ctx)) return empty;
+      ensureBudgetBaseline();
+      const costs = canSeeCosts(ctx);
+      const st = state();
+      const all = budgetNeeds();
+      const statuses = budgetStatuses(all);
+      const needs = all.filter((n) => zoneInScope(zones, n.sectorId, ctx.scope));
+      const rows = st.allocations.filter((l) => zoneInScope(zones, l.cvr_id, ctx.scope));
+      const zoneById = new Map(zones.map((z) => [z.id, z]));
+      const drOf = (cvrId: string) => zoneById.get(zoneById.get(cvrId)?.parent_id ?? '') ?? null;
+      const forLine = (l: AllocationLine) => needs.filter((n) => n.campaign === l.campaign_code && n.cvrId === l.cvr_id);
+      const lines: BudgetLineView[] = rows
+        .map((l) => ({
+          id: l.id, campaign_code: l.campaign_code, dispositif: campaignDispositifOf(l.campaign_code), cvr: zoneById.get(l.cvr_id) as Zone, dr: drOf(l.cvr_id),
+          allocated_cents: toCents(l.amount_eur_ht), revision: l.revision, updated_on: l.updated_on, updated_by_profile: l.updated_by_profile,
+          figures: costs ? figuresOf(toCents(l.amount_eur_ht), forLine(l), statuses) : null,
+        }))
+        .sort((a, b) => a.campaign_code.localeCompare(b.campaign_code) || a.cvr.code.localeCompare(b.cvr.code));
+      const group = (keyOfLine: (l: BudgetLineView) => string | null, keyOfNeed: (n: BudgetNeed) => string | null): BudgetGroup[] => {
+        const keys = new Set<string>();
+        for (const l of lines) { const k = keyOfLine(l); if (k) keys.add(k); }
+        for (const n of needs) { const k = keyOfNeed(n); if (k) keys.add(k); }
+        return [...keys].sort().map((key) => {
+          const ls = lines.filter((l) => keyOfLine(l) === key);
+          const allocated = ls.length === 0 ? null : ls.reduce((sum, l) => sum + l.allocated_cents, 0);
+          return { key, allocated_cents: allocated, figures: costs ? figuresOf(allocated, needs.filter((n) => keyOfNeed(n) === key), statuses) : null };
+        });
+      };
+      const envelope = ctx.scope.kind === 'all' ? currentEnvelope() : null;
+      const allocatedTotal = allocatedSum(linesOf(rows));
+      return {
+        envelopeVisible: ctx.scope.kind === 'all',
+        envelope,
+        allocated_cents: allocatedTotal,
+        unallocated_cents: envelope && ctx.scope.kind === 'all' ? toCents(envelope.amount_eur_ht) - sumLines(st.allocations) : null,
+        costsVisible: costs,
+        figures: costs ? figuresOf(allocatedTotal, needs, statuses) : null,
+        lines,
+        groups: {
+          dispositif: group((l) => l.dispositif, (n) => n.dispositif),
+          dr: group((l) => l.dr?.id ?? null, (n) => n.drId),
+          campaign: group((l) => l.campaign_code, (n) => n.campaign),
+          cvr: group((l) => l.cvr.id, (n) => n.cvrId),
+        },
+        beyondCount: needs.filter((n) => statuses.get(n.id) === 'beyond').length,
+        noBudgetCount: costs ? needs.filter((n) => statuses.get(n.id) === 'no_budget').length : null,
+        unpricedCount: costs ? needs.filter((n) => statuses.get(n.id) === 'unpriced').length : null,
+      };
+    },
+
+    async getBudgetNeeds(ctx): Promise<BudgetNeedRow[]> {
+      ctx = eff(ctx);
+      if (!canSeeCosts(ctx)) return [];
+      ensureBudgetBaseline();
+      const all = budgetNeeds();
+      const statuses = budgetStatuses(all);
+      return all
+        .filter((n) => zoneInScope(zones, n.sectorId, ctx.scope))
+        .map((n) => ({
+          needId: n.id, needCode: n.code, sectorId: n.sectorId, cvrId: n.cvrId, campaign: n.campaign, dispositif: n.dispositif, cost: n.cost,
+          kind: n.started ? ('consumed' as const) : ('forecast' as const), status: statuses.get(n.id) as BudgetStatus,
+        }))
+        .sort((a, b) => a.needCode.localeCompare(b.needCode));
+    },
+
+    async getEnvelopeVersions(ctx) {
+      if (!canReadBudgetCtx(ctx) || ctx.scope.kind !== 'all') return [];
+      return [...state().envelopes].sort((a, b) => b.version - a.version);
+    },
+
+    async getBudgetRates(ctx) {
+      return canSeeCosts(ctx) ? rates : [];
+    },
+
+    async getBudgetAlerts(ctx) {
+      ctx = eff(ctx);
+      if (!canReadBudgetCtx(ctx)) return [];
+      ensureBudgetBaseline();
+      return budgetAlerts(ctx).filter((a) => audienceAllows(ctx.side, a.audience));
+    },
+
+    async getBudgetEvents(ctx) {
+      if (!canReadBudgetCtx(ctx)) return [];
+      return state().events
+        .filter((e) => (BUDGET_EVENT_CODES as readonly string[]).includes(e.code) && audienceAllows(ctx.side, e.audience) && zoneInScope(zones, e.zone_id, eff(ctx).scope))
+        .sort((a, b) => b.seq - a.seq);
+    },
+
+    async setEnvelope(ctx, input) {
+      if (ctx.profileId !== 'direction_client') return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const current = currentEnvelope();
+      const issue = envelopeIssue(input, current, sumLines(st.allocations), isValidIsoDate);
+      if (issue) return { status: 'refused', reason: issue };
+      const motive = (input.motive ?? '').trim();
+      const created: EnvelopeVersion = {
+        id: crypto.randomUUID(), version: (current?.version ?? 0) + 1, period_start: input.periodStart, period_end: input.periodEnd,
+        amount_eur_ht: input.amountEur, currency: 'EUR', basis: 'HT', entered_by_profile: ctx.profileId, entered_on: clock.date,
+        motive: motive || null, is_demo: true,
+      };
+      st.envelopes.push(created);
+      // L'enveloppe nationale n'est lisible ni du DR ni du CVR : l'événement reste à l'agence, la direction lit son historique à l'écran.
+      emit('EV-50', ctx.profileId, anyDrZone(), null, 'agency', {
+        version: created.version, amount_eur: created.amount_eur_ht, period_start: created.period_start, period_end: created.period_end,
+        ...(current ? { previous_eur: current.amount_eur_ht } : {}), ...(motive ? { motive } : {}),
+      });
+      return { status: 'ok' };
+    },
+
+    async saveAllocation(ctx, input) {
+      if (ctx.profileId !== 'agency_admin') return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const envelope = currentEnvelope();
+      const issue = allocationIssue(input, envelope ? toCents(envelope.amount_eur_ht) : null, budgetLines(), {
+        campaign: (code) => campaigns.some((c) => c.code === code),
+        cvr: (id) => zones.some((z) => z.id === id && z.kind === 'cvr'),
+      });
+      if (issue) return { status: 'refused', reason: issue };
+      const motive = (input.motive ?? '').trim();
+      const existing = st.allocations.find((l) => l.campaign_code === input.campaign && l.cvr_id === input.cvrId);
+      if (existing) {
+        const previous = existing.amount_eur_ht;
+        existing.amount_eur_ht = input.amountEur;
+        existing.revision += 1;
+        existing.updated_on = clock.date;
+        existing.updated_by_profile = ctx.profileId;
+        emit('EV-51', ctx.profileId, existing.cvr_id, null, 'both', {
+          action: 'updated', campaign: existing.campaign_code, previous_eur: previous, amount_eur: existing.amount_eur_ht, revision: existing.revision, motive,
+        });
+      } else {
+        st.allocations.push({
+          id: crypto.randomUUID(), campaign_code: input.campaign, cvr_id: input.cvrId, amount_eur_ht: input.amountEur, currency: 'EUR', basis: 'HT',
+          revision: 1, updated_on: clock.date, updated_by_profile: ctx.profileId, is_demo: true,
+        });
+        emit('EV-51', ctx.profileId, input.cvrId, null, 'both', {
+          action: 'created', campaign: input.campaign, amount_eur: input.amountEur, revision: 1, ...(motive ? { motive } : {}),
+        });
+      }
+      return { status: 'ok' };
+    },
+
+    async removeAllocation(ctx, lineId, motive) {
+      if (ctx.profileId !== 'agency_admin') return { status: 'refused', reason: 'forbidden' };
+      const st = state();
+      const line = st.allocations.find((l) => l.id === lineId);
+      if (!line) return { status: 'refused', reason: 'not_found' };
+      const reason = (motive ?? '').trim();
+      if (!reason || reason.length > 280) return { status: 'refused', reason: 'motive_required' };
+      st.allocations = st.allocations.filter((l) => l.id !== lineId);
+      emit('EV-51', ctx.profileId, line.cvr_id, null, 'both', {
+        action: 'removed', campaign: line.campaign_code, previous_eur: line.amount_eur_ht, revision: line.revision + 1, motive: reason,
+      });
+      return { status: 'ok' };
+    },
+
     async getBatchDraft(ctx) {
       return state().batchDrafts[draftKey(ctx)] ?? null;
     },
@@ -1472,6 +1745,25 @@ export function createMemoryRepository(): Repository {
       delete state().batchDrafts[draftKey(ctx)];
     },
   };
+
+  // A4b1 : toute écriture qui peut changer le budget (besoin, qualification, validation, recrutement, enveloppe, allocation) est suivie
+  // du calcul des déplacements d'imputation et des dépassements, tracés au journal. Le repère de départ est posé avant la première écriture.
+  const WRITES_THAT_MOVE_BUDGET: Record<string, 'need' | 'allocation'> = {
+    saveNeed: 'need', duplicateNeed: 'need', saveNeedsBatch: 'need', qualifyNeed: 'need', recordStep: 'need', validateNeed: 'need',
+    validateBatch: 'need', resubmitNeed: 'need', saveProposal: 'need', withdrawProposal: 'need', decideProposal: 'need', decideBatch: 'need',
+    setEnvelope: 'allocation', saveAllocation: 'allocation', removeAllocation: 'allocation',
+  };
+  const writable = repo as unknown as Record<string, (ctx: AccessContext, ...args: unknown[]) => Promise<unknown>>;
+  for (const [name, trigger] of Object.entries(WRITES_THAT_MOVE_BUDGET)) {
+    const original = (writable[name] as (ctx: AccessContext, ...args: unknown[]) => Promise<unknown>).bind(repo);
+    writable[name] = async (ctx, ...args) => {
+      ensureBudgetBaseline();
+      const result = await original(ctx, ...args);
+      settleBudget(ctx, trigger);
+      return result;
+    };
+  }
+  return repo;
 
   function refusal(reason: SaveRefusal, findings: ReturnedFinding[] = [], missing: string[] = []): SaveResult {
     return { status: 'refused', reason, findings, missing };

@@ -25,6 +25,9 @@ write('proposals.json', f.proposals);
 write('decisions.json', f.decisions);
 write('notes.json', f.notes);
 write('delegations.json', f.delegations);
+write('rates.json', f.rates);
+write('envelopes.json', f.envelopes);
+write('allocations.json', f.allocations);
 console.log(
-  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements, ${f.recruitments.length} suivis de recrutement, ${f.proposals.length} propositions, ${f.decisions.length} décisions, ${f.notes.length} notes, ${f.delegations.length} délégations.`,
+  `Fixtures écrites : ${f.zones.length} zones, ${f.profiles.length} profils, ${f.alerts.length} alertes, ${f.needs.length} besoins, ${f.stores.length} magasins, ${f.events.length} événements, ${f.recruitments.length} suivis de recrutement, ${f.proposals.length} propositions, ${f.decisions.length} décisions, ${f.notes.length} notes, ${f.delegations.length} délégations, ${f.rates.length} tarifs fictifs, ${f.envelopes.length} version d'enveloppe, ${f.allocations.length} lignes d'allocation.`,
 );

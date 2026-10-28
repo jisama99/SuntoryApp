@@ -1,17 +1,18 @@
 import type { AccessContext } from '@/domain/access';
 import type { DelayMonth, DerivedAlert, OutboxItem } from '@/domain/deadline-views';
 import type { DelayStat, FunnelSummary, Milestone, NextStep, PipelineParams, ProposalIssue } from '@/domain/pipeline';
+import type { AllocationRefusal, EnvelopeRefusal, Figures, NeedCost } from '@/domain/budget';
 import type { DelegationRefusal, EnvelopeStatus, ValidationRefusal } from '@/domain/validation';
 import type {
-  DecisionOutcome, DeadlineType, DelegationStatus, Dispositif, EscalationReason, ExecutionStatus, FunnelState, HomeSkin, MenuKey, NoteObjectKind,
+  BudgetStatus, DecisionOutcome, DeadlineType, DelegationStatus, Dispositif, EscalationReason, ExecutionStatus, FunnelState, HomeSkin, MenuKey, NoteObjectKind,
   NoteVisibility, PositionStatus, PresetId, ProfileId, RecruitmentStep, ReopenScope, Scope, Severity, Situation, StartLagKind, ValidationLevel,
   ValidationOutcome, ValidationState,
 } from '@/domain/types';
 import type { Finding } from '@/domain/rules';
 import type { RuleInput } from '@/domain/week-rules';
 import type {
-  Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note,
-  ParamChange, ParamKey, Proposal, ProposalInput, PublicAccount, Recruitment, Reopening, ReopeningRequest, Store, ValidationEntry, WeekClosure, Zone,
+  AllocationLine, Alert, BatchRow, BusinessEvent, Campaign, DeadlineSettings, Decision, Delegation, DemoClock, DemoProfile, DispositifParams, Need, Note,
+  EnvelopeVersion, ParamChange, ParamKey, Proposal, ProposalInput, PublicAccount, Rate, Recruitment, Reopening, ReopeningRequest, Store, ValidationEntry, WeekClosure, Zone,
 } from './schemas';
 
 export interface MenuEntry {
@@ -144,6 +145,28 @@ export interface Repository {
   canManageDelegations(ctx: AccessContext): boolean;
   createDelegation(ctx: AccessContext, input: DelegationInput): Promise<MutationResult<DelegationRefusal | 'forbidden'>>;
   revokeDelegation(ctx: AccessContext, delegationId: string): Promise<MutationResult<'forbidden' | 'not_found' | 'not_revocable'>>;
+  // ---- Lot A4b1 : enveloppe cliente, allocation de l'agence, prévisionnel par besoin (D153, D156) ----
+  /** Vrai pour les profils qui ont l'entrée de menu Budget : eux seuls lisent le budget, ses alertes et ses événements. */
+  canReadBudget(ctx: AccessContext): boolean;
+  /** La direction cliente saisit l'enveloppe nationale (version datée). L'agence la voit sans pouvoir la modifier. */
+  canSetEnvelope(ctx: AccessContext): boolean;
+  /** L'agence administration alloue, sans dépasser l'enveloppe. */
+  canAllocate(ctx: AccessContext): boolean;
+  /** Situation budgétaire du périmètre. Les mesures de coût (consommé, prévisionnel, atterrissage, disponible) sont réservées à l'agence. */
+  getBudget(ctx: AccessContext): Promise<BudgetView>;
+  /** Prévisionnel par besoin : agence seule (coûts). Vide pour la cliente. */
+  getBudgetNeeds(ctx: AccessContext): Promise<BudgetNeedRow[]>;
+  /** Versions de l'enveloppe nationale, la plus récente d'abord. Direction cliente, agence et prestataire. */
+  getEnvelopeVersions(ctx: AccessContext): Promise<EnvelopeVersion[]>;
+  /** Tarifs fictifs datés : agence seule. */
+  getBudgetRates(ctx: AccessContext): Promise<Rate[]>;
+  /** Alertes budgétaires dérivées, filtrées par audience, périmètre et droit de lecture du budget (D108, défaut refus). */
+  getBudgetAlerts(ctx: AccessContext): Promise<BudgetAlert[]>;
+  /** Journal budgétaire (EV-28, EV-50 à EV-52) : audience, périmètre et droit de lecture appliqués. */
+  getBudgetEvents(ctx: AccessContext): Promise<BusinessEvent[]>;
+  setEnvelope(ctx: AccessContext, input: EnvelopeInput): Promise<MutationResult<EnvelopeFailure>>;
+  saveAllocation(ctx: AccessContext, input: AllocationInput): Promise<MutationResult<AllocationFailure>>;
+  removeAllocation(ctx: AccessContext, lineId: string, motive: string): Promise<MutationResult<'forbidden' | 'not_found' | 'motive_required'>>;
   getBatchDraft(ctx: AccessContext): Promise<BatchDraft | null>;
   saveBatchDraft(ctx: AccessContext, rows: BatchRow[]): Promise<MutationResult<'forbidden'>>;
   clearBatchDraft(ctx: AccessContext): Promise<void>;
@@ -418,4 +441,87 @@ export interface NoteInput {
   recipientZoneId?: string;
   /** Confirmation explicite exigée avant tout partage (D162). */
   confirmShare?: boolean;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Lot A4b1 : budget. Montants en centimes entiers (euros hors taxes, fictifs). `null` = « Non chiffré » ou « Budget non renseigné », jamais 0.
+// ---------------------------------------------------------------------------------------------
+export interface EnvelopeInput {
+  amountEur: number;
+  periodStart: string;
+  periodEnd: string;
+  motive?: string;
+}
+export type EnvelopeFailure = EnvelopeRefusal | 'forbidden';
+
+export interface AllocationInput {
+  campaign: string;
+  cvrId: string;
+  amountEur: number;
+  motive?: string;
+}
+export type AllocationFailure = AllocationRefusal | 'forbidden';
+
+export interface BudgetLineView {
+  id: string;
+  campaign_code: string;
+  dispositif: Dispositif;
+  cvr: Zone;
+  dr: Zone | null;
+  allocated_cents: number;
+  revision: number;
+  updated_on: string;
+  updated_by_profile: AllocationLine['updated_by_profile'];
+  /** Mesures de la maille : agence seulement (coûts). */
+  figures: Figures | null;
+}
+
+/** Une ligne d'un regroupement (dispositif, DR, campagne ou CVR). `figures` est nul pour la cliente. */
+export interface BudgetGroup {
+  key: string;
+  allocated_cents: number | null;
+  figures: Figures | null;
+}
+
+export interface BudgetView {
+  /** Enveloppe nationale visible : direction cliente, agence, prestataire. Un DR ou un CVR ne la lit pas. */
+  envelopeVisible: boolean;
+  envelope: EnvelopeVersion | null;
+  /** Total des lignes d'allocation du périmètre ; nul s'il n'y en a aucune (« Budget non renseigné »). */
+  allocated_cents: number | null;
+  /** Enveloppe moins total alloué (national). Nul sans enveloppe ou hors vue nationale. */
+  unallocated_cents: number | null;
+  costsVisible: boolean;
+  /** Mesures du périmètre : agence seulement. */
+  figures: Figures | null;
+  lines: BudgetLineView[];
+  groups: { dispositif: BudgetGroup[]; dr: BudgetGroup[]; campaign: BudgetGroup[]; cvr: BudgetGroup[] };
+  /** Besoins au-delà du disponible de leur maille, dans le périmètre (sans montant). */
+  beyondCount: number;
+  /** Agence seulement : besoins sans budget de maille et besoins non chiffrés. */
+  noBudgetCount: number | null;
+  unpricedCount: number | null;
+}
+
+/** Ligne du prévisionnel par besoin (agence seule). */
+export interface BudgetNeedRow {
+  needId: string;
+  needCode: string;
+  sectorId: string;
+  cvrId: string | null;
+  campaign: string | null;
+  dispositif: Dispositif | null;
+  cost: NeedCost;
+  kind: 'consumed' | 'forecast';
+  status: BudgetStatus;
+}
+
+export interface BudgetAlert {
+  id: string;
+  audience: Alert['audience'];
+  severity: Severity;
+  /** Clé sous `alerts.budget`. */
+  message_key: 'needsBeyond' | 'noBudget' | 'unpriced' | 'envelopeMissing';
+  params: Record<string, string | number>;
+  created_at: string;
 }

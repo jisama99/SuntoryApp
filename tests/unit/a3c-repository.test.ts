@@ -214,19 +214,19 @@ describe('scénario 4 : arbitrage entre deux CVR', () => {
   });
 });
 
-describe('« hors enveloppe » : point d\'entrée sans règle (D43 ouverte, A4b1)', () => {
-  it('par défaut non évalué ; l\'escalade reste déclenchée à la main avec motif', async () => {
+describe('« hors enveloppe » : point d\'entrée branché sur le budget (D43 ouverte, règle de A4b1 en hypothèse)', () => {
+  it('par défaut selon le budget de la maille (dans l\'enveloppe ici) ; l\'escalade reste déclenchée à la main avec motif', async () => {
     const id = await idOf('BES-DEMO-032');
-    expect((await row('BES-DEMO-032', CVR1())).validation.envelope).toBe('not_evaluated');
+    expect((await row('BES-DEMO-032', CVR1())).validation.envelope).toBe('within');
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'escalate', reason: 'out_of_envelope' })).toMatchObject({ reason: 'motive_required' });
     expect(await repo.validateNeed(CVR1(), id, { outcome: 'escalate', reason: 'out_of_envelope', motive: 'Budget du CVR à vérifier.' })).toEqual({ status: 'ok' });
     expect((await row('BES-DEMO-032')).validation.escalation).toMatchObject({ reason: 'out_of_envelope', trigger: 'manual' });
   });
-  it('A4b1 branche son évaluateur par ce point d\'entrée', async () => {
+  it('un évaluateur posé remplace la règle ; sans argument, retour à la règle du budget', async () => {
     setEnvelopeEvaluator(() => 'exceeded');
     expect((await row('BES-DEMO-032', CVR1())).validation.envelope).toBe('exceeded');
     setEnvelopeEvaluator();
-    expect((await row('BES-DEMO-032', CVR1())).validation.envelope).toBe('not_evaluated');
+    expect((await row('BES-DEMO-032', CVR1())).validation.envelope).toBe('within');
   });
 });
 

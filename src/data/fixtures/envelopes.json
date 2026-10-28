@@ -1,0 +1,15 @@
+[
+  {
+    "id": "be38d9a4-dc18-482b-83c0-1cac6da5025e",
+    "version": 1,
+    "period_start": "2026-10-01",
+    "period_end": "2027-06-30",
+    "amount_eur_ht": 100000,
+    "currency": "EUR",
+    "basis": "HT",
+    "entered_by_profile": "direction_client",
+    "entered_on": "2026-10-14",
+    "motive": null,
+    "is_demo": true
+  }
+]

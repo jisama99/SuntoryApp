@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { AlertList } from '@/components/AlertList';
+import { BudgetAlertList } from '@/components/BudgetAlertList';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { DeadlineAlertList } from '@/components/DeadlineAlertList';
 import { Gallery } from '@/components/Gallery';
@@ -29,8 +30,8 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
   const title = t(`menu.${key}`);
 
   if (key === 'alerts') {
-    const [alerts, zones, deadlineAlerts, pipelineAlerts] = await Promise.all([
-      repository.getAlerts(ctx), repository.getScopeZones(ctx), repository.getDeadlineAlerts(ctx), repository.getPipelineAlerts(ctx),
+    const [alerts, zones, deadlineAlerts, pipelineAlerts, budgetAlerts] = await Promise.all([
+      repository.getAlerts(ctx), repository.getScopeZones(ctx), repository.getDeadlineAlerts(ctx), repository.getPipelineAlerts(ctx), repository.getBudgetAlerts(ctx),
     ]);
     return (
       <>
@@ -46,6 +47,12 @@ export default async function SectionPage({ params }: { params: Promise<{ locale
           <section aria-labelledby="pipeline-alerts-title" className="mb-8 flex flex-col gap-3">
             <h2 id="pipeline-alerts-title" className="text-lg font-semibold">{t('alerts.pipelineTitle')}</h2>
             <PipelineAlertList alerts={pipelineAlerts} showAudience={ctx.side !== 'client'} />
+          </section>
+        ) : null}
+        {budgetAlerts.length > 0 ? (
+          <section aria-labelledby="budget-alerts-title" className="mb-8 flex flex-col gap-3">
+            <h2 id="budget-alerts-title" className="text-lg font-semibold">{t('budget.alertsTitle')}</h2>
+            <BudgetAlertList alerts={budgetAlerts} showAudience={ctx.side !== 'client'} />
           </section>
         ) : null}
         {alerts.length === 0 ? (

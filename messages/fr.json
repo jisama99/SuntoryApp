@@ -143,6 +143,13 @@
       "escalationPending": "{n, plural, one {# besoin escaladé attend l'arbitrage du DR.} other {# besoins escaladés attendent l'arbitrage du DR.}}",
       "resubmitPending": "{n, plural, one {# besoin refusé attend une nouvelle soumission.} other {# besoins refusés attendent une nouvelle soumission.}}",
       "delegationEnding": "{n, plural, one {# délégation se termine bientôt.} other {# délégations se terminent bientôt.}}"
+    },
+    "budget": {
+      "needsBeyond": "{n, plural, one {# besoin dépasse le disponible de son budget. Il reste enregistré et attend un arbitrage.} other {# besoins dépassent le disponible de leur budget. Ils restent enregistrés et attendent un arbitrage.}}",
+      "noBudget": "{n, plural, one {# besoin n'a aucune ligne de budget. Budget non renseigné.} other {# besoins n'ont aucune ligne de budget. Budget non renseigné.}}",
+      "unpriced": "{n, plural, one {# besoin ne peut pas être chiffré.} other {# besoins ne peuvent pas être chiffrés.}}",
+      "envelopeMissing": "Aucune enveloppe n'est renseignée. Budget non renseigné.",
+      "open": "Ouvrir le budget"
     }
   },
   "states": {
@@ -1110,7 +1117,11 @@
       "EV-46": "Délégation créée ou révoquée",
       "EV-47": "Besoin soumis de nouveau",
       "EV-48": "Besoin saisi par l'agence pour le compte d'un RS",
-      "EV-49": "Avis managérial donné à la saisie"
+      "EV-49": "Avis managérial donné à la saisie",
+      "EV-28": "Besoin au-delà du disponible",
+      "EV-50": "Enveloppe de la cliente saisie",
+      "EV-51": "Allocation de l'agence modifiée",
+      "EV-52": "Imputation budgétaire déplacée"
     },
     "detail": {
       "title": "Besoin {code}",
@@ -1505,7 +1516,7 @@
       },
       "reason": "Cas d'escalade",
       "envelope": {
-        "not_evaluated": "Enveloppe non évaluée : la règle de calcul n'est pas encore arrêtée. L'escalade repose sur votre jugement et sur le motif saisi.",
+        "not_evaluated": "Enveloppe non évaluée : le coût du besoin ou le budget de sa maille n'est pas renseigné. L'escalade repose sur votre jugement et sur le motif saisi.",
         "within": "L'enveloppe n'est pas dépassée.",
         "exceeded": "L'enveloppe est dépassée."
       },
@@ -1626,6 +1637,222 @@
       "forbidden": "Seule l'agence administration paramètre les suppléants.",
       "not_found": "Délégation introuvable.",
       "not_revocable": "Cette délégation est déjà terminée ou révoquée."
+    }
+  },
+  "budget": {
+    "title": "Budget",
+    "note": "Montants fictifs de démonstration, en euros hors taxes.",
+    "tabs": {
+      "label": "Sections du budget",
+      "situation": "Situation",
+      "envelope": "Enveloppe",
+      "allocation": "Répartition",
+      "needs": "Prévisionnel par besoin",
+      "journal": "Journal"
+    },
+    "notFilled": "Budget non renseigné",
+    "notPriced": "Non chiffré",
+    "tiles": {
+      "envelope": "Enveloppe de la cliente",
+      "envelopeSub": "Version {version}, saisie le {date}",
+      "allocated": "Réparti par l'agence",
+      "allocatedZone": "Réparti sur votre périmètre",
+      "allocatedSub": "{pct} % de l'enveloppe",
+      "unallocated": "Non réparti",
+      "unallocatedSub": "Reste de l'enveloppe à répartir",
+      "consumed": "Consommé",
+      "consumedSub": "Postes démarrés",
+      "forecast": "Prévisionnel",
+      "forecastSub": "Besoins pas encore démarrés",
+      "landing": "Atterrissage",
+      "landingSub": "Consommé plus prévisionnel",
+      "available": "Disponible",
+      "availableSub": "Réparti moins atterrissage",
+      "over": "Dépassement",
+      "coverage": "{priced, plural, one {# besoin chiffré} other {# besoins chiffrés}} sur {total}",
+      "coverageLabel": "Couverture du chiffrage"
+    },
+    "measuresTitle": "Les quatre mesures du périmètre",
+    "alertsTitle": "Alertes du budget",
+    "alertsEmpty": "Aucune alerte budgétaire pour le moment.",
+    "situationTitle": "Situation par maille",
+    "by": {
+      "label": "Regrouper par",
+      "dispositif": "Dispositif",
+      "dr": "DR",
+      "campaign": "Campagne",
+      "cvr": "CVR"
+    },
+    "groups": {
+      "title": "Répartition",
+      "caption": "Budget réparti selon le regroupement choisi",
+      "allocated": "{amount} répartis",
+      "share": "{pct} % du total réparti",
+      "legend": "Lecture des barres : la barre pleine est le budget réparti, la part consommée puis la part prévisionnelle y sont tracées.",
+      "bar": "{label} : {consumed} consommés, {forecast} prévisionnels sur {allocated} répartis",
+      "barShare": "{label} : {share} du total réparti",
+      "consumed": "Consommé",
+      "forecast": "Prévisionnel",
+      "availableLine": "Disponible : {amount}",
+      "overLine": "Dépassement : {amount}",
+      "empty": "Aucune ligne d'allocation ne correspond."
+    },
+    "lines": {
+      "title": "Lignes d'allocation",
+      "caption": "Allocation par campagne et par CVR",
+      "emptyTitle": "Aucune allocation",
+      "empty": "L'agence n'a pas encore réparti le budget sur ce périmètre."
+    },
+    "cols": {
+      "campaign": "Campagne",
+      "dispositif": "Dispositif",
+      "dr": "DR",
+      "cvr": "CVR",
+      "allocated": "Réparti",
+      "consumed": "Consommé",
+      "forecast": "Prévisionnel",
+      "landing": "Atterrissage",
+      "available": "Disponible",
+      "status": "Situation",
+      "updated": "Mise à jour",
+      "revision": "Révision",
+      "actions": "Actions",
+      "need": "Besoin",
+      "sector": "Secteur",
+      "hours": "Heures par semaine",
+      "weeks": "Semaines",
+      "rate": "Tarif horaire fictif",
+      "cost": "Coût estimé",
+      "nature": "Nature",
+      "version": "Version",
+      "amount": "Montant",
+      "period": "Période",
+      "enteredBy": "Saisie par",
+      "motive": "Motif",
+      "event": "Événement",
+      "date": "Date",
+      "actor": "Acteur",
+      "detail": "Détail",
+      "audience": "Audience"
+    },
+    "status": {
+      "within": "Dans le budget",
+      "beyond": "Au-delà du disponible",
+      "no_budget": "Budget non renseigné",
+      "unpriced": "Non chiffré"
+    },
+    "nature": {
+      "consumed": "Consommé",
+      "forecast": "Prévisionnel"
+    },
+    "missing": {
+      "dispositif": "Dispositif non renseigné",
+      "hours": "Heures non renseignées",
+      "period": "Période non renseignée",
+      "rate": "Aucun tarif fictif en vigueur"
+    },
+    "envelope": {
+      "title": "Enveloppe de la cliente",
+      "intro": "La cliente saisit l'enveloppe qu'elle alloue, datée et versionnée. Elle descend à l'agence, qui la voit sans pouvoir la modifier.",
+      "readOnly": "L'enveloppe est saisie par la direction cliente. L'agence la lit et la répartit sans la modifier.",
+      "noEnvelope": "Aucune enveloppe n'est renseignée.",
+      "formTitle": "Saisir une nouvelle version",
+      "firstVersion": "Première version de l'enveloppe.",
+      "amount": "Montant (euros hors taxes)",
+      "amountHint": "Deux décimales au plus. Exemple : 120 000,50",
+      "period": "Période couverte",
+      "periodHint": "Premier et dernier jour de la période de l'enveloppe.",
+      "motive": "Motif de la nouvelle version",
+      "motiveHint": "Obligatoire dès la deuxième version.",
+      "submit": "Enregistrer la version",
+      "historyTitle": "Versions de l'enveloppe",
+      "historyCaption": "Versions de l'enveloppe, de la plus récente à la plus ancienne",
+      "current": "Version courante",
+      "previous": "Version remplacée",
+      "enteredOn": "Saisie le {date}",
+      "range": "Du {start} au {end}",
+      "allocatedOf": "{allocated} déjà répartis sur {amount}",
+      "refused": {
+        "forbidden": "Seule la direction cliente saisit l'enveloppe.",
+        "invalid": "Le montant doit être supérieur à zéro, avec deux décimales au plus.",
+        "invalid_period": "La période est invalide : le dernier jour ne peut pas précéder le premier.",
+        "motive_required": "Un motif est obligatoire pour une nouvelle version.",
+        "below_allocated": "Le montant est inférieur au total déjà réparti par l'agence. L'agence doit d'abord réduire ses allocations.",
+        "incomplete": "Renseignez le montant et la période."
+      }
+    },
+    "allocation": {
+      "title": "Répartition par l'agence",
+      "intro": "L'agence répartit l'enveloppe par campagne et par CVR, sans jamais dépasser l'enveloppe. Une ligne absente vaut budget non renseigné.",
+      "readOnly": "La répartition est réservée à l'agence en mode administration.",
+      "noEnvelope": "Aucune enveloppe n'est renseignée : rien ne peut être réparti.",
+      "remaining": "Reste à répartir : {amount}",
+      "formTitle": "Répartir ou modifier une ligne",
+      "campaign": "Campagne",
+      "cvr": "CVR",
+      "choose": "Choisir",
+      "amount": "Montant réparti (euros hors taxes)",
+      "amountHint": "Deux décimales au plus. Zéro est permis : c'est une allocation nulle voulue.",
+      "motive": "Motif",
+      "motiveHint": "Obligatoire pour modifier une ligne existante.",
+      "existing": "Ligne existante : {amount}, révision {revision}. Un motif est obligatoire.",
+      "submit": "Enregistrer la ligne",
+      "remove": "Retirer",
+      "removeMotive": "Motif du retrait",
+      "removeConfirm": "Confirmer le retrait",
+      "removeCancel": "Annuler",
+      "refused": {
+        "forbidden": "La répartition est réservée à l'agence en mode administration.",
+        "invalid": "Le montant doit être positif ou nul, avec deux décimales au plus.",
+        "no_envelope": "Aucune enveloppe n'est renseignée : rien ne peut être réparti.",
+        "exceeds_envelope": "Le total réparti dépasserait l'enveloppe de la cliente.",
+        "motive_required": "Un motif est obligatoire.",
+        "unknown_campaign": "Cette campagne est inconnue.",
+        "unknown_cvr": "Ce CVR est inconnu.",
+        "unchanged": "Le montant est déjà celui de la ligne.",
+        "not_found": "Cette ligne n'existe plus.",
+        "incomplete": "Choisissez une campagne et un CVR, puis saisissez un montant."
+      }
+    },
+    "needs": {
+      "title": "Prévisionnel par besoin",
+      "intro": "Chaque besoin porte un coût estimé : heures par semaine, fois semaines, fois tarif horaire fictif daté. Il compte au prévisionnel jusqu'au démarrage du poste, puis au consommé. Un besoin au-delà du disponible reste enregistré : il déclenche une alerte puis un arbitrage.",
+      "restricted": "Les coûts par besoin sont réservés à l'agence.",
+      "caption": "Coût estimé de chaque besoin compté au budget",
+      "filters": {
+        "label": "Filtrer les besoins",
+        "all": "Tous",
+        "within": "Dans le budget",
+        "beyond": "Au-delà du disponible",
+        "no_budget": "Budget non renseigné",
+        "unpriced": "Non chiffrés",
+        "consumed": "Consommés",
+        "forecast": "Prévisionnels"
+      },
+      "emptyTitle": "Aucun besoin",
+      "empty": "Aucun besoin ne correspond à ce filtre.",
+      "weeksValue": "{n, plural, one {# semaine} other {# semaines}}",
+      "ratesTitle": "Tarifs horaires fictifs",
+      "ratesNote": "Tarifs fictifs de démonstration, datés. Ils ne sont pas les tarifs contractuels.",
+      "ratesFrom": "En vigueur depuis le {date}"
+    },
+    "journal": {
+      "title": "Journal du budget",
+      "intro": "Chaque modification de l'enveloppe, de la répartition et de l'imputation des besoins est tracée avec sa date, son auteur et son motif.",
+      "caption": "Événements budgétaires, du plus récent au plus ancien",
+      "emptyTitle": "Aucun événement",
+      "empty": "Le journal du budget est vide pour ce périmètre.",
+      "detail": {
+        "EV-28": "Le besoin {need} dépasse le disponible de sa maille.",
+        "EV-50": "Version {version} de l'enveloppe : {amount}.",
+        "EV-50Previous": "Version {version} de l'enveloppe : {amount}, au lieu de {previous}.",
+        "EV-51created": "Ligne créée pour {campaign} : {amount}.",
+        "EV-51updated": "Ligne modifiée pour {campaign} : de {previous} à {amount}.",
+        "EV-51removed": "Ligne retirée pour {campaign} : {previous}.",
+        "EV-52moved": "Le besoin {need} change de maille budgétaire.",
+        "EV-52recosted": "Le coût estimé du besoin {need} est recalculé.",
+        "motive": "Motif : {motive}"
+      }
     }
   }
 }
