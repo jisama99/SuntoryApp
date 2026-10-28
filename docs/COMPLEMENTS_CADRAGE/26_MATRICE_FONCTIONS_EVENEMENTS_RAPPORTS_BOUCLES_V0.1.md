@@ -88,6 +88,9 @@ Colonnes : fonction source (doc 16), données portées, rapports alimentés. Tou
 | EV-37 | Rapport généré, contrôle en échec, relu, validé, publié, partagé | F-70.x | spécification, empreinte, auteur | R-09 |
 | EV-38 | Paramètre ou échéance modifié | D176 | paramètre, ancienne et nouvelle valeur, auteur | R-05 |
 | EV-39 | Modification annulée | D178 | objet, écriture annulée, auteur | R-09 |
+| **Saisie des besoins (lot A3d, D241 à D243)** | | | | |
+| EV-48 | Besoin saisi par l'agence pour le compte d'un RS | F-20.1 à 20.4, D242 | qui (agence), secteur, date, indicateur `on_behalf` ; audience « les deux » ; aucun coût ni motif | à définir |
+| EV-49 | Avis donné à la saisie | F-20.4, D241 | auteur et niveau (CVR, DR ou direction), besoin, ligne `at_entry` du dossier de validation ; audience « les deux » ; aucun coût ni note interne | à définir |
 Remarque : EV-21 n'existe dans aucune source lue (ni colonne, ni statut). Sa donnée source est à confirmer (§11, point 3).
 
 ## 4. Matrice fonctions, événements, rapports, boucles
