@@ -58,7 +58,6 @@ export default async function BudgetNeedsPage({ params, searchParams }: {
     },
     { key: 'sector', header: t('cols.sector'), render: (r) => (zoneById.get(r.sectorId) ? <ZoneLabel zone={zoneById.get(r.sectorId) as Zone} /> : null) },
     { key: 'campaign', header: t('cols.campaign'), sortValue: (r) => r.campaign ?? '', render: (r) => campaignLabel(r.campaign) },
-    { key: 'dispositif', header: t('cols.dispositif'), render: (r) => (r.dispositif ? td(r.dispositif) : t('notFilled')) },
     { key: 'hours', header: t('cols.hours'), numeric: true, sortValue: (r) => r.cost.hours, render: (r) => (r.cost.hours === null ? t('notFilled') : String(r.cost.hours)) },
     { key: 'weeks', header: t('cols.weeks'), numeric: true, sortValue: (r) => r.cost.weeks, render: (r) => String(r.cost.weeks) },
     { key: 'rate', header: t('cols.rate'), numeric: true, render: (r) => (r.cost.rateCents === null ? t('notFilled') : formatMoney(r.cost.rateCents, loc)) },

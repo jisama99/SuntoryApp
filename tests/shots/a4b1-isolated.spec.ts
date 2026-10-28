@@ -21,10 +21,11 @@ test('A4b1 : captures de la chaîne budgétaire', async ({ page, context }) => {
   let locale: 'fr' | 'en' = 'fr';
   const as = (c: BrowserContext, username: string) => loginAs(c, username);
 
-  const shot = async (name: string, dark = false) => {
+  const shot = async (name: string, dark = false, reload = true) => {
     for (const theme of dark ? ['light', 'dark'] : ['light']) {
       await context.addCookies([{ name: 'demo_theme', value: theme, url: BASE }]);
-      await page.reload();
+      // Sans rechargement, l'état de l'écran (message de refus, formulaire rempli) reste visible sur la capture.
+      if (reload) await page.reload();
       for (const w of SIZES) {
         await page.setViewportSize({ width: w.width, height: w.height });
         await page.waitForLoadState('networkidle');
@@ -76,7 +77,7 @@ test('A4b1 : captures de la chaîne budgétaire', async ({ page, context }) => {
   await page.getByLabel('Montant réparti (euros hors taxes)').fill('999 999');
   await page.getByRole('button', { name: 'Enregistrer la ligne' }).click();
   await expect(page.getByTestId('allocation-result')).toContainText('dépasserait l\'enveloppe');
-  await shot('allocation_refus_depassement');
+  await shot('allocation_refus_depassement', false, false);
   await page.goto('/fr/budget/allocation');
   await page.getByLabel('Campagne').selectOption('CMP-DEMO-02');
   await page.getByLabel('CVR').selectOption(uh!);
