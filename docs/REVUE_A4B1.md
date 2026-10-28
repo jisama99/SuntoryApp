@@ -5,7 +5,7 @@ Revue indépendante du 28/10/2026 (D191), branche `revue/A4b1` créée depuis `o
 **C3 : non exécuté** (hors session : `.denylist.local` absent). À lancer sur le poste de T. SOEFOU avant fusion.
 
 ## 1. Verdict provisoire
-**Fusionnable**, sous réserve de la validation de T. SOEFOU (étape 8) : aucun bloquant, trois défauts mineurs corrigés, contrôles verts, C3 à lancer sur le poste.
+**Fusionnable** : aucun bloquant, trois défauts mineurs corrigés, contrôles verts, C3 à lancer sur le poste. Validation de T. SOEFOU reçue le 28/10/2026 dans cette session : D244 à D249 validées sans réserve ; regroupement par CVR gardé tel quel et à traiter en A4a ; `NO_ENVELOPE_RULE` gardé.
 
 ## 2. Conformité aux critères du prompt A4b1
 | Critère | Preuve |
